@@ -1,0 +1,30 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.SolitePOS" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryVariant">@color/whiteGrey</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/whiteGrey</item>
+        <item name="colorSecondaryVariant">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+		<item name="android:windowBackground">@color/blackGrey</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+		<item name="android:textColor">@color/whiteGrey</item>
+    </style>
+
+	<style name="NoActionBar" parent="Theme.SolitePOS">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+
+	<style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+		<item name="textAllCaps">false</item>
+		<item name="android:textColor">@color/whiteGrey</item>
+		<item name="android:textAlignment">textStart</item>
+		<item name="iconTint">@null</item>
+	</style>
+</resources>

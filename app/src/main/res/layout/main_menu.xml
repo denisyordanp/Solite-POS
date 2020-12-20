@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="0dp"
+	android:layout_weight="1"
+	android:layout_height="match_parent"
+	android:padding="@dimen/basePadding"
+	android:background="@drawable/bg_main_menu"
+	android:orientation="vertical">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Pesanan"
+		android:textColor="@color/primaryVariant"/>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_order"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/TextButton"
+		app:icon="@drawable/ic_cook"
+		android:text="Pesanan"/>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_not_pay"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/TextButton"
+		app:icon="@drawable/ic_payment"
+		android:text="Belum bayar"/>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_done"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/TextButton"
+		app:icon="@drawable/ic_done"
+		android:text="Selesai"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Kedai"
+		android:textColor="@color/primaryVariant"/>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_out_money"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/TextButton"
+		app:icon="@drawable/ic_shopping"
+		android:text="Pengeluaran"/>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_history"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/TextButton"
+		app:icon="@drawable/ic_history"
+		android:text="Riwayat"/>
+
+</LinearLayout>

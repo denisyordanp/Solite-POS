@@ -1,0 +1,10 @@
+<resources>
+	<string name="app_name" translatable="false">Solite-POS</string>
+	<string name="app_version" translatable="false">Ver. 1.0.0</string>
+
+	<!--	IMAGE DESCRIPTION-->
+	<string name="solite_logo_image" translatable="false">Solite Logo</string>
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

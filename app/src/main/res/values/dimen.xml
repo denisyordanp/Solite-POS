@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="baseMargin">16dp</dimen>
+	<dimen name="floatMargin">30dp</dimen>
+	<dimen name="contentMargin">4dp</dimen>
+
+	<dimen name="SMargin">4dp</dimen>
+	<dimen name="MMargin">8dp</dimen>
+	<dimen name="LMargin">12dp</dimen>
+
+	<dimen name="basePadding">10dp</dimen>
+
+	<dimen name="MText">18sp</dimen>
+	<dimen name="LLText">30sp</dimen>
+</resources>

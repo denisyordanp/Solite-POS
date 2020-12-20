@@ -1,0 +1,2 @@
+rootProject.name = "Solite-POS"
+include ':app'
