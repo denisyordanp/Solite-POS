@@ -7,7 +7,7 @@ data class Order(
 	var name: String,
 	var orderNo: String,
 	var items: ArrayList<DetailOrder>,
-	var cookTime: Calendar
+	var cookTime: Calendar?
 ){
 
 	companion object{
@@ -31,10 +31,14 @@ data class Order(
 		return total
 	}
 
-	val strFinishCook: String
+	val strFinishCook: String?
 	get() {
-		val finish = cookTime
-		finish.add(Calendar.MINUTE, COOK_TIME)
-		return "${finish[Calendar.HOUR_OF_DAY]}:${finish[Calendar.MINUTE]}"
+		return if (cookTime != null){
+			val finish = cookTime
+			finish!!.add(Calendar.MINUTE, COOK_TIME)
+			"${finish[Calendar.HOUR_OF_DAY]}:${finish[Calendar.MINUTE]}"
+		}else{
+			null
+		}
 	}
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.data.source.local.entity.Product
 import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
@@ -41,13 +42,15 @@ class OnProcessFragment : Fragment() {
 		if (activity != null){
 			adapter = OrderListAdapter()
 			adapter.setItems(getItems())
+
+			_binding.rvOp.layoutManager = LinearLayoutManager(activity)
 			_binding.rvOp.adapter = adapter
 		}
 	}
 
 	private fun getItems(): ArrayList<Order>{
 		val items: ArrayList<Order> = ArrayList()
-		items.add(Order("Denis", "6545646", getProduct(), Calendar.getInstance()))
+		items.add(Order("Denis", "6545646", getProduct(), null))
 		items.add(Order("Evaviliya", "54165", getProduct(), Calendar.getInstance()))
 		items.add(Order("Linda", "23138", getProduct(), Calendar.getInstance()))
 		return items

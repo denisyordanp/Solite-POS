@@ -1,60 +1,63 @@
 package com.sosialite.solite_pos.view.main.menu
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sosialite.solite_pos.R
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.sosialite.solite_pos.data.source.local.entity.Product
+import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
+import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.databinding.FragmentDoneBinding
+import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
+import java.util.*
+import kotlin.collections.ArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DoneFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DoneFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+	private lateinit var _binding: FragmentDoneBinding
+	private lateinit var adapter: OrderListAdapter
+
+	companion object {
+		val instance: DoneFragment
+			get() {
+				return DoneFragment()
+			}
+	}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_done, container, false)
+    ): View {
+		_binding = FragmentDoneBinding.inflate(inflater, container, false)
+        return _binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DoneFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DoneFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		if (activity != null){
+			adapter = OrderListAdapter()
+			adapter.setItems(getItems())
+
+			_binding.rvDn.layoutManager = LinearLayoutManager(activity)
+			_binding.rvDn.adapter = adapter
+		}
+	}
+
+	private fun getItems(): ArrayList<Order>{
+		val items: ArrayList<Order> = ArrayList()
+		items.add(Order("Denis", "6545646", getProduct(), null))
+		items.add(Order("Evaviliya", "54165", getProduct(), Calendar.getInstance()))
+		items.add(Order("Linda", "23138", getProduct(), Calendar.getInstance()))
+		return items
+	}
+
+	private fun getProduct(): ArrayList<DetailOrder>{
+		val items: ArrayList<DetailOrder> = ArrayList()
+		items.add(DetailOrder(Product("5412", "Angsio Ceker Ayam", 15000), 1))
+		items.add(DetailOrder(Product("815", "Siomay Udang", 14000), 2))
+		items.add(DetailOrder(Product("356", "Kulit Tahu Udang", 14000), 2))
+		return items
+	}
 }

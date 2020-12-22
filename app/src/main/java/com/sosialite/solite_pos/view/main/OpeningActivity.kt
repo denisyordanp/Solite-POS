@@ -11,7 +11,7 @@ class OpeningActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ActivityOpeningBinding.inflate(layoutInflater).root)
-		Handler(Looper.getMainLooper()).postDelayed({toMain()}, 1000)
+		Handler(Looper.getMainLooper()).postDelayed({toMain()}, 2000)
     }
 
 	private fun toMain(){

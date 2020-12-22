@@ -7,10 +7,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
 import com.sosialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.io.OutputStream
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -243,10 +243,6 @@ class PrintBill(private var activity: AppCompatActivity) {
 			"Saturday" -> "Sab"
 			else -> ""
 		}
-	}
-
-	private fun thousand(number: Int): String{
-		return NumberFormat.getNumberInstance(Locale.getDefault()).format(number)
 	}
 
 	private fun withSpace(str1: String, str2: String, length: Int): String {
