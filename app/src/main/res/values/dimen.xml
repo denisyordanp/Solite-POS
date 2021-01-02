@@ -11,5 +11,6 @@
 	<dimen name="basePadding">10dp</dimen>
 
 	<dimen name="MText">18sp</dimen>
+	<dimen name="LText">24sp</dimen>
 	<dimen name="LLText">30sp</dimen>
 </resources>

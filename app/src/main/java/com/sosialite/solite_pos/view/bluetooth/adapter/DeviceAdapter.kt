@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.sosialite.solite_pos.databinding.RvDeviceBluetoothListBinding
+import com.sosialite.solite_pos.databinding.RvStringListBinding
 
 class DeviceAdapter(private val callback: (BluetoothDevice) -> Unit) : RecyclerView.Adapter<DeviceAdapter.ListViewHolder>(){
 
@@ -21,20 +21,20 @@ class DeviceAdapter(private val callback: (BluetoothDevice) -> Unit) : RecyclerV
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-		return ListViewHolder(RvDeviceBluetoothListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+		return ListViewHolder(RvStringListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 	}
 
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		val device = items[position]
 		val text = "${device.name} \n ${device.address}".trimIndent()
 
-		holder.binding.tvRvDvBtName.text = text
-		holder.itemView.setOnClickListener { callback.invoke(device) }
+		holder.binding.tvRvSt.text = text
+		holder.binding.root.setOnClickListener { callback.invoke(device) }
 	}
 
 	override fun getItemCount(): Int {
 		return items.size
 	}
 
-	class ListViewHolder(val binding: RvDeviceBluetoothListBinding) : RecyclerView.ViewHolder(binding.root)
+	class ListViewHolder(val binding: RvStringListBinding) : RecyclerView.ViewHolder(binding.root)
 }

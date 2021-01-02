@@ -1,4 +1,4 @@
-package com.sosialite.solite_pos.utils
+package com.sosialite.solite_pos.utils.tools
 
 class KeyString {
 	object BaseKey {

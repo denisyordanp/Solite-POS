@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:paddingBottom="@dimen/LMargin">
+
+	<ImageView
+		android:id="@+id/imageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_see_bottom"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+		android:id="@+id/textView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/LMargin"
+		android:text="Rincian Pesanan"
+		android:textSize="@dimen/LLText"
+		android:textStyle="bold"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+	<LinearLayout
+		android:id="@+id/linearLayout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/bg_main_menu"
+		android:backgroundTint="@color/whiteGrey"
+		android:elevation="@dimen/MMargin"
+		android:orientation="horizontal"
+		android:padding="@dimen/MMargin"
+		app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/textView">
+
+		<LinearLayout
+			android:id="@+id/cont_do_print"
+			android:layout_width="80dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/SMargin"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/btn_do_print"
+				android:layout_width="match_parent"
+				android:layout_height="80dp"
+				app:cardBackgroundColor="@color/primary">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_gravity="center"
+					android:padding="@dimen/MMargin"
+					android:src="@drawable/ic_print" />
+
+			</com.google.android.material.card.MaterialCardView>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Print"
+				android:textAlignment="center" />
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/cont_do_cancel"
+			android:layout_width="80dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/SMargin"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/btn_do_cancel"
+				android:layout_width="match_parent"
+				android:layout_height="80dp"
+				app:cardBackgroundColor="@color/primary">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_gravity="center"
+					android:padding="@dimen/MMargin"
+					android:src="@drawable/ic_cancel" />
+
+			</com.google.android.material.card.MaterialCardView>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Batal"
+				android:textAlignment="center" />
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/cont_do_pay"
+			android:layout_width="80dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/SMargin"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/btn_do_pay"
+				android:layout_width="match_parent"
+				android:layout_height="80dp"
+				app:cardBackgroundColor="@color/primary">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_gravity="center"
+					android:padding="@dimen/MMargin"
+					android:src="@drawable/ic_payments" />
+
+			</com.google.android.material.card.MaterialCardView>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Bayar"
+				android:textAlignment="center" />
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/cont_do_done"
+			android:layout_width="80dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/SMargin"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/btn_do_done"
+				android:layout_width="match_parent"
+				android:layout_height="80dp"
+				app:cardBackgroundColor="@color/primary">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_gravity="center"
+					android:padding="@dimen/MMargin"
+					android:src="@drawable/ic_done_all" />
+
+			</com.google.android.material.card.MaterialCardView>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Selesai"
+				android:textAlignment="center" />
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<com.google.android.material.card.MaterialCardView
+		android:id="@+id/materialCardView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/baseMargin"
+		app:cardCornerRadius="@dimen/MMargin"
+		app:cardElevation="@dimen/MMargin"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/textView">
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/LMargin"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/tv_do_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Denis Yordan P"
+				android:textSize="@dimen/LLText"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/tv_do_date"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="24/12/2020 17:20 WIB"
+				android:textSize="@dimen/MText"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/tv_do_no_order"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="No. 654156156"
+				android:textSize="@dimen/MText"
+				android:textStyle="bold" />
+
+		</LinearLayout>
+
+	</com.google.android.material.card.MaterialCardView>
+
+	<com.google.android.material.card.MaterialCardView
+		android:id="@+id/materialCardView2"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/baseMargin"
+		app:cardCornerRadius="@dimen/MMargin"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rv_detail_order"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/MMargin"
+			tools:listitem="@layout/rv_detail_item_order_list"/>
+
+	</com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

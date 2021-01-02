@@ -52,7 +52,6 @@ class BluetoothDeviceListActivity : AppCompatActivity() {
 
 		private var mbtSocket: BluetoothSocket? = null
 
-		const val REQUEST_CONNECT_BT = 2
 		const val REQUEST_ENABLE_BT = 0
 
 		fun getSocket(): BluetoothSocket? {

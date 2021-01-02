@@ -16,7 +16,30 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 		<item name="android:textColor">@color/blackGrey</item>
+		<item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
+		<item name="buttonStyle">@style/ButtonStyle</item>
     </style>
+
+	<style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
+		<item name="textAllCaps">false</item>
+		<item name="backgroundTint">@color/primaryVariant</item>
+		<item name="android:textColor">@color/blackGrey</item>
+	</style>
+
+	<style name="BottomSheetTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+		<item name="bottomSheetStyle">@style/ModalSheetStyle</item>
+	</style>
+
+	<style name="ModalSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+		<item name="backgroundTint">@color/primary</item>
+		<item name="shapeAppearanceOverlay">@style/ShapeAppearance</item>
+	</style>
+
+	<style name="ShapeAppearance">
+		<item name="cornerFamily">rounded</item>
+		<item name="cornerSizeTopLeft">@dimen/MMargin</item>
+		<item name="cornerSizeTopRight">@dimen/MMargin</item>
+	</style>
 
 	<style name="NoActionBar" parent="Theme.SolitePOS">
 		<item name="windowActionBar">false</item>
@@ -32,5 +55,11 @@
 
 	<style name="FloatingButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
 		<item name="backgroundTint">@color/primary</item>
+	</style>
+
+	<style name="CenterText">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:textAlignment">center</item>
 	</style>
 </resources>

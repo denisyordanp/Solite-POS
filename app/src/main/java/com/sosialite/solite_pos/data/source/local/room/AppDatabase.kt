@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.sosialite.solite_pos.data.source.local.entity.Product
-import com.sosialite.solite_pos.utils.KeyString
+import com.sosialite.solite_pos.utils.tools.KeyString
 
 @Database(
 		entities = [Product::class],

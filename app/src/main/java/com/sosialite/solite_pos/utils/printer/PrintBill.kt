@@ -6,8 +6,9 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.sosialite.solite_pos.R
-import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
+import com.sosialite.solite_pos.data.source.local.entity.helper.Order
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.io.OutputStream
@@ -18,18 +19,20 @@ class PrintBill(private var activity: AppCompatActivity) {
 
 	private var btsocket: BluetoothSocket? = null
 	private var outputStream: OutputStream? = null
-	private var items: ArrayList<DetailOrder>? = null
-	private var pay: Int? = null
+	private var order: Order? = null
 
-	fun doPrint(items: ArrayList<DetailOrder>?, pay: Int?){
-		this.items = items
-		this.pay = pay
+	companion object{
+		const val REQUEST_CONNECT_BT = 2
+	}
+
+	fun doPrint(order: Order?){
+		this.order = order
 		if (btsocket == null) {
 			val intent = Intent(
 				activity.applicationContext,
 				BluetoothDeviceListActivity::class.java
 			)
-			activity.startActivityForResult(intent, BluetoothDeviceListActivity.REQUEST_CONNECT_BT)
+			activity.startActivityForResult(intent, REQUEST_CONNECT_BT)
 		} else {
 			setPaper()
 		}
@@ -70,30 +73,29 @@ class PrintBill(private var activity: AppCompatActivity) {
 	}
 
 	private fun setItems() {
-		if (!items.isNullOrEmpty()){
-			var grand = 0
-			for ((i, item) in items!!.withIndex()){
-				val total = item.amount * item.product.price
-				grand += total
-				printCustom("${i+1}.${item.product.name}", 0, 0)
-				printNewLine()
-				printCustom(withSpace("  ${item.amount} x Rp.${thousand(item.product.price)}", "= Rp.${thousand(total)}", 32), 0, 0)
-				printNewLine()
+		if (!order?.items.isNullOrEmpty()){
+			for ((i, item) in order?.items!!.withIndex()){
+				if (item.product != null){
+					printCustom("${i+1}.${item.product!!.name}", 0, 0)
+					printNewLine()
+					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.price)}", "= ${toRupiah(item.amount * item.product!!.price)}", 32), 0, 0)
+					printNewLine()
+				}
 			}
 			printCustom(PrinterUtils.LINES21, 0, 2)
 			printNewLine()
-			printTotal(grand)
+			printTotal()
 		}
 	}
 
 //	print total
-	private fun printTotal(total: Int) {
-		if (pay != null){
-			printCustom(withSpace("Total   : Rp.", thousand(total), 21), 1, 2)
+	private fun printTotal() {
+		if (order?.pay != 0){
+			printCustom(withSpace("Total   : Rp.", thousand(order?.totalPay), 21), 1, 2)
 			printNewLine()
-			printCustom(withSpace("Bayar   : Rp.", thousand(pay!!), 21), 1, 2)
+			printCustom(withSpace("Bayar   : Rp.", thousand(order?.pay), 21), 1, 2)
 			printNewLine()
-			printCustom(withSpace("Kembali : Rp.", thousand(pay!!-total), 21), 1, 2)
+			printCustom(withSpace("Kembali : Rp.", thousand(order?.payReturn), 21), 1, 2)
 			printNewLine()
 			printCustom(PrinterUtils.LINES, 0, 0)
 		}
@@ -110,7 +112,9 @@ class PrintBill(private var activity: AppCompatActivity) {
 		printNewLine()
 		printCustom("Tgl : ${getDateTime()}", 0, 0)
 		printNewLine()
-		printCustom("No  : 654125/8", 0, 0)
+		printCustom("No  : ${order?.orderNo}", 0, 0)
+		printNewLine()
+		printCustom("Nama: ${order?.customer?.name}", 0, 0)
 		printNewLine()
 		printCustom(PrinterUtils.LINES, 0, 0)
 		printNewLine()
@@ -225,24 +229,9 @@ class PrintBill(private var activity: AppCompatActivity) {
 
 	private fun getDateTime(): String {
 		val l = Locale.getDefault()
-		val dateF = SimpleDateFormat("d/M/y H:m", l)
-		val dayF = SimpleDateFormat("EEEE", l)
-		val date = dateF.format(Date())
-		val day = dayF.format(Date())
-		return "${getDay(day)},$date"
-	}
-
-	private fun getDay(day: String): String{
-		return when(day){
-			"Sunday" -> "Min"
-			"Monday" -> "Sen"
-			"Tuesday" -> "Sel"
-			"Wednesday" -> "Rab"
-			"Thursday" -> "Kam"
-			"Friday" -> "Jum"
-			"Saturday" -> "Sab"
-			else -> ""
-		}
+		val dateF = SimpleDateFormat("EE, d/M/y H:m", l)
+//		val date = dateF.format(Date())
+		return dateF.format(Date())
 	}
 
 	private fun withSpace(str1: String, str2: String, length: Int): String {
@@ -268,7 +257,7 @@ class PrintBill(private var activity: AppCompatActivity) {
 	fun onSetSocket(){
 		try {
 			btsocket = BluetoothDeviceListActivity.getSocket()
-			doPrint(items, pay)
+			doPrint(order)
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}

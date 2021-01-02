@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	app:cardElevation="0dp"
+	app:cardCornerRadius="0dp">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/MMargin"
+		android:weightSum="15"
+		android:orientation="horizontal">
+
+		<TextView
+			android:id="@+id/tv_io_no"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="1."
+			android:textStyle="bold"
+			android:textSize="@dimen/LText" />
+
+		<TextView
+			android:id="@+id/tv_io_amount"
+			android:layout_weight="2"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="2x"
+			android:textStyle="bold"
+			android:textSize="@dimen/LText" />
+
+		<TextView
+			android:id="@+id/tv_io_name"
+			android:layout_weight="4"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="Lumpia Ayam Goreng"
+			android:textSize="@dimen/LText" />
+
+		<TextView
+			android:id="@+id/tv_io_price"
+			android:layout_weight="4"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="Rp. 14,000"
+			android:textSize="@dimen/LText" />
+
+		<TextView
+			android:id="@+id/tv_io_total"
+			android:layout_weight="4"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:textStyle="bold"
+			android:text="Rp. 28,000"
+			android:textSize="@dimen/LText" />
+
+	</LinearLayout>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.5dp"
+		android:background="@color/whiteGrey"/>
+
+</com.google.android.material.card.MaterialCardView>

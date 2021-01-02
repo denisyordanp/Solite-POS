@@ -4,10 +4,14 @@
 	<color name="primaryVariant">#E0A00B</color>
 	<color name="onPrimary">#FF03DAC5</color>
 
-	<color name="whiteGrey">#FF03DAC5</color>
+	<color name="whiteGrey">#F1F1F1</color>
+	<color name="shimmer">#CACACA</color>
 	<color name="grey">#FF018786</color>
 	<color name="black">#FF000000</color>
 	<color name="white">#FFFFFFFF</color>
+
+	<color name="selected">#F2FFAA</color>
+	<color name="red">#FF3333</color>
 
 	<color name="blackGrey">#002423</color>
 </resources>
