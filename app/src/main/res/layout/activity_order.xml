@@ -8,7 +8,7 @@
 	android:weightSum="4"
 	android:baselineAligned="false"
 	android:orientation="horizontal"
-	tools:context=".view.main.menu.newOrder.NewOrderActivity">
+	tools:context=".view.main.menu.order.OrderActivity">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:id="@+id/contDjMain"
@@ -43,11 +43,11 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/btn_nw_back"
 			app:layout_constraintTop_toTopOf="parent"
-			app:tabIndicatorColor="@color/whiteGrey"
-			app:tabMode="scrollable"
+			app:tabIndicatorColor="@color/primary"
+			app:tabIndicatorHeight="@dimen/SMargin"
 			app:tabSelectedTextColor="@color/blackGrey"
-			app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-			app:tabTextColor="@color/grey" />
+			app:tabMode="scrollable"
+			app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
 
 		<androidx.viewpager.widget.ViewPager
 			android:id="@+id/vp_new_order"

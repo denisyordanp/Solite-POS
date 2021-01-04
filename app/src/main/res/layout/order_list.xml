@@ -15,7 +15,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="Denis Yordan"
-		android:textSize="@dimen/MText"
+		android:textSize="@dimen/LText"
 		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +25,7 @@
 		android:id="@+id/tv_ol_date"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:textSize="@dimen/MText"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/tv_ol_name" />
@@ -33,6 +34,7 @@
 		android:id="@+id/tv_ol_no"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:textSize="@dimen/MText"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/tv_ol_date" />
@@ -48,12 +50,13 @@
 		app:layout_constraintTop_toBottomOf="@+id/tv_ol_no"
 		tools:listitem="@layout/rv_item_order_list" />
 
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btn_ol_create"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/MMargin"
 		android:text="Buat Pesanan"
+		android:enabled="false"
 		android:textColor="@color/blackGrey"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"

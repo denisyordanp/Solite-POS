@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
@@ -10,34 +11,36 @@
 		android:id="@+id/imageView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:src="@drawable/ic_see_bottom"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true"
+		android:src="@drawable/ic_see_bottom" />
 
 	<TextView
 		android:id="@+id/textView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/LMargin"
+		android:layout_below="@+id/imageView"
+		android:layout_alignParentStart="true"
+		android:layout_marginStart="@dimen/LMargin"
+		android:layout_marginEnd="@dimen/LMargin"
+		android:layout_marginBottom="@dimen/LMargin"
 		android:text="Rincian Pesanan"
 		android:textSize="@dimen/LLText"
-		android:textStyle="bold"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/imageView" />
+		android:textStyle="bold" />
 
 	<LinearLayout
 		android:id="@+id/linearLayout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_below="@+id/textView"
+		android:layout_above="@id/materialCardView2"
 		android:background="@drawable/bg_main_menu"
 		android:backgroundTint="@color/whiteGrey"
 		android:elevation="@dimen/MMargin"
 		android:orientation="horizontal"
-		android:padding="@dimen/MMargin"
-		app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/textView">
+		android:padding="@dimen/MMargin">
 
 		<LinearLayout
 			android:id="@+id/cont_do_print"
@@ -169,11 +172,12 @@
 		android:id="@+id/materialCardView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/baseMargin"
+		android:layout_below="@+id/textView"
+		android:layout_alignParentStart="true"
+		android:layout_marginStart="@dimen/baseMargin"
+		android:layout_marginBottom="@dimen/baseMargin"
 		app:cardCornerRadius="@dimen/MMargin"
-		app:cardElevation="@dimen/MMargin"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/textView">
+		app:cardElevation="@dimen/MMargin">
 
 		<LinearLayout
 			android:layout_width="wrap_content"
@@ -209,24 +213,43 @@
 
 	</com.google.android.material.card.MaterialCardView>
 
-	<com.google.android.material.card.MaterialCardView
-		android:id="@+id/materialCardView2"
-		android:layout_width="0dp"
+	<LinearLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/baseMargin"
-		app:cardCornerRadius="@dimen/MMargin"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+		android:layout_below="@id/materialCardView"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentEnd="true"
+		android:weightSum="10"
+		android:orientation="vertical">
 
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rv_detail_order"
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/materialCardView2"
 			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="9"
+			android:layout_margin="@dimen/baseMargin"
+			app:cardCornerRadius="@dimen/MMargin">
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/rv_detail_order"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/MMargin"
+				tools:listitem="@layout/rv_detail_item_order_list" />
+
+		</com.google.android.material.card.MaterialCardView>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btn_do_edit"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/MMargin"
-			tools:listitem="@layout/rv_detail_item_order_list"/>
+			android:layout_marginBottom="@dimen/baseMargin"
+			android:layout_marginEnd="@dimen/baseMargin"
+			android:layout_gravity="end"
+			android:text="Rubah pesanan"
+			android:textColor="@color/blackGrey"
+			app:backgroundTint="@color/white" />
 
-	</com.google.android.material.card.MaterialCardView>
+	</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

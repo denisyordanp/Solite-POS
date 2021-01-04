@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Proses masak"/>
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/SMargin"
+			android:padding="@dimen/baseMargin"
+			android:background="@color/white">
+
+			<TextView
+				android:id="@+id/textView2"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Lama pengukusan"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:orientation="horizontal"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
+
+				<com.google.android.material.card.MaterialCardView
+					android:id="@+id/btn_st_cook_min"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					app:cardElevation="0dp"
+					android:layout_marginEnd="@dimen/LMargin">
+
+					<ImageView
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:src="@drawable/ic_remove_circle" />
+
+				</com.google.android.material.card.MaterialCardView>
+
+				<TextView
+					android:id="@+id/tv_st_cook_time"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="13m"
+					android:textStyle="bold" />
+
+				<com.google.android.material.card.MaterialCardView
+					android:id="@+id/btn_st_cook_add"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					app:cardElevation="0dp"
+					android:layout_marginStart="@dimen/LMargin">
+
+					<ImageView
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:src="@drawable/ic_add_circle" />
+
+				</com.google.android.material.card.MaterialCardView>
+
+			</LinearLayout>
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+	</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

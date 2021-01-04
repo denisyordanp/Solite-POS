@@ -61,4 +61,18 @@
 		app:icon="@drawable/ic_history"
 		android:text="Riwayat"/>
 
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Aplikasi"
+		android:textColor="@color/primaryVariant"/>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_setting"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/TextButton"
+		app:icon="@drawable/ic_settings"
+		android:text="Pengaturan"/>
+
 </LinearLayout>

@@ -1,14 +1,11 @@
-package com.sosialite.solite_pos.view.main
+package com.sosialite.solite_pos.view.dialog
 
 import android.app.Dialog
-import android.content.DialogInterface
-import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sosialite.solite_pos.databinding.FragmentMessageBinding
@@ -24,20 +21,6 @@ class MessageFragment : BottomSheetDialogFragment() {
 
 	private var positiveCallback: (() -> Unit)? = null
 	private var negativeCallback: ((Dialog?) -> Unit)? = null
-
-	companion object{
-
-		private var INSTANCE: MessageFragment? = null
-
-		fun create(): MessageFragment{
-			INSTANCE = MessageFragment()
-			return INSTANCE!!
-		}
-	}
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -63,29 +46,29 @@ class MessageFragment : BottomSheetDialogFragment() {
 		if (!positiveTxt.isNullOrEmpty()){
 			_binding.btnMsPositive.text = positiveTxt
 			_binding.btnMsPositive.visibility = View.VISIBLE
-			_binding.btnMsPositive.setOnClickListener { positiveCallback?.invoke() }
+			_binding.btnMsPositive.setOnClickListener {
+				positiveCallback?.invoke()
+				dialog?.dismiss()
+			}
 		}
 		if (!negativeTxt.isNullOrEmpty()){
-			_binding.btnMsPositive.text = negativeTxt
-			_binding.btnMsPositive.visibility = View.VISIBLE
-			_binding.btnMsPositive.setOnClickListener { negativeCallback?.invoke(dialog) }
+			_binding.btnMsNegative.text = negativeTxt
+			_binding.btnMsNegative.visibility = View.VISIBLE
+			_binding.btnMsNegative.setOnClickListener { negativeCallback?.invoke(dialog) }
 		}
 	}
 
-	fun setMessage(message: String): MessageFragment{
+	fun setMessage(message: String){
 		this.message = message
-		return INSTANCE!!
 	}
 
-	fun setOnPositiveButton(text: String, callback: (() -> Unit)): MessageFragment{
+	fun setOnPositiveButton(text: String, callback: (() -> Unit)){
 		positiveTxt = text
 		positiveCallback = callback
-		return INSTANCE!!
 	}
 
-	fun setOnNegativeButton(text: String, callback: ((Dialog?) -> Unit)): MessageFragment{
+	fun setOnNegativeButton(text: String, callback: ((Dialog?) -> Unit)){
 		negativeTxt = text
 		negativeCallback = callback
-		return INSTANCE!!
 	}
 }

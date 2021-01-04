@@ -1,7 +1,8 @@
 package com.sosialite.solite_pos.utils.config
 
-import com.sosialite.solite_pos.data.source.local.entity.Product
+import com.sosialite.solite_pos.data.source.local.entity.main.Product
 import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
+import com.sosialite.solite_pos.data.source.local.entity.helper.Order
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -10,6 +11,15 @@ import kotlin.collections.ArrayList
 
 class MainConfig {
 	companion object{
+
+		fun orderIndex(array: ArrayList<Order>, order: Order): Int?{
+			for ((i, v) in array.withIndex()){
+				if (order.orderNo == v.orderNo){
+					return i
+				}
+			}
+			return null
+		}
 
 		fun productIndex(array: ArrayList<DetailOrder>, product: Product?): Int?{
 			for ((i, v) in array.withIndex()){

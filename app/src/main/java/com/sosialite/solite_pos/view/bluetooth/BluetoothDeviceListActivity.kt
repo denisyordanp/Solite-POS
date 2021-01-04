@@ -10,15 +10,15 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.bluetooth.adapter.DeviceAdapter
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
-class BluetoothDeviceListActivity : AppCompatActivity() {
+class BluetoothDeviceListActivity : SocialiteActivity() {
 
 	private var mBluetoothAdapter: BluetoothAdapter? = null
 

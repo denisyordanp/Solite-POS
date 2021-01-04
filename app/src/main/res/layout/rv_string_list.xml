@@ -16,7 +16,7 @@
 			android:id="@+id/tv_rv_st"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="dasdsa d"
+			android:drawablePadding="@dimen/MMargin"
 			android:padding="@dimen/baseMargin"/>
 
 		<View

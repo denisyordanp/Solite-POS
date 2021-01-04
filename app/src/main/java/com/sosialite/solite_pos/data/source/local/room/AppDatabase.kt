@@ -4,11 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.sosialite.solite_pos.data.source.local.entity.Product
-import com.sosialite.solite_pos.utils.tools.KeyString
+import com.sosialite.solite_pos.data.source.local.entity.main.Category
+import com.sosialite.solite_pos.data.source.local.entity.main.Customer
+import com.sosialite.solite_pos.data.source.local.entity.main.Product
+import com.sosialite.solite_pos.utils.tools.helper.KeyString
 
 @Database(
-		entities = [Product::class],
+		entities = [
+			Product::class,
+			Customer::class,
+			Category::class
+				   ],
 		version = 1,
 		exportSchema = false
 )
@@ -24,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
 					INSTANCE = Room.databaseBuilder(
 							context.applicationContext,
 							AppDatabase::class.java,
-							KeyString.BaseKey.DB_NAME
+							KeyString.Database.DB_NAME
 					)
 							.allowMainThreadQueries()
 							.fallbackToDestructiveMigration()

@@ -4,10 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
 import com.sosialite.solite_pos.databinding.ActivityOpeningBinding
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 
-class OpeningActivity : AppCompatActivity() {
+class OpeningActivity : SocialiteActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ActivityOpeningBinding.inflate(layoutInflater).root)

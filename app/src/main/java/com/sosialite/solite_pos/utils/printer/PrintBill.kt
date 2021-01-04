@@ -4,18 +4,18 @@ import android.bluetooth.BluetoothSocket
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.data.source.local.entity.helper.Order
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PrintBill(private var activity: AppCompatActivity) {
+class PrintBill(private var activity: SocialiteActivity) {
 
 	private var btsocket: BluetoothSocket? = null
 	private var outputStream: OutputStream? = null
