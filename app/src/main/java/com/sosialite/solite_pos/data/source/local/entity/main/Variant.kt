@@ -3,26 +3,33 @@ package com.sosialite.solite_pos.data.source.local.entity.main
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
-import com.sosialite.solite_pos.utils.tools.helper.KeyString
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import java.io.Serializable
 
 @Entity(
-		tableName = KeyString.Database.TBL_VARIANT,
-		primaryKeys = ["id"],
+		tableName = AppDatabase.TBL_VARIANT,
+		primaryKeys = [Variant.ID],
 		indices = [
-			Index(value = ["id"])
+			Index(value = [Variant.ID])
 		]
 )
 data class Variant(
-		@ColumnInfo(name = "id")
+		@ColumnInfo(name = ID)
 		var id: Int,
 
-		@ColumnInfo(name = "name")
+		@ColumnInfo(name = NAME)
 		var name: Int,
 
-		@ColumnInfo(name = "desc")
+		@ColumnInfo(name = DESC)
 		var desc: Int,
 
-		@ColumnInfo(name = "price")
+		@ColumnInfo(name = PRICE)
 		var price: Int
-) : Serializable
+) : Serializable{
+	companion object{
+		const val ID = "id_variant"
+		const val NAME = "name"
+		const val DESC = "desc"
+		const val PRICE = "price"
+	}
+}

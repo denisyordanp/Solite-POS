@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
 import com.sosialite.solite_pos.data.source.local.entity.helper.Order
-import com.sosialite.solite_pos.databinding.RvProductListBinding
+import com.sosialite.solite_pos.databinding.RvProductOrderBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 
-class ProductListAdapter(private var order: Order?) : RecyclerView.Adapter<ProductListAdapter.ListViewHolder>() {
+class ProductOrderAdapter(private var order: Order?) : RecyclerView.Adapter<ProductOrderAdapter.ListViewHolder>() {
 	var callback: ((Boolean, DetailOrder) -> Unit)? = null
 
 	var items: ArrayList<DetailOrder> = ArrayList()
@@ -21,8 +21,6 @@ class ProductListAdapter(private var order: Order?) : RecyclerView.Adapter<Produ
 			field.addAll(value)
 			notifyDataSetChanged()
 		}
-
-	constructor(): this(null)
 
 	fun deleteData(code: Int){
 		for ((i, v) in items.withIndex()){
@@ -36,7 +34,7 @@ class ProductListAdapter(private var order: Order?) : RecyclerView.Adapter<Produ
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-		return ListViewHolder(RvProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+		return ListViewHolder(RvProductOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 	}
 
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
@@ -73,7 +71,7 @@ class ProductListAdapter(private var order: Order?) : RecyclerView.Adapter<Produ
 		return items.size
 	}
 
-	class ListViewHolder(val binding: RvProductListBinding) : RecyclerView.ViewHolder(binding.root){
+	class ListViewHolder(val binding: RvProductOrderBinding) : RecyclerView.ViewHolder(binding.root){
 		var firstAmount: Int? = null
 
 		fun setFirst(amount: Int){

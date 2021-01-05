@@ -12,7 +12,6 @@ class ViewModelFactory private constructor(private val repository: SoliteReposit
 		@Volatile
 		private var INSTANCE: ViewModelFactory? = null
 
-
 		fun getInstance(context: Context?): ViewModelFactory {
 			if (INSTANCE == null) {
 				synchronized(ViewModelFactory::class.java) {

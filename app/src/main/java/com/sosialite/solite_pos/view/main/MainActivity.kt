@@ -10,10 +10,7 @@ import com.sosialite.solite_pos.databinding.ActivityMainBinding
 import com.sosialite.solite_pos.utils.printer.PrintBill
 import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.sosialite.solite_pos.view.main.menu.DoneFragment
-import com.sosialite.solite_pos.view.main.menu.NotPayFragment
-import com.sosialite.solite_pos.view.main.menu.OnProcessFragment
-import com.sosialite.solite_pos.view.main.menu.SettingFragment
+import com.sosialite.solite_pos.view.main.menu.*
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.main.menu.order.OrderActivity
 
@@ -29,6 +26,7 @@ class MainActivity : SocialiteActivity() {
 	private val onProcessFragment: OnProcessFragment = OnProcessFragment.instance
 	private val settingFragment: SettingFragment = SettingFragment.instance
 	private val notPayFragment: NotPayFragment = NotPayFragment.instance
+	private val masterFragment: MasterFragment = MasterFragment.instance
 	private val doneFragment: DoneFragment = DoneFragment.instance
 
 	companion object{
@@ -83,7 +81,8 @@ class MainActivity : SocialiteActivity() {
 		_binding.mainMenu.menuOrder.setOnClickListener { setMenu(it, 0) }
 		_binding.mainMenu.menuNotPay.setOnClickListener { setMenu(it, 1) }
 		_binding.mainMenu.menuDone.setOnClickListener { setMenu(it, 2) }
-		_binding.mainMenu.menuSetting.setOnClickListener { setMenu(it, 3) }
+		_binding.mainMenu.menuMaster.setOnClickListener { setMenu(it, 3) }
+		_binding.mainMenu.menuSetting.setOnClickListener { setMenu(it, 4) }
 	}
 
 	fun addOrder(order: Order){
@@ -95,6 +94,7 @@ class MainActivity : SocialiteActivity() {
 		arrayList.add(FragmentWithTitle("", onProcessFragment))
 		arrayList.add(FragmentWithTitle("", notPayFragment))
 		arrayList.add(FragmentWithTitle("", doneFragment))
+		arrayList.add(FragmentWithTitle("", masterFragment))
 		arrayList.add(FragmentWithTitle("", settingFragment))
 
 		adapter.setData(arrayList)
@@ -112,6 +112,7 @@ class MainActivity : SocialiteActivity() {
 		_binding.mainMenu.menuOutMoney.setBackgroundColor(white)
 		_binding.mainMenu.menuSetting.setBackgroundColor(white)
 		_binding.mainMenu.menuHistory.setBackgroundColor(white)
+		_binding.mainMenu.menuMaster.setBackgroundColor(white)
 		_binding.mainMenu.menuNotPay.setBackgroundColor(white)
 		_binding.mainMenu.menuOrder.setBackgroundColor(white)
 		_binding.mainMenu.menuDone.setBackgroundColor(white)

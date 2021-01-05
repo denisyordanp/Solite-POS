@@ -1,13 +1,16 @@
 package com.sosialite.solite_pos.utils.config
 
-import com.sosialite.solite_pos.data.source.local.entity.main.Product
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
 import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.main.Product
+import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.viewmodelFactory.ViewModelFactory
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainConfig {
 	companion object{
@@ -60,6 +63,10 @@ class MainConfig {
 				return if (d != null) ld.format(d) else ""
 			}
 			return ""
+		}
+
+		fun getViewModel(context: FragmentActivity): MainViewModel{
+			return ViewModelProvider(context, ViewModelFactory.getInstance(context.applicationContext)).get(MainViewModel::class.java)
 		}
 	}
 }

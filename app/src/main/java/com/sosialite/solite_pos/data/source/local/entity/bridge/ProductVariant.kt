@@ -4,38 +4,44 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.sosialite.solite_pos.data.source.local.entity.bridge.ProductVariant.Companion.ID
 import com.sosialite.solite_pos.data.source.local.entity.main.Product
 import com.sosialite.solite_pos.data.source.local.entity.main.Variant
-import com.sosialite.solite_pos.utils.tools.helper.KeyString
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import java.io.Serializable
 
 @Entity(
-		tableName = KeyString.Database.TBL_PRODUCT_VARIANT,
-		primaryKeys = ["id"],
+		tableName = AppDatabase.TBL_PRODUCT_VARIANT,
+		primaryKeys = [ID],
 		foreignKeys = [
 			ForeignKey(
 				entity = Product::class,
-				parentColumns = ["id"],
-				childColumns = ["id_product"],
+				parentColumns = [Product.ID],
+				childColumns = [Product.ID],
 				onDelete = ForeignKey.CASCADE),
 			ForeignKey(
 					entity = Variant::class,
-					parentColumns = ["id"],
-					childColumns = ["id_variant"],
+					parentColumns = [Variant.ID],
+					childColumns = [Variant.ID],
 					onDelete = ForeignKey.CASCADE)
 		],
 		indices = [
-			Index(value = ["id"]),
-			Index(value = ["id_product"]),
-			Index(value = ["id_variant"])
+			Index(value = [ID]),
+			Index(value = [Product.ID]),
+			Index(value = [Variant.ID])
 		]
 )
 data class ProductVariant(
-		@ColumnInfo(name = "id")
+		@ColumnInfo(name = ID)
 		var id: Int,
 
-		@ColumnInfo(name = "id_product")
+		@ColumnInfo(name = Product.ID)
 		var idProduct: Int,
 
-		@ColumnInfo(name = "id_variant")
+		@ColumnInfo(name = Variant.ID)
 		var idVariant: Int
-)
+): Serializable{
+	companion object{
+		const val ID = "id_product_variant"
+	}
+}

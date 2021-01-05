@@ -3,13 +3,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".view.main.menu.order.ProductListFragment">
+	android:layout_height="match_parent">
 
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/rv_product_list"
+		android:id="@+id/rv_product_order"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:listitem="@layout/rv_product_list"/>
+		tools:listitem="@layout/rv_product_order"/>
 
 </FrameLayout>

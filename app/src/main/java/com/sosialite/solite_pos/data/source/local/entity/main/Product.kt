@@ -5,39 +5,47 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.Index
-import com.sosialite.solite_pos.utils.tools.helper.KeyString
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import java.io.Serializable
 
 @Entity(
-		tableName = KeyString.Database.TBL_PRODUCT,
-		primaryKeys = ["id"],
+		tableName = AppDatabase.TBL_PRODUCT,
+		primaryKeys = [Product.ID],
 		foreignKeys = [ForeignKey(
 				entity = Category::class,
-				parentColumns = ["id"],
-				childColumns = ["category"],
+				parentColumns = [Category.ID],
+				childColumns = [Category.ID],
 				onDelete = CASCADE)
 		],
 		indices = [
-			Index(value = ["code"]),
-			Index(value = ["category"])
+			Index(value = [Product.ID]),
+			Index(value = [Category.ID])
 		]
 )
 data class Product(
-		@ColumnInfo(name = "id")
+		@ColumnInfo(name = ID)
 		var id: Int,
 
-		@ColumnInfo(name = "name")
+		@ColumnInfo(name = NAME)
 		var name: String,
 
-		@ColumnInfo(name = "category")
+		@ColumnInfo(name = Category.ID)
 		var category: Int,
 
-		@ColumnInfo(name = "desc")
+		@ColumnInfo(name = DESC)
 		var desc: String,
 
-		@ColumnInfo(name = "price")
+		@ColumnInfo(name = PRICE)
 		var price: Int,
 
-		@ColumnInfo(name = "stock")
+		@ColumnInfo(name = STOCK)
 		var stock: Int
-): Serializable
+): Serializable{
+	companion object{
+		const val ID = "id_product"
+		const val NAME = "name"
+		const val DESC = "desc"
+		const val PRICE = "price"
+		const val STOCK = "stock"
+	}
+}

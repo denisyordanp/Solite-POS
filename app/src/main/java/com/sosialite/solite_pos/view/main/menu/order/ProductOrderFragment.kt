@@ -7,22 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.sosialite.solite_pos.data.source.local.entity.main.Category
 import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
 import com.sosialite.solite_pos.data.source.local.entity.helper.Order
-import com.sosialite.solite_pos.databinding.FragmentProductListBinding
+import com.sosialite.solite_pos.data.source.local.entity.main.Category
+import com.sosialite.solite_pos.databinding.FragmentProductOrderBinding
 import com.sosialite.solite_pos.utils.tools.OrderListBroadcast
 import com.sosialite.solite_pos.utils.tools.helper.DataDummy
-import com.sosialite.solite_pos.view.main.menu.adapter.ProductListAdapter
+import com.sosialite.solite_pos.view.main.menu.adapter.ProductOrderAdapter
 
-class ProductListFragment(
+class ProductOrderFragment(
 		private var category: Category?,
 		private var order: Order?,
 		private var callback: ((Boolean, DetailOrder) -> Unit)?
 	) : Fragment() {
 
-	private lateinit var _binding: FragmentProductListBinding
-	private lateinit var adapter: ProductListAdapter
+	private lateinit var _binding: FragmentProductOrderBinding
+	private lateinit var adapter: ProductOrderAdapter
 
 	private lateinit var deleteReceiver: OrderListBroadcast
 
@@ -30,7 +30,7 @@ class ProductListFragment(
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View {
-		_binding = FragmentProductListBinding.inflate(inflater, container, false)
+		_binding = FragmentProductOrderBinding.inflate(inflater, container, false)
 		return _binding.root
 	}
 
@@ -38,12 +38,12 @@ class ProductListFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			adapter = ProductListAdapter(order)
+			adapter = ProductOrderAdapter(order)
 
-			_binding.rvProductList.layoutManager = GridLayoutManager(activity, 5)
-			_binding.rvProductList.adapter = adapter
+			_binding.rvProductOrder.layoutManager = GridLayoutManager(activity, 5)
+			_binding.rvProductOrder.adapter = adapter
 
-			adapter.items = DataDummy.DataProduct.getProduct(category)
+			adapter.items = DataDummy.DataProduct.getDetailProduct(category)
 			adapter.callback = callback
 
 			deleteReceiver = OrderListBroadcast((activity!!))

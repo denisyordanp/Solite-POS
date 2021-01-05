@@ -49,7 +49,6 @@ class OrderActivity : SocialiteActivity() {
 		_binding.vpNewOrder.adapter = vpAdapter
 		_binding.tabNewOrder.setupWithViewPager(_binding.vpNewOrder)
 
-
 		adapter = ItemOrderListAdapter(ItemOrderListAdapter.ORDER)
 		adapter.buttonCallback = { setButton(it) }
 
@@ -111,7 +110,7 @@ class OrderActivity : SocialiteActivity() {
 	private fun setPageAdapter(){
 		val fragments: ArrayList<FragmentWithTitle> = ArrayList()
 		for (ctg in DataDummy.DataCategory.allCategory){
-			val fragment = ProductListFragment(ctg, order) {b, d ->
+			val fragment = ProductOrderFragment(ctg, order) { b, d ->
 				if (b) adapter.addItem(d) else adapter.delItem(d)
 			}
 			fragments.add(FragmentWithTitle(ctg.name, fragment))

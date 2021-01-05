@@ -12,7 +12,9 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/NoActionBar">
-		<activity android:name=".view.main.SettingActivity"></activity>
+		<activity android:name=".view.main.menu.master.product.ProductMasterActivity"></activity>
+		<activity android:name=".view.main.menu.master.ListMasterActivity" />
+		<activity android:name=".view.main.SettingActivity" />
 		<activity
 			android:name=".view.main.menu.order.CustomerNameActivity"
 			android:screenOrientation="landscape" />

@@ -79,7 +79,7 @@ class DataDummy {
 			var lemonTea = Product(36, "Lemon Tea", DataCategory.minuman.id, "Ceker Ayam", 8000, 10)
 			var minral = Product(37, "Air Mineral", DataCategory.minuman.id, "Ceker Ayam", 4000, 10)
 
-			fun getProduct(category: Category?): ArrayList<DetailOrder>{
+			fun getDetailProduct(category: Category?): ArrayList<DetailOrder>{
 				val items: ArrayList<DetailOrder> = ArrayList()
 				if (category != null){
 					for (prod in allDetailProduct){
