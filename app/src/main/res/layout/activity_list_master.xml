@@ -10,34 +10,59 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_margin="@dimen/baseMargin"
 		android:orientation="vertical">
 
-		<com.google.android.material.card.MaterialCardView
-			android:id="@+id/btn_lm_back"
-			android:layout_width="50dp"
-			android:layout_height="50dp"
-			app:cardCornerRadius="25dp"
-			app:cardElevation="0dp">
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:layout_marginTop="@dimen/MMargin"
+			android:background="@drawable/bg_header_list_master">
 
-			<ImageView
-				android:layout_width="match_parent"
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/btn_lm_back"
+				android:layout_width="50dp"
+				android:layout_height="50dp"
+				android:layout_marginStart="@dimen/baseMargin"
+				app:cardCornerRadius="25dp"
+				app:cardElevation="0dp">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:padding="@dimen/MMargin"
+					android:src="@drawable/ic_back" />
+
+			</com.google.android.material.card.MaterialCardView>
+
+			<View
+				android:layout_width="2dp"
 				android:layout_height="match_parent"
-				android:padding="@dimen/MMargin"
-				android:src="@drawable/ic_back" />
+				android:background="@color/whiteGrey"
+				android:layout_margin="@dimen/SMargin"/>
 
-		</com.google.android.material.card.MaterialCardView>
+			<TextView
+				android:id="@+id/tv_lm_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="@dimen/MText"
+				android:layout_gravity="center"
+				android:layout_margin="@dimen/MMargin"
+				android:text="Varian"/>
+
+		</LinearLayout>
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rv_list_master"
-			android:layout_marginTop="@dimen/MMargin"
+			android:layout_marginTop="@dimen/baseMargin"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
+			android:layout_height="match_parent"
+			tools:listitem="@layout/rv_category_master"/>
 
 	</LinearLayout>
 
 	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-		android:id="@+id/fab_lm_new_datat"
+		android:id="@+id/fab_lm_new_data"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		app:icon="@drawable/ic_add"

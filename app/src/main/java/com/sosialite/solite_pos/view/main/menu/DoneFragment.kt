@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sosialite.solite_pos.databinding.FragmentDoneBinding
-import com.sosialite.solite_pos.utils.tools.helper.DataDummy
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 
 class DoneFragment : Fragment() {
@@ -34,7 +33,7 @@ class DoneFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null && context != null){
 			adapter = OrderListAdapter(context!!, activity!!.supportFragmentManager)
-			adapter.setItems(DataDummy.DataOrder.getDone())
+//			adapter.setItems(DataDummy.DataOrder.getDone())
 
 			_binding.rvDn.layoutManager = GridLayoutManager(activity, 4)
 			_binding.rvDn.adapter = adapter

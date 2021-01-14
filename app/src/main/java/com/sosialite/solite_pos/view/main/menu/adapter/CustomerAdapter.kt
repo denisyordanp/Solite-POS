@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.R
-import com.sosialite.solite_pos.data.source.local.entity.main.Customer
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.sosialite.solite_pos.databinding.RvStringListBinding
 
 class CustomerAdapter(private val callback: (Customer) -> Unit) : RecyclerView.Adapter<CustomerAdapter.ListViewHolder>(){

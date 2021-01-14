@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sosialite.solite_pos.data.source.local.entity.main.Customer
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.sosialite.solite_pos.databinding.ActivityCustomerNameBinding
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.CustomerAdapter
+import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -16,6 +18,9 @@ class CustomerNameActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityCustomerNameBinding
 	private lateinit var adapter: CustomerAdapter
+	private lateinit var viewModel: MainViewModel
+
+	private val customers: ArrayList<Customer> = ArrayList()
 
 	companion object{
 		const val CUSTOMER: String = "customer"
@@ -27,11 +32,13 @@ class CustomerNameActivity : SocialiteActivity() {
 		_binding = ActivityCustomerNameBinding.inflate(layoutInflater)
         setContentView(_binding.root)
 
+		viewModel = getViewModel(this)
+		
 		adapter = CustomerAdapter { setResult(it) }
 		_binding.rvCustomerName.layoutManager = LinearLayoutManager(this)
 		_binding.rvCustomerName.adapter = adapter
 
-		setFilter(null)
+		getCustomer()
 
 		_binding.btnCnCancel.setOnClickListener {
 			setResult(RESULT_CANCELED)
@@ -51,25 +58,28 @@ class CustomerNameActivity : SocialiteActivity() {
 	private fun setFilter(s: String?){
 		if (!s.isNullOrEmpty()){
 			val array: ArrayList<Customer> = ArrayList()
-			for (user in getCustomer()){
+			for (user in customers){
 				if (user.name.toLowerCase(Locale.getDefault()).contains(s.toLowerCase(Locale.getDefault()))){
 					array.add(user)
 				}
 			}
 			if (array.isEmpty()){
-				array.add(Customer(Customer.ID_ADD, "Tambah pelanggan baru"))
+				val c = Customer("Tambah pelanggan baru")
+				c.id = Customer.ID_ADD
+				array.add(c)
 			}
 			adapter.setItems(array)
 		}else{
-			adapter.setItems(getCustomer())
+			adapter.setItems(customers)
 		}
 	}
 
 	private fun setResult(customer: Customer){
 		val data = Intent()
 		if (customer.id == -1){
-//			save to database
-			data.putExtra(CUSTOMER, Customer(214, newCustomer))
+			val newCustomer = Customer(newCustomer)
+			saveData(newCustomer)
+			data.putExtra(CUSTOMER, newCustomer)
 		}else{
 			data.putExtra(CUSTOMER, customer)
 		}
@@ -89,15 +99,19 @@ class CustomerNameActivity : SocialiteActivity() {
 			return builder.toString()
 		}
 
-	private fun getCustomer(): ArrayList<Customer>{
-		val arrayList: ArrayList<Customer> = ArrayList()
-		arrayList.add(Customer(1, "Aci"))
-		arrayList.add(Customer(2, "Denis"))
-		arrayList.add(Customer(3, "Eva"))
-		arrayList.add(Customer(4, "Linda"))
-		arrayList.add(Customer(5, "Kolter"))
-		arrayList.add(Customer(6, "Alfren"))
-		arrayList.add(Customer(7, "Oca"))
-		return arrayList
+	private fun getCustomer(){
+		viewModel.customers.observe(this, {
+			if (!it.isNullOrEmpty()){
+				if (customers.isNotEmpty()){
+					customers.clear()
+				}
+				customers.addAll(it)
+			}
+			setFilter(null)
+		})
+	}
+
+	private fun saveData(customer: Customer){
+		viewModel.insertCustomers(customer)
 	}
 }

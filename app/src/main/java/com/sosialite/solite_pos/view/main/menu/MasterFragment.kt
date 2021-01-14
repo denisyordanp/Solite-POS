@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sosialite.solite_pos.databinding.FragmentMasterBinding
+import com.sosialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.sosialite.solite_pos.view.main.menu.master.product.ProductMasterActivity
 
 class MasterFragment : Fragment() {
@@ -31,6 +32,24 @@ class MasterFragment : Fragment() {
 		if (activity != null){
 
 			_binding.btnMtProduct.setOnClickListener { startActivity(Intent(activity, ProductMasterActivity::class.java)) }
+			_binding.btnMtCategory.setOnClickListener {
+				startActivity(
+						Intent(activity, ListMasterActivity::class.java)
+								.putExtra(ListMasterActivity.TYPE, ListMasterActivity.CATEGORY)
+				)
+			}
+			_binding.btnMtVariant.setOnClickListener {
+				startActivity(
+						Intent(activity, ListMasterActivity::class.java)
+								.putExtra(ListMasterActivity.TYPE, ListMasterActivity.VARIANT)
+				)
+			}
+			_binding.btnMtPayment.setOnClickListener {
+				startActivity(
+					Intent(activity, ListMasterActivity::class.java)
+						.putExtra(ListMasterActivity.TYPE, ListMasterActivity.PAYMENT)
+				)
+			}
 		}
 	}
 }

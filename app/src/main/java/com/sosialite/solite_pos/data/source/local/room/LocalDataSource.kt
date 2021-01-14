@@ -1,11 +1,15 @@
 package com.sosialite.solite_pos.data.source.local.room
 
 import androidx.lifecycle.LiveData
-import com.sosialite.solite_pos.data.source.local.entity.helper.ProductWithCategory
-import com.sosialite.solite_pos.data.source.local.entity.main.Category
-import com.sosialite.solite_pos.data.source.local.entity.main.Customer
-import com.sosialite.solite_pos.data.source.local.entity.main.Product
-import com.sosialite.solite_pos.data.source.local.entity.main.Variant
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 
 class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 
@@ -21,32 +25,105 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 		}
 	}
 
-	fun getProduct(category: Int): LiveData<List<ProductWithCategory>>{
-		return soliteDao.getProducts(category)
+	fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>>{
+		return soliteDao.getProductWithCategories(category)
 	}
 
-	fun insertProducts(data: List<Product>){
-		soliteDao.insertProducts(data)
+	fun insertProduct(data: Product): Long{
+		return soliteDao.insertProduct(data)
 	}
 
-	val categories: LiveData<List<Category>>
-		get() = soliteDao.getCategories()
+	fun updateProduct(data: Product){
+		soliteDao.updateProduct(data)
+	}
 
-	fun insertCategories(data: List<Category>){
-		soliteDao.insertCategories(data)
+	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>>{
+		return soliteDao.getDataProduct(idCategory)
+	}
+
+	fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>{
+		return soliteDao.getVariantProduct(idProduct, idVariantOption)
+	}
+
+	fun insertVariantProduct(data: VariantProduct){
+		soliteDao.insertVariantProduct(data)
+	}
+
+	fun removeVariantProduct(data: VariantProduct){
+		soliteDao.removeVariantProduct(data.idVariantOption, data.idProduct)
+	}
+
+
+	fun getLiveVariantMixProduct(idVariant: Int): LiveData<VariantWithVariantMix>{
+		return soliteDao.getLiveVariantMixProduct(idVariant)
+	}
+
+	fun getVariantMixProduct(idVariant: Int): VariantWithVariantMix {
+		return soliteDao.getVariantMixProduct(idVariant)
+	}
+
+	fun insertVariantMix(data: VariantMix){
+		soliteDao.insertVariantMix(data)
+	}
+
+	fun removeVariantMix(data: VariantMix){
+		soliteDao.removeVariantMix(data.idVariant, data.idProduct)
+	}
+
+	fun getCategories(query: SimpleSQLiteQuery): LiveData<List<Category>>{
+		return soliteDao.getCategories(query)
+	}
+
+	fun insertCategory(data: Category): Long{
+		return soliteDao.insertCategory(data)
+	}
+
+	fun updateCategory(data: Category){
+		soliteDao.updateCategory(data)
 	}
 
 	val variants: LiveData<List<Variant>>
 		get() = soliteDao.getVariants()
 
-	fun insertVariants(data: List<Variant>){
-		soliteDao.insertVariants(data)
+	fun insertVariant(data: Variant){
+		soliteDao.insertVariant(data)
+	}
+
+	fun updateVariant(data: Variant){
+		soliteDao.updateVariant(data)
+	}
+
+	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<List<VariantOption>>{
+		return soliteDao.getVariantOptions(query)
+	}
+
+	fun insertVariantOption(data: VariantOption){
+		soliteDao.insertVariantOption(data)
+	}
+
+	fun updateVariantOption(data: VariantOption){
+		soliteDao.updateVariantOption(data)
 	}
 
 	val customers: LiveData<List<Customer>>
 		get() = soliteDao.getCustomers()
 
-	fun insertCustomers(data: List<Customer>){
-		soliteDao.insertCustomers(data)
+	fun insertCustomer(data: Customer){
+		soliteDao.insertCustomer(data)
+	}
+
+	fun updateCustomer(data: Customer){
+		soliteDao.updateCustomer(data)
+	}
+
+	val payments: LiveData<List<Payment>>
+		get() = soliteDao.getPayments()
+
+	fun insertPayment(data: Payment){
+		soliteDao.insertPayment(data)
+	}
+
+	fun updatePayment(data: Payment){
+		soliteDao.updatePayment(data)
 	}
 }

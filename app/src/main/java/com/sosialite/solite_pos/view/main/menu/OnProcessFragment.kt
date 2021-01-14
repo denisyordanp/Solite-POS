@@ -6,15 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.FragmentOnProcessBinding
-import com.sosialite.solite_pos.utils.tools.helper.DataDummy
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
+import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class OnProcessFragment : Fragment() {
 
 	private lateinit var _binding: FragmentOnProcessBinding
 	private lateinit var adapter: OrderListAdapter
+	private lateinit var viewModel: MainViewModel
 
 	companion object{
 		val instance: OnProcessFragment
@@ -35,14 +37,25 @@ class OnProcessFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null && context != null){
 			adapter = OrderListAdapter(context!!, activity!!.supportFragmentManager)
-			adapter.setItems(DataDummy.DataOrder.getProcess())
+
+			viewModel = getViewModel(activity!!)
+
+			getData()
 
 			_binding.rvOp.layoutManager = GridLayoutManager(activity, 4)
 			_binding.rvOp.adapter = adapter
 		}
 	}
 
+	private fun getData(){
+//		viewModel.getOrders().observe(activity!!, {
+//			if (!it.isNullOrEmpty()){
+//				adapter.items = ArrayList(it)
+//			}
+//		})
+	}
+
 	fun addItem(order: Order){
-		adapter.addItem(order)
+//		adapter.addItem(order)
 	}
 }

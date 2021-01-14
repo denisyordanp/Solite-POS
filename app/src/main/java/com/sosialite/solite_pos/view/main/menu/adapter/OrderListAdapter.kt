@@ -12,21 +12,26 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.R
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.RvOrderListBinding
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.orderIndex
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
-import com.sosialite.solite_pos.utils.tools.DoneCook
 import com.sosialite.solite_pos.utils.tools.MessageBottom
 import com.sosialite.solite_pos.view.main.menu.bottom.DetailOrderFragment
-import java.util.*
-import kotlin.collections.ArrayList
 
 class OrderListAdapter(
 		private var context: Context,
 		private var fragmentManager: FragmentManager
 		) : RecyclerView.Adapter<OrderListAdapter.ListViewHolder>() {
-	private val items: ArrayList<Order> = ArrayList()
+
+	var items: ArrayList<OrderDetail> = ArrayList()
+		set(value) {
+			if (field.isNotEmpty()){
+				field.clear()
+			}
+			field.addAll(value)
+			notifyDataSetChanged()
+		}
 
 	private var warning: Drawable? = null
 	private var pay: Drawable? = null
@@ -42,44 +47,36 @@ class OrderListAdapter(
 		cook = ResourcesCompat.getDrawable(r, R.drawable.ic_cooking_50dp, null)
 	}
 
-	fun setItems(items: ArrayList<Order>){
-		if (this.items.isNotEmpty()){
-			this.items.clear()
-		}
-		this.items.addAll(items)
-		notifyDataSetChanged()
-	}
-
-	fun addItem(item: Order){
-		val pos = orderIndex(items, item)
-		if (pos != null){
-			items[pos] = item
-			notifyItemChanged(pos)
-		}else{
-			items.add(0, item)
-			notifyItemInserted(0)
-		}
-	}
+//	fun addItem(item: OrderWithProduct){
+//		val pos = orderIndex(items, item)
+//		if (pos != null){
+//			items[pos] = item
+//			notifyItemChanged(pos)
+//		}else{
+//			items.add(0, item)
+//			notifyItemInserted(0)
+//		}
+//	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
 		return ListViewHolder(RvOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 	}
 
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-		val order = items[position]
-
-		val totalItem = "Banyaknya ${order.totalItem} barang"
-		val totalPay = "Rp. ${thousand(order.totalPay)}"
-
-		setImage(holder.binding.ivOrLogo, order.status)
-		holder.binding.tvOrName.text = order.customer?.name
-		holder.binding.tvOrTotalItem.text = totalItem
-		holder.binding.tvOrTotalPay.text = totalPay
-		setCookTime(holder.binding.tvOrTime, order, position)
-
-		holder.itemView.setOnClickListener {
-			DetailOrderFragment(order).show(fragmentManager, "detail-order")
-		}
+//		val order = items[position]
+//
+//		val totalItem = "Banyaknya ${order.products.size} barang"
+//		val totalPay = "Rp. ${thousand(order.totalPay)}"
+//
+//		setImage(holder.binding.ivOrLogo, order.order?.status)
+//		holder.binding.tvOrName.text = order.customer?.name
+//		holder.binding.tvOrTotalItem.text = totalItem
+//		holder.binding.tvOrTotalPay.text = totalPay
+//		setCookTime(holder.binding.tvOrTime, order.order, position)
+//
+//		holder.itemView.setOnClickListener {
+//			DetailOrderFragment(order).show(fragmentManager, "detail-order")
+//		}
 	}
 
 	override fun getItemCount(): Int {
@@ -88,16 +85,18 @@ class OrderListAdapter(
 
 	class ListViewHolder(val binding: RvOrderListBinding) : RecyclerView.ViewHolder(binding.root)
 
-	private fun setImage(v: ImageView, status: Int){
-		when(status){
-			Order.ON_PROCESS -> v.setImageDrawable(cook)
-			Order.NEED_PAY -> v.setImageDrawable(pay)
-			Order.DONE -> v.setImageDrawable(done)
+	private fun setImage(v: ImageView, status: Int?){
+		if (status != null){
+			when(status){
+				Order.ON_PROCESS -> v.setImageDrawable(cook)
+				Order.NEED_PAY -> v.setImageDrawable(pay)
+				Order.DONE -> v.setImageDrawable(done)
+			}
 		}
 	}
 
-	private fun setCookTime(v: TextView, order: Order, pos: Int){
-		if (order.status == Order.ON_PROCESS){
+	private fun setCookTime(v: TextView, order: Order?, pos: Int){
+		if (order?.status == Order.ON_PROCESS){
 			val text: String
 			if(order.finishToString(context).isNullOrEmpty()){
 				v.setBackgroundColor(Color.RED)
@@ -123,8 +122,8 @@ class OrderListAdapter(
 	}
 
 	private fun updateTime(pos: Int){
-		items[pos].cookTime = Calendar.getInstance()
-		DoneCook(context).set(items[pos])
+//		items[pos].cookTime = Calendar.getInstance()
+//		DoneCook(context).set(items[pos])
 		notifyItemChanged(pos)
 	}
 }

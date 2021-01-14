@@ -1,15 +1,13 @@
 package com.sosialite.solite_pos.utils.tools
 
-import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity.Companion.BROADCAST_KEY
-import java.util.*
 
 class DoneCook(private var context: Context?) : BroadcastReceiver() {
 
@@ -43,13 +41,14 @@ class DoneCook(private var context: Context?) : BroadcastReceiver() {
 
 	fun set(order: Order) {
 		if (context != null){
-			val time = order.getFinishCook(context!!)?.time
-			if (time != null){
-				val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-				val calendar = Calendar.getInstance()
-				calendar.time = time
-				alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, getPendingIntent(order.orderNo, order.customer?.name))
-			}
+//			val time = order.getFinishCook(context!!)?.time
+//			if (time != null){
+//				val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//				val calendar = Calendar.getInstance()
+//				calendar.time = time
+//				TODO("selesaikan")
+//				alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, getPendingIntent(order.orderNo, order.customer?.name))
+//			}
 		}
 	}
 

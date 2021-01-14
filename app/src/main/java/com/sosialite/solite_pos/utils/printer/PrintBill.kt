@@ -5,9 +5,9 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.sosialite.solite_pos.R
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
@@ -21,12 +21,18 @@ class PrintBill(private var activity: SocialiteActivity) {
 	private var outputStream: OutputStream? = null
 	private var order: Order? = null
 
+	var payment: Payment? = null
+
 	companion object{
 		const val REQUEST_CONNECT_BT = 2
 	}
 
 	fun doPrint(order: Order?){
 		this.order = order
+		setData()
+	}
+
+	private fun setData(){
 		if (btsocket == null) {
 			val intent = Intent(
 				activity.applicationContext,
@@ -73,32 +79,41 @@ class PrintBill(private var activity: SocialiteActivity) {
 	}
 
 	private fun setItems() {
-		if (!order?.items.isNullOrEmpty()){
-			for ((i, item) in order?.items!!.withIndex()){
-				if (item.product != null){
-					printCustom("${i+1}.${item.product!!.name}", 0, 0)
-					printNewLine()
-					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.price)}", "= ${toRupiah(item.amount * item.product!!.price)}", 32), 0, 0)
-					printNewLine()
-				}
-			}
-			printCustom(PrinterUtils.LINES21, 0, 2)
-			printNewLine()
-			printTotal()
-		}
+		TODO("selesaikan")
+//		if (!order?.items.isNullOrEmpty()){
+//			for ((i, item) in order?.items!!.withIndex()){
+//				if (item.product != null){
+//					printCustom("${i+1}.${item.product!!.name}", 0, 0)
+//					printNewLine()
+//					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.price)}", "= ${toRupiah(item.amount * item.product!!.price)}", 32), 0, 0)
+//					printNewLine()
+//				}
+//			}
+//			printCustom(PrinterUtils.LINES21, 0, 2)
+//			printNewLine()
+//			printTotal()
+//		}
 	}
 
 //	print total
 	private fun printTotal() {
-		if (order?.pay != 0){
-			printCustom(withSpace("Total   : Rp.", thousand(order?.totalPay), 21), 1, 2)
-			printNewLine()
-			printCustom(withSpace("Bayar   : Rp.", thousand(order?.pay), 21), 1, 2)
-			printNewLine()
-			printCustom(withSpace("Kembali : Rp.", thousand(order?.payReturn), 21), 1, 2)
-			printNewLine()
-			printCustom(PrinterUtils.LINES, 0, 0)
-		}
+//		if (order?.pay != 0){
+//			TODO("selesaikan")
+//			printCustom(withSpace("Total   : Rp.", thousand(order?.totalPay), 21), 1, 2)
+//			printNewLine()
+//
+//			if (payment != null && payment!!.name == "Tunai"){
+//				printCustom(withSpace("Bayar   : Rp.", thousand(order?.pay), 21), 1, 2)
+//				printNewLine()
+//				TODO("selesaikan")
+//				printCustom(withSpace("Kembali : Rp.", thousand(order?.payReturn), 21), 1, 2)
+//				printNewLine()
+//			}else{
+//				printCustom(withSpace("Bayar   : Rp.", payment?.name, 21), 1, 2)
+//				printNewLine()
+//			}
+//			printCustom(PrinterUtils.LINES, 0, 0)
+//		}
 	}
 
 //	set header
@@ -114,7 +129,8 @@ class PrintBill(private var activity: SocialiteActivity) {
 		printNewLine()
 		printCustom("No  : ${order?.orderNo}", 0, 0)
 		printNewLine()
-		printCustom("Nama: ${order?.customer?.name}", 0, 0)
+	TODO("selesaikan")
+//		printCustom("Nama: ${order?.customer?.name}", 0, 0)
 		printNewLine()
 		printCustom(PrinterUtils.LINES, 0, 0)
 		printNewLine()
@@ -230,17 +246,20 @@ class PrintBill(private var activity: SocialiteActivity) {
 	private fun getDateTime(): String {
 		val l = Locale.getDefault()
 		val dateF = SimpleDateFormat("EE, d/M/y H:m", l)
-//		val date = dateF.format(Date())
 		return dateF.format(Date())
 	}
 
-	private fun withSpace(str1: String, str2: String, length: Int): String {
-		val loop = length - (str1.length + str2.length)
-		var space = ""
-		repeat(loop){
-			space = "$space "
+	private fun withSpace(str1: String, str2: String?, length: Int): String {
+		return if (str2 != null){
+			val loop = length - (str1.length + str2.length)
+			var space = ""
+			repeat(loop){
+				space = "$space "
+			}
+			"$str1$space$str2"
+		}else{
+			""
 		}
-		return "$str1$space$str2"
 	}
 
 	fun onDestroy(){

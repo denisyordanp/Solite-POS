@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import com.sosialite.solite_pos.databinding.FragmentAlertMessageBinding
+import com.sosialite.solite_pos.utils.config.MainConfig
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.setDialogFragment
 
 class AlertMessageFragment : DialogFragment() {
 
@@ -18,8 +20,7 @@ class AlertMessageFragment : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentAlertMessageBinding.inflate(inflater, container, false)
-		dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-		dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+		setDialogFragment(dialog?.window)
         return _binding.root
     }
 

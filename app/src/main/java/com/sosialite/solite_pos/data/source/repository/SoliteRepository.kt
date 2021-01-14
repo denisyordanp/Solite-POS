@@ -1,16 +1,23 @@
 package com.sosialite.solite_pos.data.source.repository
 
 import androidx.lifecycle.LiveData
-import com.sosialite.solite_pos.data.source.local.entity.helper.ProductWithCategory
-import com.sosialite.solite_pos.data.source.local.entity.main.Category
-import com.sosialite.solite_pos.data.source.local.entity.main.Customer
-import com.sosialite.solite_pos.data.source.local.entity.main.Product
-import com.sosialite.solite_pos.data.source.local.entity.main.Variant
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 import com.sosialite.solite_pos.data.source.local.room.LocalDataSource
 import com.sosialite.solite_pos.data.source.remote.RemoteDataSource
 import com.sosialite.solite_pos.utils.database.AppExecutors
 
-class SoliteRepository private constructor(private val remoteDataSource: RemoteDataSource, private val localDataSource: LocalDataSource, private val appExecutors: AppExecutors) : SoliteDataSource {
+class SoliteRepository private constructor(
+		private val remoteDataSource: RemoteDataSource,
+		private val localDataSource: LocalDataSource,
+		private val appExecutors: AppExecutors
+		) : SoliteDataSource {
 
 	companion object {
 		@Volatile
@@ -29,32 +36,120 @@ class SoliteRepository private constructor(private val remoteDataSource: RemoteD
 		}
 	}
 
-	override fun getProducts(category: Int): LiveData<List<ProductWithCategory>> {
-		return localDataSource.getProduct(category)
+	override fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>> {
+		return localDataSource.getDataProduct(idCategory)
 	}
 
-	override fun insertProducts(data: List<Product>) {
-		localDataSource.insertProducts(data)
+	override fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>{
+		return localDataSource.getVariantProduct(idProduct, idVariantOption)
 	}
 
-	override val categories: LiveData<List<Category>>
-		get() = localDataSource.categories
+	override fun insertVariantProduct(data: VariantProduct) {
+		localDataSource.insertVariantProduct(data)
+	}
 
-	override fun insertCategories(data: List<Category>) {
-		localDataSource.insertCategories(data)
+	override fun removeVariantProduct(data: VariantProduct) {
+		localDataSource.removeVariantProduct(data)
+	}
+
+	override fun getLiveVariantMixProduct(idVariant: Int): LiveData<VariantWithVariantMix>{
+		return localDataSource.getLiveVariantMixProduct(idVariant)
+	}
+
+	override fun getVariantMixProduct(idVariant: Int): VariantWithVariantMix {
+		return localDataSource.getVariantMixProduct(idVariant)
+	}
+
+	override fun insertVariantMix(data: VariantMix) {
+		localDataSource.insertVariantMix(data)
+	}
+
+	override fun removeVariantMix(data: VariantMix) {
+		localDataSource.removeVariantMix(data)
+	}
+
+//	override fun getOrders(): LiveData<List<OrderWithProduct>> {
+//		return localDataSource.getOrders()
+//	}
+//
+//	override fun getDetailOrders(orderNo: String): LiveData<List<DetailOrder>> {
+//		return localDataSource.getDetailOrders(orderNo)
+//	}
+//
+//	override fun getDataProducts(category: Int): LiveData<List<DetailProduct>> {
+//		return localDataSource.getDataProducts(category)
+//	}
+//
+//	override fun getProducts(category: Int): LiveData<List<DetailProduct>> {
+//		return localDataSource.getProduct(category)
+//	}
+
+	override fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>> {
+		return localDataSource.getProductWithCategories(category)
+	}
+
+	override fun insertProduct(data: Product): Long {
+		return localDataSource.insertProduct(data)
+	}
+
+	override fun updateProduct(data: Product){
+		localDataSource.updateProduct(data)
+	}
+
+	override fun getCategories(query: SimpleSQLiteQuery): LiveData<List<Category>>{
+		return localDataSource.getCategories(query)
+	}
+
+	override fun insertCategory(data: Category){
+		localDataSource.insertCategory(data)
+	}
+
+	override fun updateCategory(data: Category) {
+		localDataSource.updateCategory(data)
 	}
 
 	override val variants: LiveData<List<Variant>>
 		get() = localDataSource.variants
 
-	override fun insertVariants(data: List<Variant>) {
-		localDataSource.insertVariants(data)
+	override fun insertVariant(data: Variant) {
+		localDataSource.insertVariant(data)
+	}
+
+	override fun updateVariant(data: Variant) {
+		localDataSource.updateVariant(data)
+	}
+
+	override fun getVariantOptions(query: SupportSQLiteQuery): LiveData<List<VariantOption>>{
+		return localDataSource.getVariantOptions(query)
+	}
+
+	override fun insertVariantOption(data: VariantOption) {
+		localDataSource.insertVariantOption(data)
+	}
+
+	override fun updateVariantOption(data: VariantOption) {
+		localDataSource.updateVariantOption(data)
 	}
 
 	override val customers: LiveData<List<Customer>>
 		get() = localDataSource.customers
 
-	override fun insertCustomers(data: List<Customer>) {
-		localDataSource.insertCustomers(data)
+	override fun insertCustomer(data: Customer) {
+		localDataSource.insertCustomer(data)
+	}
+
+	override fun updateCustomer(data: Customer) {
+		localDataSource.updateCustomer(data)
+	}
+
+	override val payments: LiveData<List<Payment>>
+		get() = localDataSource.payments
+
+	override fun insertPayment(data: Payment) {
+		localDataSource.insertPayment(data)
+	}
+
+	override fun updatePayment(data: Payment) {
+		localDataSource.updatePayment(data)
 	}
 }

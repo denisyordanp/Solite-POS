@@ -20,6 +20,15 @@
 		<item name="buttonStyle">@style/ButtonStyle</item>
     </style>
 
+	<style name="TextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="boxCornerRadiusTopStart">@dimen/MMargin</item>
+		<item name="boxCornerRadiusTopEnd">@dimen/MMargin</item>
+		<item name="boxCornerRadiusBottomEnd">@dimen/MMargin</item>
+		<item name="boxCornerRadiusBottomStart">@dimen/MMargin</item>
+		<item name="boxBackgroundColor">@color/white</item>
+
+	</style>
+
 	<style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
 		<item name="textAllCaps">false</item>
 		<item name="backgroundTint">@color/primaryVariant</item>

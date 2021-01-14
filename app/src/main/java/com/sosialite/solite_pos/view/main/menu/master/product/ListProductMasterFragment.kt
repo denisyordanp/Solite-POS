@@ -6,30 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sosialite.solite_pos.data.source.local.entity.main.Category
-import com.sosialite.solite_pos.databinding.FragmentProductMasterBinding
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
+import com.sosialite.solite_pos.databinding.FragmentListProductMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
-import com.sosialite.solite_pos.view.main.menu.adapter.ProductMasterAdapter
+import com.sosialite.solite_pos.view.main.menu.adapter.master.product.ProductMasterAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
-class ProductMasterFragment(private var category: Category?) : Fragment() {
+class ListProductMasterFragment(private var category: Category?) : Fragment() {
 
-	private lateinit var _binding: FragmentProductMasterBinding
+	private lateinit var _binding: FragmentListProductMasterBinding
 	private lateinit var adapter: ProductMasterAdapter
 	private lateinit var viewModel: MainViewModel
 
 	constructor(): this(null)
 
 	companion object {
-		val instance: ProductMasterFragment
+		val instance: ListProductMasterFragment
 			get() {
-				return ProductMasterFragment()
+				return ListProductMasterFragment()
 			}
 	}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-		_binding = FragmentProductMasterBinding.inflate(inflater, container, false)
+		_binding = FragmentListProductMasterBinding.inflate(inflater, container, false)
         return _binding.root
     }
 
@@ -38,7 +38,7 @@ class ProductMasterFragment(private var category: Category?) : Fragment() {
 		if (activity != null){
 
 			viewModel = MainConfig.getViewModel(activity!!)
-			adapter = ProductMasterAdapter()
+			adapter = ProductMasterAdapter(parentFragmentManager)
 
 			setData()
 
@@ -48,10 +48,12 @@ class ProductMasterFragment(private var category: Category?) : Fragment() {
 	}
 
 	private fun setData(){
-		viewModel.getProducts(category?.id)?.observe(activity!!, {
-			if (!it.isNullOrEmpty()){
-				adapter.items = ArrayList(it)
-			}
-		})
+		if (category != null){
+			viewModel.getDataProduct(category!!.id).observe(activity!!, {
+				if (!it.isNullOrEmpty()){
+					adapter.items = ArrayList(it)
+				}
+			})
+		}
 	}
 }

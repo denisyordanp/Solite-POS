@@ -50,7 +50,8 @@
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rv_customer_name"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			tools:listitem="@layout/rv_string_list"/>
 
 	</LinearLayout>
 

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sosialite.solite_pos.databinding.FragmentNotPayBinding
-import com.sosialite.solite_pos.utils.tools.helper.DataDummy
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 
 class NotPayFragment : Fragment() {
@@ -34,7 +33,7 @@ class NotPayFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null && context != null){
 			adapter = OrderListAdapter(context!!, activity!!.supportFragmentManager)
-			adapter.setItems(DataDummy.DataOrder.getPay())
+//			adapter.setItems(DataDummy.DataOrder.getPay())
 
 			_binding.rvNp.layoutManager = GridLayoutManager(activity, 4)
 			_binding.rvNp.adapter = adapter

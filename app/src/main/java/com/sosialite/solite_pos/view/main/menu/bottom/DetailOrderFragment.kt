@@ -9,17 +9,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.FragmentDetailOrderBinding
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.view.main.MainActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.sosialite.solite_pos.view.main.menu.order.OrderActivity
+import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
-class DetailOrderFragment(private var order: Order?) : BottomSheetDialogFragment() {
+class DetailOrderFragment(private var order: OrderDetail?) : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentDetailOrderBinding
 	private lateinit var adapter: ItemOrderListAdapter
+	private lateinit var viewModel: MainViewModel
+
 	private var mainActivity: MainActivity? = null
 
 	constructor(): this(null)
@@ -44,9 +49,12 @@ class DetailOrderFragment(private var order: Order?) : BottomSheetDialogFragment
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+		if (mainActivity != null){
+
+			viewModel = getViewModel(mainActivity!!)
+
 			adapter = ItemOrderListAdapter(ItemOrderListAdapter.DETAIL)
-			_binding.rvDetailOrder.layoutManager = LinearLayoutManager(activity)
+			_binding.rvDetailOrder.layoutManager = LinearLayoutManager(mainActivity)
 			_binding.rvDetailOrder.adapter = adapter
 
 			setData()
@@ -54,14 +62,14 @@ class DetailOrderFragment(private var order: Order?) : BottomSheetDialogFragment
 			_binding.btnDoCancel.setOnClickListener{ }
 			_binding.btnDoPrint.setOnClickListener{ }
 			_binding.btnDoPay.setOnClickListener{
-				PayFragment(order).show(childFragmentManager, "pay")
+//				PayFragment(order).show(childFragmentManager, "pay")
 			}
 			_binding.btnDoEdit.setOnClickListener {
-				startActivityForResult(
-						Intent(context, OrderActivity::class.java)
-								.putExtra(OrderActivity.ORDER_TYPE, OrderActivity.EDIT_ORDER)
-								.putExtra(OrderActivity.ORDER_DATA, order), OrderActivity.EDIT_ORDER_RQ_CODE
-				)
+//				startActivityForResult(
+//						Intent(context, OrderActivity::class.java)
+//								.putExtra(OrderActivity.ORDER_TYPE, OrderActivity.EDIT_ORDER)
+//								.putExtra(OrderActivity.ORDER_DATA, order?.order), OrderActivity.EDIT_ORDER_RQ_CODE
+//				)
 			}
 		}
 	}
@@ -70,10 +78,10 @@ class DetailOrderFragment(private var order: Order?) : BottomSheetDialogFragment
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == OrderActivity.EDIT_ORDER_RQ_CODE){
 			if (data != null){
-				val order: Order? = data.getSerializableExtra(MainActivity.EXTRA_ORDER) as Order?
+				val order = data.getSerializableExtra(MainActivity.EXTRA_ORDER) as OrderDetail?
 				if (order != null){
 					this.order = order
-					mainActivity?.addOrder(order)
+//					mainActivity?.addOrder(order)
 					setData()
 				}
 			}
@@ -82,26 +90,36 @@ class DetailOrderFragment(private var order: Order?) : BottomSheetDialogFragment
 
 	private fun setData(){
 
-		when(order?.status){
-			Order.ON_PROCESS -> {
-				_binding.contDoCancel.visibility = View.VISIBLE
-				_binding.contDoPay.visibility = View.VISIBLE
-				_binding.contDoDone.visibility = View.VISIBLE
-			}
+//		when(order?.order?.status){
+//			Order.ON_PROCESS -> {
+//				_binding.contDoCancel.visibility = View.VISIBLE
+//				_binding.contDoPay.visibility = View.VISIBLE
+//				_binding.contDoDone.visibility = View.VISIBLE
+//			}
+//
+//			Order.NEED_PAY -> {
+//				_binding.contDoPay.visibility = View.VISIBLE
+//			}
+//			Order.DONE -> {
+//				_binding.contDoPrint.visibility = View.VISIBLE
+//				_binding.btnDoEdit.visibility = View.INVISIBLE
+//			}
+//		}
+//
+//		val no = "No. ${order?.order?.orderNo}"
+//		_binding.tvDoDate.text = order?.order?.timeString
+//		_binding.tvDoNoOrder.text = no
+//		_binding.tvDoName.text = order?.customer?.name
+//		getDetailOrders(order?.order?.orderNo)
+	}
 
-			Order.NEED_PAY -> {
-				_binding.contDoPay.visibility = View.VISIBLE
-			}
-			Order.DONE -> {
-				_binding.contDoPrint.visibility = View.VISIBLE
-				_binding.btnDoEdit.visibility = View.INVISIBLE
-			}
+	private fun getDetailOrders(orderNo: String?){
+		if (!orderNo.isNullOrEmpty()){
+//			viewModel.getDetailOrders(orderNo).observe(mainActivity!!, {
+//				if (!it.isNullOrEmpty()){
+//					adapter.items = ArrayList(it)
+//				}
+//			})
 		}
-
-		val no = "No. ${order?.orderNo}"
-		_binding.tvDoDate.text = order?.timeString
-		_binding.tvDoNoOrder.text = no
-		_binding.tvDoName.text = order?.customer?.name
-		adapter.setItems(order)
 	}
 }

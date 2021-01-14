@@ -38,6 +38,15 @@
 			app:backgroundTint="@color/white"
 			android:text="Varian"/>
 
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btn_mt_payment"
+			style="@style/TextButton"
+			android:padding="@dimen/baseMargin"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:backgroundTint="@color/white"
+			android:text="Pembayaran"/>
+
 	</LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

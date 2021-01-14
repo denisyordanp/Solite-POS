@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import com.sosialite.solite_pos.view.dialog.MessageFragment
 
 class MessageBottom(private var fm: FragmentManager) {
-	var fragment: MessageFragment = MessageFragment()
+	private var fragment: MessageFragment = MessageFragment()
 
 	fun show() {
 		fragment.show(fm, "Message")

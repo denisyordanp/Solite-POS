@@ -1,22 +1,55 @@
 package com.sosialite.solite_pos.data.source.repository
 
 import androidx.lifecycle.LiveData
-import com.sosialite.solite_pos.data.source.local.entity.helper.ProductWithCategory
-import com.sosialite.solite_pos.data.source.local.entity.main.Category
-import com.sosialite.solite_pos.data.source.local.entity.main.Customer
-import com.sosialite.solite_pos.data.source.local.entity.main.Product
-import com.sosialite.solite_pos.data.source.local.entity.main.Variant
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 
 internal interface SoliteDataSource{
-	fun getProducts(category: Int): LiveData<List<ProductWithCategory>>
-	fun insertProducts(data: List<Product>)
 
-	val categories: LiveData<List<Category>>
-	fun insertCategories(data: List<Category>)
+//	fun getOrders(): LiveData<List<OrderWithProduct>>
+//	fun getDetailOrders(orderNo: String): LiveData<List<DetailOrder>>
+//
+//	fun getDataProducts(category: Int): LiveData<List<DetailProduct>>
+
+	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>>
+
+	fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>
+	fun insertVariantProduct(data: VariantProduct)
+	fun removeVariantProduct(data: VariantProduct)
+
+	fun getLiveVariantMixProduct(idVariant: Int): LiveData<VariantWithVariantMix>
+	fun getVariantMixProduct(idVariant: Int): VariantWithVariantMix
+	fun insertVariantMix(data: VariantMix)
+	fun removeVariantMix(data: VariantMix)
+
+	fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>>
+	fun insertProduct(data: Product): Long
+	fun updateProduct(data: Product)
+
+	fun getCategories(query: SimpleSQLiteQuery): LiveData<List<Category>>
+	fun insertCategory(data: Category)
+	fun updateCategory(data: Category)
 
 	val variants: LiveData<List<Variant>>
-	fun insertVariants(data: List<Variant>)
+	fun insertVariant(data: Variant)
+	fun updateVariant(data: Variant)
+
+	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<List<VariantOption>>
+	fun insertVariantOption(data: VariantOption)
+	fun updateVariantOption(data: VariantOption)
 
 	val customers: LiveData<List<Customer>>
-	fun insertCustomers(data: List<Customer>)
+	fun insertCustomer(data: Customer)
+	fun updateCustomer(data: Customer)
+
+	val payments: LiveData<List<Payment>>
+	fun insertPayment(data: Payment)
+	fun updatePayment(data: Payment)
 }

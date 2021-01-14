@@ -3,26 +3,48 @@ package com.sosialite.solite_pos.view.main.menu.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sosialite.solite_pos.data.source.local.entity.helper.DetailOrder
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.*
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.productIndex
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
-import com.sosialite.solite_pos.utils.tools.OrderListBroadcast
 
-class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrderListAdapter.BaseViewHolder<DetailOrder>>() {
+class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrderListAdapter.BaseViewHolder<ProductOrderDetail>>() {
 
-	private val items: ArrayList<DetailOrder> = ArrayList()
-	var buttonCallback: ((Boolean) -> Unit)? = null
 	private var status: Int? = 0
 
 	var order: Order? = null
 	val sortedOrder: Order?
 	get() {
-		val order = order
-		order?.items?.removeAt(order.items.lastIndex)
+		val newOrder = order
+//		order?.items?.removeAt(order.items.lastIndex)
 		return order
+	}
+
+	var items: ArrayList<ProductOrderDetail> = ArrayList()
+		set(value) {
+//			order = value[0].order
+			status = order?.status
+			if (field.isNotEmpty()){
+				field.clear()
+			}
+			field.addAll(value)
+			if (type == DETAIL){
+				setData()
+			}
+			notifyDataSetChanged()
+		}
+	private val grandTotal: Int
+	get() {
+		var total = 0
+		for (item in items){
+			if (item.product != null){
+				total += item.product!!.price * item.amount
+			}
+		}
+		return total
 	}
 
 	companion object{
@@ -33,72 +55,63 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		const val ORDER = 1
 	}
 
-	fun setItems(order: Order?){
-		if (order != null){
-			this.order = order
-			status = order.status
-			if (items.isNotEmpty()){
-				items.clear()
-			}
-			if (!order.items.isNullOrEmpty()){
-				items.addAll(order.items)
-			}
-			if (type == DETAIL){
-				setData()
-			}
-			notifyDataSetChanged()
-		}
-	}
-
-	fun addItem(detail: DetailOrder){
+	fun addItem(
+			detail: ProductOrderDetail,
+			btnCallback: (Boolean) -> Unit
+	){
 		if (order != null){
 			if (items.isEmpty()){
-				setData()
+				if (detail.amount != 0){
+					setData()
+					add(detail, btnCallback)
+				}
+			}else{
+				add(detail, btnCallback)
 			}
-			val pos = productIndex(items, detail.product)
-			if (pos != null){
+		}
+	}
+
+	private fun add(
+			detail: ProductOrderDetail,
+			btnCallback: (Boolean) -> Unit
+	){
+		val pos = productIndex(items, detail)
+		if (pos != null){
+			if (detail.amount == 0){
+				delItem(pos)
+				btnCallback.invoke(false)
+			}else{
 				items[pos] = detail
 				notifyItemChanged(pos)
-			}else{
+				btnCallback.invoke(true)
+			}
+		}else{
+			if (detail.amount != 0){
 				items.add(0, detail)
 				notifyItemInserted(0)
-			}
-			order!!.items = items
-			notifyItemChanged(items.size-1)
-			buttonCallback?.invoke(true)
-		}
-	}
-
-	fun delItem(detail: DetailOrder){
-		if (order != null){
-			if (detail.amount > 0){
-				val pos = productIndex(items, detail.product)
-				if (pos != null){
-					items[pos] = detail
-					order!!.items = items
-					notifyItemChanged(pos)
-					notifyItemChanged(items.size-1)
-				}
+				btnCallback.invoke(true)
 			}else{
-				if (items.size == 2){
-					items.clear()
-					notifyDataSetChanged()
-					buttonCallback?.invoke(false)
-				}else{
-					val pos = productIndex(items, detail.product)
-					if (pos != null){
-						items.remove(detail)
-						order!!.items = items
-						notifyItemRemoved(pos)
-						notifyItemChanged(items.size-1)
-					}
-				}
+				btnCallback.invoke(false)
 			}
+		}
+		notifyItemChanged(items.size-1)
+	}
 
+	private fun delItem(pos: Int){
+		if (order != null){
+			if (items.size == 2){
+				items.clear()
+				notifyDataSetChanged()
+			}else{
+				items.removeAt(pos)
+//				order!!.items = items
+				notifyItemRemoved(pos)
+				notifyItemChanged(items.size-1)
+			}
 		}
 	}
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<DetailOrder> {
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ProductOrderDetail> {
 		return when (viewType){
 			FIRST_COLUMN -> {
 				FirstColumnViewHolder(RvFirstColumnItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -112,7 +125,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			}
 			TOTAL_COLUMN -> {
 				when(type){
-					DETAIL -> TotalColumnViewHolder(RvTotalDetailItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+					DETAIL -> TotalDetailColumnViewHolder(RvTotalDetailItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 					ORDER -> TotalOrderColumnViewHolder(RvTotalItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 					else -> throw IllegalArgumentException("Invalid adapterType")
 				}
@@ -121,7 +134,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		}
 	}
 
-	override fun onBindViewHolder(holder: BaseViewHolder<DetailOrder>, position: Int) {
+	override fun onBindViewHolder(holder: BaseViewHolder<ProductOrderDetail>, position: Int) {
 		holder.bind(items[position])
 	}
 
@@ -153,47 +166,48 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 
 	private fun setData(){
 		if (type == DETAIL){
-			items.add(0, DetailOrder())
+			items.add(0, ProductOrderDetail())
 		}
 		when(status){
 			Order.ON_PROCESS, Order.NEED_PAY -> {
-				items.add(DetailOrder())
+				items.add(ProductOrderDetail())
 			}
 			Order.DONE -> {
-				items.add(DetailOrder())
-				items.add(DetailOrder())
-				items.add(DetailOrder())
+				items.add(ProductOrderDetail())
+				items.add(ProductOrderDetail())
+				items.add(ProductOrderDetail())
 			}
 		}
 	}
 
-	inner class FirstColumnViewHolder(binding: RvFirstColumnItemOrderListBinding) : BaseViewHolder<DetailOrder>(binding.root) {
-		override fun bind(detail: DetailOrder) {}
+	inner class FirstColumnViewHolder(binding: RvFirstColumnItemOrderListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
+		override fun bind(detail: ProductOrderDetail) {}
 	}
 
-	inner class ValueDetailColumnViewHolder(private val binding: RvDetailItemOrderListBinding) : BaseViewHolder<DetailOrder>(binding.root) {
-		override fun bind(detail: DetailOrder) {
+	inner class ValueDetailColumnViewHolder(private val binding: RvDetailItemOrderListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
+		override fun bind(detail: ProductOrderDetail) {
+			if (detail.product != null){
+				val no = "$adapterPosition."
+				val amount = "${detail.amount}x"
+				val total = detail.product!!.price * detail.amount
 
-			val no = "$adapterPosition."
-			val amount = "${detail.amount}x"
-			val total = detail.product!!.price * detail.amount
-
-			binding.tvIoNo.text = no
-			binding.tvIoAmount.text = amount
-			binding.tvIoName.text = detail.product?.name
-			binding.tvIoPrice.text = toRupiah(detail.product?.price)
-			binding.tvIoTotal.text = toRupiah(total)
+				binding.tvIoNo.text = no
+				binding.tvIoAmount.text = amount
+				binding.tvIoName.text = detail.product?.name
+				binding.tvIoPrice.text = toRupiah(detail.product?.price)
+				binding.tvIoTotal.text = toRupiah(total)
+			}
 		}
 	}
 
-	inner class ValueOrderColumnViewHolder(private val binding: RvItemOrderListBinding) : BaseViewHolder<DetailOrder>(binding.root) {
-		override fun bind(detail: DetailOrder) {
+	inner class ValueOrderColumnViewHolder(private val binding: RvItemOrderListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
+		override fun bind(detail: ProductOrderDetail) {
 
 			val no = "$adapterPosition."
 			val amount = "${detail.amount}x"
 			var total = 0
 			if (detail.product != null){
-				total = detail.product!!.price * detail.amount
+				total = detail.product?.price ?: 0 * detail.amount
 			}
 
 			binding.tvIoNo.text = no
@@ -208,56 +222,55 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 				binding.btnOlDelete.setOnClickListener {
 					if (items.size == 2){
 						items.clear()
-						order!!.items = items
 						notifyDataSetChanged()
 					}else{
 						items.remove(detail)
-						order!!.items = items
 						notifyItemRemoved(adapterPosition)
 						notifyItemChanged(items.size-1)
 					}
-					OrderListBroadcast(binding.root.context).sendBroadcastProduct(detail.product?.id)
 				}
 			}
 		}
 	}
 
-	inner class TotalColumnViewHolder(private val binding: RvTotalDetailItemOrderListBinding) : BaseViewHolder<DetailOrder>(binding.root) {
-		override fun bind(detail: DetailOrder) {
+	inner class TotalDetailColumnViewHolder(private val binding: RvTotalDetailItemOrderListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
+		override fun bind(detail: ProductOrderDetail) {
 			var title = ""
 			var amount = ""
 			if (status == Order.DONE){
 				when(adapterPosition){
 					itemCount-3 -> {
 						title = "Total : "
-						amount = toRupiah(order?.totalPay)
+						amount = toRupiah(grandTotal)
 					}
 					itemCount-2 -> {
 						title = "Bayar : "
-						amount = toRupiah(order?.pay)
+//						amount = toRupiah(order?.pay)
+						amount = toRupiah(100000)
 					}
 					itemCount-1 -> {
 						title = "Kembalian : "
-						amount = toRupiah(order?.payReturn)
+						amount = toRupiah(100000 - grandTotal)
 					}
 				}
 			}else{
 				title = "Total : "
-				amount = toRupiah(order?.totalPay)
+				amount = toRupiah(grandTotal)
 			}
 			binding.tvIoPrice.text = title
 			binding.tvIoTotal.text = amount
 		}
+
 	}
 
-	inner class TotalOrderColumnViewHolder(private val binding: RvTotalItemOrderListBinding) : BaseViewHolder<DetailOrder>(binding.root) {
-		override fun bind(detail: DetailOrder) {
+	inner class TotalOrderColumnViewHolder(private val binding: RvTotalItemOrderListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
+		override fun bind(detail: ProductOrderDetail) {
 			binding.tvIoName.text = "Total : "
-			binding.tvIoTotal.text = toRupiah(order?.totalPay)
+			binding.tvIoTotal.text = toRupiah(grandTotal)
 		}
 	}
 
-	abstract class BaseViewHolder<DetailOrder>(itemView: View) : RecyclerView.ViewHolder(itemView){
-		abstract fun bind(detail: DetailOrder)
+	abstract class BaseViewHolder<ProductOrderDetail>(itemView: View) : RecyclerView.ViewHolder(itemView){
+		abstract fun bind(detail: ProductOrderDetail)
 	}
 }

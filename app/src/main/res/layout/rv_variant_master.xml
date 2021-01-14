@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	app:cardBackgroundColor="@color/white"
+	android:layout_marginBottom="@dimen/RvLine"
+	app:cardElevation="0dp"
+	app:cardCornerRadius="0dp">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="@dimen/MMargin"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/btn_vm_options"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
+
+			<TextView
+				android:id="@+id/tv_rv_vr_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:maxLines="2"
+				android:text="Mentai"
+				android:textSize="@dimen/MText"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/tv_rv_vr_type"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/MMargin"
+				android:text="Hanya pilih satu"
+				android:textSize="@dimen/MText" />
+
+			<TextView
+				android:id="@+id/tv_rv_vr_option"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/MMargin"
+				android:text="Terdapat 3 pilihan"
+				android:textSize="@dimen/MText" />
+
+		</LinearLayout>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btn_vm_options"
+			style="@style/Widget.MaterialComponents.Button.TextButton"
+			android:layout_width="wrap_content"
+			android:layout_height="0dp"
+			android:drawableEnd="@drawable/ic_arrow_right"
+			android:textColor="@color/blackGrey"
+			android:text="Pilihan"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

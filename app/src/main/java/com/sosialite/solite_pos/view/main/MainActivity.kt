@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.sosialite.solite_pos.R
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.ActivityMainBinding
 import com.sosialite.solite_pos.utils.printer.PrintBill
 import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
@@ -17,8 +17,9 @@ import com.sosialite.solite_pos.view.main.menu.order.OrderActivity
 class MainActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityMainBinding
-	private lateinit var printBill: PrintBill
 	private lateinit var adapter: ViewPagerAdapter
+
+	lateinit var printBill: PrintBill
 
 	private var primaryColor: Int = 0
 	private var white: Int = 0
@@ -52,8 +53,8 @@ class MainActivity : SocialiteActivity() {
 		_binding.fabMainNewOrder.setOnClickListener {
 			startActivityForResult(
 					Intent(this, OrderActivity::class.java)
-							.putExtra(OrderActivity.ORDER_TYPE, OrderActivity.NEW_ORDER)
-					, OrderActivity.NEW_ORDER_RQ_CODE)
+							.putExtra(OrderActivity.ORDER_TYPE, OrderActivity.NEW_ORDER),
+				OrderActivity.NEW_ORDER_RQ_CODE)
 		}
     }
 
@@ -78,14 +79,14 @@ class MainActivity : SocialiteActivity() {
 	}
 
 	private fun setMenu(){
-		_binding.mainMenu.menuOrder.setOnClickListener { setMenu(it, 0) }
-		_binding.mainMenu.menuNotPay.setOnClickListener { setMenu(it, 1) }
-		_binding.mainMenu.menuDone.setOnClickListener { setMenu(it, 2) }
-		_binding.mainMenu.menuMaster.setOnClickListener { setMenu(it, 3) }
-		_binding.mainMenu.menuSetting.setOnClickListener { setMenu(it, 4) }
+		_binding.mainMenu.menuOrder.setOnClickListener { setMenu(it, 0, true) }
+		_binding.mainMenu.menuNotPay.setOnClickListener { setMenu(it, 1, true) }
+		_binding.mainMenu.menuDone.setOnClickListener { setMenu(it, 2, true) }
+		_binding.mainMenu.menuMaster.setOnClickListener { setMenu(it, 3, false) }
+		_binding.mainMenu.menuSetting.setOnClickListener { setMenu(it, 4, false) }
 	}
 
-	fun addOrder(order: Order){
+	private fun addOrder(order: Order){
 		onProcessFragment.addItem(order)
 	}
 
@@ -102,7 +103,8 @@ class MainActivity : SocialiteActivity() {
 		_binding.mainMenu.menuOrder.setBackgroundColor(primaryColor)
 	}
 
-	private fun setMenu(v: View, pos: Int){
+	private fun setMenu(v: View, pos: Int, isFabShow: Boolean){
+		if (isFabShow) _binding.fabMainNewOrder.show() else _binding.fabMainNewOrder.hide()
 		resetButton()
 		v.setBackgroundColor(primaryColor)
 		_binding.vpMain.setCurrentItem(pos, true)
@@ -116,9 +118,5 @@ class MainActivity : SocialiteActivity() {
 		_binding.mainMenu.menuNotPay.setBackgroundColor(white)
 		_binding.mainMenu.menuOrder.setBackgroundColor(white)
 		_binding.mainMenu.menuDone.setBackgroundColor(white)
-	}
-
-	fun printBill(order: Order){
-		printBill.doPrint(order)
 	}
 }

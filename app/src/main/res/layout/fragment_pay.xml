@@ -13,19 +13,26 @@
 		android:layout_height="wrap_content"
 		android:src="@drawable/ic_see_bottom" />
 
+	<Button
+		style="@style/ButtonStyle"
+		android:id="@+id/btn_pay_method"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/baseMargin"
+		android:text="Metode pembayaran" />
+
 	<com.google.android.material.textfield.TextInputLayout
-		style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-		app:boxCornerRadiusBottomStart="@dimen/MMargin"
-		app:boxCornerRadiusBottomEnd="@dimen/MMargin"
-		app:boxCornerRadiusTopEnd="@dimen/MMargin"
-		app:boxCornerRadiusTopStart="@dimen/MMargin"
+		android:id="@+id/lay_edt_pay_cash"
+		android:visibility="gone"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 		app:boxBackgroundColor="@color/white"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/baseMargin">
+		android:layout_marginStart="@dimen/baseMargin"
+		android:layout_marginEnd="@dimen/baseMargin">
 
 		<com.google.android.material.textfield.TextInputEditText
-			android:id="@+id/edt_pay_pay"
+			android:id="@+id/edt_pay_cash"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:inputType="number"

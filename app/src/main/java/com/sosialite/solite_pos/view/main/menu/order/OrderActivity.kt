@@ -3,18 +3,20 @@ package com.sosialite.solite_pos.view.main.menu.order
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sosialite.solite_pos.data.source.local.entity.main.Customer
-import com.sosialite.solite_pos.data.source.local.entity.helper.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Customer
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.ActivityOrderBinding
 import com.sosialite.solite_pos.databinding.OrderListBinding
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentTime
-import com.sosialite.solite_pos.utils.tools.OrderNo
-import com.sosialite.solite_pos.utils.tools.helper.DataDummy
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.sosialite.solite_pos.utils.tools.MessageBottom
 import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.MainActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class OrderActivity : SocialiteActivity() {
 
@@ -22,6 +24,7 @@ class OrderActivity : SocialiteActivity() {
 	private lateinit var adapter: ItemOrderListAdapter
 	private lateinit var vpAdapter: ViewPagerAdapter
 	private lateinit var _order: OrderListBinding
+	private lateinit var viewModel: MainViewModel
 
 	private var order: Order? = null
 	private var type: Int = 0
@@ -42,6 +45,8 @@ class OrderActivity : SocialiteActivity() {
 		_order = _binding.newOrderList
 		setContentView(_binding.root)
 
+		viewModel = getViewModel(this)
+
 		order = intent.getSerializableExtra(ORDER_DATA) as Order?
 		type = intent.getIntExtra(ORDER_TYPE, 0)
 
@@ -50,7 +55,6 @@ class OrderActivity : SocialiteActivity() {
 		_binding.tabNewOrder.setupWithViewPager(_binding.vpNewOrder)
 
 		adapter = ItemOrderListAdapter(ItemOrderListAdapter.ORDER)
-		adapter.buttonCallback = { setButton(it) }
 
 		_order.rvOrderList.layoutManager = LinearLayoutManager(this)
 		_order.rvOrderList.adapter = adapter
@@ -61,7 +65,7 @@ class OrderActivity : SocialiteActivity() {
 		}
 
 		_binding.btnNwBack.setOnClickListener { onBackPressed() }
-		_order.btnOlCreate.setOnClickListener { setResult() }
+		_order.btnOlCreate.setOnClickListener { setDine() }
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -84,40 +88,58 @@ class OrderActivity : SocialiteActivity() {
 	}
 
 	private fun setNewOrder(customer: Customer){
-		order = Order(customer, OrderNo.orderNo, currentTime)
-		adapter.setItems(order)
+		order = Order(Order.orderNo(this), customer.id, currentDate)
+		adapter.order = order
 
-		setContent(order!!)
+		setContent(order!!, customer)
 	}
 
 	private fun setEditOrder(){
 		if (order != null){
-			adapter.setItems(order)
+			adapter.order = order
 
-			setContent(order!!)
+//			viewModel.getDetailOrders(order!!.orderNo).observe(this, {
+//				if (!it.isNullOrEmpty()){
+//					adapter.items = ArrayList(it)
+//					setContent(order!!, it[0].customer)
+//				}
+//			})
 		}
 	}
 
-	private fun setContent(order: Order){
+	private fun setContent(order: Order, customer: Customer?){
 		val no = "No. ${order.orderNo}"
 		_order.tvOlNo.text = no
 		_order.tvOlDate.text = order.timeString
-		_order.tvOlName.text = order.customer?.name
+		_order.tvOlName.text = customer?.name
 
 		setPageAdapter()
 	}
 
 	private fun setPageAdapter(){
-		val fragments: ArrayList<FragmentWithTitle> = ArrayList()
-		for (ctg in DataDummy.DataCategory.allCategory){
-			val fragment = ProductOrderFragment(ctg, order) { b, d ->
-				if (b) adapter.addItem(d) else adapter.delItem(d)
+		viewModel.getCategories(Category.getFilter(Category.ACTIVE)).observe(this, {
+			if (!it.isNullOrEmpty()){
+				val fragments: ArrayList<FragmentWithTitle> = ArrayList()
+				for (ctg in it){
+					val fragment = ProductOrderFragment(ctg) { p ->
+						adapter.addItem(p){ b ->
+							setButton(b)
+						}
+					}
+					fragments.add(FragmentWithTitle(ctg.name, fragment))
+				}
+				vpAdapter.setData(fragments)
+				_binding.vpNewOrder.offscreenPageLimit = vpAdapter.count
 			}
-			fragments.add(FragmentWithTitle(ctg.name, fragment))
-		}
+		})
+	}
 
-		vpAdapter.setData(fragments)
-		_binding.vpNewOrder.offscreenPageLimit = vpAdapter.count
+	private fun setDine(){
+		MessageBottom(supportFragmentManager)
+				.setMessage("Apakah makan ditempat atau dibungkus?")
+				.setPositiveListener("Makan ditempat"){ setResult() }
+				.setNegativeListener("Dibungkus"){ setResult() }
+				.show()
 	}
 
 	private fun setResult(){
