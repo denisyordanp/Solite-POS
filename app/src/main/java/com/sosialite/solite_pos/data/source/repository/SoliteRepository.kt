@@ -3,6 +3,8 @@ package com.sosialite.solite_pos.data.source.repository
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
@@ -36,6 +38,22 @@ class SoliteRepository private constructor(
 		}
 	}
 
+	override fun getOrderDetail(status: Int): List<OrderWithProduct>{
+		return localDataSource.getOrderDetail(status)
+	}
+
+	override fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct{
+		return localDataSource.insertPaymentOrder(payment)
+	}
+
+	override fun newOrder(order: OrderWithProduct) {
+		localDataSource.newOrder(order)
+	}
+
+	override fun updateOrder(order: Order) {
+		localDataSource.updateOrder(order)
+	}
+
 	override fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>> {
 		return localDataSource.getDataProduct(idCategory)
 	}
@@ -67,22 +85,6 @@ class SoliteRepository private constructor(
 	override fun removeVariantMix(data: VariantMix) {
 		localDataSource.removeVariantMix(data)
 	}
-
-//	override fun getOrders(): LiveData<List<OrderWithProduct>> {
-//		return localDataSource.getOrders()
-//	}
-//
-//	override fun getDetailOrders(orderNo: String): LiveData<List<DetailOrder>> {
-//		return localDataSource.getDetailOrders(orderNo)
-//	}
-//
-//	override fun getDataProducts(category: Int): LiveData<List<DetailProduct>> {
-//		return localDataSource.getDataProducts(category)
-//	}
-//
-//	override fun getProducts(category: Int): LiveData<List<DetailProduct>> {
-//		return localDataSource.getProduct(category)
-//	}
 
 	override fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>> {
 		return localDataSource.getProductWithCategories(category)
@@ -134,8 +136,8 @@ class SoliteRepository private constructor(
 	override val customers: LiveData<List<Customer>>
 		get() = localDataSource.customers
 
-	override fun insertCustomer(data: Customer) {
-		localDataSource.insertCustomer(data)
+	override fun insertCustomer(data: Customer): Long {
+		return localDataSource.insertCustomer(data)
 	}
 
 	override fun updateCustomer(data: Customer) {
@@ -151,5 +153,17 @@ class SoliteRepository private constructor(
 
 	override fun updatePayment(data: Payment) {
 		localDataSource.updatePayment(data)
+	}
+
+	override fun getOutcome(date: String): LiveData<List<Outcome>> {
+		return localDataSource.getOutcome(date)
+	}
+
+	override fun insertOutcome(data: Outcome) {
+		localDataSource.insertOutcome(data)
+	}
+
+	override fun updateOutcome(data: Outcome) {
+		localDataSource.updateOutcome(data)
 	}
 }

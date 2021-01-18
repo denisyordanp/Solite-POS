@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
@@ -15,21 +17,21 @@ import com.sosialite.solite_pos.data.source.repository.SoliteRepository
 
 class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 
-//	fun getProducts(category: Int?): LiveData<List<DetailProduct>>? {
-//		return if (category != null){
-//			repository.getProducts(category)
-//		}else{
-//			null
-//		}
-//	}
-//
-//	fun getDetailOrders(orderNo: String): LiveData<List<DetailOrder>>{
-//		return repository.getDetailOrders(orderNo)
-//	}
-//
-//	fun getOrders(): LiveData<List<OrderWithProduct>> {
-//		return repository.getOrders()
-//	}
+	fun getOrderDetail(status: Int): List<OrderWithProduct>{
+		return repository.getOrderDetail(status)
+	}
+
+	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct{
+		return repository.insertPaymentOrder(payment)
+	}
+
+	fun newOrder(order: OrderWithProduct){
+		repository.newOrder(order)
+	}
+
+	fun updateOrder(order: Order) {
+		repository.updateOrder(order)
+	}
 
 	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>> {
 		return repository.getDataProduct(idCategory)
@@ -117,8 +119,8 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 	val customers: LiveData<List<Customer>>
 		get() = repository.customers
 
-	fun insertCustomers(data: Customer){
-		repository.insertCustomer(data)
+	fun insertCustomers(data: Customer): Long{
+		return repository.insertCustomer(data)
 	}
 
 	fun updateCustomer(data: Customer){
@@ -134,5 +136,17 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 
 	fun updatePayment(data: Payment){
 		repository.updatePayment(data)
+	}
+
+	fun getOutcome(date: String): LiveData<List<Outcome>> {
+		return repository.getOutcome(date)
+	}
+
+	fun insertOutcome(data: Outcome) {
+		repository.insertOutcome(data)
+	}
+
+	fun updateOutcome(data: Outcome) {
+		repository.updateOutcome(data)
 	}
 }

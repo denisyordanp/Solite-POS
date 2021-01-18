@@ -77,8 +77,8 @@ class CustomerNameActivity : SocialiteActivity() {
 	private fun setResult(customer: Customer){
 		val data = Intent()
 		if (customer.id == -1){
-			val newCustomer = Customer(newCustomer)
-			saveData(newCustomer)
+			val newCustomer = Customer(nameCustomer)
+			newCustomer.id = getIdCustomer(newCustomer).toInt()
 			data.putExtra(CUSTOMER, newCustomer)
 		}else{
 			data.putExtra(CUSTOMER, customer)
@@ -87,7 +87,7 @@ class CustomerNameActivity : SocialiteActivity() {
 		finish()
 	}
 
-	private val newCustomer: String
+	private val nameCustomer: String
 		get() {
 			val str = _binding.edtCnName.text.toString().trim { it <= ' ' }.toLowerCase(Locale.getDefault())
 			val strArray = str.split(" ").toTypedArray()
@@ -111,7 +111,7 @@ class CustomerNameActivity : SocialiteActivity() {
 		})
 	}
 
-	private fun saveData(customer: Customer){
-		viewModel.insertCustomers(customer)
+	private fun getIdCustomer(customer: Customer): Long{
+		return viewModel.insertCustomers(customer)
 	}
 }

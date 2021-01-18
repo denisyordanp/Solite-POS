@@ -1,5 +1,6 @@
-package com.sosialite.solite_pos.view.main.menu
+package com.sosialite.solite_pos.view.main.menu.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sosialite.solite_pos.databinding.FragmentSettingBinding
 import com.sosialite.solite_pos.utils.config.SettingPref
+import com.sosialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 
 class SettingFragment : Fragment() {
 
@@ -43,6 +45,10 @@ class SettingFragment : Fragment() {
 			_binding.btnStCookMin.setOnClickListener {
 				SettingPref(activity!!).cookTime = SettingPref(activity!!).cookTime-1
 				setCookTime()
+			}
+
+			_binding.btnStBluetooth.setOnClickListener {
+				startActivity(Intent(activity, BluetoothDeviceListActivity::class.java))
 			}
 		}
 	}

@@ -5,8 +5,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import com.sosialite.solite_pos.utils.config.MainConfig
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentTime
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.strToDate
 import com.sosialite.solite_pos.utils.config.SettingPref
@@ -41,20 +43,34 @@ data class Order(
 	@ColumnInfo(name = COOK_TIME)
 	var cookTime: String?,
 
+	@ColumnInfo(name = TAKE_AWAY)
+	var isTakeAway: Boolean,
+
 	@ColumnInfo(name = STATUS)
 	var status: Int
 ): Serializable {
 
 	companion object{
 
-		const val NO = "order_no"
 		const val ORDER_DATE = "order_date"
 		const val COOK_TIME = "cook_time"
+		const val TAKE_AWAY = "take_away"
 		const val STATUS = "status"
+		const val NO = "order_no"
 
 		const val ON_PROCESS = 0
 		const val NEED_PAY = 1
-		const val DONE = 2
+		const val CANCEL = 2
+		const val DONE = 3
+
+		fun getFilter(status: Int): SimpleSQLiteQuery {
+			val query = StringBuilder().append("SELECT * FROM ")
+			query.append(AppDatabase.TBL_ORDER)
+			query.append(" WHERE ")
+			query.append(STATUS)
+			query.append(" = ").append(status)
+			return SimpleSQLiteQuery(query.toString())
+		}
 
 		private var setting: SettingPref? = null
 
@@ -63,7 +79,7 @@ data class Order(
 			return id
 		}
 
-		val id: String
+		private val id: String
 			get() {
 				if (date != savedDate){
 					saveDate()
@@ -83,7 +99,7 @@ data class Order(
 		private val date: String
 			get() {
 				val fd = SimpleDateFormat("ddMMyy", Locale.getDefault())
-				return fd.format(MainConfig.currentTime)
+				return fd.format(currentTime)
 			}
 
 		private val savedDate: String
@@ -97,7 +113,10 @@ data class Order(
 			reset()
 		}
 
-		fun add(){
+		fun add(context: Context){
+			if (setting == null){
+				setting = SettingPref(context)
+			}
 			setting!!.orderCount = setting!!.orderCount+1
 		}
 
@@ -106,19 +125,27 @@ data class Order(
 		}
 	}
 
-	constructor(orderNo: String, customer: Int, orderTime: String): this(orderNo, customer, orderTime, null, ON_PROCESS)
+	constructor(orderNo: String, customer: Int, orderTime: String): this(orderNo, customer, orderTime, null, false, ON_PROCESS)
+
+	fun isCancelable(context: Context): Boolean{
+		return if (cookTime != null){
+			currentTime.before(getFinishCook(context).time)
+		}else{
+			true
+		}
+	}
 
 	val timeString: String
 		get() {
 			return dateFormat(orderTime, MainConfig.ldFormat)
 		}
 
-	private fun getFinishCook(context: Context): Calendar{
+	fun getFinishCook(context: Context): Calendar{
 		return if (cookTime != null){
 			val finish: Calendar = Calendar.getInstance()
 
 			finish.time = strToDate(cookTime)
-			finish.add(Calendar.SECOND, SettingPref(context).cookTime)
+			finish.add(Calendar.MINUTE, SettingPref(context).cookTime)
 			finish
 		}else{
 			Calendar.getInstance()

@@ -32,8 +32,8 @@ class ProductOrderAdapter(
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		val p = items[position]
 
-		holder.binding.tvPmvName.text = p.product?.name
-		holder.setPrice(p.product?.price)
+		holder.binding.tvPmvName.text = p.product.name
+		holder.setPrice(p.product.price)
 		holder.itemView.setOnClickListener {
 			DetailOrderProductFragment(p, callback).show(fragmentManager, "detail-order-product")
 		}

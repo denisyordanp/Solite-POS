@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Window
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
@@ -22,9 +23,9 @@ class MainConfig {
 		private const val dbFormat = "yyyy-MM-dd HH:mm:ss"
 		const val ldFormat = "dd MMMM yyyy HH:mm"
 
-		fun orderIndex(array: ArrayList<Order>, order: Order): Int?{
+		fun orderIndex(array: ArrayList<OrderWithProduct>, order: OrderWithProduct): Int?{
 			for ((i, v) in array.withIndex()){
-				if (order.orderNo == v.orderNo){
+				if (order.order.orderNo == v.order.orderNo){
 					return i
 				}
 			}
@@ -71,14 +72,7 @@ class MainConfig {
 				Date()
 			}else{
 				val db = SimpleDateFormat(dbFormat, Locale.getDefault())
-				var d: Date? = null
-				return try {
-					d = db.parse(date)
-					d!!
-				}catch (e: ParseException){
-					e.printStackTrace()
-					Date()
-				}
+				return db.parse(date)!!
 			}
 		}
 

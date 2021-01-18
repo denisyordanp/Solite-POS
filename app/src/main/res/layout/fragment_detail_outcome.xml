@@ -19,18 +19,26 @@
 		android:layout_margin="@dimen/baseMargin"
 		android:orientation="vertical">
 
+		<TextView
+			android:id="@+id/tv_oc_date"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/MText"
+			android:textStyle="bold|italic"
+			android:text="Senin, 23 Januari 2021"/>
+
 		<com.google.android.material.textfield.TextInputLayout
 			style="@style/TextLayout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_cm_name"
+				android:id="@+id/edt_oc_name"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:inputType="text"
 				android:maxLines="1"
-				android:hint="Masukan nama kategori"/>
+				android:hint="Masukan nama pengeluaran"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
 
@@ -40,13 +48,53 @@
 			android:layout_height="wrap_content">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_cm_desc"
+				android:id="@+id/edt_oc_desc"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:inputType="text"
-				android:hint="Masukan deskripsi kategori"/>
+				android:hint="Masukan deskripsi pengeluaran"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:weightSum="4">
+
+			<com.google.android.material.textfield.TextInputLayout
+				style="@style/TextLayout"
+				android:layout_weight="1"
+				android:layout_width="0dp"
+				android:paddingEnd="@dimen/MMargin"
+				android:paddingStart="0dp"
+				android:layout_height="wrap_content">
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edt_oc_amount"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:hint="Masukan jumlah"/>
+
+			</com.google.android.material.textfield.TextInputLayout>
+
+			<com.google.android.material.textfield.TextInputLayout
+				style="@style/TextLayout"
+				android:layout_weight="3"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content">
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edt_oc_price"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:hint="Masukan harga satuan"/>
+
+			</com.google.android.material.textfield.TextInputLayout>
+
+		</LinearLayout>
 
 	</LinearLayout>
 
@@ -58,7 +106,7 @@
 
 		<Button
 			style="@style/ButtonStyle"
-			android:id="@+id/btn_cm_save"
+			android:id="@+id/btn_oc_save"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/SMargin"
@@ -66,7 +114,7 @@
 
 		<Button
 			style="@style/ButtonStyle"
-			android:id="@+id/btn_cm_cancel"
+			android:id="@+id/btn_oc_cancel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/SMargin"

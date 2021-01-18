@@ -3,6 +3,8 @@ package com.sosialite.solite_pos.data.source.repository
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
@@ -13,10 +15,10 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 
 internal interface SoliteDataSource{
 
-//	fun getOrders(): LiveData<List<OrderWithProduct>>
-//	fun getDetailOrders(orderNo: String): LiveData<List<DetailOrder>>
-//
-//	fun getDataProducts(category: Int): LiveData<List<DetailProduct>>
+	fun getOrderDetail(status: Int): List<OrderWithProduct>
+	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct
+	fun newOrder(order: OrderWithProduct)
+	fun updateOrder(order: Order)
 
 	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>>
 
@@ -46,10 +48,14 @@ internal interface SoliteDataSource{
 	fun updateVariantOption(data: VariantOption)
 
 	val customers: LiveData<List<Customer>>
-	fun insertCustomer(data: Customer)
+	fun insertCustomer(data: Customer): Long
 	fun updateCustomer(data: Customer)
 
 	val payments: LiveData<List<Payment>>
 	fun insertPayment(data: Payment)
 	fun updatePayment(data: Payment)
+
+	fun getOutcome(date: String): LiveData<List<Outcome>>
+	fun insertOutcome(data: Outcome)
+	fun updateOutcome(data: Outcome)
 }

@@ -48,6 +48,7 @@
 
 		<Button
 			style="@style/ButtonStyle"
+			android:enabled="false"
 			android:id="@+id/btn_pay_pay"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

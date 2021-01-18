@@ -1,8 +1,13 @@
 package com.sosialite.solite_pos.data.source.local.room
 
 import androidx.lifecycle.LiveData
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Update
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
@@ -23,6 +28,22 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 			}
 			return INSTANCE!!
 		}
+	}
+
+	fun getOrderDetail(status: Int): List<OrderWithProduct>{
+		return soliteDao.getListOrderDetail(status)
+	}
+
+	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct{
+		return soliteDao.insertAndGetPaymentOrder(payment)
+	}
+
+	fun newOrder(order: OrderWithProduct){
+		soliteDao.newOrder(order)
+	}
+
+	fun updateOrder(order: Order){
+		soliteDao.updateOrder(order)
 	}
 
 	fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>>{
@@ -108,8 +129,8 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 	val customers: LiveData<List<Customer>>
 		get() = soliteDao.getCustomers()
 
-	fun insertCustomer(data: Customer){
-		soliteDao.insertCustomer(data)
+	fun insertCustomer(data: Customer): Long{
+		return soliteDao.insertCustomer(data)
 	}
 
 	fun updateCustomer(data: Customer){
@@ -125,5 +146,17 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 
 	fun updatePayment(data: Payment){
 		soliteDao.updatePayment(data)
+	}
+
+	fun getOutcome(date: String): LiveData<List<Outcome>>{
+		return soliteDao.getOutcome(date)
+	}
+
+	fun insertOutcome(data: Outcome){
+		soliteDao.insertOutcome(data)
+	}
+
+	fun updateOutcome(data: Outcome){
+		soliteDao.updateOutcome(data)
 	}
 }

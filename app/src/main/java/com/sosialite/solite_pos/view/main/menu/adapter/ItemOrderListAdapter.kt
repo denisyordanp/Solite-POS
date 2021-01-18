@@ -3,8 +3,8 @@ package com.sosialite.solite_pos.view.main.menu.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.*
@@ -13,29 +13,57 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 
 class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrderListAdapter.BaseViewHolder<ProductOrderDetail>>() {
 
-	private var status: Int? = 0
+	var btnCallback: ((Boolean) -> Unit)? = null
 
-	var order: Order? = null
-	val sortedOrder: Order?
-	get() {
-		val newOrder = order
-//		order?.items?.removeAt(order.items.lastIndex)
-		return order
-	}
-
-	var items: ArrayList<ProductOrderDetail> = ArrayList()
-		set(value) {
-//			order = value[0].order
-			status = order?.status
-			if (field.isNotEmpty()){
-				field.clear()
+	var order: OrderWithProduct? = null
+	set(value) {
+		if (value != null){
+			field = value
+			if (items.isNotEmpty()){
+				items.clear()
 			}
-			field.addAll(value)
-			if (type == DETAIL){
+			items.addAll(value.products)
+			if (type == DETAIL || type == EDIT){
 				setData()
 			}
+			btnCallback?.invoke(false)
 			notifyDataSetChanged()
 		}
+	}
+
+	val newOrder: OrderWithProduct?
+	get() {
+		return if (order != null){
+			OrderWithProduct(
+					order!!.order,
+					order!!.payment,
+					order!!.customer,
+					sortedItems
+			)
+		}else{
+			null
+		}
+	}
+
+	private val items: ArrayList<ProductOrderDetail> = ArrayList()
+	private val sortedItems: ArrayList<ProductOrderDetail>
+	get() {
+		val items: ArrayList<ProductOrderDetail> = this.items
+		if (type == DETAIL){
+			items.remove(ProductOrderDetail.title)
+		}
+		when(order?.order?.status){
+			Order.ON_PROCESS, Order.NEED_PAY -> {
+				items.remove(ProductOrderDetail.grand)
+			}
+			Order.DONE -> {
+				items.remove(ProductOrderDetail.grand)
+				items.remove(ProductOrderDetail.payment)
+				items.remove(ProductOrderDetail.payReturn)
+			}
+		}
+		return items
+	}
 	private val grandTotal: Int
 	get() {
 		var total = 0
@@ -47,68 +75,59 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		return total
 	}
 
-	companion object{
-		private const val FIRST_COLUMN = 0
-		private const val VALUE_COLUMN = 1
-		private const val TOTAL_COLUMN = 2
-		const val DETAIL = 0
-		const val ORDER = 1
-	}
-
-	fun addItem(
-			detail: ProductOrderDetail,
-			btnCallback: (Boolean) -> Unit
-	){
-		if (order != null){
-			if (items.isEmpty()){
-				if (detail.amount != 0){
-					setData()
-					add(detail, btnCallback)
-				}
-			}else{
-				add(detail, btnCallback)
+	fun addItem(detail: ProductOrderDetail){
+		if (items.isEmpty()){
+			if (detail.amount != 0){
+				setData()
+				add(detail)
 			}
+		}else{
+			add(detail)
 		}
 	}
 
-	private fun add(
-			detail: ProductOrderDetail,
-			btnCallback: (Boolean) -> Unit
-	){
+	private fun add(detail: ProductOrderDetail){
 		val pos = productIndex(items, detail)
 		if (pos != null){
 			if (detail.amount == 0){
 				delItem(pos)
-				btnCallback.invoke(false)
+				btnCallback?.invoke(false)
 			}else{
 				items[pos] = detail
 				notifyItemChanged(pos)
-				btnCallback.invoke(true)
+				btnCallback?.invoke(true)
 			}
 		}else{
 			if (detail.amount != 0){
 				items.add(0, detail)
 				notifyItemInserted(0)
-				btnCallback.invoke(true)
+				btnCallback?.invoke(true)
 			}else{
-				btnCallback.invoke(false)
+				btnCallback?.invoke(false)
 			}
 		}
 		notifyItemChanged(items.size-1)
 	}
 
 	private fun delItem(pos: Int){
-		if (order != null){
-			if (items.size == 2){
-				items.clear()
-				notifyDataSetChanged()
-			}else{
-				items.removeAt(pos)
-//				order!!.items = items
-				notifyItemRemoved(pos)
-				notifyItemChanged(items.size-1)
-			}
+		if (items.size == 2){
+			items.clear()
+			notifyDataSetChanged()
+		}else{
+			items.removeAt(pos)
+			notifyItemRemoved(pos)
+			notifyItemChanged(items.size-1)
 		}
+	}
+
+	companion object{
+		private const val FIRST_COLUMN = 0
+		private const val VALUE_COLUMN = 1
+		private const val TOTAL_COLUMN = 2
+
+		const val DETAIL = 0
+		const val ORDER = 1
+		const val EDIT = 1
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ProductOrderDetail> {
@@ -139,24 +158,11 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		return if (position == 0){
-			when(type){
-				DETAIL -> FIRST_COLUMN
-				ORDER -> VALUE_COLUMN
-				else -> throw IllegalArgumentException("Invalid adapterType")
-			}
-		}else if (status == Order.ON_PROCESS || status == Order.NEED_PAY){
-			if (position == items.size - 1){
-				TOTAL_COLUMN
-			}else{
-				VALUE_COLUMN
-			}
-		}else {
-			if (position > items.size - 4){
-				TOTAL_COLUMN
-			}else{
-				VALUE_COLUMN
-			}
+		val item = items[position]
+		return when(item.type){
+			null -> VALUE_COLUMN
+			ProductOrderDetail.TITLE -> FIRST_COLUMN
+			else -> TOTAL_COLUMN
 		}
 	}
 
@@ -166,16 +172,18 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 
 	private fun setData(){
 		if (type == DETAIL){
-			items.add(0, ProductOrderDetail())
+			items.add(0, ProductOrderDetail.title)
 		}
-		when(status){
+		when(order?.order?.status){
 			Order.ON_PROCESS, Order.NEED_PAY -> {
-				items.add(ProductOrderDetail())
+				items.add(ProductOrderDetail.grand)
 			}
 			Order.DONE -> {
-				items.add(ProductOrderDetail())
-				items.add(ProductOrderDetail())
-				items.add(ProductOrderDetail())
+				items.add(ProductOrderDetail.grand)
+				items.add(ProductOrderDetail.payment)
+				if (order?.payment?.payment!!.isCash){
+					items.add(ProductOrderDetail.payReturn)
+				}
 			}
 		}
 	}
@@ -193,8 +201,8 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 
 				binding.tvIoNo.text = no
 				binding.tvIoAmount.text = amount
-				binding.tvIoName.text = detail.product?.name
-				binding.tvIoPrice.text = toRupiah(detail.product?.price)
+				binding.tvIoName.text = detail.product!!.name
+				binding.tvIoPrice.text = toRupiah(detail.product!!.price)
 				binding.tvIoTotal.text = toRupiah(total)
 			}
 		}
@@ -207,7 +215,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			val amount = "${detail.amount}x"
 			var total = 0
 			if (detail.product != null){
-				total = detail.product?.price ?: 0 * detail.amount
+				total = detail.product!!.price * detail.amount
 			}
 
 			binding.tvIoNo.text = no
@@ -216,7 +224,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			binding.tvIoPrice.text = toRupiah(detail.product?.price)
 			binding.tvIoTotal.text = toRupiah(total)
 
-			if (order?.status == Order.NEED_PAY){
+			if (order?.order?.status == Order.NEED_PAY){
 				binding.btnOlDelete.visibility = View.INVISIBLE
 			}else{
 				binding.btnOlDelete.setOnClickListener {
@@ -228,6 +236,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 						notifyItemRemoved(adapterPosition)
 						notifyItemChanged(items.size-1)
 					}
+					btnCallback?.invoke(true)
 				}
 			}
 		}
@@ -237,25 +246,23 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		override fun bind(detail: ProductOrderDetail) {
 			var title = ""
 			var amount = ""
-			if (status == Order.DONE){
-				when(adapterPosition){
-					itemCount-3 -> {
-						title = "Total : "
-						amount = toRupiah(grandTotal)
-					}
-					itemCount-2 -> {
-						title = "Bayar : "
-//						amount = toRupiah(order?.pay)
-						amount = toRupiah(100000)
-					}
-					itemCount-1 -> {
-						title = "Kembalian : "
-						amount = toRupiah(100000 - grandTotal)
+			when(detail.type){
+				ProductOrderDetail.GRAND_TOTAL -> {
+					title = "Total : "
+					amount = toRupiah(grandTotal)
+				}
+				ProductOrderDetail.PAYMENT -> {
+					title = "Bayar : "
+					amount = if (order?.payment?.payment!!.isCash){
+						toRupiah(order?.payment?.orderPayment?.pay)
+					}else{
+						order?.payment?.payment!!.name
 					}
 				}
-			}else{
-				title = "Total : "
-				amount = toRupiah(grandTotal)
+				ProductOrderDetail.RETURN -> {
+					title = "Kembalian : "
+					amount = toRupiah(order?.payment?.orderPayment?.inReturn(order!!.grandTotal))
+				}
 			}
 			binding.tvIoPrice.text = title
 			binding.tvIoTotal.text = amount

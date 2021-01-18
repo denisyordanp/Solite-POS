@@ -19,7 +19,6 @@
 			android:layout_weight="1"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="1."
 			android:textStyle="bold"
 			android:textSize="@dimen/LText" />
 
@@ -28,7 +27,6 @@
 			android:layout_weight="2"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="2x"
 			android:textStyle="bold"
 			android:textSize="@dimen/LText" />
 
@@ -37,7 +35,6 @@
 			android:layout_weight="4"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="Lumpia Ayam Goreng"
 			android:textSize="@dimen/LText" />
 
 		<TextView
@@ -45,7 +42,6 @@
 			android:layout_weight="4"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="Rp. 14,000"
 			android:textSize="@dimen/LText" />
 
 		<TextView
@@ -54,7 +50,6 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:textStyle="bold"
-			android:text="Rp. 28,000"
 			android:textSize="@dimen/LText" />
 
 	</LinearLayout>

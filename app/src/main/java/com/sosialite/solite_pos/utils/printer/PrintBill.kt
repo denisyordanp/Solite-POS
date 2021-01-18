@@ -1,15 +1,12 @@
 package com.sosialite.solite_pos.utils.printer
 
-import android.bluetooth.BluetoothSocket
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.sosialite.solite_pos.R
-import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
-import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.sosialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
@@ -17,29 +14,27 @@ import java.util.*
 
 class PrintBill(private var activity: SocialiteActivity) {
 
-	private var btsocket: BluetoothSocket? = null
 	private var outputStream: OutputStream? = null
-	private var order: Order? = null
-
-	var payment: Payment? = null
+	private var order: OrderWithProduct? = null
 
 	companion object{
 		const val REQUEST_CONNECT_BT = 2
 	}
 
-	fun doPrint(order: Order?){
+	fun doPrint(order: OrderWithProduct?){
 		this.order = order
 		setData()
 	}
 
 	private fun setData(){
-		if (btsocket == null) {
-			val intent = Intent(
-				activity.applicationContext,
-				BluetoothDeviceListActivity::class.java
-			)
-			activity.startActivityForResult(intent, REQUEST_CONNECT_BT)
-		} else {
+
+		if (DeviceConnection.mbtSocket == null){
+			DeviceConnection(activity).getDevice{
+				if (it){
+					setPaper()
+				}
+			}
+		}else{
 			setPaper()
 		}
 	}
@@ -47,7 +42,7 @@ class PrintBill(private var activity: SocialiteActivity) {
 	private fun setPaper(){
 		var opstream: OutputStream? = null
 		try {
-			opstream = btsocket?.outputStream
+			opstream = DeviceConnection.mbtSocket?.outputStream
 		} catch (e: IOException) {
 			e.printStackTrace()
 		}
@@ -60,7 +55,7 @@ class PrintBill(private var activity: SocialiteActivity) {
 			} catch (e: InterruptedException) {
 				e.printStackTrace()
 			}
-			outputStream = btsocket?.outputStream
+			outputStream = DeviceConnection.mbtSocket?.outputStream
 
 //			print header
 			setHeader()
@@ -79,44 +74,47 @@ class PrintBill(private var activity: SocialiteActivity) {
 	}
 
 	private fun setItems() {
-		TODO("selesaikan")
-//		if (!order?.items.isNullOrEmpty()){
-//			for ((i, item) in order?.items!!.withIndex()){
-//				if (item.product != null){
-//					printCustom("${i+1}.${item.product!!.name}", 0, 0)
-//					printNewLine()
-//					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.price)}", "= ${toRupiah(item.amount * item.product!!.price)}", 32), 0, 0)
-//					printNewLine()
-//				}
-//			}
-//			printCustom(PrinterUtils.LINES21, 0, 2)
-//			printNewLine()
-//			printTotal()
-//		}
+		if (!order?.products.isNullOrEmpty()){
+			for ((i, item) in order?.products!!.withIndex()){
+				if (item.product != null){
+					printCustom("${i+1}.${item.product!!.name}", 0, 0)
+					for (variant in item.variants){
+						printCustom(" ${variant.name}", 1, 0)
+					}
+					printNewLine()
+					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.price)}", "= ${toRupiah(item.amount * item.product!!.price)}", 32), 0, 0)
+					printNewLine()
+				}
+			}
+			printCustom(PrinterUtils.LINES21, 0, 2)
+			printNewLine()
+			printTotal()
+		}
 	}
 
 //	print total
 	private fun printTotal() {
-//		if (order?.pay != 0){
-//			TODO("selesaikan")
-//			printCustom(withSpace("Total   : Rp.", thousand(order?.totalPay), 21), 1, 2)
-//			printNewLine()
-//
-//			if (payment != null && payment!!.name == "Tunai"){
-//				printCustom(withSpace("Bayar   : Rp.", thousand(order?.pay), 21), 1, 2)
-//				printNewLine()
-//				TODO("selesaikan")
-//				printCustom(withSpace("Kembali : Rp.", thousand(order?.payReturn), 21), 1, 2)
-//				printNewLine()
-//			}else{
-//				printCustom(withSpace("Bayar   : Rp.", payment?.name, 21), 1, 2)
-//				printNewLine()
-//			}
-//			printCustom(PrinterUtils.LINES, 0, 0)
-//		}
+		if (order?.payment != null){
+			printCustom(withSpace("Total   : Rp.", thousand(order?.grandTotal), 21), 1, 2)
+			printNewLine()
+
+			if (order!!.payment!!.payment != null){
+				if (order!!.payment!!.payment!!.isCash){
+					printCustom(withSpace("Bayar   : Rp.", thousand(order!!.payment!!.orderPayment?.pay), 21), 1, 2)
+					printNewLine()
+					printCustom(withSpace("Kembali : Rp.", thousand(order!!.payment!!.orderPayment?.inReturn(order!!.grandTotal)), 21), 1, 2)
+					printNewLine()
+				}else{
+					printCustom(withSpace("Bayar   :", order!!.payment!!.payment!!.name, 21), 1, 2)
+					printNewLine()
+				}
+			}
+			printCustom(PrinterUtils.LINES, 0, 0)
+		}
 	}
 
 //	set header
+
 	private fun setHeader() {
 		printLogo()
 		printCustom("Jl.Jend.Sudirman No.16G,Baros", 0, 1)
@@ -127,16 +125,23 @@ class PrintBill(private var activity: SocialiteActivity) {
 		printNewLine()
 		printCustom("Tgl : ${getDateTime()}", 0, 0)
 		printNewLine()
-		printCustom("No  : ${order?.orderNo}", 0, 0)
+		printCustom("No  : ${order?.order?.orderNo}", 0, 0)
 		printNewLine()
-	TODO("selesaikan")
-//		printCustom("Nama: ${order?.customer?.name}", 0, 0)
+		printCustom("Nama: ${order?.customer?.name}", 0, 0)
+		printNewLine()
+		val takeAway = if (order?.order!!.isTakeAway){
+			"Take Away"
+		}else{
+			"Dine In"
+		}
+		printCustom(takeAway, 1, 2)
 		printNewLine()
 		printCustom(PrinterUtils.LINES, 0, 0)
 		printNewLine()
 	}
 
 //	set footer
+
 	private fun setFooter() {
 		printCustom("Terima kasih atas kunjungannya", 1, 1)
 		printNewLine()
@@ -154,10 +159,10 @@ class PrintBill(private var activity: SocialiteActivity) {
 	}
 
 	//print custom
+
 	private fun printCustom(msg: String, size: Int, align: Int) {
 		//Print config "mode"
 		val cc = byteArrayOf(0x1B, 0x21, 0x03) // 0- normal size text
-		//byte[] cc1 = new byte[]{0x1B,0x21,0x00};  // 0- normal size text
 		val bb = byteArrayOf(0x1B, 0x21, 0x08) // 1- only bold text
 		val bb2 = byteArrayOf(0x1B, 0x21, 0x20) // 2- bold with medium text
 		val bb3 = byteArrayOf(0x1B, 0x21, 0x10) // 3- bold with large text
@@ -183,6 +188,7 @@ class PrintBill(private var activity: SocialiteActivity) {
 	}
 
 	//print logo
+
 	private fun printLogo() {
 		try {
 			val bmp = BitmapFactory.decodeResource(
@@ -203,6 +209,7 @@ class PrintBill(private var activity: SocialiteActivity) {
 	}
 
 	//print new line
+
 	private fun printNewLine() {
 		try {
 			outputStream?.write(PrinterCommands.FEED_LINE)
@@ -233,6 +240,7 @@ class PrintBill(private var activity: SocialiteActivity) {
 //	}
 
 	//print byte[]
+
 	private fun printText(msg: ByteArray?) {
 		try {
 			// Print normal text
@@ -264,9 +272,9 @@ class PrintBill(private var activity: SocialiteActivity) {
 
 	fun onDestroy(){
 		try {
-			if (btsocket != null) {
+			if (DeviceConnection.mbtSocket != null) {
 				outputStream?.close()
-				btsocket?.close()
+				DeviceConnection.mbtSocket?.close()
 			}
 		} catch (e: IOException) {
 			e.printStackTrace()
@@ -275,8 +283,7 @@ class PrintBill(private var activity: SocialiteActivity) {
 
 	fun onSetSocket(){
 		try {
-			btsocket = BluetoothDeviceListActivity.getSocket()
-			doPrint(order)
+			setData()
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}

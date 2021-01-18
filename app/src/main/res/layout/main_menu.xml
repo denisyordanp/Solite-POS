@@ -46,7 +46,7 @@
 		android:textColor="@color/primaryVariant"/>
 
 	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_out_money"
+		android:id="@+id/menu_outcome"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		style="@style/TextButton"

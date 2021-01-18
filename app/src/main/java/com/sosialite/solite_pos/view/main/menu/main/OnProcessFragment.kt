@@ -1,4 +1,4 @@
-package com.sosialite.solite_pos.view.main.menu
+package com.sosialite.solite_pos.view.main.menu.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.FragmentOnProcessBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
@@ -36,8 +37,8 @@ class OnProcessFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null && context != null){
-			adapter = OrderListAdapter(context!!, activity!!.supportFragmentManager)
 
+			adapter = OrderListAdapter(context!!, activity!!.supportFragmentManager)
 			viewModel = getViewModel(activity!!)
 
 			getData()
@@ -48,14 +49,19 @@ class OnProcessFragment : Fragment() {
 	}
 
 	private fun getData(){
-//		viewModel.getOrders().observe(activity!!, {
-//			if (!it.isNullOrEmpty()){
-//				adapter.items = ArrayList(it)
-//			}
-//		})
+		adapter.items = ArrayList(viewModel.getOrderDetail(Order.ON_PROCESS))
+		adapter.cookCallback = { updateOrder(it) }
 	}
 
-	fun addItem(order: Order){
-//		adapter.addItem(order)
+	private fun updateOrder(order: Order){
+		viewModel.updateOrder(order)
+	}
+
+	fun addItem(order: OrderWithProduct){
+		adapter.addItem(order)
+	}
+
+	fun removeItem(order: OrderWithProduct){
+		adapter.removeItem(order)
 	}
 }

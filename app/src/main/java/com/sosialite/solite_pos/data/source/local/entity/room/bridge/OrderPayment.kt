@@ -45,4 +45,8 @@ import java.io.Serializable
 	}
 
 	constructor(orderNo: String, idPayment: Int, pay: Int): this(0, orderNo, idPayment, pay)
+
+	fun inReturn(total: Int): Int{
+		return total - pay
+	}
 }

@@ -17,6 +17,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 			Payment::class,
 			Product::class,
 			Variant::class,
+			Outcome::class,
 			OrderDetail::class,
 			OrderPayment::class,
 			OrderProductVariant::class,
@@ -42,12 +43,19 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 		const val TBL_VARIANT_MIX = "variant_mix"
 		const val TBL_CATEGORY = "category"
 		const val TBL_CUSTOMER = "customer"
+		const val TBL_OUTCOME = "outcome"
 		const val TBL_PAYMENT = "payment"
 		const val TBL_PRODUCT = "product"
 		const val TBL_VARIANT = "variant"
 		const val TBL_ORDER = "order"
 
 		private var INSTANCE: AppDatabase? = null
+
+//		private var migration_1_2: Migration = object : Migration(1, 2) {
+//			override fun migrate(database: SupportSQLiteDatabase) {
+//				database.execSQL("ALTER TABLE '$TBL_ORDER' ADD COLUMN ${Order.TAKE_AWAY} INTEGER")
+//			}
+//		}
 
 		fun getInstance(context: Context): AppDatabase {
 			if (INSTANCE == null) {
@@ -58,7 +66,8 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 							DB_NAME
 					)
 							.allowMainThreadQueries()
-							.fallbackToDestructiveMigration()
+//							.addMigrations(migration_1_2)
+//							.fallbackToDestructiveMigration()
 							.build()
 				}
 			}

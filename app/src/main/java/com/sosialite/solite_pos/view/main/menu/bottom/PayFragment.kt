@@ -10,18 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.sosialite.solite_pos.databinding.FragmentPayBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.utils.tools.MessageBottom
 import com.sosialite.solite_pos.view.main.MainActivity
-import com.sosialite.solite_pos.view.main.PaymentsActivity
+import com.sosialite.solite_pos.view.main.menu.order.PaymentsActivity
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 
-class PayFragment(private var order: Order?) : BottomSheetDialogFragment() {
+class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentPayBinding
 	private lateinit var viewModel: MainViewModel
@@ -68,20 +69,24 @@ class PayFragment(private var order: Order?) : BottomSheetDialogFragment() {
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == PaymentsActivity.RQ_PAYMENT && resultCode == Activity.RESULT_OK){
 			payment = data?.getSerializableExtra(PaymentsActivity.PAYMENT) as Payment
-			if (payment != null && payment!!.isCash){
-				_binding.layEdtPayCash.visibility = View.VISIBLE
+			if (payment != null){
+				_binding.btnPayMethod.text = payment!!.name
+				_binding.btnPayPay.isEnabled = true
+				if (payment!!.isCash){
+					_binding.layEdtPayCash.visibility = View.VISIBLE
+				}
 			}
 		}
 	}
 
 	private fun payBill(){
-		if (payment != null){
+		if (payment != null && order != null){
 			if (payment!!.isCash){
 				if (isCheck){
 					MessageBottom(childFragmentManager)
 						.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
 						.setPositiveListener("Ya"){
-							printBill(cashPay)
+							pay(payment!!, cashPay.toInt())
 						}
 						.setNegativeListener("Batal"){
 							it?.dismiss()
@@ -91,7 +96,7 @@ class PayFragment(private var order: Order?) : BottomSheetDialogFragment() {
 				MessageBottom(childFragmentManager)
 					.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
 					.setPositiveListener("Ya"){
-						printBill(null)
+						pay(payment!!, order!!.grandTotal)
 					}
 					.setNegativeListener("Batal"){
 						it?.dismiss()
@@ -107,10 +112,10 @@ class PayFragment(private var order: Order?) : BottomSheetDialogFragment() {
 				_binding.edtPayCash.error = "Tidak boleh kosong"
 				false
 			}
-//			cashPay.toInt() < order!!.totalPay -> {
-//				_binding.edtPayCash.error = "Jumlah kurang dari total belanja"
-//				false
-//			}
+			cashPay.toInt() < order!!.grandTotal -> {
+				_binding.edtPayCash.error = "Jumlah kurang dari total belanja"
+				false
+			}
 			else -> {
 				_binding.edtPayCash.error = null
 				true
@@ -122,11 +127,15 @@ class PayFragment(private var order: Order?) : BottomSheetDialogFragment() {
 		startActivityForResult(Intent(context, PaymentsActivity::class.java), PaymentsActivity.RQ_PAYMENT)
 	}
 
-	private fun printBill(pay: String?){
-		if (order != null){
-//			order!!.pay = pay?.toInt() ?: order!!.totalPay
-			mainActivity?.printBill?.payment = payment
-			mainActivity?.printBill?.doPrint(order!!)
+	private fun pay(payment: Payment, pay: Int){
+		if (this.order != null){
+			val order = viewModel.insertPaymentOrder(OrderPayment(this.order!!.order.orderNo, payment.id, pay))
+			printBill(order)
 		}
+	}
+
+	private fun printBill(order: OrderWithProduct){
+		dialog?.dismiss()
+		mainActivity?.setPay(order)
 	}
 }

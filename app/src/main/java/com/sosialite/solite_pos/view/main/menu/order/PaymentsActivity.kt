@@ -1,4 +1,4 @@
-package com.sosialite.solite_pos.view.main
+package com.sosialite.solite_pos.view.main.menu.order
 
 import android.content.Intent
 import android.os.Bundle

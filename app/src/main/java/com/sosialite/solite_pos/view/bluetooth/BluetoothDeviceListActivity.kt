@@ -12,17 +12,15 @@ import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
+import com.sosialite.solite_pos.utils.config.SettingPref
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.bluetooth.adapter.DeviceAdapter
-import java.io.IOException
-import java.util.*
-import kotlin.collections.ArrayList
 
 class BluetoothDeviceListActivity : SocialiteActivity() {
 
 	private var mBluetoothAdapter: BluetoothAdapter? = null
-
 	private var btDevices: ArrayList<BluetoothDevice> = ArrayList()
+	private var mbtSocket: BluetoothSocket? = null
 
 	private val mBTReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent) {
@@ -45,18 +43,13 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 
 	private lateinit var binding: ActivityBluetoothDeviceListBinding
 	private lateinit var adapter: DeviceAdapter
+	private lateinit var setting: SettingPref
 
 	companion object{
 
 		private var TAG = BluetoothDeviceListActivity::class.java.simpleName
 
-		private var mbtSocket: BluetoothSocket? = null
-
 		const val REQUEST_ENABLE_BT = 0
-
-		fun getSocket(): BluetoothSocket? {
-			return mbtSocket
-		}
 	}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,11 +57,13 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 		binding = ActivityBluetoothDeviceListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-		adapter = DeviceAdapter {onChooseDevice(it)}
+		setting = SettingPref(this)
+
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+		adapter = DeviceAdapter(setting.printerDevice) { onChooseDevice(it) }
 
 		binding.rvBtDvList.layoutManager = LinearLayoutManager(this)
 		binding.rvBtDvList.adapter = adapter
-
 
 		try {
 			if (initDevicesList() != 0) {
@@ -91,7 +86,6 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 						for (device in btDeviceList) {
 							if (!btDevices.contains(device)) {
 								btDevices.add(device)
-
 							}
 						}
 						adapter.setItems(btDevices)
@@ -123,8 +117,6 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 
 	private fun initDevicesList(): Int {
 		flushData()
-
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 		if (mBluetoothAdapter != null) {
 			if (mBluetoothAdapter!!.isDiscovering) {
 				mBluetoothAdapter?.cancelDiscovery()
@@ -164,43 +156,7 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 	}
 
 	private fun onChooseDevice(device: BluetoothDevice){
-		if (mBluetoothAdapter == null) {
-			return
-		}else{
-			if (mBluetoothAdapter!!.isDiscovering) {
-				mBluetoothAdapter!!.cancelDiscovery()
-			}
-
-			Toast.makeText(
-					applicationContext, "Connecting to ${device.name}, ${device.address}",
-					Toast.LENGTH_SHORT).show()
-
-			val connectThread = Thread {
-				try {
-//					val uuid: Boolean = device.fetchUuidsWithSdp()
-					val uuid: UUID = device.uuids[0].uuid
-					mbtSocket = device.createRfcommSocketToServiceRecord(uuid)
-					mbtSocket?.connect()
-				} catch (ex: IOException) {
-					runOnUiThread(socketErrorRunnable)
-					try {
-						mbtSocket?.close()
-					} catch (e: IOException) {
-						e.printStackTrace()
-					}
-					mbtSocket = null
-				} finally {
-					runOnUiThread { finish() }
-				}
-			}
-
-			connectThread.start()
-		}
-	}
-
-	private val socketErrorRunnable = Runnable {
-		Toast.makeText(applicationContext,
-				"Cannot establish connection", Toast.LENGTH_SHORT).show()
-		mBluetoothAdapter?.startDiscovery()
+		SettingPref(this).printerDevice = device.address
+		finish()
 	}
 }

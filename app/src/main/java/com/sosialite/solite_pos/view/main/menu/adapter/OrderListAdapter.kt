@@ -12,10 +12,13 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.R
-import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.RvOrderListBinding
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.orderIndex
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
+import com.sosialite.solite_pos.utils.tools.DoneCook
 import com.sosialite.solite_pos.utils.tools.MessageBottom
 import com.sosialite.solite_pos.view.main.menu.bottom.DetailOrderFragment
 
@@ -24,7 +27,9 @@ class OrderListAdapter(
 		private var fragmentManager: FragmentManager
 		) : RecyclerView.Adapter<OrderListAdapter.ListViewHolder>() {
 
-	var items: ArrayList<OrderDetail> = ArrayList()
+	var cookCallback: ((Order) -> Unit)? = null
+
+	var items: ArrayList<OrderWithProduct> = ArrayList()
 		set(value) {
 			if (field.isNotEmpty()){
 				field.clear()
@@ -47,36 +52,43 @@ class OrderListAdapter(
 		cook = ResourcesCompat.getDrawable(r, R.drawable.ic_cooking_50dp, null)
 	}
 
-//	fun addItem(item: OrderWithProduct){
-//		val pos = orderIndex(items, item)
-//		if (pos != null){
-//			items[pos] = item
-//			notifyItemChanged(pos)
-//		}else{
-//			items.add(0, item)
-//			notifyItemInserted(0)
-//		}
-//	}
+	fun addItem(item: OrderWithProduct){
+		val pos = orderIndex(items, item)
+		if (pos != null){
+			items[pos] = item
+			notifyItemChanged(pos)
+		}else{
+			items.add(0, item)
+			notifyItemInserted(0)
+		}
+	}
+
+	fun removeItem(item: OrderWithProduct){
+		val pos = orderIndex(items, item)
+		if (pos != null){
+			items.removeAt(pos)
+			notifyItemRemoved(pos)
+		}
+	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
 		return ListViewHolder(RvOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 	}
 
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-//		val order = items[position]
-//
-//		val totalItem = "Banyaknya ${order.products.size} barang"
-//		val totalPay = "Rp. ${thousand(order.totalPay)}"
-//
-//		setImage(holder.binding.ivOrLogo, order.order?.status)
-//		holder.binding.tvOrName.text = order.customer?.name
-//		holder.binding.tvOrTotalItem.text = totalItem
-//		holder.binding.tvOrTotalPay.text = totalPay
-//		setCookTime(holder.binding.tvOrTime, order.order, position)
-//
-//		holder.itemView.setOnClickListener {
-//			DetailOrderFragment(order).show(fragmentManager, "detail-order")
-//		}
+		val order = items[position]
+		val totalItem = "Banyaknya ${order.totalItem} barang"
+		val totalPay = "Rp. ${thousand(order.grandTotal)}"
+
+		setImage(holder.binding.ivOrLogo, order.order.status)
+		holder.binding.tvOrName.text = order.customer.name
+		holder.binding.tvOrTotalItem.text = totalItem
+		holder.binding.tvOrTotalPay.text = totalPay
+		setCookTime(holder.binding.tvOrTime, order.order, position)
+
+		holder.itemView.setOnClickListener {
+			DetailOrderFragment(order).show(fragmentManager, "detail-order")
+		}
 	}
 
 	override fun getItemCount(): Int {
@@ -122,8 +134,10 @@ class OrderListAdapter(
 	}
 
 	private fun updateTime(pos: Int){
-//		items[pos].cookTime = Calendar.getInstance()
-//		DoneCook(context).set(items[pos])
+		val order = items[pos]
+		order.order.cookTime = currentDate
+		DoneCook(context).set(order)
+		cookCallback?.invoke(order.order)
 		notifyItemChanged(pos)
 	}
 }

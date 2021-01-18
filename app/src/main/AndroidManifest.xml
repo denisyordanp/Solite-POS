@@ -15,7 +15,7 @@
 		<activity android:name=".view.main.menu.master.product.ListProductMasterCategoryActivity"></activity>
 		<activity android:name=".view.main.menu.master.detail.VariantMixOptionActivity" />
 		<activity android:name=".view.main.menu.master.detail.VariantOptionActivity" />
-		<activity android:name=".view.main.PaymentsActivity" />
+		<activity android:name=".view.main.menu.order.PaymentsActivity" />
 		<activity android:name=".view.main.menu.master.product.ProductMasterActivity" />
 		<activity android:name=".view.main.menu.master.ListMasterActivity" />
 		<activity android:name=".view.main.SettingActivity" />
