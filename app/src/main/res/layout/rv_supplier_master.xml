@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:maxHeight="60dp"
+	android:layout_height="wrap_content"
+	app:cardBackgroundColor="@color/white"
+	android:layout_marginBottom="@dimen/RvLine"
+	app:cardElevation="0dp"
+	app:cardCornerRadius="0dp">
+
+	<LinearLayout
+		android:id="@+id/linearLayout3"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:padding="@dimen/MMargin">
+
+		<TextView
+			android:id="@+id/tv_rv_sm_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:maxLines="2"
+			android:text="Almaris"
+			android:textSize="@dimen/MText"
+			android:textStyle="bold"
+			app:layout_constraintStart_toEndOf="@+id/iv_rv_pm_logo"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/tv_rv_sm_phone"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textStyle="bold"
+			android:text="08216542964" />
+
+		<TextView
+			android:id="@+id/tv_rv_sm_address"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Jl. alamat ajah yang kamu tau tentang apa yang ada dalam diri" />
+
+		<TextView
+			android:id="@+id/tv_rv_sm_desc"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Pada category ini dimsum berupa porsian per varian" />
+
+	</LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

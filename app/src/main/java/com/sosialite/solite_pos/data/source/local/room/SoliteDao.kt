@@ -80,6 +80,17 @@ interface SoliteDao{
 	}
 
 	@Transaction
+	fun reduceProductStock(idProduct: Int, isMix: Boolean){
+		val product = getProduct(idProduct)
+		if (isMix){
+			product.stock = product.stock-1
+		}else{
+			product.stock = product.stock-product.portion
+		}
+		updateProduct(product)
+	}
+
+	@Transaction
 	fun newOrder(order: OrderWithProduct){
 		insertOrder(order.order)
 		for (item in order.products){
@@ -181,6 +192,28 @@ interface SoliteDao{
 	@Update
 	fun updateCustomer(data: Customer)
 
+	//	SUPPLIER
+
+	@Query("SELECT * FROM ${AppDatabase.TBL_SUPPLIER}")
+	fun getSuppliers(): LiveData<List<Supplier>>
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insertSupplier(data: Supplier): Long
+
+	@Update
+	fun updateSupplier(data: Supplier)
+
+	//	PURCHASE
+
+	@Query("SELECT * FROM ${AppDatabase.TBL_PURCHASE}")
+	fun getPurchases(): LiveData<List<Purchase>>
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insertPurchase(data: Purchase): Long
+
+	@Update
+	fun updatePurchase(data: Purchase)
+
 //	PAYMENTS
 
 	@Query("SELECT * FROM ${AppDatabase.TBL_PAYMENT}")
@@ -194,7 +227,7 @@ interface SoliteDao{
 
 //	OUTCOME
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_OUTCOME} WHERE ${Outcome.DATE} = :date")
+	@Query("SELECT * FROM ${AppDatabase.TBL_OUTCOME} WHERE date(${Outcome.DATE}) = date(:date)")
 	fun getOutcome(date: String): LiveData<List<Outcome>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)

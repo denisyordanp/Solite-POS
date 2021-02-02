@@ -54,6 +54,14 @@
 		android:text="Pengeluaran"/>
 
 	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_purchase"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/TextButton"
+		app:icon="@drawable/ic_purchase"
+		android:text="Pembelian"/>
+
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/menu_history"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

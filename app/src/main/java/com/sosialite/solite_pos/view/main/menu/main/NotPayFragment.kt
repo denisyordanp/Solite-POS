@@ -19,13 +19,6 @@ class NotPayFragment : Fragment() {
 	private lateinit var adapter: OrderListAdapter
 	private lateinit var viewModel: MainViewModel
 
-	companion object {
-		val instance: NotPayFragment
-			get() {
-				return NotPayFragment()
-			}
-	}
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

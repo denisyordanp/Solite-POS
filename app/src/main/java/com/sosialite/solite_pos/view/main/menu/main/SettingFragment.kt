@@ -15,13 +15,7 @@ class SettingFragment : Fragment() {
 	private lateinit var _binding: FragmentSettingBinding
 
 	companion object {
-
 		private const val MIN_COOK = 1
-
-		val instance: SettingFragment
-			get() {
-				return SettingFragment()
-			}
 	}
 
 	override fun onCreateView(

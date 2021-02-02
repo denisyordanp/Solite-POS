@@ -34,6 +34,8 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 		get() = _binding.edtPmName.text.toString().trim()
 	private val desc: String
 		get() = _binding.edtPmDesc.text.toString().trim()
+	private val portion: String
+		get() = _binding.edtPmPortion.text.toString().trim()
 	private val price: String
 		get() = _binding.edtPmPrice.text.toString().trim()
 
@@ -65,7 +67,7 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 			}else{
 				_binding.btnPmSave.setOnClickListener {
 					if (isCheck){
-						saveData(getProduct(name, category!!.id, desc, price.toInt(), 0, false))
+						saveData(getProduct(name, category!!.id, desc, price.toInt(), portion.toInt(), 0, false))
 					}
 				}
 			}
@@ -97,8 +99,20 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 				_binding.edtPmDesc.error = "Tidak boleh kosong"
 				false
 			}
+			portion.isEmpty() -> {
+				_binding.edtPmPortion.error = "Tidak boleh kosong"
+				false
+			}
+			portion.toInt() == 0 -> {
+				_binding.edtPmPortion.error = "Tidak boleh 0"
+				false
+			}
 			price.isEmpty() -> {
 				_binding.edtPmPrice.error = "Tidak boleh kosong"
+				false
+			}
+			price.toInt() == 0 -> {
+				_binding.edtPmPrice.error = "Tidak boleh 0"
 				false
 			}
 			category == null -> {
@@ -114,17 +128,17 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 	private fun setData(){
 		if (product?.category != null){
 			category = product.category
-			_binding.edtPmName.setText(product.product?.name)
-			_binding.edtPmDesc.setText(product.product?.desc)
-			_binding.edtPmPrice.setText(product.product?.price.toString())
+			_binding.edtPmName.setText(product.product.name)
+			_binding.edtPmDesc.setText(product.product.desc)
+			_binding.edtPmPrice.setText(product.product.price.toString())
 
-			_binding.btnPmCategory.text = product.category?.name
+			_binding.btnPmCategory.text = product.category.name
 			val count = "${product.options.size} Varian terpilih"
 			_binding.btnPmVariant.text = count
 
 			_binding.btnPmSave.setOnClickListener {
 				if (isCheck){
-					updateData(getProduct(name, category!!.id, desc, price.toInt(), product.product!!.stock, product.product!!.isActive))
+					updateData(getProduct(name, category!!.id, desc, price.toInt(), portion.toInt(), product.product.stock, product.product.isActive))
 				}
 			}
 		}
@@ -165,11 +179,11 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 		dialog?.dismiss()
 	}
 
-	private fun getProduct(name: String, category: Int, desc: String, price: Int, stock: Int, isActive: Boolean): Product{
+	private fun getProduct(name: String, category: Int, desc: String, price: Int, portion: Int, stock: Int, isActive: Boolean): Product{
 		return if (product?.product != null){
-			Product(product.product!!.id, name, category, desc, price, stock, isActive)
+			Product(product.product.id, name, category, desc, price, portion, stock, isActive)
 		}else{
-			Product(name, category, desc, price, stock, isActive)
+			Product(name, category, desc, price, portion, stock, isActive)
 		}
 	}
 }

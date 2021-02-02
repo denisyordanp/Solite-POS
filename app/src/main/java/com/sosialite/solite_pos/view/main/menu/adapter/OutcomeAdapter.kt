@@ -7,6 +7,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.sosialite.solite_pos.databinding.RvOutcomeBinding
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.ldFormat
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
 
@@ -37,7 +40,7 @@ class OutcomeAdapter(private val fragmentManager: FragmentManager) : RecyclerVie
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		if (position == items.size){
 			holder.binding.tvRvOcName.text = "Total pengeluaran : "
-			holder.binding.tvRvOcDesc.visibility = View.INVISIBLE
+			holder.binding.tvRvOcDesc.text = dateFormat(currentDate, ldFormat)
 			holder.binding.tvRvOcTotal.text = toRupiah(grandTotal)
 		}else{
 			val o = items[position]

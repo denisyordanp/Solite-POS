@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.sosialite.solite_pos">
+    package="com.sosialite.solite_pos">
 
-	<uses-permission android:name="android.permission.BLUETOOTH" />
-	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-	<application
-		android:allowBackup="true"
-		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:roundIcon="@mipmap/ic_launcher_round"
-		android:supportsRtl="true"
-		android:theme="@style/NoActionBar">
-		<activity android:name=".view.main.menu.master.product.ListProductMasterCategoryActivity"></activity>
-		<activity android:name=".view.main.menu.master.detail.VariantMixOptionActivity" />
-		<activity android:name=".view.main.menu.master.detail.VariantOptionActivity" />
-		<activity android:name=".view.main.menu.order.PaymentsActivity" />
-		<activity android:name=".view.main.menu.master.product.ProductMasterActivity" />
-		<activity android:name=".view.main.menu.master.ListMasterActivity" />
-		<activity android:name=".view.main.SettingActivity" />
-		<activity
-			android:name=".view.main.menu.order.CustomerNameActivity"
-			android:screenOrientation="landscape" />
-		<activity
-			android:name=".view.main.menu.order.OrderActivity"
-			android:screenOrientation="landscape" />
-		<activity
-			android:name=".view.bluetooth.BluetoothDeviceListActivity"
-			android:screenOrientation="landscape" />
-		<activity
-			android:name=".view.main.OpeningActivity"
-			android:screenOrientation="landscape">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/NoActionBar">
+        <activity android:name=".view.main.menu.purchase.PurchaseActivity"></activity>
+        <activity android:name=".view.main.menu.master.product.ListProductMasterCategoryActivity" />
+        <activity android:name=".view.main.menu.master.detail.VariantMixOptionActivity" />
+        <activity android:name=".view.main.menu.master.detail.VariantOptionActivity" />
+        <activity android:name=".view.main.menu.order.PaymentsActivity" />
+        <activity android:name=".view.main.menu.master.product.ProductMasterActivity" />
+        <activity android:name=".view.main.menu.master.ListMasterActivity" />
+        <activity android:name=".view.main.SettingActivity" />
+        <activity
+            android:name=".view.main.menu.order.CustomerNameActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.menu.order.OrderActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.bluetooth.BluetoothDeviceListActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.OpeningActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".view.main.MainActivity"
-			android:screenOrientation="landscape" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.main.MainActivity"
+            android:screenOrientation="landscape" />
 
-		<receiver android:name=".utils.tools.DoneCook" />
-	</application>
+        <receiver android:name=".utils.tools.DoneCook" />
+    </application>
 
 </manifest>

@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:orientation="vertical">
 
 	<ImageView
@@ -25,12 +23,12 @@
 			android:layout_height="wrap_content">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_pm_name"
+				android:id="@+id/edt_sm_name"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:inputType="text"
 				android:maxLines="1"
-				android:hint="Masukan nama produk"/>
+				android:hint="Masukan nama supplier"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
 
@@ -40,11 +38,11 @@
 			android:layout_height="wrap_content">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_pm_desc"
+				android:id="@+id/edt_sm_address"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:inputType="text"
-				android:hint="Masukan deskripsi produk"/>
+				android:hint="Masukan alamat supplier"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
 
@@ -54,11 +52,11 @@
 			android:layout_height="wrap_content">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_pm_portion"
+				android:id="@+id/edt_sm_phone"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:inputType="number"
-				android:hint="Masukan jumlah dalam 1 porsi"/>
+				android:hint="Masukan nomor telepon supplier"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
 
@@ -68,31 +66,13 @@
 			android:layout_height="wrap_content">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_pm_price"
+				android:id="@+id/edt_sm_desc"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:inputType="number"
-				android:hint="Masukan harga produk"/>
+				android:inputType="text"
+				android:hint="Masukan deskripsi supplier"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
-
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/btn_pm_category"
-			style="@style/Widget.MaterialComponents.Button.TextButton"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:backgroundTint="@color/white"
-			android:text="Pilih kategori"
-			android:textColor="@color/blackGrey"/>
-
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/btn_pm_variant"
-			style="@style/Widget.MaterialComponents.Button.TextButton"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:backgroundTint="@color/white"
-			android:text="4 Variant dipilih"
-			android:textColor="@color/blackGrey"/>
 
 	</LinearLayout>
 
@@ -104,7 +84,7 @@
 
 		<Button
 			style="@style/ButtonStyle"
-			android:id="@+id/btn_pm_save"
+			android:id="@+id/btn_sm_save"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/SMargin"
@@ -112,7 +92,7 @@
 
 		<Button
 			style="@style/ButtonStyle"
-			android:id="@+id/btn_pm_cancel"
+			android:id="@+id/btn_sm_cancel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/SMargin"

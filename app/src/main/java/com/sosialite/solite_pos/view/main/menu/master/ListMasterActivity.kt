@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.sosialite.solite_pos.databinding.ActivityListMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
@@ -13,10 +14,12 @@ import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.master.category.CategoryMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.category.CategoryProductMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.PaymentMasterAdapter
+import com.sosialite.solite_pos.view.main.menu.adapter.master.SupplierMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.variant.VariantMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.variant.VariantProductMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.master.bottom.CategoryMasterFragment
 import com.sosialite.solite_pos.view.main.menu.master.bottom.PaymentMasterFragment
+import com.sosialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragment
 import com.sosialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
@@ -37,8 +40,9 @@ class ListMasterActivity : SocialiteActivity() {
 		const val RQ_CODE = 999
 
 		const val CATEGORY = 1
-		const val VARIANT = 2
-		const val PAYMENT = 3
+		const val SUPPLIER = 2
+		const val VARIANT = 3
+		const val PAYMENT = 4
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +67,35 @@ class ListMasterActivity : SocialiteActivity() {
 			CATEGORY -> setCategory()
 			VARIANT -> setVariant()
 			PAYMENT -> setPayment()
+			SUPPLIER -> setSupplier()
 			else -> throw IllegalArgumentException("Invalid type of master type")
 		}
+	}
+
+	private fun setSupplier(){
+		_binding.fabLmNewData.text = "Tambah Supplier"
+		_binding.tvLmTitle.text = "Supplier"
+
+		val adapter = SupplierMasterAdapter(supportFragmentManager)
+		_binding.rvListMaster.adapter = adapter
+
+		getSuppliers { adapter.items = it }
+
+		if (code == RQ_CODE){
+			_binding.fabLmNewData.hide()
+		}else{
+			_binding.fabLmNewData.setOnClickListener {
+				SupplierMasterFragment(null).show(supportFragmentManager, "detail-supplier")
+			}
+		}
+	}
+
+	private fun getSuppliers(callback: (ArrayList<Supplier>) -> Unit){
+		viewModel.suppliers.observe(this, {
+			if (!it.isNullOrEmpty()){
+				callback.invoke(ArrayList(it))
+			}
+		})
 	}
 
 	private fun setCategory(){

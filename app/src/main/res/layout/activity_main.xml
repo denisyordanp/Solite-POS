@@ -18,10 +18,11 @@
 			android:id="@+id/main_menu"
 			layout="@layout/main_menu"/>
 
-		<com.sosialite.solite_pos.utils.tools.CustomViewPager
+		<androidx.viewpager2.widget.ViewPager2
 			android:id="@+id/vp_main"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
+			android:orientation="vertical"
 			android:layout_weight="3"
 			android:layout_margin="@dimen/contentMargin"/>
 

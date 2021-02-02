@@ -2,6 +2,7 @@ package com.sosialite.solite_pos.view.main.menu.master.detail
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
@@ -35,9 +36,8 @@ class VariantMixOptionActivity : AppCompatActivity() {
 		product = intent.getSerializableExtra(PRODUCT) as Product?
 		variant = intent.getSerializableExtra(VARIANT) as Variant?
 
-		adapter = ViewPagerAdapter(supportFragmentManager)
+		adapter = ViewPagerAdapter(this)
 		_binding.vpVmo.adapter = adapter
-		_binding.tabVmo.setupWithViewPager(_binding.vpVmo)
 
 		setPageAdapter()
 
@@ -52,9 +52,17 @@ class VariantMixOptionActivity : AppCompatActivity() {
 					val fragment = ProductMixVariantFragment(variant, ctg)
 					fragments.add(FragmentWithTitle(ctg.name, fragment))
 				}
-				adapter.setData(fragments)
-				_binding.vpVmo.offscreenPageLimit = adapter.count
+				setData(fragments)
 			}
 		})
+	}
+
+	private fun setData(fragments: ArrayList<FragmentWithTitle>){
+		adapter.setData(fragments)
+		_binding.vpVmo.offscreenPageLimit = adapter.itemCount
+		TabLayoutMediator(_binding.tabVmo, _binding.vpVmo) { tab, position ->
+			tab.text = fragments[position].title
+			_binding.vpVmo.setCurrentItem(tab.position, true)
+		}.attach()
 	}
 }

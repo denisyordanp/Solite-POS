@@ -24,6 +24,14 @@ class ProductMixVariantAdapter(
 	var addCallback: ((Product) -> Unit)? = null
 	var delCallback: ((Product) -> Unit)? = null
 
+	var selected: ArrayList<Product> = ArrayList()
+		set(value) {
+			if (field.isNotEmpty()){
+				field.clear()
+			}
+			field.addAll(value)
+			notifyDataSetChanged()
+		}
 	var items: ArrayList<ProductWithCategory> = ArrayList()
 		set(value) {
 			if (field.isNotEmpty()){
@@ -32,15 +40,6 @@ class ProductMixVariantAdapter(
 			field.addAll(value)
 			notifyDataSetChanged()
 		}
-
-	var selected: ArrayList<Product> = ArrayList()
-	set(value) {
-		if (field.isNotEmpty()){
-			field.clear()
-		}
-		field.addAll(value)
-		notifyDataSetChanged()
-	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
 		return ListViewHolder(RvProductBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -88,16 +87,15 @@ class ProductMixVariantAdapter(
 				MASTER -> {
 					binding.contPmvCount.visibility = View.GONE
 					binding.cbPmvSelected.visibility = View.VISIBLE
+					binding.cbPmvSelected.isEnabled = false
 					binding.root.setOnClickListener {
 						if (!isChecked){
 							if (items[position].product != null){
-								addCallback?.invoke(items[position].product!!)
-								selected.add(items[position].product!!)
+								addProduct(items[position].product!!)
 							}
 						}else{
 							if (items[position].product != null){
-								delCallback?.invoke(items[position].product!!)
-								selected.remove(items[position].product!!)
+								delProduct(items[position].product!!)
 							}
 						}
 						notifyItemChanged(position)
@@ -113,9 +111,22 @@ class ProductMixVariantAdapter(
 			}
 		}
 
+		private fun addProduct(product: Product){
+			addCallback?.invoke(product)
+			selected.add(product)
+		}
+
+		private fun delProduct(product: Product){
+			delCallback?.invoke(product)
+			selected.remove(product)
+		}
+
 		fun setSelected(product: Product?){
 			for (item in selected){
-				isSelected(item.id == product?.id)
+				if (item.id == product?.id){
+					isSelected(true)
+					break
+				}
 			}
 		}
 

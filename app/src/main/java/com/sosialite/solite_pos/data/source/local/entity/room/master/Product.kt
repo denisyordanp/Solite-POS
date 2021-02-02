@@ -35,6 +35,9 @@ data class Product(
 	@ColumnInfo(name = PRICE)
 	var price: Int,
 
+	@ColumnInfo(name = PORTION)
+	var portion: Int,
+
 	@ColumnInfo(name = STOCK)
 	var stock: Int,
 
@@ -42,6 +45,7 @@ data class Product(
 	var isActive: Boolean
 ): Serializable{
 	companion object{
+		const val PORTION = "portion"
 		const val ID = "id_product"
 		const val STATUS = "status"
 		const val STOCK = "stock"
@@ -50,5 +54,5 @@ data class Product(
 		const val DESC = "desc"
 	}
 
-	constructor(name: String, category: Int, desc: String, price: Int, stock: Int, isActive: Boolean): this(0, name, category, desc, price, stock, isActive)
+	constructor(name: String, category: Int, desc: String, price: Int, portion: Int, stock: Int, isActive: Boolean): this(0, name, category, desc, price, portion, stock, isActive)
 }

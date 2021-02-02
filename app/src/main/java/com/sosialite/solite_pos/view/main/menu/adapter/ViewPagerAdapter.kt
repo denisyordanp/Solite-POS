@@ -1,12 +1,16 @@
 package com.sosialite.solite_pos.view.main.menu.adapter
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentTransaction
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.*
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
 
-class ViewPagerAdapter(private var fm: FragmentManager?) : FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
+class ViewPagerAdapter(private val fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
 	private var fragments: ArrayList<FragmentWithTitle> = ArrayList()
 
@@ -18,19 +22,14 @@ class ViewPagerAdapter(private var fm: FragmentManager?) : FragmentPagerAdapter(
 		notifyDataSetChanged()
 	}
 
-	override fun getCount(): Int {
-		return fragments.size
-	}
+	override fun getItemCount(): Int = fragments.size
 
-	override fun getItem(position: Int): Fragment {
-		return if (fragments.isNotEmpty()) {
-			fragments[position].fragment
-		} else {
-			Fragment()
-		}
-	}
+	override fun createFragment(position: Int): Fragment = fragments[position].fragment
 
-	override fun getPageTitle(position: Int): CharSequence {
-		return fragments[position].title
-	}
+//	fun getTabView(position: Int): View {
+//		val v: View = LayoutInflater.from(fa).inflate(R.layout.tab_custom, null)
+//		val tv = v.findViewById<View>(R.id.tv_tab_name) as TextView
+//		tv.text = fragments[position].title
+//		return v
+//	}
 }

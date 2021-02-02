@@ -19,13 +19,6 @@ class OnProcessFragment : Fragment() {
 	private lateinit var adapter: OrderListAdapter
 	private lateinit var viewModel: MainViewModel
 
-	companion object{
-		val instance: OnProcessFragment
-		get() {
-			return OnProcessFragment()
-		}
-	}
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,11 +27,10 @@ class OnProcessFragment : Fragment() {
         return _binding.root
     }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		if (activity != null && context != null){
-
-			adapter = OrderListAdapter(context!!, activity!!.supportFragmentManager)
+	override fun onActivityCreated(savedInstanceState: Bundle?) {
+		super.onActivityCreated(savedInstanceState)
+		if (activity != null){
+			adapter = OrderListAdapter(context!!, childFragmentManager)
 			viewModel = getViewModel(activity!!)
 
 			getData()

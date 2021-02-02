@@ -11,7 +11,9 @@ class SettingPref(context: Context) {
 		private const val PREF_SETTING = "setting_preference"
 
 		private const val PRINTER_DEVICE = "printer_device"
-		private const val SAVED_DATE = "saved_date"
+		private const val PURCHASE_DATE = "purchase_date"
+		private const val PURCHASE_ID = "purchase_id"
+		private const val ORDER_DATE = "order_date"
 		private const val COOK_TIME = "cook_time"
 		private const val ORDER_ID = "order_id"
 	}
@@ -51,12 +53,30 @@ class SettingPref(context: Context) {
 			editor.apply()
 		}
 
-	var savedDate: String?
+	var purchaseCount: Int
 		get() {
-			return preferences.getString(SAVED_DATE, "")
+			return preferences.getInt(PURCHASE_ID, 1)
 		}
 		set(value) {
-			editor.putString(SAVED_DATE, value)
+			editor.putInt(PURCHASE_ID, value)
+			editor.apply()
+		}
+
+	var orderDate: String?
+		get() {
+			return preferences.getString(ORDER_DATE, "")
+		}
+		set(value) {
+			editor.putString(ORDER_DATE, value)
+			editor.apply()
+		}
+
+	var purchaseDate: String?
+		get() {
+			return preferences.getString(PURCHASE_DATE, "")
+		}
+		set(value) {
+			editor.putString(PURCHASE_DATE, value)
 			editor.apply()
 		}
 }

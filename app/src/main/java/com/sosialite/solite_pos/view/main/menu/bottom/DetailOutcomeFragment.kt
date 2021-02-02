@@ -9,10 +9,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.sosialite.solite_pos.databinding.FragmentDetailOutcomeBinding
+import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.ldFormat
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.setDialogFragment
 import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
@@ -57,6 +59,8 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
 					}
 				}
 			}
+
+			_binding.btnOcCancel.setOnClickListener { dialog?.dismiss() }
 		}
 	}
 

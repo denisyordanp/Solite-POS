@@ -3,6 +3,7 @@ package com.sosialite.solite_pos.view.main.menu.order
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Customer
@@ -51,9 +52,8 @@ class OrderActivity : SocialiteActivity() {
 		order = intent.getSerializableExtra(ORDER_DATA) as OrderWithProduct?
 		type = intent.getIntExtra(ORDER_TYPE, 0)
 
-		vpAdapter = ViewPagerAdapter(supportFragmentManager)
+		vpAdapter = ViewPagerAdapter(this)
 		_binding.vpNewOrder.adapter = vpAdapter
-		_binding.tabNewOrder.setupWithViewPager(_binding.vpNewOrder)
 
 		_order.rvOrderList.layoutManager = LinearLayoutManager(this)
 
@@ -120,10 +120,19 @@ class OrderActivity : SocialiteActivity() {
 					}
 					fragments.add(FragmentWithTitle(ctg.name, fragment))
 				}
-				vpAdapter.setData(fragments)
-				_binding.vpNewOrder.offscreenPageLimit = vpAdapter.count
+
+				setData(fragments)
 			}
 		})
+	}
+
+	private fun setData(fragments: ArrayList<FragmentWithTitle>){
+		TabLayoutMediator(_binding.tabNewOrder, _binding.vpNewOrder) { tab, position ->
+			tab.text = fragments[position].title
+			_binding.vpNewOrder.setCurrentItem(tab.position, true)
+		}.attach()
+		vpAdapter.setData(fragments)
+		_binding.vpNewOrder.offscreenPageLimit = vpAdapter.itemCount
 	}
 
 	private fun setButton(state: Boolean){

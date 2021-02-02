@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.sosialite.solite_pos.databinding.FragmentOutcomeBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
@@ -18,17 +19,15 @@ class OutcomeFragment : Fragment() {
 	private lateinit var viewModel: MainViewModel
 	private lateinit var adapter: OutcomeAdapter
 
-	companion object {
-		val instance: OutcomeFragment
-			get() {
-				return OutcomeFragment()
-			}
-	}
-
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View {
 		_binding = FragmentOutcomeBinding.inflate(inflater, container, false)
 		return _binding.root
+	}
+
+	override fun onActivityCreated(savedInstanceState: Bundle?) {
+		super.onActivityCreated(savedInstanceState)
+
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

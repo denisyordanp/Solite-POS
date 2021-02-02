@@ -51,6 +51,14 @@ internal interface SoliteDataSource{
 	fun insertCustomer(data: Customer): Long
 	fun updateCustomer(data: Customer)
 
+	val suppliers: LiveData<List<Supplier>>
+	fun insertSupplier(data: Supplier): Long
+	fun updateSupplier(data: Supplier)
+
+	fun getPurchases(): LiveData<List<Purchase>>
+	fun insertPurchase(data: Purchase): Long
+	fun updatePurchase(data: Purchase)
+
 	val payments: LiveData<List<Payment>>
 	fun insertPayment(data: Payment)
 	fun updatePayment(data: Payment)

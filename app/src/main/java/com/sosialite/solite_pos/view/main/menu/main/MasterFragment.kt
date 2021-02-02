@@ -14,13 +14,6 @@ class MasterFragment : Fragment() {
 
 	private lateinit var _binding: FragmentMasterBinding
 
-	companion object {
-		val instance: MasterFragment
-			get() {
-				return MasterFragment()
-			}
-	}
-
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View {
 		_binding = FragmentMasterBinding.inflate(inflater, container, false)
@@ -48,6 +41,12 @@ class MasterFragment : Fragment() {
 				startActivity(
 					Intent(activity, ListMasterActivity::class.java)
 						.putExtra(ListMasterActivity.TYPE, ListMasterActivity.PAYMENT)
+				)
+			}
+			_binding.btnMtSupplier.setOnClickListener {
+				startActivity(
+					Intent(activity, ListMasterActivity::class.java)
+						.putExtra(ListMasterActivity.TYPE, ListMasterActivity.SUPPLIER)
 				)
 			}
 		}

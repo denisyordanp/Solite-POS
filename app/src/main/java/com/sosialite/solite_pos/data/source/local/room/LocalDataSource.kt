@@ -3,6 +3,7 @@ package com.sosialite.solite_pos.data.source.local.room
 import androidx.lifecycle.LiveData
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import androidx.room.Update
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -135,6 +136,30 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 
 	fun updateCustomer(data: Customer){
 		soliteDao.updateCustomer(data)
+	}
+
+	fun getSuppliers(): LiveData<List<Supplier>>{
+		return soliteDao.getSuppliers()
+	}
+
+	fun insertSupplier(data: Supplier): Long{
+		return soliteDao.insertSupplier(data)
+	}
+
+	fun updateSupplier(data: Supplier){
+		soliteDao.updateSupplier(data)
+	}
+
+	fun getPurchases(): LiveData<List<Purchase>>{
+		return soliteDao.getPurchases()
+	}
+
+	fun insertPurchase(data: Purchase): Long{
+		return soliteDao.insertPurchase(data)
+	}
+
+	fun updatePurchase(data: Purchase){
+		soliteDao.updatePurchase(data)
 	}
 
 	val payments: LiveData<List<Payment>>

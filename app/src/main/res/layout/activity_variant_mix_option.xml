@@ -70,7 +70,7 @@
 				app:tabMode="scrollable"
 				app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
 
-			<androidx.viewpager.widget.ViewPager
+			<androidx.viewpager2.widget.ViewPager2
 				android:id="@+id/vp_vmo"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent" />

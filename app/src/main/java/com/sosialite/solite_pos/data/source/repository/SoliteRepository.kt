@@ -144,6 +144,29 @@ class SoliteRepository private constructor(
 		localDataSource.updateCustomer(data)
 	}
 
+	override val suppliers: LiveData<List<Supplier>>
+		get() = localDataSource.getSuppliers()
+
+	override fun insertSupplier(data: Supplier): Long {
+		return localDataSource.insertSupplier(data)
+	}
+
+	override fun updateSupplier(data: Supplier) {
+		localDataSource.updateSupplier(data)
+	}
+
+	override fun getPurchases(): LiveData<List<Purchase>> {
+		return localDataSource.getPurchases()
+	}
+
+	override fun insertPurchase(data: Purchase): Long {
+		return localDataSource.insertPurchase(data)
+	}
+
+	override fun updatePurchase(data: Purchase) {
+		return localDataSource.updatePurchase(data)
+	}
+
 	override val payments: LiveData<List<Payment>>
 		get() = localDataSource.payments
 

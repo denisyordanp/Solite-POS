@@ -18,6 +18,8 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 			Product::class,
 			Variant::class,
 			Outcome::class,
+			Purchase::class,
+			Supplier::class,
 			OrderDetail::class,
 			OrderPayment::class,
 			OrderProductVariant::class,
@@ -43,6 +45,8 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 		const val TBL_VARIANT_MIX = "variant_mix"
 		const val TBL_CATEGORY = "category"
 		const val TBL_CUSTOMER = "customer"
+		const val TBL_SUPPLIER = "supplier"
+		const val TBL_PURCHASE = "purchase"
 		const val TBL_OUTCOME = "outcome"
 		const val TBL_PAYMENT = "payment"
 		const val TBL_PRODUCT = "product"

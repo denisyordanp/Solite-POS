@@ -1,7 +1,11 @@
 package com.sosialite.solite_pos.view.main.menu.master.product
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import com.google.android.material.tabs.TabLayoutMediator
+import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.databinding.ActivityProductMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
@@ -9,6 +13,7 @@ import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+
 
 class ProductMasterActivity : AppCompatActivity() {
 
@@ -23,9 +28,8 @@ class ProductMasterActivity : AppCompatActivity() {
 
 		viewModel = getViewModel(this)
 
-		adapter = ViewPagerAdapter(supportFragmentManager)
+		adapter = ViewPagerAdapter(this)
 		_binding.vpProductMaster.adapter = adapter
-		_binding.tabProductMaster.setupWithViewPager(_binding.vpProductMaster)
 
 		getCategories()
 
@@ -37,7 +41,7 @@ class ProductMasterActivity : AppCompatActivity() {
 
 	private fun getCategories(){
 		viewModel.getCategories(Category.getFilter(Category.ALL)).observe(this, {
-			if (!it.isNullOrEmpty()){
+			if (!it.isNullOrEmpty()) {
 				setAdapter(ArrayList(it))
 			}
 		})
@@ -50,8 +54,12 @@ class ProductMasterActivity : AppCompatActivity() {
 			arrayList.add(FragmentWithTitle(ctg.name, fragment))
 		}
 
+		TabLayoutMediator(_binding.tabProductMaster, _binding.vpProductMaster) { tab, position ->
+			tab.text = arrayList[position].title
+			_binding.vpProductMaster.setCurrentItem(tab.position, true)
+		}.attach()
 		adapter.setData(arrayList)
-		_binding.vpProductMaster.offscreenPageLimit = adapter.count-1
+		_binding.vpProductMaster.offscreenPageLimit = adapter.itemCount
 		_binding.btnPmBack.setOnClickListener { onBackPressed() }
 	}
 }

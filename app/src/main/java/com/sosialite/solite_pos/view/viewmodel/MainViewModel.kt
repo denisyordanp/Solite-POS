@@ -127,6 +127,29 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateCustomer(data)
 	}
 
+	val suppliers: LiveData<List<Supplier>>
+	get() = repository.suppliers
+
+	fun insertSupplier(data: Supplier): Long{
+		return repository.insertSupplier(data)
+	}
+
+	fun updateSupplier(data: Supplier){
+		repository.updateSupplier(data)
+	}
+
+	fun getPurchases(): LiveData<List<Purchase>>{
+		return repository.getPurchases()
+	}
+
+	fun insertPurchase(data: Purchase): Long{
+		return repository.insertPurchase(data)
+	}
+
+	fun updatePurchase(data: Purchase){
+		repository.updatePurchase(data)
+	}
+
 	val payments: LiveData<List<Payment>>
 		get() = repository.payments
 

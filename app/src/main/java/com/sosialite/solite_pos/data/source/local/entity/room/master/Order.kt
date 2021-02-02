@@ -104,12 +104,12 @@ data class Order(
 
 		private val savedDate: String
 			get() {
-				val date = setting!!.savedDate
+				val date = setting!!.orderDate
 				return date ?: ""
 			}
 
 		private fun saveDate(){
-			setting!!.savedDate = date
+			setting!!.orderDate = date
 			reset()
 		}
 

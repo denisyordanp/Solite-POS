@@ -1,6 +1,7 @@
 package com.sosialite.solite_pos.view.main.menu.master.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,9 +43,6 @@ class ProductMixVariantFragment(
 			setAdapter()
 
 			_binding.rvProductMixVariant.layoutManager = GridLayoutManager(activity, 5)
-			_binding.rvProductMixVariant.adapter = adapter
-
-			getProductSelected()
 		}
 	}
 
@@ -56,6 +54,9 @@ class ProductMixVariantFragment(
 		adapter.delCallback = {
 			delVariantMix(it)
 		}
+		_binding.rvProductMixVariant.adapter = adapter
+
+		getProductSelected()
 	}
 
 	private fun getProductSelected(){

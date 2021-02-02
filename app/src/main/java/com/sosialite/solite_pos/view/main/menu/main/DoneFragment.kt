@@ -19,13 +19,6 @@ class DoneFragment : Fragment() {
 	private lateinit var adapter: OrderListAdapter
 	private lateinit var viewModel: MainViewModel
 
-	companion object {
-		val instance: DoneFragment
-			get() {
-				return DoneFragment()
-			}
-	}
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
