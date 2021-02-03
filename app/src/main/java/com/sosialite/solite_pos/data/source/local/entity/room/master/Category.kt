@@ -26,12 +26,16 @@ data class Category(
 	@ColumnInfo(name = DESC)
 	var desc: String,
 
+	@ColumnInfo(name = STOCK)
+	var isStock: Boolean,
+
 	@ColumnInfo(name = STATUS)
 	var isActive: Boolean
 ): Serializable{
 	companion object{
 		const val ID = "id_category"
 		const val STATUS = "status"
+		const val STOCK = "stock"
 		const val NAME = "name"
 		const val DESC = "desc"
 
@@ -52,5 +56,5 @@ data class Category(
 		}
 	}
 
-	constructor(name: String, desc: String, isActive: Boolean): this(0, name, desc, isActive)
+	constructor(name: String, desc: String, isStock: Boolean, isActive: Boolean): this(0, name, desc, isStock, isActive)
 }

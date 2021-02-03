@@ -21,9 +21,11 @@ import java.io.Serializable
 			onDelete = ForeignKey.CASCADE)
 	],
 	indices = [
-		Index(value = [OrderDetail.ID]),
-		Index(value = [Order.NO]),
-		Index(value = [Product.ID]),
+		Index(value = [
+			OrderDetail.ID,
+			Order.NO,
+			Product.ID
+		])
 	]
 )
 data class OrderDetail(

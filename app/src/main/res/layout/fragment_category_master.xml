@@ -48,6 +48,12 @@
 
 		</com.google.android.material.textfield.TextInputLayout>
 
+		<com.google.android.material.checkbox.MaterialCheckBox
+			android:id="@+id/cb_cm_stock"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Memiliki stock sendiri"/>
+
 	</LinearLayout>
 
 	<LinearLayout

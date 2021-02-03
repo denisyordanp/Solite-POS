@@ -30,9 +30,11 @@ import java.io.Serializable
 			)
 		],
 		indices = [
-			Index(value = [VariantProduct.ID]),
-			Index(value = [VariantOption.ID]),
-			Index(value = [Product.ID]),
+			Index(value = [
+				VariantProduct.ID,
+				VariantOption.ID,
+				Product.ID
+			])
 		]
 )
 data class VariantProduct(

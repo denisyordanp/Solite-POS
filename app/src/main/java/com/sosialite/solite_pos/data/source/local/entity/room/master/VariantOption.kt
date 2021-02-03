@@ -15,8 +15,7 @@ import java.io.Serializable
 					onDelete = ForeignKey.CASCADE)
 		],
 		indices = [
-			Index(value = [VariantOption.ID]),
-			Index(value = [Variant.ID]),
+			Index(value = [VariantOption.ID, Variant.ID])
 		]
 )
 data class VariantOption(

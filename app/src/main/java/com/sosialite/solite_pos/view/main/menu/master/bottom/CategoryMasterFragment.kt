@@ -22,9 +22,10 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 
 	private val name: String
 	get() = _binding.edtCmName.text.toString().trim()
-
 	private val desc: String
 	get() = _binding.edtCmDesc.text.toString().trim()
+	private val isStock: Boolean
+		get() = _binding.cbCmStock.isChecked
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View {
@@ -48,7 +49,7 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 			}else{
 				_binding.btnCmSave.setOnClickListener {
 					if (isCheck){
-						saveData(getCategory(name, desc, false))
+						saveData(getCategory(true))
 					}
 				}
 			}
@@ -63,7 +64,7 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 			_binding.edtCmDesc.setText(category.desc)
 			_binding.btnCmSave.setOnClickListener {
 				if (isCheck){
-					updateData(getCategory(name, desc, category.isActive))
+					updateData(getCategory(false))
 				}
 			}
 		}
@@ -96,15 +97,15 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 		dialog?.dismiss()
 	}
 
-	private fun getCategory(name: String, desc: String, status: Boolean?): Category {
+	private fun getCategory(isNew: Boolean): Category {
 		return if (category != null){
-			if (status != null){
-				Category(category.id, name, desc, status)
+			if (!isNew){
+				Category(category.id, name, desc, isStock, category.isActive)
 			}else{
-				Category(category.id, name, desc,false)
+				Category(category.id, name, desc, isStock, false)
 			}
 		}else{
-			Category(name, desc, false)
+			Category(name, desc, isStock, false)
 		}
 	}
 }

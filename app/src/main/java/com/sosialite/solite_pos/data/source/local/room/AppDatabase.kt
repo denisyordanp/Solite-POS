@@ -38,6 +38,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 
 		const val TBL_ORDER_PRODUCT_VARIANT_MIX = "order_product_variant_mix"
 		const val TBL_ORDER_PRODUCT_VARIANT = "order_product_variant"
+		const val TBL_PURCHASE_PRODUCT = "purchase_product"
 		const val TBL_VARIANT_PRODUCT = "variant_product"
 		const val TBL_VARIANT_OPTION = "variant_option"
 		const val TBL_ORDER_PAYMENT = "order_payment"
