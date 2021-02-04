@@ -69,7 +69,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		var total = 0
 		for (item in items){
 			if (item.product != null){
-				total += item.product!!.price * item.amount
+				total += item.product!!.sellPrice * item.amount
 			}
 		}
 		return total
@@ -125,9 +125,10 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		private const val VALUE_COLUMN = 1
 		private const val TOTAL_COLUMN = 2
 
-		const val DETAIL = 0
-		const val ORDER = 1
-		const val EDIT = 1
+		const val PURCHASE = 0
+		const val DETAIL = 1
+		const val ORDER = 2
+		const val EDIT = 3
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ProductOrderDetail> {
@@ -197,12 +198,12 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			if (detail.product != null){
 				val no = "$adapterPosition."
 				val amount = "${detail.amount}x"
-				val total = detail.product!!.price * detail.amount
+				val total = detail.product!!.sellPrice * detail.amount
 
 				binding.tvIoNo.text = no
 				binding.tvIoAmount.text = amount
 				binding.tvIoName.text = detail.product!!.name
-				binding.tvIoPrice.text = toRupiah(detail.product!!.price)
+				binding.tvIoPrice.text = toRupiah(detail.product!!.sellPrice)
 				binding.tvIoTotal.text = toRupiah(total)
 			}
 		}
@@ -215,13 +216,18 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			val amount = "${detail.amount}x"
 			var total = 0
 			if (detail.product != null){
-				total = detail.product!!.price * detail.amount
+				total = detail.product!!.sellPrice * detail.amount
+			}
+			val price = if (type == PURCHASE){
+				detail.product?.buyPrice
+			}else{
+				detail.product?.sellPrice
 			}
 
 			binding.tvIoNo.text = no
 			binding.tvIoAmount.text = amount
 			binding.tvIoName.text = detail.product?.name
-			binding.tvIoPrice.text = toRupiah(detail.product?.price)
+			binding.tvIoPrice.text = toRupiah(price)
 			binding.tvIoTotal.text = toRupiah(total)
 
 			if (order?.order?.status == Order.NEED_PAY){

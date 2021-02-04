@@ -18,6 +18,7 @@ import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.MainActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.sosialite.solite_pos.view.main.menu.master.bottom.DetailOrderProductFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class OrderActivity : SocialiteActivity() {
@@ -115,7 +116,7 @@ class OrderActivity : SocialiteActivity() {
 			if (!it.isNullOrEmpty()){
 				val fragments: ArrayList<FragmentWithTitle> = ArrayList()
 				for (ctg in it){
-					val fragment = ProductOrderFragment(ctg) { p ->
+					val fragment = ProductOrderFragment(DetailOrderProductFragment.ORDER, ctg) { p ->
 						adapter.addItem(p)
 					}
 					fragments.add(FragmentWithTitle(ctg.name, fragment))

@@ -20,7 +20,7 @@ data class OrderWithProduct(
 		var total = 0
 		for (item in products){
 			if (item.product != null){
-				total += item.product!!.price * item.amount
+				total += item.product!!.sellPrice * item.amount
 			}
 		}
 		return total

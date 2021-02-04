@@ -82,7 +82,7 @@ class PrintBill(private var activity: SocialiteActivity) {
 						printCustom(" ${variant.name}", 1, 0)
 					}
 					printNewLine()
-					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.price)}", "= ${toRupiah(item.amount * item.product!!.price)}", 32), 0, 0)
+					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.sellPrice)}", "= ${toRupiah(item.amount * item.product!!.sellPrice)}", 32), 0, 0)
 					printNewLine()
 				}
 			}

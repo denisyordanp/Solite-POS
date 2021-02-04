@@ -12,6 +12,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.view.main.menu.master.bottom.DetailOrderProductFragment
 
 class ProductOrderAdapter(
+		private val type: Int,
 		private val fragmentManager: FragmentManager,
 		private var callback: ((ProductOrderDetail) -> Unit)?
 ) : RecyclerView.Adapter<ProductOrderAdapter.ListViewHolder>() {
@@ -33,9 +34,9 @@ class ProductOrderAdapter(
 		val p = items[position]
 
 		holder.binding.tvPmvName.text = p.product.name
-		holder.setPrice(p.product.price)
+		holder.setPrice(p.product.sellPrice)
 		holder.itemView.setOnClickListener {
-			DetailOrderProductFragment(p, callback).show(fragmentManager, "detail-order-product")
+			DetailOrderProductFragment(type, p, callback).show(fragmentManager, "detail-order-product")
 		}
 	}
 

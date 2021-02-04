@@ -42,14 +42,27 @@ data class Category(
 		const val ALL = 2
 		const val ACTIVE = 1
 
+		fun getFilter(state: Int, isStock: Boolean): SimpleSQLiteQuery {
+			return filter(state, isStock)
+		}
+
 		fun getFilter(state: Int): SimpleSQLiteQuery {
+			return filter(state, false)
+		}
+
+		private fun filter(state: Int, isStock: Boolean): SimpleSQLiteQuery {
 			val query = StringBuilder().append("SELECT * FROM ")
 			query.append(AppDatabase.TBL_CATEGORY)
 			when(state){
 				ACTIVE -> {
 					query.append(" WHERE ")
-						.append(STATUS)
-						.append(" = ").append(ACTIVE)
+							.append(STATUS)
+							.append(" = ").append(ACTIVE)
+					if (isStock){
+						query.append(" AND ")
+								.append(STOCK)
+								.append(" = ").append("1")
+					}
 				}
 			}
 			return SimpleSQLiteQuery(query.toString())

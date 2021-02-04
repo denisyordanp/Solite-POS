@@ -28,9 +28,10 @@ class ProductMasterAdapter(private val fragmentManager: FragmentManager) : Recyc
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		val p = items[position]
 
-		holder.binding.tvRvPmName.text = p.product?.name
-		holder.binding.tvRvPmPrice.text = toRupiah(p.product?.price)
-		holder.binding.tvRvPmDesc.text = p.product?.desc
+		holder.binding.tvRvPmName.text = p.product.name
+		holder.binding.tvRvPmBuyPrice.text = toRupiah(p.product.buyPrice)
+		holder.binding.tvRvPmSellPrice.text = toRupiah(p.product.sellPrice)
+		holder.binding.tvRvPmDesc.text = p.product.desc
 		holder.setVariants(p.options)
 
 		holder.itemView.setOnClickListener {

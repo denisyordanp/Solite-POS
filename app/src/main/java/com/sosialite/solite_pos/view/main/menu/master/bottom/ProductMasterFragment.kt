@@ -36,8 +36,10 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 		get() = _binding.edtPmDesc.text.toString().trim()
 	private val portion: String
 		get() = _binding.edtPmPortion.text.toString().trim()
-	private val price: String
-		get() = _binding.edtPmPrice.text.toString().trim()
+	private val buyPrice: String
+		get() = _binding.edtPmBuyPrice.text.toString().trim()
+	private val sellPrice: String
+		get() = _binding.edtPmSellPrice.text.toString().trim()
 
 	private var category: Category? = null
 
@@ -66,8 +68,8 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 				setData()
 			}else{
 				_binding.btnPmSave.setOnClickListener {
-					if (isCheck){
-						saveData(getProduct(name, category!!.id, desc, price.toInt(), portion.toInt(), 0, false))
+					if (isCheck && category != null){
+						saveData(getProduct())
 					}
 				}
 			}
@@ -107,12 +109,20 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 				_binding.edtPmPortion.error = "Tidak boleh 0"
 				false
 			}
-			price.isEmpty() -> {
-				_binding.edtPmPrice.error = "Tidak boleh kosong"
+			buyPrice.isEmpty() -> {
+				_binding.edtPmBuyPrice.error = "Tidak boleh kosong"
 				false
 			}
-			price.toInt() == 0 -> {
-				_binding.edtPmPrice.error = "Tidak boleh 0"
+			buyPrice.toInt() == 0 -> {
+				_binding.edtPmBuyPrice.error = "Tidak boleh 0"
+				false
+			}
+			sellPrice.isEmpty() -> {
+				_binding.edtPmSellPrice.error = "Tidak boleh kosong"
+				false
+			}
+			sellPrice.toInt() == 0 -> {
+				_binding.edtPmSellPrice.error = "Tidak boleh 0"
 				false
 			}
 			category == null -> {
@@ -130,15 +140,16 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 			category = product.category
 			_binding.edtPmName.setText(product.product.name)
 			_binding.edtPmDesc.setText(product.product.desc)
-			_binding.edtPmPrice.setText(product.product.price.toString())
+			_binding.edtPmBuyPrice.setText(product.product.buyPrice.toString())
+			_binding.edtPmSellPrice.setText(product.product.sellPrice.toString())
 
 			_binding.btnPmCategory.text = product.category.name
 			val count = "${product.options.size} Varian terpilih"
 			_binding.btnPmVariant.text = count
 
 			_binding.btnPmSave.setOnClickListener {
-				if (isCheck){
-					updateData(getProduct(name, category!!.id, desc, price.toInt(), portion.toInt(), product.product.stock, product.product.isActive))
+				if (isCheck && category != null){
+					updateData(getProduct())
 				}
 			}
 		}
@@ -179,11 +190,11 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 		dialog?.dismiss()
 	}
 
-	private fun getProduct(name: String, category: Int, desc: String, price: Int, portion: Int, stock: Int, isActive: Boolean): Product{
+	private fun getProduct(): Product{
 		return if (product?.product != null){
-			Product(product.product.id, name, category, desc, price, portion, stock, isActive)
+			Product(product.product.id, name, category!!.id, desc, buyPrice.toInt(), sellPrice.toInt(), portion.toInt(), product.product.stock, product.product.isActive)
 		}else{
-			Product(name, category, desc, price, portion, stock, isActive)
+			Product(name, category!!.id, desc, buyPrice.toInt(), sellPrice.toInt(), portion.toInt(), 0, false)
 		}
 	}
 }

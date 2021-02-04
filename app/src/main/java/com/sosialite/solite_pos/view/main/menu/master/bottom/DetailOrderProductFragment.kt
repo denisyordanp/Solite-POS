@@ -20,11 +20,17 @@ import com.sosialite.solite_pos.databinding.FragmentDetailOrderProductBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.setDialogFragment
 
 class DetailOrderProductFragment(
+		private val type: Int,
 		private val product: DataProduct,
 		private var callback: ((ProductOrderDetail) -> Unit)?
 		) : DialogFragment() {
 
 	private lateinit var _binding: FragmentDetailOrderProductBinding
+
+	companion object{
+		const val ORDER: Int = 1
+		const val PURCHASE: Int = 2
+	}
 
 	private var amount: Int = 0
 	private var radioColor: Int = 0
@@ -66,7 +72,9 @@ class DetailOrderProductFragment(
 	private fun setData(){
 		_binding.tvDopName.text = product.product.name
 
-		setVariants()
+		if (type == ORDER){
+			setVariants()
+		}
 	}
 
 	private fun addAmount(){

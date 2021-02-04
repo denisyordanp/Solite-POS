@@ -14,6 +14,7 @@ import com.sosialite.solite_pos.view.main.menu.adapter.ProductOrderAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class ProductOrderFragment(
+		private val type: Int,
 		private var category: Category?,
 		private var callback: ((ProductOrderDetail) -> Unit)?
 	) : Fragment() {
@@ -22,7 +23,7 @@ class ProductOrderFragment(
 	private lateinit var adapter: ProductOrderAdapter
 	private lateinit var viewModel: MainViewModel
 
-	constructor(): this(null, null)
+	constructor(): this(0, null, null)
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View {
@@ -35,7 +36,7 @@ class ProductOrderFragment(
 		if (activity != null){
 
 			viewModel = getViewModel(activity!!)
-			adapter = ProductOrderAdapter(parentFragmentManager, callback)
+			adapter = ProductOrderAdapter(type, parentFragmentManager, callback)
 
 			_binding.rvProductOrder.layoutManager = GridLayoutManager(activity, 5)
 			_binding.rvProductOrder.adapter = adapter

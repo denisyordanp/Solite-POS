@@ -1,92 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:orientation="vertical"
 	tools:context=".view.main.menu.master.detail.VariantMixOptionActivity">
 
 	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical">
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginTop="@dimen/MMargin"
+		android:background="@drawable/bg_header_list_master">
 
-		<LinearLayout
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/btn_vmo_back"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
+			android:layout_marginStart="@dimen/baseMargin"
+			app:cardCornerRadius="25dp"
+			app:cardElevation="0dp">
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:padding="@dimen/MMargin"
+				android:src="@drawable/ic_back" />
+
+		</com.google.android.material.card.MaterialCardView>
+
+		<View
+			android:layout_width="2dp"
+			android:layout_height="match_parent"
+			android:background="@color/whiteGrey"
+			android:layout_margin="@dimen/SMargin"/>
+
+		<TextView
+			android:id="@+id/tv_vmo_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:layout_marginTop="@dimen/MMargin"
-			android:background="@drawable/bg_header_list_master">
-
-			<com.google.android.material.card.MaterialCardView
-				android:id="@+id/btn_vmo_back"
-				android:layout_width="50dp"
-				android:layout_height="50dp"
-				android:layout_marginStart="@dimen/baseMargin"
-				app:cardCornerRadius="25dp"
-				app:cardElevation="0dp">
-
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:padding="@dimen/MMargin"
-					android:src="@drawable/ic_back" />
-
-			</com.google.android.material.card.MaterialCardView>
-
-			<View
-				android:layout_width="2dp"
-				android:layout_height="match_parent"
-				android:background="@color/whiteGrey"
-				android:layout_margin="@dimen/SMargin"/>
-
-			<TextView
-				android:id="@+id/tv_vmo_title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textSize="@dimen/MText"
-				android:layout_gravity="center"
-				android:layout_margin="@dimen/MMargin"
-				android:text="Pilihan Varian Dimsum"/>
-
-		</LinearLayout>
-
-		<LinearLayout
-			android:id="@+id/contDjMain"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			android:layout_margin="@dimen/contentMargin">
-
-			<com.google.android.material.tabs.TabLayout
-				android:id="@+id/tab_vmo"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toTopOf="parent"
-				app:tabIndicatorColor="@color/primary"
-				app:tabIndicatorHeight="@dimen/SMargin"
-				app:tabSelectedTextColor="@color/blackGrey"
-				app:tabMode="scrollable"
-				app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
-
-			<androidx.viewpager2.widget.ViewPager2
-				android:id="@+id/vp_vmo"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
-
-		</LinearLayout>
+			android:textSize="@dimen/MText"
+			android:layout_gravity="center"
+			android:layout_margin="@dimen/MMargin"
+			android:text="Pilihan Varian Dimsum"/>
 
 	</LinearLayout>
 
-	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-		android:id="@+id/fab_vo_new_option"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		app:icon="@drawable/ic_add"
-		android:text="Tambah pilihan"
-		android:layout_gravity="bottom|end"
-		android:layout_margin="@dimen/floatMargin"
-		tools:ignore="ContentDescription" />
+	<LinearLayout
+		android:id="@+id/contDjMain"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:layout_margin="@dimen/contentMargin">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+		<com.google.android.material.tabs.TabLayout
+			android:id="@+id/tab_vmo"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toTopOf="parent"
+			app:tabIndicatorColor="@color/primary"
+			app:tabIndicatorHeight="@dimen/SMargin"
+			app:tabSelectedTextColor="@color/blackGrey"
+			app:tabMode="scrollable"
+			app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+
+		<androidx.viewpager2.widget.ViewPager2
+			android:id="@+id/vp_vmo"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
+	</LinearLayout>
+
+</LinearLayout>

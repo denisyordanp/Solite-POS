@@ -68,11 +68,25 @@
 			android:layout_height="wrap_content">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_pm_price"
+				android:id="@+id/edt_pm_buy_price"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:inputType="number"
-				android:hint="Masukan harga produk"/>
+				android:hint="Masukan harga beli produk"/>
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.textfield.TextInputLayout
+			style="@style/TextLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/edt_pm_sell_price"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="number"
+				android:hint="Masukan harga jual produk"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
 
