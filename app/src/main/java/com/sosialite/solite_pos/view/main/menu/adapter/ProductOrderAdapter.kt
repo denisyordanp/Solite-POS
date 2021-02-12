@@ -9,7 +9,7 @@ import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.databinding.RvProductBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
-import com.sosialite.solite_pos.view.main.menu.master.bottom.DetailOrderProductFragment
+import com.sosialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 
 class ProductOrderAdapter(
 		private val type: Int,
@@ -33,8 +33,13 @@ class ProductOrderAdapter(
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		val p = items[position]
 
+		val price = if (type == DetailOrderProductFragment.ORDER){
+			p.product.sellPrice
+		}else{
+			p.product.buyPrice
+		}
 		holder.binding.tvPmvName.text = p.product.name
-		holder.setPrice(p.product.sellPrice)
+		holder.setPrice(price)
 		holder.itemView.setOnClickListener {
 			DetailOrderProductFragment(type, p, callback).show(fragmentManager, "detail-order-product")
 		}

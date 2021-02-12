@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
@@ -31,6 +32,18 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 
 	fun updateOrder(order: Order) {
 		repository.updateOrder(order)
+	}
+
+	fun cancelOrder(order: OrderWithProduct) {
+		repository.cancelOrder(order)
+	}
+
+	fun getPurchase(): List<PurchaseWithProduct>{
+		return repository.getPurchase()
+	}
+
+	fun newPurchase(data: PurchaseWithProduct){
+		repository.newPurchase(data)
 	}
 
 	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>> {
@@ -138,18 +151,6 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateSupplier(data)
 	}
 
-	fun getPurchases(): LiveData<List<Purchase>>{
-		return repository.getPurchases()
-	}
-
-	fun insertPurchase(data: Purchase): Long{
-		return repository.insertPurchase(data)
-	}
-
-	fun updatePurchase(data: Purchase){
-		repository.updatePurchase(data)
-	}
-
 	val payments: LiveData<List<Payment>>
 		get() = repository.payments
 
@@ -171,5 +172,9 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 
 	fun updateOutcome(data: Outcome) {
 		repository.updateOutcome(data)
+	}
+
+	fun fillData(){
+		repository.fillData()
 	}
 }

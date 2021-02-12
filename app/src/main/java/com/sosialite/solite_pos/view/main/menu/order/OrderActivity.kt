@@ -18,7 +18,7 @@ import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.MainActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
-import com.sosialite.solite_pos.view.main.menu.master.bottom.DetailOrderProductFragment
+import com.sosialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class OrderActivity : SocialiteActivity() {

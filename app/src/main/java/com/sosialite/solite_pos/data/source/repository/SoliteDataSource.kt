@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
@@ -19,6 +20,10 @@ internal interface SoliteDataSource{
 	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct
 	fun newOrder(order: OrderWithProduct)
 	fun updateOrder(order: Order)
+	fun cancelOrder(order: OrderWithProduct)
+
+	fun getPurchase(): List<PurchaseWithProduct>
+	fun newPurchase(data: PurchaseWithProduct)
 
 	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>>
 
@@ -55,10 +60,6 @@ internal interface SoliteDataSource{
 	fun insertSupplier(data: Supplier): Long
 	fun updateSupplier(data: Supplier)
 
-	fun getPurchases(): LiveData<List<Purchase>>
-	fun insertPurchase(data: Purchase): Long
-	fun updatePurchase(data: Purchase)
-
 	val payments: LiveData<List<Payment>>
 	fun insertPayment(data: Payment)
 	fun updatePayment(data: Payment)
@@ -66,4 +67,5 @@ internal interface SoliteDataSource{
 	fun getOutcome(date: String): LiveData<List<Outcome>>
 	fun insertOutcome(data: Outcome)
 	fun updateOutcome(data: Outcome)
+	fun fillData()
 }

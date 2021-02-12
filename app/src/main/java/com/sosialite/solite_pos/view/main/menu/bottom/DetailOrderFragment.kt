@@ -150,6 +150,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 			if (isCancelAble){
 				bottom.setPositiveListener("Ya"){
 					mainActivity?.cancelOrder(order)
+					dialog?.dismiss()
 				}
 			}
 			bottom.show()

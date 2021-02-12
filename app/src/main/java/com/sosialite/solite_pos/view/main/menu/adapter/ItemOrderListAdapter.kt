@@ -8,7 +8,7 @@ import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.*
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.productIndex
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.productOrderIndex
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 
 class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrderListAdapter.BaseViewHolder<ProductOrderDetail>>() {
@@ -87,7 +87,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 	}
 
 	private fun add(detail: ProductOrderDetail){
-		val pos = productIndex(items, detail)
+		val pos = productOrderIndex(items, detail)
 		if (pos != null){
 			if (detail.amount == 0){
 				delItem(pos)
@@ -125,7 +125,6 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		private const val VALUE_COLUMN = 1
 		private const val TOTAL_COLUMN = 2
 
-		const val PURCHASE = 0
 		const val DETAIL = 1
 		const val ORDER = 2
 		const val EDIT = 3
@@ -218,16 +217,11 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			if (detail.product != null){
 				total = detail.product!!.sellPrice * detail.amount
 			}
-			val price = if (type == PURCHASE){
-				detail.product?.buyPrice
-			}else{
-				detail.product?.sellPrice
-			}
 
 			binding.tvIoNo.text = no
 			binding.tvIoAmount.text = amount
 			binding.tvIoName.text = detail.product?.name
-			binding.tvIoPrice.text = toRupiah(price)
+			binding.tvIoPrice.text = toRupiah(detail.product?.sellPrice)
 			binding.tvIoTotal.text = toRupiah(total)
 
 			if (order?.order?.status == Order.NEED_PAY){

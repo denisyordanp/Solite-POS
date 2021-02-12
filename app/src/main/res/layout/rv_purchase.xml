@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:maxHeight="60dp"
+	android:layout_height="wrap_content"
+	app:cardBackgroundColor="@color/white"
+	android:layout_marginBottom="@dimen/RvLine"
+	app:cardElevation="0dp"
+	app:cardCornerRadius="0dp">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/baseMargin">
+
+		<TextView
+			android:id="@+id/tv_rv_pc_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:maxLines="2"
+			android:text="10 Januari 2020"
+			android:textSize="@dimen/MText"
+			android:textStyle="bold"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/tv_rv_pc_supplier"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Dimsum Almaris"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/tv_rv_pc_date" />
+
+		<TextView
+			android:id="@+id/tv_rv_pc_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Rp. 30.000"
+			android:textStyle="bold"
+			android:textSize="@dimen/MText"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

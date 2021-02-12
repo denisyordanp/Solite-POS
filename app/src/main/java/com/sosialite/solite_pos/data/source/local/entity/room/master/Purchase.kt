@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import com.sosialite.solite_pos.utils.config.MainConfig
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentTime
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
 import com.sosialite.solite_pos.utils.config.SettingPref
@@ -89,8 +90,11 @@ data class Purchase(
 		}
 	}
 
+	constructor(context: Context, idSupplier: Int): this(purchaseNo(context), idSupplier, currentDate)
+
 	val timeString: String
 		get() {
 			return dateFormat(purchaseTime, MainConfig.ldFormat)
 		}
+
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
@@ -52,6 +53,18 @@ class SoliteRepository private constructor(
 
 	override fun updateOrder(order: Order) {
 		localDataSource.updateOrder(order)
+	}
+
+	override fun cancelOrder(order: OrderWithProduct){
+		localDataSource.cancelOrder(order)
+	}
+
+	override fun getPurchase(): List<PurchaseWithProduct> {
+		return localDataSource.getPurchase()
+	}
+
+	override fun newPurchase(data: PurchaseWithProduct) {
+		localDataSource.newPurchase(data)
 	}
 
 	override fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>> {
@@ -155,18 +168,6 @@ class SoliteRepository private constructor(
 		localDataSource.updateSupplier(data)
 	}
 
-	override fun getPurchases(): LiveData<List<Purchase>> {
-		return localDataSource.getPurchases()
-	}
-
-	override fun insertPurchase(data: Purchase): Long {
-		return localDataSource.insertPurchase(data)
-	}
-
-	override fun updatePurchase(data: Purchase) {
-		return localDataSource.updatePurchase(data)
-	}
-
 	override val payments: LiveData<List<Payment>>
 		get() = localDataSource.payments
 
@@ -188,5 +189,9 @@ class SoliteRepository private constructor(
 
 	override fun updateOutcome(data: Outcome) {
 		localDataSource.updateOutcome(data)
+	}
+
+	override fun fillData(){
+		localDataSource.fillData()
 	}
 }

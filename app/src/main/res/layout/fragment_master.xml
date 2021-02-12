@@ -56,6 +56,15 @@
 			app:backgroundTint="@color/white"
 			android:text="Supplier"/>
 
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btn_mt_test"
+			style="@style/TextButton"
+			android:padding="@dimen/baseMargin"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:backgroundTint="@color/white"
+			android:text="Isi data"/>
+
 	</LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

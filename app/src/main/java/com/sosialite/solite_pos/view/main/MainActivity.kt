@@ -6,7 +6,9 @@ import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.sosialite.solite_pos.databinding.ActivityMainBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.printer.PrintBill
@@ -40,6 +42,7 @@ class MainActivity : SocialiteActivity() {
 
 	companion object{
 		const val EXTRA_ORDER = "extra_order"
+		const val EXTRA_PURCHASE = "extra_purchase"
 	}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +58,6 @@ class MainActivity : SocialiteActivity() {
 		white = ResourcesCompat.getColor(resources, R.color.white, null)
 
 		adapter = ViewPagerAdapter(this)
-
 		_binding.vpMain.adapter = adapter
 		_binding.vpMain.isUserInputEnabled = false
 
@@ -76,6 +78,14 @@ class MainActivity : SocialiteActivity() {
 				}
 			}
 			PrintBill.REQUEST_CONNECT_BT -> printBill.onSetSocket()
+			PurchaseActivity.NEW_PURCHASE -> {
+				if (data != null){
+					val purchase: PurchaseWithProduct? = data.getSerializableExtra(EXTRA_PURCHASE) as PurchaseWithProduct?
+					if (purchase != null){
+						addPurchase(purchase)
+					}
+				}
+			}
 		}
 	}
 
@@ -120,9 +130,15 @@ class MainActivity : SocialiteActivity() {
 	fun cancelOrder(order: OrderWithProduct?){
 		if (order != null){
 			order.order.status = Order.CANCEL
-			viewModel.updateOrder(order.order)
+			viewModel.cancelOrder(order)
 			onProcessFragment.removeItem(order)
 		}
+	}
+
+	private fun addPurchase(purchase: PurchaseWithProduct){
+		Purchase.add(this)
+		viewModel.newPurchase(purchase)
+		purchaseFragment.addPurchase(purchase)
 	}
 
 	private fun setPager(){
@@ -183,7 +199,10 @@ class MainActivity : SocialiteActivity() {
 			3 -> {
 				_binding.fabMainNewOrder.text = "Pembelian baru"
 				_binding.fabMainNewOrder.setOnClickListener {
-					startActivity(Intent(this, PurchaseActivity::class.java))
+					startActivityForResult(
+							Intent(this, PurchaseActivity::class.java),
+							PurchaseActivity.NEW_PURCHASE
+					)
 				}
 			}
 		}

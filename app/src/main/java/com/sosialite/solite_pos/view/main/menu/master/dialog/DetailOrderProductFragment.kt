@@ -1,4 +1,4 @@
-package com.sosialite.solite_pos.view.main.menu.master.bottom
+package com.sosialite.solite_pos.view.main.menu.master.dialog
 
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -33,7 +33,9 @@ class DetailOrderProductFragment(
 	}
 
 	private var amount: Int = 0
+	private var maxAmount: Int = 0
 	private var radioColor: Int = 0
+
 	private var arrayRg: ArrayList<OptionWithRadioButton> = ArrayList()
 	private val variants: ArrayList<Variant>
 	get() {
@@ -46,6 +48,10 @@ class DetailOrderProductFragment(
 			}
 		}
 		return array
+	}
+	private val values: String
+	get() {
+		return _binding.edtPlValue.text.toString().trim()
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +69,15 @@ class DetailOrderProductFragment(
 			setData()
 
 			_binding.btnCmCancel.setOnClickListener { dialog?.dismiss() }
-			_binding.btnCmSave.setOnClickListener { setResult() }
+			_binding.btnCmSave.setOnClickListener {
+				if (type == PURCHASE){
+					if (validate()){
+						setResult()
+					}
+				}else{
+					setResult()
+				}
+			}
 			_binding.btnPlPlus.setOnClickListener { addAmount() }
 			_binding.btnPlMin.setOnClickListener { minAmount() }
 		}
@@ -74,17 +88,42 @@ class DetailOrderProductFragment(
 
 		if (type == ORDER){
 			setVariants()
+
+			if (product.category.isStock){
+				maxAmount = product.product.stock / 4
+				_binding.tvplStock.text = "Sisa : ${maxAmount} Porsi"
+			}else{
+				maxAmount = product.product.stock
+				_binding.tvplStock.text = "Sisa : ${maxAmount} Pcs"
+			}
+		}else{
+			_binding.contPlPlusMinus.visibility = View.GONE
+			_binding.contPlValue.visibility = View.VISIBLE
+			_binding.tvplStock.visibility = View.GONE
 		}
 	}
 
+	private fun validate(): Boolean{
+		if (values.isEmpty()){
+			_binding.edtPlValue.error = "Tidak boleh kosong"
+		}else{
+			return true
+		}
+		return false
+	}
+
 	private fun addAmount(){
-		amount += 1
-		_binding.tvPlAmount.text = amount.toString()
+		if (amount < maxAmount){
+			amount += 1
+			_binding.tvPlAmount.text = amount.toString()
+		}
 	}
 
 	private fun minAmount(){
-		amount -= 1
-		_binding.tvPlAmount.text = amount.toString()
+		if (amount > 0){
+			amount -= 1
+			_binding.tvPlAmount.text = amount.toString()
+		}
 	}
 
 	private fun setVariants(){
@@ -156,7 +195,11 @@ class DetailOrderProductFragment(
 			}
 		}
 
-		val detail = ProductOrderDetail(product.product, arrayVariants, amount)
+		val detail = if (type == ORDER){
+			ProductOrderDetail(product.product, arrayVariants, amount)
+		}else{
+			ProductOrderDetail(product.product, arrayVariants, values.toInt())
+		}
 		callback?.invoke(detail)
 		dialog?.dismiss()
 	}

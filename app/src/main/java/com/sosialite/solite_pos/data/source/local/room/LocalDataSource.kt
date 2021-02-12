@@ -1,27 +1,22 @@
 package com.sosialite.solite_pos.data.source.local.room
 
 import androidx.lifecycle.LiveData
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
-import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 
 class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 
 	companion object {
 		private var INSTANCE: LocalDataSource? = null
-
 
 		fun getInstance(soliteDao: SoliteDao): LocalDataSource {
 			if (INSTANCE == null) {
@@ -45,6 +40,18 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 
 	fun updateOrder(order: Order){
 		soliteDao.updateOrder(order)
+	}
+
+	fun cancelOrder(order: OrderWithProduct){
+		soliteDao.cancelOrder(order)
+	}
+
+	fun getPurchase(): List<PurchaseWithProduct>{
+		return soliteDao.getPurchaseData()
+	}
+
+	fun newPurchase(data: PurchaseWithProduct){
+		soliteDao.newPurchase(data)
 	}
 
 	fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>>{
@@ -150,18 +157,6 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 		soliteDao.updateSupplier(data)
 	}
 
-	fun getPurchases(): LiveData<List<Purchase>>{
-		return soliteDao.getPurchases()
-	}
-
-	fun insertPurchase(data: Purchase): Long{
-		return soliteDao.insertPurchase(data)
-	}
-
-	fun updatePurchase(data: Purchase){
-		soliteDao.updatePurchase(data)
-	}
-
 	val payments: LiveData<List<Payment>>
 		get() = soliteDao.getPayments()
 
@@ -183,5 +178,9 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 
 	fun updateOutcome(data: Outcome){
 		soliteDao.updateOutcome(data)
+	}
+
+	fun fillData(){
+		soliteDao.fillData()
 	}
 }

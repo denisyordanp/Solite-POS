@@ -140,6 +140,7 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 			category = product.category
 			_binding.edtPmName.setText(product.product.name)
 			_binding.edtPmDesc.setText(product.product.desc)
+			_binding.edtPmPortion.setText(product.product.portion.toString())
 			_binding.edtPmBuyPrice.setText(product.product.buyPrice.toString())
 			_binding.edtPmSellPrice.setText(product.product.sellPrice.toString())
 
@@ -192,9 +193,9 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 
 	private fun getProduct(): Product{
 		return if (product?.product != null){
-			Product(product.product.id, name, category!!.id, desc, buyPrice.toInt(), sellPrice.toInt(), portion.toInt(), product.product.stock, product.product.isActive)
+			Product(product.product.id, name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), product.product.stock, product.product.isActive)
 		}else{
-			Product(name, category!!.id, desc, buyPrice.toInt(), sellPrice.toInt(), portion.toInt(), 0, false)
+			Product(name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), 0, false)
 		}
 	}
 }

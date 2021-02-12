@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
@@ -37,10 +37,21 @@ class MainConfig {
 			w?.requestFeature(Window.FEATURE_NO_TITLE)
 		}
 
-		fun productIndex(array: ArrayList<ProductOrderDetail>, detail: ProductOrderDetail?): Int?{
+		fun productOrderIndex(array: ArrayList<ProductOrderDetail>, detail: ProductOrderDetail?): Int?{
 			for ((i, v) in array.withIndex()){
 				if (v.product != null){
 					if (v.product == detail?.product && v.variants == detail?.variants){
+						return i
+					}
+				}
+			}
+			return null
+		}
+
+		fun productPurchaseIndex(array: ArrayList<PurchaseProductWithProduct>, detail: PurchaseProductWithProduct?): Int?{
+			for ((i, v) in array.withIndex()){
+				if (v.product != null){
+					if (v.product == detail?.product){
 						return i
 					}
 				}

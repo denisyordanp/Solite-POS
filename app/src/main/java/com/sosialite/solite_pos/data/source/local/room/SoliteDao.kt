@@ -5,6 +5,8 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.*
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.*
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
@@ -95,6 +97,13 @@ interface SoliteDao{
 		insertOrder(order.order)
 		for (item in order.products){
 			if (item.product != null){
+				val category = getCategory(item.product!!.category)
+				val amount = if (category.isStock){
+					item.amount * item.product!!.portion
+				}else{
+					item.amount
+				}
+				decreaseProductStock(item.product!!.id, amount)
 				val idOrder = insertDetailOrders(OrderDetail(order.order.orderNo, item.product!!.id, item.amount))
 				for (variant in item.variants){
 					insertVariantOrder(OrderProductVariant(idOrder.toInt(), variant.id, 0))
@@ -105,6 +114,70 @@ interface SoliteDao{
 
 	@Update
 	fun updateOrder(order: Order)
+
+	@Transaction
+	fun cancelOrder(order: OrderWithProduct){
+		updateOrder(order.order)
+		for (item in order.products){
+			if (item.product != null){
+				val category = getCategory(item.product!!.category)
+				val amount = if (category.isStock){
+					item.amount * item.product!!.portion
+				}else{
+					item.amount
+				}
+				increaseProductStock(item.product!!.id, amount)
+			}
+		}
+	}
+
+//	PURCHASE
+
+	@Query("SELECT * FROM ${AppDatabase.TBL_PURCHASE}")
+	fun getPurchases(): List<Purchase>
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insertPurchase(data: Purchase)
+
+	@Update
+	fun updatePurchase(data: Purchase)
+
+	@Query("SELECT * FROM ${AppDatabase.TBL_PURCHASE_PRODUCT} WHERE ${Purchase.NO} = :purchaseNo")
+	fun getPurchasesProduct(purchaseNo: String): List<PurchaseProduct>
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insertPurchaseProduct(data: List<PurchaseProduct>)
+
+	@Update
+	fun updatePurchaseProduct(data: PurchaseProduct)
+
+	@Transaction
+	fun getPurchaseData(): List<PurchaseWithProduct>{
+		val purchases = getPurchases()
+		val list: ArrayList<PurchaseWithProduct> = ArrayList()
+		for (purchase in purchases){
+			val purchaseProduct = getPurchasesProduct(purchase.purchaseNo)
+			val supplier = getSupplierById(purchase.idSupplier)
+			val array: ArrayList<PurchaseProductWithProduct> = ArrayList()
+			for (products in purchaseProduct){
+				val product = getProduct(products.idProduct)
+				array.add(PurchaseProductWithProduct(products, product))
+			}
+			list.add(PurchaseWithProduct(purchase, supplier, array))
+		}
+		return list
+	}
+
+	@Transaction
+	fun newPurchase(data: PurchaseWithProduct){
+		insertPurchase(data.purchase)
+		insertPurchaseProduct(data.purchaseProduct)
+		for (product in data.products){
+			if (product.purchaseProduct != null){
+				increaseProductStock(product.purchaseProduct!!.idProduct, product.purchaseProduct!!.amount)
+			}
+		}
+	}
 
 //	PRODUCT
 
@@ -119,6 +192,12 @@ interface SoliteDao{
 
 	@Update
 	fun updateProduct(data: Product)
+
+	@Query("UPDATE ${AppDatabase.TBL_PRODUCT} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${AppDatabase.TBL_PRODUCT} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
+	fun increaseProductStock(idProduct: Int, amount: Int)
+
+	@Query("UPDATE ${AppDatabase.TBL_PRODUCT} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${AppDatabase.TBL_PRODUCT} WHERE ${Product.ID} = :idProduct) - :amount) WHERE ${Product.ID} = :idProduct")
+	fun decreaseProductStock(idProduct: Int, amount: Int)
 
 //	VARIANT PRODUCT
 
@@ -152,6 +231,9 @@ interface SoliteDao{
 
 	@RawQuery(observedEntities = [Category::class])
 	fun getCategories(query: SupportSQLiteQuery): LiveData<List<Category>>
+
+	@Query("SELECT * FROM ${AppDatabase.TBL_CATEGORY} WHERE ${Category.ID} = :idCategory")
+	fun getCategory(idCategory: Int): Category
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insertCategory(data: Category): Long
@@ -197,22 +279,14 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${AppDatabase.TBL_SUPPLIER}")
 	fun getSuppliers(): LiveData<List<Supplier>>
 
+	@Query("SELECT * FROM ${AppDatabase.TBL_SUPPLIER} WHERE ${Supplier.ID} = :idSupplier")
+	fun getSupplierById(idSupplier: Int): Supplier
+
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insertSupplier(data: Supplier): Long
 
 	@Update
 	fun updateSupplier(data: Supplier)
-
-	//	PURCHASE
-
-	@Query("SELECT * FROM ${AppDatabase.TBL_PURCHASE}")
-	fun getPurchases(): LiveData<List<Purchase>>
-
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	fun insertPurchase(data: Purchase): Long
-
-	@Update
-	fun updatePurchase(data: Purchase)
 
 //	PAYMENTS
 
@@ -235,4 +309,21 @@ interface SoliteDao{
 
 	@Update
 	fun updateOutcome(data: Outcome)
+
+
+	// FILL DATA
+	@Transaction
+	fun fillData(){
+		insertVariant(Variant(1, "Cara Masak", Variant.ONE_OPTION, isMust = true, isMix = false))
+		insertVariantOption(VariantOption(1, 1, "Kukus", "Dimsum Kukus", 0, isCount = false, isActive = true))
+		insertVariantOption(VariantOption(2, 1, "Goreng", "Dimsum Goreng", 0, isCount = false, isActive = true))
+		insertCategory(Category(1, "Dimsum", "Dimsum Porsian", isStock = true, isActive = true))
+		insertProduct(Product(1, "Siomay Ayam", 1, "Siomay Ayam", 14000, 2250, 4, 1, isActive = true))
+		insertProduct(Product(2, "Kwotie", 1, "Kwotie", 15000, 2500, 4, 1, isActive = true))
+		insertVariantProduct(VariantProduct(1, 1, 1, 1))
+		insertVariantProduct(VariantProduct(1, 1, 2, 2))
+		insertPayment(Payment(1, "Cash", "Pembayaran Tunai", 0f, isCash = true, isActive = true))
+		insertPayment(Payment(2, "Debit", "Pembayaran Debit", 0.1f, isCash = false, isActive = true))
+		insertSupplier(Supplier(1, "Dimsum Almaris", "1654156123", "Setrasari", "Lumanyun"))
+	}
 }
