@@ -149,7 +149,7 @@ class ListMasterActivity : SocialiteActivity() {
 				val adapter = VariantProductMasterAdapter(product!!, this)
 				_binding.rvListMaster.adapter = adapter
 
-				getVariants { adapter.items = it }
+				getVariants(product!!.isMix) { adapter.items = it }
 			}
 		}else{
 			_binding.fabLmNewData.setOnClickListener {
@@ -159,14 +159,24 @@ class ListMasterActivity : SocialiteActivity() {
 			val adapter = VariantMasterAdapter(this)
 			_binding.rvListMaster.adapter = adapter
 
-			getVariants { adapter.items = it }
+			getVariants(null) { adapter.items = it }
 		}
 	}
 
-	private fun getVariants(callback: ((ArrayList<Variant>) -> Unit)){
+	private fun getVariants(isMix: Boolean?, callback: ((ArrayList<Variant>) -> Unit)){
 		viewModel.variants.observe(this, {
 			if (!it.isNullOrEmpty()){
-				callback.invoke(ArrayList(it))
+				val variants: ArrayList<Variant> = ArrayList()
+				for (item in it){
+					if (isMix != null){
+						if (item.isMix == isMix){
+							variants.add(item)
+						}
+					}else{
+						variants.add(item)
+					}
+				}
+				callback.invoke(variants)
 			}
 		})
 	}

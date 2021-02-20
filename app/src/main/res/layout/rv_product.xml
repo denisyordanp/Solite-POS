@@ -39,7 +39,6 @@
 		<TextView
 			android:id="@+id/tv_pmv_price"
 			style="@style/CenterText"
-			android:visibility="gone"
 			android:text="Rp. 14,000"
 			android:textSize="@dimen/MText"
 			app:layout_constraintEnd_toEndOf="parent"

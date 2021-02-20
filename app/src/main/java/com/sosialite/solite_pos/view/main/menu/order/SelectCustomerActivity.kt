@@ -14,7 +14,7 @@ import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CustomerNameActivity : SocialiteActivity() {
+class SelectCustomerActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityCustomerNameBinding
 	private lateinit var adapter: CustomerAdapter
@@ -24,7 +24,7 @@ class CustomerNameActivity : SocialiteActivity() {
 
 	companion object{
 		const val CUSTOMER: String = "customer"
-		const val RQ_COSTUMER = 10
+		const val RC_COSTUMER = 10
 	}
 
     override fun onCreate(savedInstanceState: Bundle?) {

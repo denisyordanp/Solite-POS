@@ -10,7 +10,7 @@ import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.PaymentsAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
-class PaymentsActivity : SocialiteActivity() {
+class SelectPaymentsActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityPaymentsBinding
 	private lateinit var adapter: PaymentsAdapter

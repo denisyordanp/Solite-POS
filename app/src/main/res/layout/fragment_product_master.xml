@@ -94,6 +94,12 @@
 
 			</com.google.android.material.textfield.TextInputLayout>
 
+			<CheckBox
+				android:id="@+id/cb_pm_mix"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Mix Variant"/>
+
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/btn_pm_category"
 				style="@style/Widget.MaterialComponents.Button.TextButton"

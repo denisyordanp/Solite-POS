@@ -9,10 +9,11 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.sosialite.solite_pos.databinding.ActivityVariantMixOptionBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
-class VariantMixOptionActivity : AppCompatActivity() {
+class VariantMixOptionActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityVariantMixOptionBinding
 	private lateinit var adapter: ViewPagerAdapter
@@ -49,8 +50,10 @@ class VariantMixOptionActivity : AppCompatActivity() {
 			if (!it.isNullOrEmpty()){
 				val fragments: ArrayList<FragmentWithTitle> = ArrayList()
 				for (ctg in it){
-					val fragment = ProductMixVariantFragment(variant, ctg)
-					fragments.add(FragmentWithTitle(ctg.name, fragment))
+					if (ctg.isStock){
+						val fragment = ProductMixVariantFragment(variant, ctg)
+						fragments.add(FragmentWithTitle(ctg.name, fragment))
+					}
 				}
 				setData(fragments)
 			}

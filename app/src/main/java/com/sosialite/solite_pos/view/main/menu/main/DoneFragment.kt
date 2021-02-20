@@ -33,10 +33,10 @@ class DoneFragment : Fragment() {
 			adapter = OrderListAdapter(context!!, activity!!.supportFragmentManager)
 			viewModel = MainConfig.getViewModel(activity!!)
 
-			getData()
-
 			_binding.rvDn.layoutManager = GridLayoutManager(activity, 4)
 			_binding.rvDn.adapter = adapter
+
+			getData()
 		}
 	}
 

@@ -28,7 +28,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 			VariantMix::class,
 			VariantProduct::class,
 			VariantOption::class],
-		version = 1,
+		version = 2,
 		exportSchema = false
 ) abstract class AppDatabase : RoomDatabase() {
 	abstract fun soliteDao(): SoliteDao
@@ -57,11 +57,11 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 
 		private var INSTANCE: AppDatabase? = null
 
-//		private var migration_1_2: Migration = object : Migration(1, 2) {
-//			override fun migrate(database: SupportSQLiteDatabase) {
-//				database.execSQL("ALTER TABLE '$TBL_ORDER' ADD COLUMN ${Order.TAKE_AWAY} INTEGER")
-//			}
-//		}
+		private var migration_1_2: Migration = object : Migration(1, 2) {
+			override fun migrate(database: SupportSQLiteDatabase) {
+				database.execSQL("ALTER TABLE '$TBL_PRODUCT' ADD COLUMN ${Product.MIX} INTEGER NOT NULL DEFAULT 0")
+			}
+		}
 
 		fun getInstance(context: Context): AppDatabase {
 			if (INSTANCE == null) {
@@ -72,7 +72,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 							DB_NAME
 					)
 							.allowMainThreadQueries()
-//							.addMigrations(migration_1_2)
+							.addMigrations(migration_1_2)
 //							.fallbackToDestructiveMigration()
 							.build()
 				}

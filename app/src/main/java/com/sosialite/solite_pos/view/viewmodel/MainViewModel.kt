@@ -54,6 +54,10 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		return repository.getVariantProduct(idProduct, idVariantOption)
 	}
 
+	fun getVariantProductById(idProduct: Int): VariantProduct?{
+		return repository.getVariantProductById(idProduct)
+	}
+
 	fun insertVariantProduct(data: VariantProduct) {
 		repository.insertVariantProduct(data)
 	}

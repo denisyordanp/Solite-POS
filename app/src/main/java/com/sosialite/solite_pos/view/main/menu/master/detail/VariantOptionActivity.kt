@@ -9,11 +9,12 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.databinding.ActivityVariantOptionBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.master.variant.VariantOptionMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
-class VariantOptionActivity : AppCompatActivity() {
+class VariantOptionActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityVariantOptionBinding
 	private lateinit var adapter: VariantOptionMasterAdapter

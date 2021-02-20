@@ -7,7 +7,7 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical"
 	android:padding="@dimen/baseMargin"
-	tools:context=".view.main.menu.order.PaymentsActivity">
+	tools:context=".view.main.menu.order.SelectPaymentsActivity">
 
 	<com.google.android.material.card.MaterialCardView
 		android:id="@+id/btn_pms_cancel"

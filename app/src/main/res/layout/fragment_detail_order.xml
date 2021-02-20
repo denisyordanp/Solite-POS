@@ -33,9 +33,9 @@
 		android:id="@+id/linearLayout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
+		android:layout_above="@+id/cont_do_list"
 		android:layout_below="@+id/textView"
-		android:layout_above="@id/materialCardView2"
+		android:layout_alignParentEnd="true"
 		android:background="@drawable/bg_main_menu"
 		android:backgroundTint="@color/whiteGrey"
 		android:elevation="@dimen/MMargin"
@@ -214,6 +214,7 @@
 	</com.google.android.material.card.MaterialCardView>
 
 	<LinearLayout
+		android:id="@+id/cont_do_list"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/materialCardView"

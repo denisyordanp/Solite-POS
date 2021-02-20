@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
@@ -59,7 +60,7 @@ class OrderActivity : SocialiteActivity() {
 		_order.rvOrderList.layoutManager = LinearLayoutManager(this)
 
 		when(type){
-			NEW_ORDER -> startActivityForResult(Intent(this, CustomerNameActivity::class.java), CustomerNameActivity.RQ_COSTUMER)
+			NEW_ORDER -> startActivityForResult(Intent(this, SelectCustomerActivity::class.java), SelectCustomerActivity.RC_COSTUMER)
 			EDIT_ORDER -> setEditOrder(order!!)
 		}
 
@@ -69,17 +70,30 @@ class OrderActivity : SocialiteActivity() {
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		if (requestCode == CustomerNameActivity.RQ_COSTUMER){
-			when(resultCode){
-				RESULT_OK -> {
-					val customer = data?.getSerializableExtra(CustomerNameActivity.CUSTOMER) as Customer?
-					if (customer != null){
-						setNewOrder(customer)
+		when (requestCode){
+			SelectCustomerActivity.RC_COSTUMER -> {
+				when(resultCode){
+					RESULT_OK -> {
+						val customer = data?.getSerializableExtra(SelectCustomerActivity.CUSTOMER) as Customer?
+						if (customer != null)
+							setNewOrder(customer)
 					}
+					RESULT_CANCELED -> finish()
 				}
-				RESULT_CANCELED -> finish()
+			}
+
+			SelectMixVariantOrderActivity.RC_MIX -> {
+				if (resultCode == RESULT_OK){
+					val product = data?.getSerializableExtra(SelectMixVariantOrderActivity.PRODUCT) as ProductOrderDetail?
+					if(product != null) addItemOrder(product)
+				}
 			}
 		}
+	}
+
+	private fun addItemOrder(product: ProductOrderDetail){
+		adapter.addItem(product)
+		_order.rvOrderList.scrollToPosition(0)
 	}
 
 	private fun setNewOrder(customer: Customer){
@@ -116,8 +130,8 @@ class OrderActivity : SocialiteActivity() {
 			if (!it.isNullOrEmpty()){
 				val fragments: ArrayList<FragmentWithTitle> = ArrayList()
 				for (ctg in it){
-					val fragment = ProductOrderFragment(DetailOrderProductFragment.ORDER, ctg) { p ->
-						adapter.addItem(p)
+					val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.ORDER, ctg, this) { p ->
+						addItemOrder(p)
 					}
 					fragments.add(FragmentWithTitle(ctg.name, fragment))
 				}

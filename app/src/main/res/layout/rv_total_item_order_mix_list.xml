@@ -2,7 +2,6 @@
 <com.google.android.material.card.MaterialCardView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	app:cardElevation="0dp"
@@ -15,24 +14,22 @@
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/MMargin">
+			android:layout_height="wrap_content">
 
 			<TextView
 				android:id="@+id/tv_io_no"
 				android:visibility="gone"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="1."
+				android:padding="@dimen/MMargin"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="parent"/>
 
 			<TextView
 				android:id="@+id/tv_io_amount"
+				android:visibility="gone"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:paddingEnd="@dimen/MMargin"
-				android:text="2x"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,53 +37,57 @@
 				android:id="@+id/tv_io_name"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Angsio Ceker Ayam"
-				app:layout_constraintStart_toEndOf="@+id/tv_io_amount"
+				android:layout_margin="@dimen/MMargin"
+				android:text="Total: "
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
-
-			<LinearLayout
-				android:id="@+id/cont_io_mix_variant"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				app:layout_constraintStart_toEndOf="@+id/tv_io_amount"
-				app:layout_constraintTop_toBottomOf="@+id/tv_io_name"/>
 
 			<TextView
 				android:id="@+id/tv_io_price"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Rp. 14,000"
+				android:visibility="gone"
 				app:layout_constraintStart_toEndOf="@+id/tv_io_amount"
-				app:layout_constraintTop_toBottomOf="@+id/cont_io_mix_variant" />
+				app:layout_constraintTop_toBottomOf="@+id/tv_io_name" />
 
-			<com.google.android.material.card.MaterialCardView
-				android:id="@+id/btn_ol_delete"
+			<TextView
+				android:id="@+id/tv_io_variant"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				app:layout_constraintBottom_toTopOf="@+id/tv_io_total"
-				app:cardElevation="0dp"
-				app:cardCornerRadius="@dimen/MMargin"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toTopOf="parent">
+				android:visibility="gone"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/tv_io_amount"
+				app:layout_constraintTop_toBottomOf="@+id/tv_io_name" />
 
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:padding="@dimen/MMargin"
-					android:src="@drawable/ic_delete"/>
-
-			</com.google.android.material.card.MaterialCardView>
+			<View
+				android:layout_width="0dp"
+				android:layout_height="1dp"
+				android:background="@color/blackGrey"
+				app:layout_constraintEnd_toEndOf="@+id/tv_io_pcs"
+				app:layout_constraintStart_toStartOf="@+id/tv_io_total"
+				app:layout_constraintTop_toTopOf="parent" />
 
 			<TextView
 				android:id="@+id/tv_io_total"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/MMargin"
-				android:text="Rp. 28,000"
+				android:layout_margin="@dimen/MMargin"
+				android:text="3"
 				android:textStyle="bold"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/tv_io_price" />
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/tv_io_name"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<TextView
+				android:id="@+id/tv_io_pcs"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/MMargin"
+				android:text="Pcs"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/tv_io_total"
+				app:layout_constraintTop_toTopOf="parent" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 

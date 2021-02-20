@@ -18,7 +18,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.utils.tools.MessageBottom
 import com.sosialite.solite_pos.view.main.MainActivity
-import com.sosialite.solite_pos.view.main.menu.order.PaymentsActivity
+import com.sosialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 
@@ -67,8 +67,8 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		if (requestCode == PaymentsActivity.RQ_PAYMENT && resultCode == Activity.RESULT_OK){
-			payment = data?.getSerializableExtra(PaymentsActivity.PAYMENT) as Payment
+		if (requestCode == SelectPaymentsActivity.RQ_PAYMENT && resultCode == Activity.RESULT_OK){
+			payment = data?.getSerializableExtra(SelectPaymentsActivity.PAYMENT) as Payment
 			if (payment != null){
 				_binding.btnPayMethod.text = payment!!.name
 				_binding.btnPayPay.isEnabled = true
@@ -124,7 +124,7 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 	}
 
 	private fun getPayment(context: Context){
-		startActivityForResult(Intent(context, PaymentsActivity::class.java), PaymentsActivity.RQ_PAYMENT)
+		startActivityForResult(Intent(context, SelectPaymentsActivity::class.java), SelectPaymentsActivity.RQ_PAYMENT)
 	}
 
 	private fun pay(payment: Payment, pay: Int){

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,8 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 		get() = _binding.edtPmBuyPrice.text.toString().trim()
 	private val sellPrice: String
 		get() = _binding.edtPmSellPrice.text.toString().trim()
+	private val isMix: Boolean
+		get() = _binding.cbPmMix.isChecked
 
 	private var category: Category? = null
 
@@ -143,6 +146,7 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 			_binding.edtPmPortion.setText(product.product.portion.toString())
 			_binding.edtPmBuyPrice.setText(product.product.buyPrice.toString())
 			_binding.edtPmSellPrice.setText(product.product.sellPrice.toString())
+			_binding.cbPmMix.isChecked = product.product.isMix
 
 			_binding.btnPmCategory.text = product.category.name
 			val count = "${product.options.size} Varian terpilih"
@@ -193,9 +197,9 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 
 	private fun getProduct(): Product{
 		return if (product?.product != null){
-			Product(product.product.id, name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), product.product.stock, product.product.isActive)
+			Product(product.product.id, name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), product.product.stock, isMix, product.product.isActive)
 		}else{
-			Product(name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), 0, false)
+			Product(name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), 0, isMix, false)
 		}
 	}
 }

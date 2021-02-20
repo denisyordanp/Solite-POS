@@ -75,6 +75,10 @@ class SoliteRepository private constructor(
 		return localDataSource.getVariantProduct(idProduct, idVariantOption)
 	}
 
+	override fun getVariantProductById(idProduct: Int): VariantProduct?{
+		return localDataSource.getVariantProductById(idProduct)
+	}
+
 	override fun insertVariantProduct(data: VariantProduct) {
 		localDataSource.insertVariantProduct(data)
 	}

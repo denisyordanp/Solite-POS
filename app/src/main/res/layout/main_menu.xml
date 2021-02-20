@@ -1,100 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="0dp"
-	android:layout_weight="1"
 	android:layout_height="match_parent"
-	android:padding="@dimen/basePadding"
-	android:background="@drawable/bg_main_menu"
-	android:orientation="vertical">
+	android:layout_weight="1">
 
-	<TextView
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="Pesanan"
-		android:textColor="@color/primaryVariant"/>
+		android:layout_height="match_parent"
+		android:padding="@dimen/basePadding"
+		android:background="@drawable/bg_main_menu"
+		android:orientation="vertical">
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_order"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_cook"
-		android:text="Pesanan"/>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Pesanan"
+			android:textColor="@color/primaryVariant"/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_not_pay"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_payment"
-		android:text="Belum bayar"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_order"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_cook"
+			android:text="Pesanan"/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_done"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_done"
-		android:text="Selesai"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_not_pay"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_payment"
+			android:text="Belum bayar"/>
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="Kedai"
-		android:textColor="@color/primaryVariant"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_done"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_done"
+			android:text="Selesai"/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_outcome"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_shopping"
-		android:text="Pengeluaran"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_cancel"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_cancel"
+			android:text="Batal"/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_purchase"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_purchase"
-		android:text="Pembelian"/>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Kedai"
+			android:textColor="@color/primaryVariant"/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_history"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_history"
-		android:text="Riwayat"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_outcome"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_shopping"
+			android:text="Pengeluaran"/>
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="Data"
-		android:textColor="@color/primaryVariant"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_purchase"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_purchase"
+			android:text="Pembelian"/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_master"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_masters"
-		android:text="Master"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_history"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_history"
+			android:text="Riwayat"/>
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="Aplikasi"
-		android:textColor="@color/primaryVariant"/>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Data"
+			android:textColor="@color/primaryVariant"/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/menu_setting"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/TextButton"
-		app:icon="@drawable/ic_settings"
-		android:text="Pengaturan"/>
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_master"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_masters"
+			android:text="Master"/>
 
-</LinearLayout>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Aplikasi"
+			android:textColor="@color/primaryVariant"/>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/menu_setting"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/TextButton"
+			app:icon="@drawable/ic_settings"
+			android:text="Pengaturan"/>
+
+	</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

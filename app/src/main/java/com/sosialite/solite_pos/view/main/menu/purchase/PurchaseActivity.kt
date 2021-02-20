@@ -16,14 +16,15 @@ import com.sosialite.solite_pos.databinding.OrderListBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.tools.MessageBottom
 import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.MainActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ItemPurchaseListAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
-import com.sosialite.solite_pos.view.main.menu.order.ProductOrderFragment
+import com.sosialite.solite_pos.view.main.menu.order.SelectProductOrderByCategoryFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
-class PurchaseActivity : AppCompatActivity() {
+class PurchaseActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityPurchaseBinding
 	private lateinit var adapter: ItemPurchaseListAdapter
@@ -86,7 +87,7 @@ class PurchaseActivity : AppCompatActivity() {
 			if (!it.isNullOrEmpty()){
 				val fragments: ArrayList<FragmentWithTitle> = ArrayList()
 				for (ctg in it){
-					val fragment = ProductOrderFragment(DetailOrderProductFragment.PURCHASE, ctg) { p ->
+					val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.PURCHASE, ctg, this) { p ->
 						if (purchase != null){
 							adapter.addItem(PurchaseProductWithProduct(
 									PurchaseProduct(purchase!!.purchaseNo, p.product!!.id, p.amount),

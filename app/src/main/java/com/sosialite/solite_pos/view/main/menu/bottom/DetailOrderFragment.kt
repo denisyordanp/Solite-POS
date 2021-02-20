@@ -104,9 +104,14 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 				Order.NEED_PAY -> {
 					_binding.contDoPay.visibility = View.VISIBLE
 				}
+
 				Order.DONE -> {
 					_binding.contDoPrint.visibility = View.VISIBLE
 					_binding.btnDoEdit.visibility = View.GONE
+				}
+
+				else -> {
+					_binding.linearLayout.visibility = View.GONE
 				}
 			}
 

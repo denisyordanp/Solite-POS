@@ -7,17 +7,26 @@ import java.io.Serializable
 data class ProductOrderDetail(
 		var product: Product?,
 		var variants: ArrayList<VariantOption>,
+		var mixProducts: ArrayList<ProductOrderDetail>,
 		var amount: Int,
 		var type: Int?
 ): Serializable{
-	constructor(product: Product?, variants: ArrayList<VariantOption>, amount: Int): this(product, variants, amount, null)
-	constructor(type: Int): this(null, ArrayList(), 0, type)
+	constructor(product: Product?, variants: ArrayList<VariantOption>, mixVariants: ArrayList<ProductOrderDetail>, amount: Int): this(product, variants, mixVariants, amount, null)
+	constructor(type: Int): this(null, ArrayList(), ArrayList(), 0, type)
 
 	companion object{
 		const val GRAND_TOTAL = 1
 		const val PAYMENT = 2
 		const val RETURN = 3
 		const val TITLE = 4
+
+		fun createProduct(product: Product?, variants: ArrayList<VariantOption>, amount: Int): ProductOrderDetail{
+			return ProductOrderDetail(product, variants, ArrayList(), amount)
+		}
+
+		fun createMix(product: Product?, variants: ArrayList<ProductOrderDetail>, amount: Int): ProductOrderDetail{
+			return ProductOrderDetail(product, ArrayList(), variants, amount)
+		}
 
 		val grand: ProductOrderDetail
 		get() = ProductOrderDetail(GRAND_TOTAL)

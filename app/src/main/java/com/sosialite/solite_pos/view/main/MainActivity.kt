@@ -38,6 +38,7 @@ class MainActivity : SocialiteActivity() {
 	private val settingFragment: SettingFragment = SettingFragment()
 	private val notPayFragment: NotPayFragment = NotPayFragment()
 	private val masterFragment: MasterFragment = MasterFragment()
+	private val cancelFragment: CancelFragment = CancelFragment()
 	private val doneFragment: DoneFragment = DoneFragment()
 
 	companion object{
@@ -98,10 +99,13 @@ class MainActivity : SocialiteActivity() {
 		_binding.mainMenu.menuOrder.setOnClickListener { setMenu(it, 0, true) }
 		_binding.mainMenu.menuNotPay.setOnClickListener { setMenu(it, 1, true) }
 		_binding.mainMenu.menuDone.setOnClickListener { setMenu(it, 2, true) }
-		_binding.mainMenu.menuOutcome.setOnClickListener { setMenu(it, 3, true) }
-		_binding.mainMenu.menuPurchase.setOnClickListener { setMenu(it, 4, true) }
-		_binding.mainMenu.menuMaster.setOnClickListener { setMenu(it, 5, false) }
-		_binding.mainMenu.menuSetting.setOnClickListener { setMenu(it, 6, false) }
+		_binding.mainMenu.menuCancel.setOnClickListener { setMenu(it, 3, true) }
+		_binding.mainMenu.menuOutcome.setOnClickListener { setMenu(it, 4, true) }
+		_binding.mainMenu.menuPurchase.setOnClickListener { setMenu(it, 5, true) }
+		_binding.mainMenu.menuMaster.setOnClickListener { setMenu(it, 6, false) }
+		_binding.mainMenu.menuSetting.setOnClickListener { setMenu(it, 7, false) }
+
+		_binding.mainMenu.menuOrder.performClick()
 	}
 
 	fun setToNotPay(order: OrderWithProduct?){
@@ -146,10 +150,11 @@ class MainActivity : SocialiteActivity() {
 		arrayList.add(0, FragmentWithTitle("", onProcessFragment))
 		arrayList.add(1, FragmentWithTitle("", notPayFragment))
 		arrayList.add(2, FragmentWithTitle("", doneFragment))
-		arrayList.add(3, FragmentWithTitle("", outcomeFragment))
-		arrayList.add(4, FragmentWithTitle("", purchaseFragment))
-		arrayList.add(5, FragmentWithTitle("", masterFragment))
-		arrayList.add(6, FragmentWithTitle("", settingFragment))
+		arrayList.add(3, FragmentWithTitle("", cancelFragment))
+		arrayList.add(4, FragmentWithTitle("", outcomeFragment))
+		arrayList.add(5, FragmentWithTitle("", purchaseFragment))
+		arrayList.add(6, FragmentWithTitle("", masterFragment))
+		arrayList.add(7, FragmentWithTitle("", settingFragment))
 
 		adapter.setData(arrayList)
 		_binding.vpMain.offscreenPageLimit = adapter.itemCount
@@ -158,9 +163,9 @@ class MainActivity : SocialiteActivity() {
 
 	private fun setMenu(v: View, pos: Int, isFabShow: Boolean){
 		when(pos){
-			0,1,2, -> setFab(1)
-			3 -> setFab(2)
-			4 -> setFab(3)
+			0,1,2,3 -> setFab(1)
+			4 -> setFab(2)
+			5 -> setFab(3)
 		}
 		if (isFabShow) _binding.fabMainNewOrder.show() else _binding.fabMainNewOrder.hide()
 		resetButton()
@@ -173,6 +178,7 @@ class MainActivity : SocialiteActivity() {
 		_binding.mainMenu.menuPurchase.setBackgroundColor(white)
 		_binding.mainMenu.menuSetting.setBackgroundColor(white)
 		_binding.mainMenu.menuHistory.setBackgroundColor(white)
+		_binding.mainMenu.menuCancel.setBackgroundColor(white)
 		_binding.mainMenu.menuMaster.setBackgroundColor(white)
 		_binding.mainMenu.menuNotPay.setBackgroundColor(white)
 		_binding.mainMenu.menuOrder.setBackgroundColor(white)

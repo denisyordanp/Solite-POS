@@ -41,7 +41,7 @@ interface SoliteDao{
 		for (item2 in details){
 			val product = getProduct(item2.idProduct)
 			val variants = getOrderVariants(item2.id)
-			products.add(ProductOrderDetail(product, ArrayList(variants.options), item2.amount))
+			products.add(ProductOrderDetail.createProduct(product, ArrayList(variants.options), item2.amount))
 		}
 		order.products = products
 		return order
@@ -82,28 +82,21 @@ interface SoliteDao{
 	}
 
 	@Transaction
-	fun reduceProductStock(idProduct: Int, isMix: Boolean){
-		val product = getProduct(idProduct)
-		if (isMix){
-			product.stock = product.stock-1
-		}else{
-			product.stock = product.stock-product.portion
-		}
-		updateProduct(product)
-	}
-
-	@Transaction
 	fun newOrder(order: OrderWithProduct){
 		insertOrder(order.order)
 		for (item in order.products){
 			if (item.product != null){
-				val category = getCategory(item.product!!.category)
-				val amount = if (category.isStock){
-					item.amount * item.product!!.portion
+
+				if (item.product!!.isMix){
+					for (p in item.mixProducts){
+						if (p.product != null){
+							decreaseProductStock(p.product!!.id, p.amount)
+						}
+					}
 				}else{
-					item.amount
+					decreaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
 				}
-				decreaseProductStock(item.product!!.id, amount)
+
 				val idOrder = insertDetailOrders(OrderDetail(order.order.orderNo, item.product!!.id, item.amount))
 				for (variant in item.variants){
 					insertVariantOrder(OrderProductVariant(idOrder.toInt(), variant.id, 0))
@@ -120,13 +113,16 @@ interface SoliteDao{
 		updateOrder(order.order)
 		for (item in order.products){
 			if (item.product != null){
-				val category = getCategory(item.product!!.category)
-				val amount = if (category.isStock){
-					item.amount * item.product!!.portion
+
+				if (item.product!!.isMix){
+					for (p in item.mixProducts){
+						if (p.product != null){
+							increaseProductStock(p.product!!.id, p.amount)
+						}
+					}
 				}else{
-					item.amount
+					increaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
 				}
-				increaseProductStock(item.product!!.id, amount)
 			}
 		}
 	}
@@ -206,6 +202,9 @@ interface SoliteDao{
 
 	@Query("SELECT * FROM ${AppDatabase.TBL_VARIANT_PRODUCT} WHERE ${Product.ID} = :idProduct AND ${VariantOption.ID} = :idVariantOption")
 	fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>
+
+	@Query("SELECT * FROM ${AppDatabase.TBL_VARIANT_PRODUCT} WHERE ${Product.ID} = :idProduct")
+	fun getVariantProductById(idProduct: Int): VariantProduct?
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insertVariantProduct(data: VariantProduct)
@@ -318,8 +317,8 @@ interface SoliteDao{
 		insertVariantOption(VariantOption(1, 1, "Kukus", "Dimsum Kukus", 0, isCount = false, isActive = true))
 		insertVariantOption(VariantOption(2, 1, "Goreng", "Dimsum Goreng", 0, isCount = false, isActive = true))
 		insertCategory(Category(1, "Dimsum", "Dimsum Porsian", isStock = true, isActive = true))
-		insertProduct(Product(1, "Siomay Ayam", 1, "Siomay Ayam", 14000, 2250, 4, 1, isActive = true))
-		insertProduct(Product(2, "Kwotie", 1, "Kwotie", 15000, 2500, 4, 1, isActive = true))
+		insertProduct(Product(1, "Siomay Ayam", 1, "Siomay Ayam", 14000, 2250, 4, 1, isMix = false, isActive = true))
+		insertProduct(Product(2, "Kwotie", 1, "Kwotie", 15000, 2500, 4, 1, isMix = false, isActive = true))
 		insertVariantProduct(VariantProduct(1, 1, 1, 1))
 		insertVariantProduct(VariantProduct(1, 1, 2, 2))
 		insertPayment(Payment(1, "Cash", "Pembayaran Tunai", 0f, isCash = true, isActive = true))

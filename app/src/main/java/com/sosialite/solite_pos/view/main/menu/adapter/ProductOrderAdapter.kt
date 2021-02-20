@@ -1,19 +1,21 @@
 package com.sosialite.solite_pos.view.main.menu.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.databinding.RvProductBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
+import com.sosialite.solite_pos.view.main.menu.order.SelectMixVariantOrderActivity
 
 class ProductOrderAdapter(
 		private val type: Int,
-		private val fragmentManager: FragmentManager,
+		private val activity: SocialiteActivity,
 		private var callback: ((ProductOrderDetail) -> Unit)?
 ) : RecyclerView.Adapter<ProductOrderAdapter.ListViewHolder>() {
 
@@ -33,15 +35,32 @@ class ProductOrderAdapter(
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		val p = items[position]
 
-		val price = if (type == DetailOrderProductFragment.ORDER){
-			p.product.sellPrice
-		}else{
-			p.product.buyPrice
+		val price = when (type) {
+			DetailOrderProductFragment.ORDER -> {
+				p.product.sellPrice
+			}
+			DetailOrderProductFragment.PURCHASE -> {
+				p.product.buyPrice
+			}
+			DetailOrderProductFragment.MIX -> {
+				holder.binding.tvPmvPrice.visibility = View.GONE
+				0
+			}
+			else -> 0
 		}
+
 		holder.binding.tvPmvName.text = p.product.name
 		holder.setPrice(price)
 		holder.itemView.setOnClickListener {
-			DetailOrderProductFragment(type, p, callback).show(fragmentManager, "detail-order-product")
+			if (p.product.isMix){
+				activity.startActivityForResult(
+					Intent(activity, SelectMixVariantOrderActivity::class.java)
+						.putExtra(SelectMixVariantOrderActivity.PRODUCT, p.product),
+					SelectMixVariantOrderActivity.RC_MIX
+				)
+			}else{
+				DetailOrderProductFragment(type, p, callback).show(activity.supportFragmentManager, "detail-order-product")
+			}
 		}
 	}
 
@@ -52,7 +71,6 @@ class ProductOrderAdapter(
 	class ListViewHolder(val binding: RvProductBinding) : RecyclerView.ViewHolder(binding.root){
 		fun setPrice(price: Int?){
 			if (price != null){
-				binding.tvPmvPrice.visibility = View.VISIBLE
 				binding.tvPmvPrice.text = toRupiah(price)
 			}
 		}

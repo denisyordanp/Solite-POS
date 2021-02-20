@@ -1,5 +1,6 @@
 package com.sosialite.solite_pos.view.main.menu.master.dialog
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.databinding.FragmentDetailOrderProductBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.setDialogFragment
+import com.sosialite.solite_pos.view.main.menu.order.SelectMixVariantOrderActivity
 
 class DetailOrderProductFragment(
 		private val type: Int,
@@ -28,6 +30,7 @@ class DetailOrderProductFragment(
 	private lateinit var _binding: FragmentDetailOrderProductBinding
 
 	companion object{
+		const val MIX: Int = 0
 		const val ORDER: Int = 1
 		const val PURCHASE: Int = 2
 	}
@@ -86,20 +89,28 @@ class DetailOrderProductFragment(
 	private fun setData(){
 		_binding.tvDopName.text = product.product.name
 
-		if (type == ORDER){
-			setVariants()
+		when(type){
+			ORDER -> {
+				setVariants()
+				_binding.tvPlStock.visibility = View.VISIBLE
 
-			if (product.category.isStock){
 				maxAmount = product.product.stock / 4
-				_binding.tvplStock.text = "Sisa : ${maxAmount} Porsi"
-			}else{
-				maxAmount = product.product.stock
-				_binding.tvplStock.text = "Sisa : ${maxAmount} Pcs"
+				_binding.tvPlStock.text = "Sisa : ${maxAmount} Porsi"
+
 			}
-		}else{
-			_binding.contPlPlusMinus.visibility = View.GONE
-			_binding.contPlValue.visibility = View.VISIBLE
-			_binding.tvplStock.visibility = View.GONE
+			PURCHASE -> {
+				_binding.contPlPlusMinus.visibility = View.GONE
+				_binding.contPlValue.visibility = View.VISIBLE
+				_binding.tvPlStock.visibility = View.GONE
+			}
+			MIX -> {
+				_binding.contPlPlusMinus.visibility = View.VISIBLE
+				_binding.contPlValue.visibility = View.GONE
+				_binding.tvPlStock.visibility = View.VISIBLE
+
+				maxAmount = product.product.stock
+				_binding.tvPlStock.text = "Sisa : ${maxAmount} Pcs"
+			}
 		}
 	}
 
@@ -195,10 +206,10 @@ class DetailOrderProductFragment(
 			}
 		}
 
-		val detail = if (type == ORDER){
-			ProductOrderDetail(product.product, arrayVariants, amount)
+		val detail = if (type == PURCHASE){
+			ProductOrderDetail.createProduct(product.product, arrayVariants, values.toInt())
 		}else{
-			ProductOrderDetail(product.product, arrayVariants, values.toInt())
+			ProductOrderDetail.createProduct(product.product, arrayVariants, amount)
 		}
 		callback?.invoke(detail)
 		dialog?.dismiss()

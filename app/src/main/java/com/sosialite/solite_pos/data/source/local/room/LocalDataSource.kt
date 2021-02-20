@@ -1,6 +1,7 @@
 package com.sosialite.solite_pos.data.source.local.room
 
 import androidx.lifecycle.LiveData
+import androidx.room.Query
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
@@ -72,6 +73,10 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 
 	fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>{
 		return soliteDao.getVariantProduct(idProduct, idVariantOption)
+	}
+
+	fun getVariantProductById(idProduct: Int): VariantProduct?{
+		return soliteDao.getVariantProductById(idProduct)
 	}
 
 	fun insertVariantProduct(data: VariantProduct){

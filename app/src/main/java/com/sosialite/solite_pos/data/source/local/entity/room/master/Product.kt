@@ -46,6 +46,9 @@ data class Product(
 	@ColumnInfo(name = STOCK)
 	var stock: Int,
 
+	@ColumnInfo(name = MIX)
+	var isMix: Boolean,
+
 	@ColumnInfo(name = STATUS)
 	var isActive: Boolean
 ): Serializable{
@@ -58,7 +61,8 @@ data class Product(
 		const val STOCK = "stock"
 		const val NAME = "name"
 		const val DESC = "desc"
+		const val MIX = "mix"
 	}
 
-	constructor(name: String, category: Int, desc: String, sellPrice: Int, buyPrice: Int, portion: Int, stock: Int, isActive: Boolean): this(0, name, category, desc, sellPrice, buyPrice, portion, stock, isActive)
+	constructor(name: String, category: Int, desc: String, sellPrice: Int, buyPrice: Int, portion: Int, stock: Int, isMix: Boolean, isActive: Boolean): this(0, name, category, desc, sellPrice, buyPrice, portion, stock, isMix, isActive)
 }

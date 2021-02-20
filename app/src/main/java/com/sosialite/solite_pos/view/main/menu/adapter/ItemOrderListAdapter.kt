@@ -3,10 +3,12 @@ package com.sosialite.solite_pos.view.main.menu.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.databinding.*
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.productOrderIndex
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
@@ -213,17 +215,42 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 
 			val no = "$adapterPosition."
 			val amount = "${detail.amount}x"
-			var total = 0
-			if (detail.product != null){
-				total = detail.product!!.sellPrice * detail.amount
-			}
 
 			binding.tvIoNo.text = no
 			binding.tvIoAmount.text = amount
 			binding.tvIoName.text = detail.product?.name
 			binding.tvIoPrice.text = toRupiah(detail.product?.sellPrice)
-			binding.tvIoTotal.text = toRupiah(total)
+			binding.tvIoTotal.text = toRupiah(getTotal(detail))
 
+			setMix(detail)
+			setBtnDelete(detail)
+		}
+
+		private fun getTotal(detail: ProductOrderDetail): Int{
+			var total = 0
+			if (detail.product != null){
+				val product: Product = detail.product!!
+				total = product.sellPrice * detail.amount
+			}
+			return total
+		}
+
+		private fun setMix(detail: ProductOrderDetail){
+			if (detail.product != null){
+				if (detail.product!!.isMix){
+					if (detail.mixProducts.isNotEmpty()){
+						for (item in detail.mixProducts){
+							val txt = "${item.amount}x ${item.product?.name}"
+							val textView = TextView(binding.root.context)
+							textView.text = txt
+							binding.contIoMixVariant.addView(textView)
+						}
+					}
+				}
+			}
+		}
+
+		private fun setBtnDelete(detail: ProductOrderDetail){
 			if (order?.order?.status == Order.NEED_PAY){
 				binding.btnOlDelete.visibility = View.INVISIBLE
 			}else{

@@ -28,6 +28,7 @@ internal interface SoliteDataSource{
 	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>>
 
 	fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>
+	fun getVariantProductById(idProduct: Int): VariantProduct?
 	fun insertVariantProduct(data: VariantProduct)
 	fun removeVariantProduct(data: VariantProduct)
 
