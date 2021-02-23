@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentTime
@@ -15,27 +16,32 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity(
-	tableName = AppDatabase.TBL_PURCHASE,
-	primaryKeys = [Purchase.NO],
-	indices = [
-		Index(value = [Purchase.NO])
-	]
+		tableName = Purchase.DB_NAME,
+		primaryKeys = [Purchase.NO],
+		indices = [
+			Index(value = [Purchase.NO])
+		]
 )
 data class Purchase(
-	@ColumnInfo(name = NO)
-	var purchaseNo: String,
+		@ColumnInfo(name = NO)
+		var purchaseNo: String,
 
-	@ColumnInfo(name = Supplier.ID)
-	var idSupplier: Int,
+		@ColumnInfo(name = Supplier.ID)
+		var idSupplier: Int,
 
-	@ColumnInfo(name = PURCHASE_DATE)
-	var purchaseTime: String
+		@ColumnInfo(name = PURCHASE_DATE)
+		var purchaseTime: String,
+
+		@ColumnInfo(name = UPLOAD)
+		var isUploaded: Boolean
 ): Serializable {
 
 	companion object{
 
 		const val PURCHASE_DATE = "purchase_date"
 		const val NO = "purchase_no"
+
+		const val DB_NAME = "purchase"
 
 		private var setting: SettingPref? = null
 
@@ -90,11 +96,21 @@ data class Purchase(
 		}
 	}
 
-	constructor(context: Context, idSupplier: Int): this(purchaseNo(context), idSupplier, currentDate)
+	constructor(context: Context, idSupplier: Int): this(purchaseNo(context), idSupplier, currentDate, false)
 
 	val timeString: String
 		get() {
 			return dateFormat(purchaseTime, MainConfig.ldFormat)
+		}
+
+	val hashMap: HashMap<String, Any?>
+		get() {
+			return hashMapOf(
+					NO to purchaseNo,
+					Supplier.ID to idSupplier,
+					PURCHASE_DATE to purchaseTime,
+					UPLOAD to isUploaded
+			)
 		}
 
 }

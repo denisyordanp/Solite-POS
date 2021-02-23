@@ -140,14 +140,14 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			VALUE_COLUMN -> {
 				when(type){
 					DETAIL -> ValueDetailColumnViewHolder(RvDetailItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-					ORDER -> ValueOrderColumnViewHolder(RvItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+					ORDER, EDIT -> ValueOrderColumnViewHolder(RvItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 					else -> throw IllegalArgumentException("Invalid adapterType")
 				}
 			}
 			TOTAL_COLUMN -> {
 				when(type){
 					DETAIL -> TotalDetailColumnViewHolder(RvTotalDetailItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-					ORDER -> TotalOrderColumnViewHolder(RvTotalItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+					ORDER, EDIT -> TotalOrderColumnViewHolder(RvTotalItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 					else -> throw IllegalArgumentException("Invalid adapterType")
 				}
 			}
@@ -215,10 +215,18 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 
 			val no = "$adapterPosition."
 			val amount = "${detail.amount}x"
+			val variants = StringBuilder()
+			for (variant in detail.variants){
+				if (variants.isNotEmpty()){
+					variants.append(", ")
+				}
+				variants.append(variant.name)
+			}
 
 			binding.tvIoNo.text = no
 			binding.tvIoAmount.text = amount
 			binding.tvIoName.text = detail.product?.name
+			binding.tvIoVariant.text = variants
 			binding.tvIoPrice.text = toRupiah(detail.product?.sellPrice)
 			binding.tvIoTotal.text = toRupiah(getTotal(detail))
 
@@ -238,12 +246,19 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		private fun setMix(detail: ProductOrderDetail){
 			if (detail.product != null){
 				if (detail.product!!.isMix){
+					binding.tvIoVariant.visibility = View.GONE
 					if (detail.mixProducts.isNotEmpty()){
 						for (item in detail.mixProducts){
-							val txt = "${item.amount}x ${item.product?.name}"
-							val textView = TextView(binding.root.context)
-							textView.text = txt
-							binding.contIoMixVariant.addView(textView)
+							val txt = "${item.product.name} x${item.amount}"
+							val tvProduct = TextView(binding.root.context)
+							tvProduct.text = txt
+							binding.contIoMixVariant.addView(tvProduct)
+
+							for (variant in item.variants){
+								val tvVariant = TextView(binding.root.context)
+								tvVariant.text = variant.name
+								binding.contIoMixVariant.addView(tvVariant)
+							}
 						}
 					}
 				}

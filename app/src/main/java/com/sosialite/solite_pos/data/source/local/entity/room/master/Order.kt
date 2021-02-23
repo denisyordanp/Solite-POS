@@ -7,6 +7,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentTime
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
@@ -17,37 +18,40 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity(
-	tableName = AppDatabase.TBL_ORDER,
-	primaryKeys = [Order.NO],
-	foreignKeys = [
-		ForeignKey(
-			entity = Customer::class,
-			parentColumns = [Customer.ID],
-			childColumns = [Customer.ID],
-			onDelete = ForeignKey.CASCADE)
-	],
-	indices = [
-		Index(value = [Customer.ID])
-	]
+		tableName = Order.DB_NAME,
+		primaryKeys = [Order.NO],
+		foreignKeys = [
+			ForeignKey(
+					entity = Customer::class,
+					parentColumns = [Customer.ID],
+					childColumns = [Customer.ID],
+					onDelete = ForeignKey.CASCADE)
+		],
+		indices = [
+			Index(value = [Customer.ID])
+		]
 )
 data class Order(
-	@ColumnInfo(name = NO)
-	var orderNo: String,
+		@ColumnInfo(name = NO)
+		var orderNo: String,
 
-	@ColumnInfo(name = Customer.ID)
-	var customer: Int,
+		@ColumnInfo(name = Customer.ID)
+		var customer: Int,
 
-	@ColumnInfo(name = ORDER_DATE)
-	var orderTime: String,
+		@ColumnInfo(name = ORDER_DATE)
+		var orderTime: String,
 
-	@ColumnInfo(name = COOK_TIME)
-	var cookTime: String?,
+		@ColumnInfo(name = COOK_TIME)
+		var cookTime: String?,
 
-	@ColumnInfo(name = TAKE_AWAY)
-	var isTakeAway: Boolean,
+		@ColumnInfo(name = TAKE_AWAY)
+		var isTakeAway: Boolean,
 
-	@ColumnInfo(name = STATUS)
-	var status: Int
+		@ColumnInfo(name = STATUS)
+		var status: Int,
+
+		@ColumnInfo(name = UPLOAD)
+		var isUploaded: Boolean
 ): Serializable {
 
 	companion object{
@@ -58,6 +62,8 @@ data class Order(
 		const val STATUS = "status"
 		const val NO = "order_no"
 
+		const val DB_NAME = "order"
+
 		const val ON_PROCESS = 0
 		const val NEED_PAY = 1
 		const val CANCEL = 2
@@ -65,7 +71,7 @@ data class Order(
 
 		fun getFilter(status: Int): SimpleSQLiteQuery {
 			val query = StringBuilder().append("SELECT * FROM ")
-			query.append(AppDatabase.TBL_ORDER)
+			query.append(DB_NAME)
 			query.append(" WHERE ")
 			query.append(STATUS)
 			query.append(" = ").append(status)
@@ -125,7 +131,7 @@ data class Order(
 		}
 	}
 
-	constructor(orderNo: String, customer: Int, orderTime: String): this(orderNo, customer, orderTime, null, false, ON_PROCESS)
+	constructor(orderNo: String, customer: Int, orderTime: String): this(orderNo, customer, orderTime, null, false, ON_PROCESS, false)
 
 	fun isCancelable(context: Context): Boolean{
 		return if (cookTime != null){
@@ -163,4 +169,16 @@ data class Order(
 			null
 		}
 	}
+
+	val hashMap: HashMap<String, Any?>
+		get() {
+			return hashMapOf(
+					NO to orderNo,
+					Customer.ID to customer,
+					ORDER_DATE to orderTime,
+					COOK_TIME to cookTime,
+					TAKE_AWAY to status,
+					UPLOAD to isUploaded
+			)
+		}
 }

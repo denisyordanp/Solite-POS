@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Customer
+import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.ActivityCustomerNameBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -25,6 +27,8 @@ class SelectCustomerActivity : SocialiteActivity() {
 	companion object{
 		const val CUSTOMER: String = "customer"
 		const val RC_COSTUMER = 10
+
+		private val TAG = SelectCustomerActivity::class.qualifiedName
 	}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,13 +82,17 @@ class SelectCustomerActivity : SocialiteActivity() {
 		val data = Intent()
 		if (customer.id == -1){
 			val newCustomer = Customer(nameCustomer)
-			newCustomer.id = getIdCustomer(newCustomer).toInt()
-			data.putExtra(CUSTOMER, newCustomer)
+			getIdCustomer(newCustomer){
+				newCustomer.id
+				data.putExtra(CUSTOMER, newCustomer)
+				setResult(RESULT_OK, data)
+				finish()
+			}
 		}else{
 			data.putExtra(CUSTOMER, customer)
+			setResult(RESULT_OK, data)
+			finish()
 		}
-		setResult(RESULT_OK, data)
-		finish()
 	}
 
 	private val nameCustomer: String
@@ -111,7 +119,17 @@ class SelectCustomerActivity : SocialiteActivity() {
 		})
 	}
 
-	private fun getIdCustomer(customer: Customer): Long{
-		return viewModel.insertCustomers(customer)
+	private fun getIdCustomer(customer: Customer, callback: (Int) -> Unit){
+		viewModel.insertCustomers(customer){
+			if (it.status == StatusResponse.FINISH) callback.invoke(it.body!!)
+			when(it.status){
+				StatusResponse.SUCCESS ->
+					Log.w(TAG, "Success upload data")
+				StatusResponse.ERROR -> {
+					Log.w(TAG, "Error upload data")
+				}
+				else -> {}
+			}
+		}
 	}
 }

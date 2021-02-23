@@ -3,10 +3,7 @@ package com.sosialite.solite_pos.data.source.local.room
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
-import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.*
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.*
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.*
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
@@ -17,20 +14,29 @@ interface SoliteDao{
 
 //	ORDER
 
-	@Query("SELECT * FROM '${AppDatabase.TBL_ORDER}' WHERE ${Order.STATUS} = :status")
-	fun getOrdersByStatus(status: Int): List<OrderWithCustomer>
+	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.STATUS} = :status AND date(${Order.ORDER_DATE}) = date(:date)")
+	fun getOrdersByStatus(status: Int, date: String): List<OrderWithCustomer>
 
-	@Query("SELECT * FROM '${AppDatabase.TBL_ORDER}' WHERE ${Order.NO} = :orderNo")
+//	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.STATUS} = ${Order.DONE} AND date(${Order.ORDER_DATE}) = date(:date)")
+//	fun getOrders(date: String): LiveData<List<Order>>
+
+	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
 	fun getOrdersByNo(orderNo: String): OrderWithCustomer
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_ORDER_DETAIL} WHERE ${Order.NO} = :orderNo")
+	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
 	fun getDetailOrders(orderNo: String): List<OrderDetail>
 
-	@Query("SELECT * FROM '${AppDatabase.TBL_ORDER}' WHERE ${Order.NO} = :orderNo")
+	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
 	fun getOrderPayment(orderNo: String): OrderWithPayment?
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_ORDER_DETAIL} WHERE ${OrderDetail.ID} = :idDetail")
+	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
 	fun getOrderVariants(idDetail: Int): DetailWithVariantOption
+
+	@Query("SELECT * FROM ${OrderProductVariantMix.DB_NAME} WHERE ${OrderProductVariantMix.ID} = :idMix")
+	fun getOrderMixVariantsOption(idMix: Int): DetailProductMixWithVariantOption
+
+	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
+	fun getOrderVariantsMix(idDetail: Int): DetailWithVariantMixOption
 
 	@Transaction
 	fun getOrderWithProduct(item: OrderWithCustomer): OrderWithProduct{
@@ -40,16 +46,30 @@ interface SoliteDao{
 		val details = getDetailOrders(item.order.orderNo)
 		for (item2 in details){
 			val product = getProduct(item2.idProduct)
-			val variants = getOrderVariants(item2.id)
-			products.add(ProductOrderDetail.createProduct(product, ArrayList(variants.options), item2.amount))
+			if (product.isMix){
+				val mixes = getOrderVariantsMix(item2.id)
+				val mixProduct: ArrayList<ProductMixOrderDetail> = ArrayList()
+				for (mix in mixes.variantsMix){
+					val variants = getOrderMixVariantsOption(mix.id)
+					mixProduct.add(ProductMixOrderDetail(
+							getProduct(mix.idProduct),
+							ArrayList(variants.options),
+							mix.amount
+					))
+				}
+				products.add(ProductOrderDetail.createMix(product, mixProduct, item2.amount))
+			}else{
+				val variants = getOrderVariants(item2.id)
+				products.add(ProductOrderDetail.createProduct(product, ArrayList(variants.options), item2.amount))
+			}
 		}
 		order.products = products
 		return order
 	}
 
 	@Transaction
-	fun getListOrderDetail(status: Int): List<OrderWithProduct>{
-		val orders = getOrdersByStatus(status)
+	fun getListOrderDetail(status: Int, date: String): List<OrderWithProduct>{
+		val orders = getOrdersByStatus(status, date)
 		val list: ArrayList<OrderWithProduct> = ArrayList()
 		for (item in orders){
 			list.add(getOrderWithProduct(item))
@@ -73,6 +93,12 @@ interface SoliteDao{
 	fun insertVariantOrder(variants: OrderProductVariant)
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insertMixVariantOrder(variants: OrderMixProductVariant)
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insertVariantMixOrder(variants: OrderProductVariantMix): Long
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insertPaymentOrder(payment: OrderPayment)
 
 	@Transaction
@@ -87,19 +113,24 @@ interface SoliteDao{
 		for (item in order.products){
 			if (item.product != null){
 
+				val idOrder = insertDetailOrders(OrderDetail(order.order.orderNo, item.product!!.id, item.amount))
+
 				if (item.product!!.isMix){
 					for (p in item.mixProducts){
-						if (p.product != null){
-							decreaseProductStock(p.product!!.id, p.amount)
+						decreaseProductStock(p.product.id, p.amount)
+
+						val idMix = insertVariantMixOrder(OrderProductVariantMix(idOrder.toInt(), p.product.id, p.amount)).toInt()
+
+						for (variant in p.variants){
+							insertMixVariantOrder(OrderMixProductVariant(idMix, variant.id))
 						}
 					}
 				}else{
 					decreaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
-				}
 
-				val idOrder = insertDetailOrders(OrderDetail(order.order.orderNo, item.product!!.id, item.amount))
-				for (variant in item.variants){
-					insertVariantOrder(OrderProductVariant(idOrder.toInt(), variant.id, 0))
+					for (variant in item.variants){
+						insertVariantOrder(OrderProductVariant(idOrder.toInt(), variant.id))
+					}
 				}
 			}
 		}
@@ -116,9 +147,7 @@ interface SoliteDao{
 
 				if (item.product!!.isMix){
 					for (p in item.mixProducts){
-						if (p.product != null){
-							increaseProductStock(p.product!!.id, p.amount)
-						}
+						increaseProductStock(p.product.id, p.amount)
 					}
 				}else{
 					increaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
@@ -129,7 +158,7 @@ interface SoliteDao{
 
 //	PURCHASE
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_PURCHASE}")
+	@Query("SELECT * FROM ${Purchase.DB_NAME}")
 	fun getPurchases(): List<Purchase>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -138,7 +167,7 @@ interface SoliteDao{
 	@Update
 	fun updatePurchase(data: Purchase)
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_PURCHASE_PRODUCT} WHERE ${Purchase.NO} = :purchaseNo")
+	@Query("SELECT * FROM ${PurchaseProduct.DB_NAME} WHERE ${Purchase.NO} = :purchaseNo")
 	fun getPurchasesProduct(purchaseNo: String): List<PurchaseProduct>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -177,10 +206,10 @@ interface SoliteDao{
 
 //	PRODUCT
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_PRODUCT} WHERE ${Product.ID} = :idProduct")
+	@Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
 	fun getProduct(idProduct: Int): Product
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_PRODUCT} WHERE ${Category.ID} = :category")
+	@Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :category")
 	fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -189,41 +218,41 @@ interface SoliteDao{
 	@Update
 	fun updateProduct(data: Product)
 
-	@Query("UPDATE ${AppDatabase.TBL_PRODUCT} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${AppDatabase.TBL_PRODUCT} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
+	@Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
 	fun increaseProductStock(idProduct: Int, amount: Int)
 
-	@Query("UPDATE ${AppDatabase.TBL_PRODUCT} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${AppDatabase.TBL_PRODUCT} WHERE ${Product.ID} = :idProduct) - :amount) WHERE ${Product.ID} = :idProduct")
+	@Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) - :amount) WHERE ${Product.ID} = :idProduct")
 	fun decreaseProductStock(idProduct: Int, amount: Int)
 
 //	VARIANT PRODUCT
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_PRODUCT} WHERE ${Category.ID} = :idCategory")
+	@Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :idCategory")
 	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>>
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_VARIANT_PRODUCT} WHERE ${Product.ID} = :idProduct AND ${VariantOption.ID} = :idVariantOption")
+	@Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct AND ${VariantOption.ID} = :idVariantOption")
 	fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_VARIANT_PRODUCT} WHERE ${Product.ID} = :idProduct")
+	@Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
 	fun getVariantProductById(idProduct: Int): VariantProduct?
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insertVariantProduct(data: VariantProduct)
 
-	@Query("DELETE FROM ${AppDatabase.TBL_VARIANT_PRODUCT} WHERE ${VariantOption.ID} = :idVariant AND ${Product.ID} = :idProduct")
+	@Query("DELETE FROM ${VariantProduct.DB_NAME} WHERE ${VariantOption.ID} = :idVariant AND ${Product.ID} = :idProduct")
 	fun removeVariantProduct(idVariant: Int, idProduct: Int)
 
 //	VARIANT MIX
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_VARIANT} WHERE ${Variant.ID} = :idVariant")
+	@Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
 	fun getVariantMixProduct(idVariant: Int): VariantWithVariantMix
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_VARIANT} WHERE ${Variant.ID} = :idVariant")
+	@Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
 	fun getLiveVariantMixProduct(idVariant: Int): LiveData<VariantWithVariantMix>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insertVariantMix(data: VariantMix)
 
-	@Query("DELETE FROM ${AppDatabase.TBL_VARIANT_MIX} WHERE ${Variant.ID} = :idVariant AND ${Product.ID} = :idProduct")
+	@Query("DELETE FROM ${VariantMix.DB_NAME} WHERE ${Variant.ID} = :idVariant AND ${Product.ID} = :idProduct")
 	fun removeVariantMix(idVariant: Int, idProduct: Int)
 
 //	CATEGORY
@@ -231,7 +260,7 @@ interface SoliteDao{
 	@RawQuery(observedEntities = [Category::class])
 	fun getCategories(query: SupportSQLiteQuery): LiveData<List<Category>>
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_CATEGORY} WHERE ${Category.ID} = :idCategory")
+	@Query("SELECT * FROM ${Category.DB_NAME} WHERE ${Category.ID} = :idCategory")
 	fun getCategory(idCategory: Int): Category
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -242,7 +271,7 @@ interface SoliteDao{
 
 //	VARIANT
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_VARIANT}")
+	@Query("SELECT * FROM ${Variant.DB_NAME}")
 	fun getVariants(): LiveData<List<Variant>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -264,7 +293,7 @@ interface SoliteDao{
 
 //	CUSTOMERS
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_CUSTOMER}")
+	@Query("SELECT * FROM ${Customer.DB_NAME}")
 	fun getCustomers(): LiveData<List<Customer>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -275,10 +304,10 @@ interface SoliteDao{
 
 	//	SUPPLIER
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_SUPPLIER}")
+	@Query("SELECT * FROM ${Supplier.DB_NAME}")
 	fun getSuppliers(): LiveData<List<Supplier>>
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_SUPPLIER} WHERE ${Supplier.ID} = :idSupplier")
+	@Query("SELECT * FROM ${Supplier.DB_NAME} WHERE ${Supplier.ID} = :idSupplier")
 	fun getSupplierById(idSupplier: Int): Supplier
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -289,7 +318,7 @@ interface SoliteDao{
 
 //	PAYMENTS
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_PAYMENT}")
+	@Query("SELECT * FROM ${Payment.DB_NAME}")
 	fun getPayments(): LiveData<List<Payment>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -300,7 +329,7 @@ interface SoliteDao{
 
 //	OUTCOME
 
-	@Query("SELECT * FROM ${AppDatabase.TBL_OUTCOME} WHERE date(${Outcome.DATE}) = date(:date)")
+	@Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) = date(:date)")
 	fun getOutcome(date: String): LiveData<List<Outcome>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -314,15 +343,21 @@ interface SoliteDao{
 	@Transaction
 	fun fillData(){
 		insertVariant(Variant(1, "Cara Masak", Variant.ONE_OPTION, isMust = true, isMix = false))
-		insertVariantOption(VariantOption(1, 1, "Kukus", "Dimsum Kukus", 0, isCount = false, isActive = true))
-		insertVariantOption(VariantOption(2, 1, "Goreng", "Dimsum Goreng", 0, isCount = false, isActive = true))
-		insertCategory(Category(1, "Dimsum", "Dimsum Porsian", isStock = true, isActive = true))
-		insertProduct(Product(1, "Siomay Ayam", 1, "Siomay Ayam", 14000, 2250, 4, 1, isMix = false, isActive = true))
-		insertProduct(Product(2, "Kwotie", 1, "Kwotie", 15000, 2500, 4, 1, isMix = false, isActive = true))
+		insertVariant(Variant(2, "Mix Variant", Variant.MULTIPLE_OPTION, isMust = true, isMix = true))
+		insertVariantOption(VariantOption(1, 1, "Kukus", "Dimsum Kukus", 0, isCount = false, isActive = true, false))
+		insertVariantOption(VariantOption(2, 1, "Goreng", "Dimsum Goreng", 0, isCount = false, isActive = true, false))
+		insertCategory(Category(1, "Dimsum", "Dimsum Porsian", isStock = true, isActive = true, false))
+		insertCategory(Category(2, "Mix Variant", "Dimsum Mix", isStock = false, isActive = true, false))
+		insertProduct(Product(1, "Siomay Ayam", 1, "Siomay Ayam", 14000, 2250, 4, 10, isMix = false, isActive = true, false))
+		insertProduct(Product(2, "Kwotie", 1, "Kwotie", 15000, 2500, 4, 10, isMix = false, isActive = true, false))
+		insertProduct(Product(3, "Small Mix", 2, "Small Mix", 18000, 1, 5, 0, isMix = true, isActive = true, false))
+		insertVariantMix(VariantMix(1, 2, 1))
+		insertVariantMix(VariantMix(2, 2, 2))
 		insertVariantProduct(VariantProduct(1, 1, 1, 1))
-		insertVariantProduct(VariantProduct(1, 1, 2, 2))
-		insertPayment(Payment(1, "Cash", "Pembayaran Tunai", 0f, isCash = true, isActive = true))
-		insertPayment(Payment(2, "Debit", "Pembayaran Debit", 0.1f, isCash = false, isActive = true))
-		insertSupplier(Supplier(1, "Dimsum Almaris", "1654156123", "Setrasari", "Lumanyun"))
+		insertVariantProduct(VariantProduct(2, 1, 2, 2))
+		insertVariantProduct(VariantProduct(3, 2, 1, 3))
+		insertPayment(Payment(1, "Cash", "Pembayaran Tunai", 0f, isCash = true, isActive = true, false))
+		insertPayment(Payment(2, "Debit", "Pembayaran Debit", 0.1f, isCash = false, isActive = true, false))
+		insertSupplier(Supplier(1, "Dimsum Almaris", "1654156123", "Setrasari", "Lumanyun", false))
 	}
 }

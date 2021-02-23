@@ -10,9 +10,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".view.main.menu.order.SelectMixVariantOrderActivity"></activity>
+        <activity android:name=".view.main.menu.outcome.DetailOutcomeActivity"></activity>
+        <activity android:name=".view.main.menu.order.SelectMixVariantOrderActivity" />
         <activity android:name=".view.main.menu.purchase.PurchaseActivity" />
         <activity android:name=".view.main.menu.master.product.ListProductMasterCategoryActivity" />
         <activity android:name=".view.main.menu.master.detail.VariantMixOptionActivity" />

@@ -104,6 +104,7 @@ class DetailOrderProductFragment(
 				_binding.tvPlStock.visibility = View.GONE
 			}
 			MIX -> {
+				setVariants()
 				_binding.contPlPlusMinus.visibility = View.VISIBLE
 				_binding.contPlValue.visibility = View.GONE
 				_binding.tvPlStock.visibility = View.VISIBLE

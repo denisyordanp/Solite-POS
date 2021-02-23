@@ -2,12 +2,13 @@ package com.sosialite.solite_pos.data.source.local.entity.room.bridge
 
 import androidx.room.*
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import java.io.Serializable
 
 @Entity(
-		tableName = AppDatabase.TBL_VARIANT_MIX,
+		tableName = VariantMix.DB_NAME,
 		foreignKeys = [
 			ForeignKey(
 					entity = Variant::class,
@@ -42,7 +43,18 @@ data class VariantMix(
 ): Serializable{
 	companion object{
 		const val ID = "id_variant_mix"
+
+		const val DB_NAME = "variant_mix"
 	}
 
 	constructor(idVariant: Int, idProduct: Int): this(0, idVariant, idProduct)
+
+	val hashMap: HashMap<String, Any?>
+		get() {
+			return hashMapOf(
+				ID to id,
+				Variant.ID to idVariant,
+				Product.ID to idProduct
+			)
+		}
 }

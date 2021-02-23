@@ -1,7 +1,6 @@
 package com.sosialite.solite_pos.data.source.local.room
 
 import androidx.lifecycle.LiveData
-import androidx.room.Query
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
@@ -27,8 +26,8 @@ class LocalDataSource private constructor(private val soliteDao: SoliteDao) {
 		}
 	}
 
-	fun getOrderDetail(status: Int): List<OrderWithProduct>{
-		return soliteDao.getListOrderDetail(status)
+	fun getOrderDetail(status: Int, date: String): List<OrderWithProduct>{
+		return soliteDao.getListOrderDetail(status, date)
 	}
 
 	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct{

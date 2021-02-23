@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/baseMargin"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_rc_refresh"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:icon="@drawable/ic_refresh"
+            app:iconGravity="end"
+            app:iconTint="@color/black"
+            android:text="Hitung ulang"/>
+
+        <TextView
+            android:id="@+id/tv_rc_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/LText"
+            android:layout_gravity="center"
+            android:text="Rabu, 24 Februari 2021" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/MText"
+            android:text="Penjualan" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_rc_income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/baseMargin"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/MText"
+            android:text="Pengeluaran" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_rc_outcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/baseMargin"/>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/LMargin"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/MText"
+                    android:text="Total Penjualan"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"/>
+
+                <TextView
+                    android:id="@+id/tv_rc_total_income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:paddingStart="@dimen/LMargin"
+                    android:paddingEnd="0dp"
+                    android:textSize="@dimen/MText"
+                    android:layout_gravity="end"
+                    android:text="Rp. 200.000"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/LMargin"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/MText"
+                    android:text="Total Pengeluaran"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"/>
+
+                <TextView
+                    android:id="@+id/tv_rc_total_outcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:paddingStart="@dimen/LMargin"
+                    android:paddingEnd="0dp"
+                    android:textSize="@dimen/MText"
+                    android:layout_gravity="end"
+                    android:text="Rp. 20.000"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <View/>
+
+                <View/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/blackGrey"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/LMargin"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/MText"
+                    android:text="Grand Total"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"/>
+
+                <TextView
+                    android:id="@+id/tv_rc_grand_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/LMargin"
+                    android:paddingEnd="0dp"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/MText"
+                    android:layout_gravity="end"
+                    android:text="Rp. 200.000"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

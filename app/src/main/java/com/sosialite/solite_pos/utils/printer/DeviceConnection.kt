@@ -25,7 +25,7 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 					activity.applicationContext,
 					BluetoothDeviceListActivity::class.java
 			)
-			activity.startActivityForResult(intent, 0)
+			activity.startActivityForResult(intent, PrintBill.REQUEST_CONNECT_BT)
 		}else{
 			val device = mBluetoothAdapter.getRemoteDevice(setting.printerDevice)
 			onDevice(device, callback)

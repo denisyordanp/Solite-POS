@@ -97,10 +97,10 @@
 			</com.google.android.material.card.MaterialCardView>
 
 			<TextView
-				android:layout_width="match_parent"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Batal"
-				android:textAlignment="center" />
+				android:layout_gravity="center"
+				android:text="Batal" />
 
 		</LinearLayout>
 
@@ -128,10 +128,10 @@
 			</com.google.android.material.card.MaterialCardView>
 
 			<TextView
-				android:layout_width="match_parent"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Bayar"
-				android:textAlignment="center" />
+				android:layout_gravity="center"
+				android:text="Bayar" />
 
 		</LinearLayout>
 
@@ -159,10 +159,10 @@
 			</com.google.android.material.card.MaterialCardView>
 
 			<TextView
-				android:layout_width="match_parent"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Selesai"
-				android:textAlignment="center" />
+				android:layout_gravity="center"
+				android:text="Selesai" />
 
 		</LinearLayout>
 

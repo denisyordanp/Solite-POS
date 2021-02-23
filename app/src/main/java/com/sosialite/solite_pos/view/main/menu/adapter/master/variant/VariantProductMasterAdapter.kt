@@ -58,9 +58,9 @@ class VariantProductMasterAdapter(
 				binding.cbVmMix.isChecked = viewModel.getVariantProductById(product.id) != null
 				binding.cbVmMix.setOnCheckedChangeListener{ _, b ->
 					if (b){
-						viewModel.insertVariantProduct(VariantProduct(v.id, 0, product.id))
+						viewModel.insertVariantProduct(VariantProduct(v.id, 1, product.id))
 					}else{
-						viewModel.removeVariantProduct(VariantProduct(v.id, 0, product.id))
+						viewModel.removeVariantProduct(VariantProduct(v.id, 1, product.id))
 					}
 				}
 			}else{

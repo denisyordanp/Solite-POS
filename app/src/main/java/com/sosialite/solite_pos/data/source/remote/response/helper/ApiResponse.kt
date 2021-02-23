@@ -6,22 +6,21 @@ class ApiResponse<T> private constructor(
 
 		val body: T?,
 
-		val message: String?) {
+		val message: String?)
+{
 
 	companion object {
 
-		fun <T> success(body: T?): ApiResponse<T?> {
+		fun <T> success(body: T): ApiResponse<T> {
 			return ApiResponse(StatusResponse.SUCCESS, body, null)
 		}
 
-
-		fun <T> empty(msg: String?, body: T?): ApiResponse<T?> {
-			return ApiResponse(StatusResponse.EMPTY, body, msg)
+		fun <T> finish(body: T): ApiResponse<T> {
+			return ApiResponse(StatusResponse.FINISH, body, null)
 		}
 
-
-		fun <T> error(msg: String?, body: T?): ApiResponse<T?> {
-			return ApiResponse(StatusResponse.ERROR, body, msg)
+		fun <T> error(msg: String?): ApiResponse<T> {
+			return ApiResponse(StatusResponse.ERROR, null, msg)
 		}
 	}
 }

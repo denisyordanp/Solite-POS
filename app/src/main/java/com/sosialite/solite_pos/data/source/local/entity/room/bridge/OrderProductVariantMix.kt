@@ -1,13 +1,11 @@
 package com.sosialite.solite_pos.data.source.local.entity.room.bridge
 
 import androidx.room.*
-import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import java.io.Serializable
 
 @Entity(
-	tableName = AppDatabase.TBL_ORDER_PRODUCT_VARIANT_MIX,
+	tableName = OrderProductVariantMix.DB_NAME,
 	foreignKeys = [
 		ForeignKey(
 			entity = OrderDetail::class,
@@ -15,16 +13,16 @@ import java.io.Serializable
 			childColumns = [OrderDetail.ID],
 			onDelete = ForeignKey.CASCADE),
 		ForeignKey(
-			entity = VariantMix::class,
-			parentColumns = [VariantMix.ID],
-			childColumns = [VariantMix.ID],
+			entity = Product::class,
+			parentColumns = [Product.ID],
+			childColumns = [Product.ID],
 			onDelete = ForeignKey.CASCADE)
 	],
 	indices = [
 		Index(value = [
 			OrderProductVariantMix.ID,
 			OrderDetail.ID,
-			VariantMix.ID
+			Product.ID
 		])
 	]
 )
@@ -36,8 +34,8 @@ data class OrderProductVariantMix(
 		@ColumnInfo(name = OrderDetail.ID)
 		var idOrderDetail: Int,
 
-		@ColumnInfo(name = VariantMix.ID)
-		var idVariantMix: Int,
+		@ColumnInfo(name = Product.ID)
+		var idProduct: Int,
 
 		@ColumnInfo(name = AMOUNT)
 		var amount: Int
@@ -45,7 +43,19 @@ data class OrderProductVariantMix(
 	companion object{
 		const val ID = "id_order_product_variant_mix"
 		const val AMOUNT = "amount"
+
+		const val DB_NAME = "order_product_variant_mix"
 	}
 
 	constructor(idOrderDetail: Int, idVariantMix: Int, amount: Int): this(0, idOrderDetail, idVariantMix, amount)
+
+	val hashMap: HashMap<String, Any?>
+		get() {
+			return hashMapOf(
+					ID to id,
+					OrderDetail.ID to idOrderDetail,
+					Product.ID to idProduct,
+					AMOUNT to amount
+			)
+		}
 }

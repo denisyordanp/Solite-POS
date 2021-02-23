@@ -25,6 +25,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 			OrderPayment::class,
 			OrderProductVariant::class,
 			OrderProductVariantMix::class,
+			OrderMixProductVariant::class,
 			VariantMix::class,
 			VariantProduct::class,
 			VariantOption::class],
@@ -35,31 +36,15 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 
 	companion object {
 
-		private const val DB_NAME = "solite_db"
-
-		const val TBL_ORDER_PRODUCT_VARIANT_MIX = "order_product_variant_mix"
-		const val TBL_ORDER_PRODUCT_VARIANT = "order_product_variant"
-		const val TBL_PURCHASE_PRODUCT = "purchase_product"
-		const val TBL_VARIANT_PRODUCT = "variant_product"
-		const val TBL_VARIANT_OPTION = "variant_option"
-		const val TBL_ORDER_PAYMENT = "order_payment"
-		const val TBL_ORDER_DETAIL = "order_detail"
-		const val TBL_VARIANT_MIX = "variant_mix"
-		const val TBL_CATEGORY = "category"
-		const val TBL_CUSTOMER = "customer"
-		const val TBL_SUPPLIER = "supplier"
-		const val TBL_PURCHASE = "purchase"
-		const val TBL_OUTCOME = "outcome"
-		const val TBL_PAYMENT = "payment"
-		const val TBL_PRODUCT = "product"
-		const val TBL_VARIANT = "variant"
-		const val TBL_ORDER = "order"
+		const val DB_NAME = "solite_db"
+		const val UPLOAD = "upload"
+		const val MAIN = "main"
 
 		private var INSTANCE: AppDatabase? = null
 
 		private var migration_1_2: Migration = object : Migration(1, 2) {
 			override fun migrate(database: SupportSQLiteDatabase) {
-				database.execSQL("ALTER TABLE '$TBL_PRODUCT' ADD COLUMN ${Product.MIX} INTEGER NOT NULL DEFAULT 0")
+				database.execSQL("ALTER TABLE '${Product.DB_NAME}' ADD COLUMN ${Product.MIX} INTEGER NOT NULL DEFAULT 0")
 			}
 		}
 

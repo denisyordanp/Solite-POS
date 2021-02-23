@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.sosialite.solite_pos.data.source.local.entity.helper.ProductMixOrderDetail
 import com.sosialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.sosialite.solite_pos.databinding.RvItemOrderMixListBinding
 import com.sosialite.solite_pos.databinding.RvTotalItemOrderMixListBinding
@@ -14,10 +15,14 @@ class ItemOrderMixListAdapter(private val type: Int) : RecyclerView.Adapter<Item
 	var btnCallback: ((Boolean) -> Unit)? = null
 
 	val items: ArrayList<ProductOrderDetail> = ArrayList()
-	val sortedItems: ArrayList<ProductOrderDetail>
+	val sortedItems: ArrayList<ProductMixOrderDetail>
 	get() {
-		val items: ArrayList<ProductOrderDetail> = this.items
-		items.remove(ProductOrderDetail.grand)
+		val items: ArrayList<ProductMixOrderDetail> = ArrayList()
+		for (item in this.items){
+			if (item.product != null){
+				items.add(ProductMixOrderDetail(item.product!!, item.variants, item.amount))
+			}
+		}
 		return items
 	}
 

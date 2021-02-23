@@ -78,10 +78,26 @@ class PrintBill(private var activity: SocialiteActivity) {
 			for ((i, item) in order?.products!!.withIndex()){
 				if (item.product != null){
 					printCustom("${i+1}.${item.product!!.name}", 0, 0)
-					for (variant in item.variants){
-						printCustom(" ${variant.name}", 1, 0)
+
+					if (item.product!!.isMix){
+						if (!item.mixProducts.isNullOrEmpty()){
+							printNewLine()
+							for (mix in item.mixProducts){
+								printCustom("  - ${mix.product.name}", 0, 0)
+								for (variant in mix.variants){
+									printCustom(" ${variant.name}", 1, 0)
+								}
+								printCustom(" x${mix.amount}", 0, 0)
+								printNewLine()
+							}
+						}
+					}else{
+						for (variant in item.variants){
+							printCustom(" ${variant.name}", 1, 0)
+						}
+						printNewLine()
 					}
-					printNewLine()
+
 					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.sellPrice)}", "= ${toRupiah(item.amount * item.product!!.sellPrice)}", 32), 0, 0)
 					printNewLine()
 				}
@@ -127,7 +143,8 @@ class PrintBill(private var activity: SocialiteActivity) {
 		printNewLine()
 		printCustom("No  : ${order?.order?.orderNo}", 0, 0)
 		printNewLine()
-		printCustom("Nama: ${order?.customer?.name}", 0, 0)
+		printCustom("Nama: ", 0, 0)
+		printCustom("${order?.customer?.name}", 1, 0)
 		printNewLine()
 		val takeAway = if (order?.order!!.isTakeAway){
 			"Take Away"

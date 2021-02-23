@@ -7,11 +7,11 @@ import java.io.Serializable
 data class ProductOrderDetail(
 		var product: Product?,
 		var variants: ArrayList<VariantOption>,
-		var mixProducts: ArrayList<ProductOrderDetail>,
+		var mixProducts: ArrayList<ProductMixOrderDetail>,
 		var amount: Int,
 		var type: Int?
 ): Serializable{
-	constructor(product: Product?, variants: ArrayList<VariantOption>, mixVariants: ArrayList<ProductOrderDetail>, amount: Int): this(product, variants, mixVariants, amount, null)
+	constructor(product: Product?, variants: ArrayList<VariantOption>, mixVariants: ArrayList<ProductMixOrderDetail>, amount: Int): this(product, variants, mixVariants, amount, null)
 	constructor(type: Int): this(null, ArrayList(), ArrayList(), 0, type)
 
 	companion object{
@@ -24,8 +24,8 @@ data class ProductOrderDetail(
 			return ProductOrderDetail(product, variants, ArrayList(), amount)
 		}
 
-		fun createMix(product: Product?, variants: ArrayList<ProductOrderDetail>, amount: Int): ProductOrderDetail{
-			return ProductOrderDetail(product, ArrayList(), variants, amount)
+		fun createMix(product: Product?, mixes: ArrayList<ProductMixOrderDetail>, amount: Int): ProductOrderDetail{
+			return ProductOrderDetail(product, ArrayList(), mixes, amount)
 		}
 
 		val grand: ProductOrderDetail

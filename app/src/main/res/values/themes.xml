@@ -58,8 +58,11 @@
 	<style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton">
 		<item name="textAllCaps">false</item>
 		<item name="android:textColor">@color/blackGrey</item>
-		<item name="android:textAlignment">textStart</item>
 		<item name="iconTint">@null</item>
+	</style>
+
+	<style name="TextButton.Menu">
+		<item name="android:gravity">start|center_vertical</item>
 	</style>
 
 	<style name="FloatingButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">

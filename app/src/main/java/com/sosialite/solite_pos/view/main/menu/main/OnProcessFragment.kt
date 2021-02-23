@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.FragmentOnProcessBinding
+import com.sosialite.solite_pos.utils.config.MainConfig
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
@@ -27,8 +29,8 @@ class OnProcessFragment : Fragment() {
         return _binding.root
     }
 
-	override fun onActivityCreated(savedInstanceState: Bundle?) {
-		super.onActivityCreated(savedInstanceState)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 			adapter = OrderListAdapter(context!!, childFragmentManager)
 			viewModel = getViewModel(activity!!)
@@ -41,7 +43,7 @@ class OnProcessFragment : Fragment() {
 	}
 
 	private fun getData(){
-		adapter.items = ArrayList(viewModel.getOrderDetail(Order.ON_PROCESS))
+		adapter.items = ArrayList(viewModel.getOrderDetail(Order.ON_PROCESS, currentDate))
 		adapter.cookCallback = { updateOrder(it) }
 	}
 

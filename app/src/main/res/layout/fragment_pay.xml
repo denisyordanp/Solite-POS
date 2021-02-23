@@ -13,6 +13,16 @@
 		android:layout_height="wrap_content"
 		android:src="@drawable/ic_see_bottom" />
 
+	<TextView
+		android:id="@+id/tv_pay_total"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/baseMargin"
+		android:layout_gravity="center"
+		android:textStyle="bold"
+		android:textSize="@dimen/MText"
+		android:text="Total : Rp. 30.000"/>
+
 	<Button
 		style="@style/ButtonStyle"
 		android:id="@+id/btn_pay_method"

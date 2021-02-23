@@ -22,6 +22,7 @@ class MainConfig {
 
 		private const val dbFormat = "yyyy-MM-dd HH:mm:ss"
 		const val ldFormat = "dd MMMM yyyy HH:mm"
+		const val sdFormat = "EEE, dd MMMM yyyy"
 
 		fun orderIndex(array: ArrayList<OrderWithProduct>, order: OrderWithProduct): Int?{
 			for ((i, v) in array.withIndex()){

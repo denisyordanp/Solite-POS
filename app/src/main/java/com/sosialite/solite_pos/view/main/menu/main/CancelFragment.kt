@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.FragmentCancelBinding
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
@@ -40,6 +41,6 @@ class CancelFragment : Fragment() {
     }
 
     private fun getData(){
-        adapter.items = ArrayList(viewModel.getOrderDetail(Order.CANCEL))
+        adapter.items = ArrayList(viewModel.getOrderDetail(Order.CANCEL, currentDate))
     }
 }

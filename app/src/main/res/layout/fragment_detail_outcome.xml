@@ -1,125 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-	tools:context=".view.main.menu.bottom.PayFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-	<ImageView
-		android:id="@+id/imageView"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:src="@drawable/ic_see_bottom" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_see_bottom" />
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/baseMargin"
-		android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/baseMargin"
+        android:orientation="vertical">
 
-		<TextView
-			android:id="@+id/tv_oc_date"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/MText"
-			android:textStyle="bold|italic"
-			android:text="Senin, 23 Januari 2021"/>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/TextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-		<com.google.android.material.textfield.TextInputLayout
-			style="@style/TextLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_oc_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
+                android:hint="Masukan nama pengeluaran"/>
 
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_oc_name"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="text"
-				android:maxLines="1"
-				android:hint="Masukan nama pengeluaran"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-		</com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/TextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-		<com.google.android.material.textfield.TextInputLayout
-			style="@style/TextLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_oc_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="Masukan deskripsi pengeluaran"/>
 
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_oc_desc"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="text"
-				android:hint="Masukan deskripsi pengeluaran"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-		</com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:weightSum="4">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextLayout"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:paddingEnd="@dimen/MMargin"
+                android:paddingStart="0dp"
+                android:layout_height="wrap_content">
 
-			<com.google.android.material.textfield.TextInputLayout
-				style="@style/TextLayout"
-				android:layout_weight="1"
-				android:layout_width="0dp"
-				android:paddingEnd="@dimen/MMargin"
-				android:paddingStart="0dp"
-				android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_oc_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Masukan jumlah"/>
 
-				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/edt_oc_amount"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:inputType="number"
-					android:hint="Masukan jumlah"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-			</com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextLayout"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
 
-			<com.google.android.material.textfield.TextInputLayout
-				style="@style/TextLayout"
-				android:layout_weight="3"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_oc_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Masukan harga satuan"/>
 
-				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/edt_oc_price"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:inputType="number"
-					android:hint="Masukan harga satuan"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-			</com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-		</LinearLayout>
+    </LinearLayout>
 
-	</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:orientation="horizontal">
+        <Button
+            style="@style/ButtonStyle"
+            android:id="@+id/btn_oc_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Simpan" />
 
-		<Button
-			style="@style/ButtonStyle"
-			android:id="@+id/btn_oc_save"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/SMargin"
-			android:text="Simpan" />
+        <Button
+            style="@style/ButtonStyle"
+            android:id="@+id/btn_oc_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Batal" />
 
-		<Button
-			style="@style/ButtonStyle"
-			android:id="@+id/btn_oc_cancel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/SMargin"
-			android:text="Batal" />
-
-	</LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

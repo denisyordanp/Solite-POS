@@ -2,11 +2,10 @@ package com.sosialite.solite_pos.data.source.local.entity.room.bridge
 
 import androidx.room.*
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import java.io.Serializable
 
 @Entity(
-	tableName = AppDatabase.TBL_ORDER_PRODUCT_VARIANT,
+	tableName = OrderProductVariant.DB_NAME,
 	foreignKeys = [
 		ForeignKey(
 			entity = OrderDetail::class,
@@ -36,15 +35,22 @@ data class OrderProductVariant(
 		var idOrderDetail: Int,
 
 		@ColumnInfo(name = VariantOption.ID)
-		var idVariantOption: Int,
-
-		@ColumnInfo(name = AMOUNT)
-		var amount: Int
+		var idVariantOption: Int
 ): Serializable{
 	companion object{
 		const val ID = "id_order_product_variant"
-		const val AMOUNT = "amount"
+
+		const val DB_NAME = "order_product_variant"
 	}
 
-	constructor(idOrderDetail: Int, idVariantOption: Int, amount: Int): this(0, idOrderDetail, idVariantOption, amount)
+	constructor(idOrderDetail: Int, idVariantOption: Int): this(0, idOrderDetail, idVariantOption)
+
+	val hashMap: HashMap<String, Any?>
+		get() {
+			return hashMapOf(
+				ID to id,
+				OrderDetail.ID to idOrderDetail,
+				VariantOption.ID to idVariantOption
+			)
+		}
 }

@@ -14,12 +14,13 @@ import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
+import com.sosialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.sosialite.solite_pos.data.source.repository.SoliteRepository
 
 class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 
-	fun getOrderDetail(status: Int): List<OrderWithProduct>{
-		return repository.getOrderDetail(status)
+	fun getOrderDetail(status: Int, date: String): List<OrderWithProduct>{
+		return repository.getOrderDetail(status, date)
 	}
 
 	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct{
@@ -136,12 +137,12 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 	val customers: LiveData<List<Customer>>
 		get() = repository.customers
 
-	fun insertCustomers(data: Customer): Long{
-		return repository.insertCustomer(data)
+	fun insertCustomers(data: Customer, callback: (ApiResponse<Int>) -> Unit){
+		return repository.insertCustomer(data, callback)
 	}
 
-	fun updateCustomer(data: Customer){
-		repository.updateCustomer(data)
+	fun updateCustomer(data: Customer, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateCustomer(data, callback)
 	}
 
 	val suppliers: LiveData<List<Supplier>>

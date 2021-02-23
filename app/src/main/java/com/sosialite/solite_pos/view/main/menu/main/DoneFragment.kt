@@ -10,6 +10,7 @@ import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.FragmentDoneBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
@@ -41,7 +42,7 @@ class DoneFragment : Fragment() {
 	}
 
 	private fun getData(){
-		adapter.items = ArrayList(viewModel.getOrderDetail(Order.DONE))
+		adapter.items = ArrayList(viewModel.getOrderDetail(Order.DONE, currentDate))
 		adapter.cookCallback = { updateOrder(it) }
 	}
 

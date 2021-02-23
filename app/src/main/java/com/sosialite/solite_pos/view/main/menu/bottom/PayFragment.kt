@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPaymen
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.sosialite.solite_pos.databinding.FragmentPayBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.utils.tools.MessageBottom
 import com.sosialite.solite_pos.view.main.MainActivity
@@ -59,6 +61,9 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 
 			viewModel = getViewModel(mainActivity!!)
 
+			val total = "Total : ${toRupiah(order?.grandTotal)}"
+			_binding.tvPayTotal.text = total
+
 			_binding.btnPayMethod.setOnClickListener { getPayment(mainActivity!!) }
 			_binding.btnPayPay.setOnClickListener { payBill() }
 			_binding.btnPayCancel.setOnClickListener { dialog?.dismiss() }
@@ -72,9 +77,11 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 			if (payment != null){
 				_binding.btnPayMethod.text = payment!!.name
 				_binding.btnPayPay.isEnabled = true
-				if (payment!!.isCash){
+
+				if (payment!!.isCash)
 					_binding.layEdtPayCash.visibility = View.VISIBLE
-				}
+				else
+					_binding.layEdtPayCash.visibility = View.GONE
 			}
 		}
 	}
@@ -135,7 +142,7 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 	}
 
 	private fun printBill(order: OrderWithProduct){
-		dialog?.dismiss()
 		mainActivity?.setPay(order)
+		dialog?.dismiss()
 	}
 }

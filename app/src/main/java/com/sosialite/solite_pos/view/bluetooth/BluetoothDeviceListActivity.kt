@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
 import com.sosialite.solite_pos.utils.config.SettingPref
+import com.sosialite.solite_pos.utils.printer.PrintBill
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.bluetooth.adapter.DeviceAdapter
 
@@ -157,6 +158,7 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 
 	private fun onChooseDevice(device: BluetoothDevice){
 		SettingPref(this).printerDevice = device.address
+		setResult(PrintBill.REQUEST_CONNECT_BT)
 		finish()
 	}
 }
