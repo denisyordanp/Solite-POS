@@ -23,6 +23,7 @@ import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.sosialite.solite_pos.view.main.menu.order.SelectProductOrderByCategoryFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class PurchaseActivity : SocialiteActivity() {
 
@@ -84,21 +85,26 @@ class PurchaseActivity : SocialiteActivity() {
 
 	private fun setPageAdapter(){
 		viewModel.getCategories(Category.getFilter(Category.ACTIVE, true)).observe(this, {
-			if (!it.isNullOrEmpty()){
-				val fragments: ArrayList<FragmentWithTitle> = ArrayList()
-				for (ctg in it){
-					val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.PURCHASE, ctg, this) { p ->
-						if (purchase != null){
-							adapter.addItem(PurchaseProductWithProduct(
-									PurchaseProduct(purchase!!.purchaseNo, p.product!!.id, p.amount),
-									p.product
-							))
+			when(it.status){
+				Status.SUCCESS -> {
+					if (!it.data.isNullOrEmpty()){
+						val fragments: ArrayList<FragmentWithTitle> = ArrayList()
+						for (ctg in it.data){
+							val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.PURCHASE, ctg, this) { p ->
+								if (purchase != null){
+									adapter.addItem(PurchaseProductWithProduct(
+											PurchaseProduct(purchase!!.purchaseNo, p.product!!.id, p.amount),
+											p.product
+									))
+								}
+							}
+							fragments.add(FragmentWithTitle(ctg.name, fragment))
 						}
-					}
-					fragments.add(FragmentWithTitle(ctg.name, fragment))
-				}
 
-				setData(fragments)
+						setData(fragments)
+					}
+				}
+				else -> {}
 			}
 		})
 	}

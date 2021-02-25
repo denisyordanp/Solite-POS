@@ -12,8 +12,8 @@ object Injection {
 	fun provideSoliteRepository(context: Context): SoliteRepository {
 		val database = getInstance(context)
 		val remoteDataSource = connect()
-		val localDataSource = LocalDataSource.getInstance(database.soliteDao())
+		val soliteDao = database.soliteDao()
 		val appExecutors = AppExecutors(context)
-		return SoliteRepository.getInstance(remoteDataSource, localDataSource, appExecutors)
+		return SoliteRepository.getInstance(remoteDataSource, soliteDao, appExecutors)
 	}
 }

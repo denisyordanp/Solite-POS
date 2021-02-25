@@ -13,6 +13,7 @@ import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.master.variant.VariantOptionMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class VariantOptionActivity : SocialiteActivity() {
 
@@ -64,8 +65,10 @@ class VariantOptionActivity : SocialiteActivity() {
 			}
 
 			viewModel.getVariantOptions(query).observe(this, {
-				if (!it.isNullOrEmpty()){
-					adapter.items = ArrayList(it)
+				var count = "Mengambil data ..."
+				when(it.status){
+					Status.SUCCESS -> adapter.items = ArrayList(it.data)
+					else -> {}
 				}
 			})
 		}

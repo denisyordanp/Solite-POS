@@ -17,6 +17,7 @@ import com.sosialite.solite_pos.view.main.menu.adapter.ItemOrderMixListAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class SelectMixVariantOrderActivity : SocialiteActivity() {
 
@@ -72,16 +73,21 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
 
     private fun setPageAdapter(){
         viewModel.getCategories(Category.getFilter(Category.ACTIVE, true)).observe(this, {
-            if (!it.isNullOrEmpty()){
-                val fragments: ArrayList<FragmentWithTitle> = ArrayList()
-                for (ctg in it){
-                    val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.MIX, ctg, this) { p ->
-                        adapter.addItem(p)
-                    }
-                    fragments.add(FragmentWithTitle(ctg.name, fragment))
-                }
+            when(it.status){
+                Status.SUCCESS -> {
+                    if (!it.data.isNullOrEmpty()){
+                        val fragments: ArrayList<FragmentWithTitle> = ArrayList()
+                        for (ctg in it.data){
+                            val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.MIX, ctg, this) { p ->
+                                adapter.addItem(p)
+                            }
+                            fragments.add(FragmentWithTitle(ctg.name, fragment))
+                        }
 
-                setPager(fragments)
+                        setPager(fragments)
+                    }
+                }
+                else -> {}
             }
         })
     }

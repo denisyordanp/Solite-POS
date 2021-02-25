@@ -36,7 +36,6 @@ class VariantOptionMasterAdapter(
 
 		holder.binding.tvRvVoName.text = vo.name
 		holder.binding.tvRvVoDesc.text = vo.desc
-		holder.binding.tvRvVoPrice.text = toRupiah(vo.price)
 		holder.binding.swVoOptions.isChecked = vo.isActive
 		holder.checkOption(vo)
 	}
@@ -50,11 +49,7 @@ class VariantOptionMasterAdapter(
 		fun checkOption(vo: VariantOption){
 			if (product != null){
 				val data = viewModel.getVariantProduct(product.id, vo.id)
-				if (!data.isNullOrEmpty()){
-					binding.swVoOptions.isChecked = true
-				}else{
-					binding.swVoOptions.isChecked = false
-				}
+				binding.swVoOptions.isChecked = !data.isNullOrEmpty()
 			}
 			setOption(vo)
 		}
@@ -64,16 +59,16 @@ class VariantOptionMasterAdapter(
 				binding.swVoOptions.setOnCheckedChangeListener{ v, _ ->
 					val variantProduct = VariantProduct(vo.idVariant, vo.id, product.id)
 					if (v.isChecked){
-						viewModel.insertVariantProduct(variantProduct)
+						viewModel.insertVariantProduct(variantProduct) {}
 					}else{
-						viewModel.removeVariantProduct(variantProduct)
+						viewModel.removeVariantProduct(variantProduct) {}
 					}
 				}
 			}else{
 				binding.swVoOptions.setOnCheckedChangeListener{ v, _ ->
 					run {
 						vo.isActive = v.isChecked
-						viewModel.updateVariantOption(vo)
+						viewModel.updateVariantOption(vo) {}
 					}
 				}
 				itemView.setOnClickListener {

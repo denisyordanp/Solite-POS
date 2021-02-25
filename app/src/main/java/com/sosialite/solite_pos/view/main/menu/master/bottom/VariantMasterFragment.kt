@@ -97,12 +97,12 @@ class VariantMasterFragment(private val variant: Variant?) : BottomSheetDialogFr
 	}
 
 	private fun saveData(variant: Variant){
-		viewModel.insertVariants(variant)
+		viewModel.insertVariants(variant) {}
 		dialog?.dismiss()
 	}
 
 	private fun updateData(variant: Variant){
-		viewModel.updateVariant(variant)
+		viewModel.updateVariant(variant) {}
 		dialog?.dismiss()
 	}
 

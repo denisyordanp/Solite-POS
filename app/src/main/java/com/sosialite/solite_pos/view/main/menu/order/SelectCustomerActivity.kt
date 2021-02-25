@@ -80,7 +80,7 @@ class SelectCustomerActivity : SocialiteActivity() {
 
 	private fun setResult(customer: Customer){
 		val data = Intent()
-		if (customer.id == -1){
+		if (customer.id == Customer.ID_ADD){
 			val newCustomer = Customer(nameCustomer)
 			getIdCustomer(newCustomer){
 				newCustomer.id
@@ -108,18 +108,23 @@ class SelectCustomerActivity : SocialiteActivity() {
 		}
 
 	private fun getCustomer(){
-		viewModel.customers.observe(this, {
-			if (!it.isNullOrEmpty()){
-				if (customers.isNotEmpty()){
-					customers.clear()
+		viewModel.getCustomers {
+			when(it.status){
+				StatusResponse.SUCCESS -> {
+					if (!it.body.isNullOrEmpty()){
+						if (customers.isNotEmpty()){
+							customers.clear()
+						}
+						customers.addAll(it.body)
+					}
+					setFilter(null)
 				}
-				customers.addAll(it)
+				else -> {}
 			}
-			setFilter(null)
-		})
+		}
 	}
 
-	private fun getIdCustomer(customer: Customer, callback: (Int) -> Unit){
+	private fun getIdCustomer(customer: Customer, callback: (Long) -> Unit){
 		viewModel.insertCustomers(customer){
 			if (it.status == StatusResponse.FINISH) callback.invoke(it.body!!)
 			when(it.status){

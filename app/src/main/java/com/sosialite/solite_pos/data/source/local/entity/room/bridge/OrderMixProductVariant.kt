@@ -1,8 +1,14 @@
 package com.sosialite.solite_pos.data.source.local.entity.room.bridge
 
 import androidx.room.*
+import com.google.firebase.firestore.QuerySnapshot
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
+import java.util.ArrayList
 
 @Entity(
 		tableName = OrderMixProductVariant.DB_NAME,
@@ -29,28 +35,45 @@ import java.io.Serializable
 data class OrderMixProductVariant(
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
-		var id: Int,
+		var id: Long,
 
 		@ColumnInfo(name = OrderProductVariantMix.ID)
-		var idOrderProductMixVariant: Int,
+		var idOrderProductMixVariant: Long,
 
 		@ColumnInfo(name = VariantOption.ID)
-		var idVariantOption: Int
+		var idVariantOption: Long,
+
+		@ColumnInfo(name = UPLOAD)
+		var isUpload: Boolean
 ): Serializable{
-	companion object{
+	companion object: RemoteUtils<OrderMixProductVariant>{
 		const val ID = "id_order_mix_product_variant"
 
 		const val DB_NAME = "order_mix_product_variant"
-	}
 
-	constructor(idOrderProductMixVariant: Int, idVariantOption: Int): this(0, idOrderProductMixVariant, idVariantOption)
-
-	val hashMap: HashMap<String, Any?>
-		get() {
+		override fun toHashMap(data: OrderMixProductVariant): HashMap<String, Any?> {
 			return hashMapOf(
-					ID to id,
-					OrderProductVariantMix.ID to idOrderProductMixVariant,
-					VariantOption.ID to idVariantOption
+					ID to data.id,
+					OrderProductVariantMix.ID to data.idOrderProductMixVariant,
+					VariantOption.ID to data.idVariantOption,
+					UPLOAD to data.isUpload
 			)
 		}
+
+		override fun toListClass(result: QuerySnapshot): List<OrderMixProductVariant> {
+			val array: ArrayList<OrderMixProductVariant> = ArrayList()
+			for (document in result){
+				val mix = OrderMixProductVariant(
+						document.data[ID] as Long,
+						document.data[OrderProductVariantMix.ID] as Long,
+						document.data[VariantOption.ID] as Long,
+						document.data[UPLOAD] as Boolean
+				)
+				array.add(mix)
+			}
+			return array
+		}
+	}
+
+	constructor(idOrderProductMixVariant: Long, idVariantOption: Long): this(0, idOrderProductMixVariant, idVariantOption, false)
 }

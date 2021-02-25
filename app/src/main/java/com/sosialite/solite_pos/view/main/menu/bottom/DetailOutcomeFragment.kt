@@ -10,7 +10,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.sosialite.solite_pos.databinding.FragmentDetailOutcomeBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
+import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.utils.tools.BottomSheet
+import com.sosialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFragment() {
@@ -18,6 +20,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
     constructor(): this(null)
 
     private lateinit var _binding: FragmentDetailOutcomeBinding
+    private var detailActivity: DetailOutcomeActivity? = null
     private lateinit var viewModel: MainViewModel
 
     private val name: String
@@ -28,6 +31,13 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
         get() = _binding.edtOcAmount.text.toString().trim()
     private val price: String
         get() = _binding.edtOcPrice.text.toString().trim()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (activity != null){
+            detailActivity = activity as DetailOutcomeActivity
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,15 +54,15 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (activity != null){
-            viewModel = MainConfig.getViewModel(activity!!)
+        if (detailActivity != null){
+            viewModel = MainConfig.getViewModel(detailActivity!!)
 
             if (outcome != null){
                 setData()
             }else{
                 _binding.btnOcSave.setOnClickListener {
                     if (isCheck){
-                        saveData(getOutcome(name, desc, amount.toInt(), price.toInt(),
+                        saveData(getOutcome(name, desc, amount.toInt(), price.toLong(),
                             MainConfig.currentDate
                         ))
                     }
@@ -68,10 +78,10 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
             _binding.edtOcName.setText(outcome.name)
             _binding.edtOcDesc.setText(outcome.desc)
             _binding.edtOcAmount.setText(outcome.amount)
-            _binding.edtOcPrice.setText(outcome.price)
+            _binding.edtOcPrice.setText(outcome.price.toString())
             _binding.btnOcSave.setOnClickListener {
                 if (isCheck){
-                    updateData(getOutcome(name, desc, amount.toInt(), price.toInt(),
+                    updateData(getOutcome(name, desc, amount.toInt(), price.toLong(),
                         MainConfig.currentDate
                     ))
                 }
@@ -113,16 +123,18 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
         }
 
     private fun saveData(outcome: Outcome){
-        viewModel.insertOutcome(outcome)
+        viewModel.insertOutcome(outcome) {}
+        detailActivity?.adapter?.addItem(outcome)
         dialog?.dismiss()
     }
 
     private fun updateData(outcome: Outcome){
-        viewModel.updateOutcome(outcome)
+        viewModel.updateOutcome(outcome) {}
+        detailActivity?.adapter?.editItem(outcome)
         dialog?.dismiss()
     }
 
-    private fun getOutcome(name: String, desc: String, amount: Int, price: Int, date: String): Outcome {
+    private fun getOutcome(name: String, desc: String, amount: Int, price: Long, date: String): Outcome {
         return if (outcome != null){
             Outcome(outcome.id, name, desc, price, amount, date)
         }else{

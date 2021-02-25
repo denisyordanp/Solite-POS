@@ -186,20 +186,20 @@ class ProductMasterFragment(private val product: DataProduct?) : BottomSheetDial
 	}
 
 	private fun updateData(data: Product){
-		viewModel.updateProduct(data)
+		viewModel.updateProduct(data) {}
 		dialog?.dismiss()
 	}
 
 	private fun saveData(data: Product){
-		viewModel.insertProduct(data)
+		viewModel.insertProduct(data) {}
 		dialog?.dismiss()
 	}
 
 	private fun getProduct(): Product{
 		return if (product?.product != null){
-			Product(product.product.id, name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), product.product.stock, isMix, product.product.isActive)
+			Product(product.product.id, name, category!!.id, "", desc, sellPrice.toLong(), buyPrice.toLong(), portion.toInt(), product.product.stock, isMix, product.product.isActive)
 		}else{
-			Product(name, category!!.id, desc, sellPrice.toInt(), buyPrice.toInt(), portion.toInt(), 0, isMix, false)
+			Product(name, category!!.id, "", desc, sellPrice.toLong(), buyPrice.toLong(), portion.toInt(), 0, isMix, false)
 		}
 	}
 }

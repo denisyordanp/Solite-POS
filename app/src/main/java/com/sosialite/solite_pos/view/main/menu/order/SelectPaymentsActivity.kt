@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.ActivityPaymentsBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -41,11 +42,16 @@ class SelectPaymentsActivity : SocialiteActivity() {
 	}
 
 	private fun getPayments(){
-		viewModel.payments.observe(this, {
-			if (!it.isNullOrEmpty()){
-				adapter.items = ArrayList(it)
+		viewModel.getPayments {
+			when(it.status){
+				StatusResponse.SUCCESS -> {
+					if (!it.body.isNullOrEmpty()){
+						adapter.items = ArrayList(it.body)
+					}
+				}
+				else -> {}
 			}
-		})
+		}
 	}
 
 	private fun setResult(payment: Payment){

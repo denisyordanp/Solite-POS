@@ -1,8 +1,10 @@
 package com.sosialite.solite_pos.view.main.menu.outcome
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.ActivityDetailOutcomeBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
@@ -15,8 +17,12 @@ import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 class DetailOutcomeActivity : AppCompatActivity() {
 
     private lateinit var _binding: ActivityDetailOutcomeBinding
-    private lateinit var adapter: OutcomeAdapter
     private lateinit var viewModel: MainViewModel
+    lateinit var adapter: OutcomeAdapter
+
+    companion object{
+        private val TAG = DetailOutcomeActivity::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +46,19 @@ class DetailOutcomeActivity : AppCompatActivity() {
     private fun setData() {
         _binding.tvOcDate.text = dateFormat(currentDate, sdFormat)
 
-        viewModel.getOutcome(currentDate).observe(this){
-            adapter.items = ArrayList(it)
+        viewModel.getOutcome(currentDate){
+            when(it.status){
+                StatusResponse.SUCCESS -> {
+                    adapter.items = ArrayList(it.body)
+                }
+                StatusResponse.EMPTY -> {
+                    Log.w(TAG, "empty get outcome")
+                }
+                StatusResponse.ERROR -> {
+                    Log.w(TAG, "error get outcome")
+                }
+                else -> {}
+            }
         }
     }
 }

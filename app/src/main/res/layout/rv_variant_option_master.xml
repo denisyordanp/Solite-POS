@@ -39,14 +39,6 @@
 				android:layout_marginStart="@dimen/MMargin"
 				android:text="Mentai adalah saus telur ikan ala jepang" />
 
-			<TextView
-				android:id="@+id/tv_rv_vo_price"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/MMargin"
-				android:text="Rp. 4.000"
-				android:textSize="@dimen/MText" />
-
 		</LinearLayout>
 
 		<com.google.android.material.switchmaterial.SwitchMaterial

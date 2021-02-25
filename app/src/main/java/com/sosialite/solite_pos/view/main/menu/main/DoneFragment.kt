@@ -47,7 +47,7 @@ class DoneFragment : Fragment() {
 	}
 
 	private fun updateOrder(order: Order){
-		viewModel.updateOrder(order)
+		viewModel.updateOrder(order) {}
 	}
 
 	fun addItem(order: OrderWithProduct){

@@ -11,6 +11,7 @@ import com.sosialite.solite_pos.databinding.FragmentListProductMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.view.main.menu.adapter.master.product.ProductMasterAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class ListProductMasterFragment(private var category: Category?) : Fragment() {
 
@@ -50,8 +51,13 @@ class ListProductMasterFragment(private var category: Category?) : Fragment() {
 	private fun setData(){
 		if (category != null){
 			viewModel.getDataProduct(category!!.id).observe(activity!!, {
-				if (!it.isNullOrEmpty()){
-					adapter.items = ArrayList(it)
+				when(it.status){
+					Status.SUCCESS -> {
+						if (!it.data.isNullOrEmpty()){
+							adapter.items = ArrayList(it.data)
+						}
+					}
+					else -> {}
 				}
 			})
 		}

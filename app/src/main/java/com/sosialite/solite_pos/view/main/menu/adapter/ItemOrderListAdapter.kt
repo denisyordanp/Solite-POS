@@ -66,9 +66,9 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 		}
 		return items
 	}
-	private val grandTotal: Int
+	private val grandTotal: Long
 	get() {
-		var total = 0
+		var total = 0L
 		for (item in items){
 			if (item.product != null){
 				total += item.product!!.sellPrice * item.amount
@@ -234,8 +234,8 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			setBtnDelete(detail)
 		}
 
-		private fun getTotal(detail: ProductOrderDetail): Int{
-			var total = 0
+		private fun getTotal(detail: ProductOrderDetail): Long{
+			var total = 0L
 			if (detail.product != null){
 				val product: Product = detail.product!!
 				total = product.sellPrice * detail.amount

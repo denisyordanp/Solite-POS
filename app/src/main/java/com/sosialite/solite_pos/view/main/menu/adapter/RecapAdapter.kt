@@ -1,6 +1,7 @@
 package com.sosialite.solite_pos.view.main.menu.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.data.source.local.entity.helper.RecapData
@@ -18,9 +19,9 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 			notifyDataSetChanged()
 		}
 
-	val grandTotal: Int
+	val grandTotal: Long
 	get() {
-		var total = 0
+		var total = 0L
 		for (item in items){
 			total += item.total
 		}
@@ -36,6 +37,9 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 			holder.binding.tvRvRcName.text = "Grand Total : "
 			holder.binding.tvRvRcTotal.text = toRupiah(grandTotal)
 		}else{
+			if (position == 0){
+				holder.binding.vRvRcLine.visibility = View.INVISIBLE
+			}
 			val r = items[position]
 
 			holder.binding.tvRvRcName.text = r.name

@@ -13,6 +13,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ProductOrderAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class SelectProductOrderByCategoryFragment(
 		private val type: Int,
@@ -50,8 +51,13 @@ class SelectProductOrderByCategoryFragment(
 	private fun getProducts(){
 		if (category != null){
 			viewModel.getDataProduct(category!!.id).observe(activity!!, {
-				if (!it.isNullOrEmpty()){
-					adapter.items = ArrayList(it)
+				when(it.status){
+					Status.SUCCESS -> {
+						if (!it.data.isNullOrEmpty()){
+							adapter.items = ArrayList(it.data)
+						}
+					}
+					else -> {}
 				}
 			})
 		}

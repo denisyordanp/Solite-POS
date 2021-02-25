@@ -1,9 +1,11 @@
 package com.sosialite.solite_pos.data.source.local.entity.room.master
 
 import androidx.room.*
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
+import java.util.ArrayList
 
 @Entity(
 		tableName = PurchaseProduct.DB_NAME,
@@ -32,13 +34,13 @@ import java.io.Serializable
 data class PurchaseProduct(
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
-		var id: Int,
+		var id: Long,
 
 		@ColumnInfo(name = Purchase.NO)
 		var purchaseNo: String,
 
 		@ColumnInfo(name = Product.ID)
-		var idProduct: Int,
+		var idProduct: Long,
 
 		@ColumnInfo(name = AMOUNT)
 		var amount: Int,
@@ -47,23 +49,37 @@ data class PurchaseProduct(
 		var isUploaded: Boolean
 ): Serializable {
 
-	constructor(purchaseNo: String, idProduct: Int, amount: Int): this(0, purchaseNo, idProduct, amount, false)
+	constructor(purchaseNo: String, idProduct: Long, amount: Int): this(0, purchaseNo, idProduct, amount, false)
 
-	companion object{
+	companion object: RemoteUtils<PurchaseProduct>{
 		const val ID = "id_purchase_product"
 		const val AMOUNT = "amount"
 
 		const val DB_NAME = "purchase_product"
-	}
 
-	val hashMap: HashMap<String, Any?>
-		get() {
+		override fun toHashMap(data: PurchaseProduct): HashMap<String, Any?> {
 			return hashMapOf(
-					ID to id,
-					Purchase.NO to purchaseNo,
-					Product.ID to idProduct,
-					AMOUNT to amount,
-					UPLOAD to isUploaded
+					ID to data.id,
+					Purchase.NO to data.purchaseNo,
+					Product.ID to data.idProduct,
+					AMOUNT to data.amount,
+					UPLOAD to data.isUploaded
 			)
 		}
+
+		override fun toListClass(result: QuerySnapshot): List<PurchaseProduct> {
+			val array: ArrayList<PurchaseProduct> = ArrayList()
+			for (document in result){
+				val purchase = PurchaseProduct(
+						document.data[ID] as Long,
+						document.data[Purchase.NO] as String,
+						document.data[Product.ID] as Long,
+						(document.data[AMOUNT] as Long).toInt(),
+						document.data[UPLOAD] as Boolean
+				)
+				array.add(purchase)
+			}
+			return array
+		}
+	}
 }

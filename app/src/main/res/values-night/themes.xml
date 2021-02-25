@@ -1,26 +1,37 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.SolitePOS" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/grey</item>
-        <item name="colorPrimaryVariant">@color/whiteGrey</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/whiteGrey</item>
-        <item name="colorSecondaryVariant">@color/white</item>
-        <item name="colorOnSecondary">@color/black</item>
-		<item name="android:windowBackground">@color/blackGrey</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-		<item name="android:textColor">@color/whiteGrey</item>
+<resources
+	xmlns:tools="http://schemas.android.com/tools">
+	<!-- Base application theme. -->
+	<style name="Theme.SolitePOS" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+		<!-- Primary brand color. -->
+		<item name="colorPrimary">@color/primary</item>
+		<item name="colorPrimaryVariant">@color/primaryVariant</item>
+		<item name="colorOnPrimary">@color/onPrimary</item>
+		<!-- Secondary brand color. -->
+		<item name="colorSecondary">@color/whiteGrey</item>
+		<item name="colorSecondaryVariant">@color/grey</item>
+		<item name="colorOnSecondary">@color/grey</item>
+		<item name="android:windowBackground">@color/whiteGrey</item>
+		<item name="extendedFloatingActionButtonStyle">@style/FloatingButton</item>
+		<!-- Status bar color. -->
+		<item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+		<!-- Customize your theme here. -->
+		<item name="android:textColor">@color/blackGrey</item>
 		<item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
 		<item name="buttonStyle">@style/ButtonStyle</item>
-    </style>
+	</style>
+
+	<style name="TextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="boxCornerRadiusTopStart">@dimen/MMargin</item>
+		<item name="boxCornerRadiusTopEnd">@dimen/MMargin</item>
+		<item name="boxCornerRadiusBottomEnd">@dimen/MMargin</item>
+		<item name="boxCornerRadiusBottomStart">@dimen/MMargin</item>
+		<item name="boxBackgroundColor">@color/white</item>
+
+	</style>
 
 	<style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
 		<item name="textAllCaps">false</item>
-		<item name="backgroundTint">@color/whiteGrey</item>
+		<item name="backgroundTint">@color/primaryVariant</item>
 		<item name="android:textColor">@color/blackGrey</item>
 	</style>
 
@@ -29,6 +40,7 @@
 	</style>
 
 	<style name="ModalSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+		<item name="backgroundTint">@color/primary</item>
 		<item name="shapeAppearanceOverlay">@style/ShapeAppearance</item>
 	</style>
 
@@ -51,5 +63,15 @@
 
 	<style name="TextButton.Menu">
 		<item name="android:gravity">start|center_vertical</item>
+	</style>
+
+	<style name="FloatingButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+		<item name="backgroundTint">@color/primary</item>
+	</style>
+
+	<style name="CenterText">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:textAlignment">center</item>
 	</style>
 </resources>

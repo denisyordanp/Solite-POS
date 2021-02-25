@@ -27,7 +27,7 @@
 		<View
 			android:id="@+id/v_rv_rc_line"
 			android:layout_width="match_parent"
-			android:layout_height="1dp"
+			android:layout_height="0.5dp"
 			android:background="@color/blackGrey"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

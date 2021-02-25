@@ -4,9 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
+import java.util.ArrayList
 
 @Entity(
 		tableName = Variant.DB_NAME,
@@ -33,9 +35,9 @@ data class Variant(
 
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = ID)
-	var id: Int = 0
+	var id: Long = 0
 
-	companion object{
+	companion object: RemoteUtils<Variant>{
 		const val ID = "id_variant"
 		const val NAME = "name"
 		const val TYPE = "type"
@@ -46,20 +48,40 @@ data class Variant(
 
 		const val ONE_OPTION = 1
 		const val MULTIPLE_OPTION = 2
-	}
 
-	constructor(idVariant: Int, name: String, type: Int, isMust: Boolean, isMix: Boolean): this(name, type, isMust, isMix, false){
-		this.id = idVariant
-	}
-
-	val hashMap: HashMap<String, Any?>
-		get() {
+		override fun toHashMap(data: Variant): HashMap<String, Any?> {
 			return hashMapOf(
-					ID to id,
-					TYPE to type,
-					MUST to isMust,
-					MIX to isMix,
-					UPLOAD to isUploaded
+					ID to data.id,
+					NAME to data.name,
+					TYPE to data.type,
+					MUST to data.isMust,
+					MIX to data.isMix,
+					UPLOAD to data.isUploaded
 			)
 		}
+
+		override fun toListClass(result: QuerySnapshot): List<Variant> {
+			val array: ArrayList<Variant> = ArrayList()
+			for (document in result){
+				val variant = Variant(
+						document.data[ID] as Long,
+						document.data[NAME] as String,
+						(document.data[TYPE] as Long).toInt(),
+						document.data[MUST] as Boolean,
+						document.data[MIX] as Boolean,
+						document.data[UPLOAD] as Boolean
+				)
+				array.add(variant)
+			}
+			return array
+		}
+	}
+
+	constructor(idVariant: Long, name: String, type: Int, isMust: Boolean, isMix: Boolean, isUploaded: Boolean): this(name, type, isMust, isMix, isUploaded){
+		this.id = idVariant
+	}
+	constructor(idVariant: Long, name: String, type: Int, isMust: Boolean, isMix: Boolean): this(name, type, isMust, isMix, false){
+		this.id = idVariant
+	}
+	constructor(name: String, type: Int, isMust: Boolean, isMix: Boolean): this(name, type, isMust, isMix, false)
 }

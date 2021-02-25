@@ -4,9 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
+import java.util.ArrayList
 
 @Entity(
 		tableName = Outcome.DB_NAME,
@@ -18,7 +20,7 @@ data class Outcome(
 
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
-		var id: Int,
+		var id: Long,
 
 		@ColumnInfo(name = NAME)
 		var name: String,
@@ -27,7 +29,7 @@ data class Outcome(
 		var desc: String,
 
 		@ColumnInfo(name = PRICE)
-		var price: Int,
+		var price: Long,
 
 		@ColumnInfo(name = AMOUNT)
 		var amount: Int,
@@ -38,7 +40,7 @@ data class Outcome(
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable{
-	companion object{
+	companion object: RemoteUtils<Outcome>{
 		const val ID = "id_outcome"
 		const val AMOUNT = "amount"
 		const val PRICE = "price"
@@ -47,23 +49,39 @@ data class Outcome(
 		const val DATE = "date"
 
 		const val DB_NAME = "outcome"
-	}
-
-	constructor(name: String, desc: String, price: Int, amount: Int, date: String): this(0, name, desc, price, amount, date, false)
-
-	val total: Int
-		get() = price * amount
-
-	val hashMap: HashMap<String, Any?>
-		get() {
+		override fun toHashMap(data: Outcome): HashMap<String, Any?> {
 			return hashMapOf(
-					ID to id,
-					NAME to name,
-					DESC to desc,
-					PRICE to price,
-					AMOUNT to amount,
-					DATE to date,
-					UPLOAD to isUploaded
+					ID to data.id,
+					NAME to data.name,
+					DESC to data.desc,
+					PRICE to data.price,
+					AMOUNT to data.amount,
+					DATE to data.date,
+					UPLOAD to data.isUploaded
 			)
 		}
+
+		override fun toListClass(result: QuerySnapshot): List<Outcome> {
+			val array: ArrayList<Outcome> = ArrayList()
+			for (document in result){
+				val outcome = Outcome(
+						document.data[ID] as Long,
+						document.data[NAME] as String,
+						document.data[DESC] as String,
+						document.data[PRICE] as Long,
+						(document.data[AMOUNT] as Long).toInt(),
+						document.data[DATE] as String,
+						document.data[UPLOAD] as Boolean
+				)
+				array.add(outcome)
+			}
+			return array
+		}
+	}
+
+	constructor(id: Long, name: String, desc: String, price: Long, amount: Int, date: String): this(id, name, desc, price, amount, date, false)
+	constructor(name: String, desc: String, price: Long, amount: Int, date: String): this(0, name, desc, price, amount, date, false)
+
+	val total: Long
+		get() = price * amount
 }

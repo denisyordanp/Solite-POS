@@ -115,7 +115,7 @@ class MainActivity : SocialiteActivity() {
 	fun setToNotPay(order: OrderWithProduct?){
 		if (order != null){
 			order.order.status = Order.NEED_PAY
-			viewModel.updateOrder(order.order)
+			viewModel.updateOrder(order.order) {}
 			onProcessFragment.removeItem(order)
 			notPayFragment.addItem(order)
 		}
@@ -123,7 +123,7 @@ class MainActivity : SocialiteActivity() {
 
 	fun setPay(order: OrderWithProduct){
 		order.order.status = Order.DONE
-		viewModel.updateOrder(order.order)
+		viewModel.updateOrder(order.order) {}
 		printBill.doPrint(order)
 		onProcessFragment.removeItem(order)
 		notPayFragment.removeItem(order)
@@ -131,7 +131,7 @@ class MainActivity : SocialiteActivity() {
 	}
 
 	fun addOrder(order: OrderWithProduct){
-		viewModel.newOrder(order)
+		viewModel.newOrder(order) {}
 		onProcessFragment.addItem(order)
 	}
 

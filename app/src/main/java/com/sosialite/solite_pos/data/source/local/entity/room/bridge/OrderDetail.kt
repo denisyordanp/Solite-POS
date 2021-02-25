@@ -1,11 +1,13 @@
 package com.sosialite.solite_pos.data.source.local.entity.room.bridge
 
 import androidx.room.*
+import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
-import com.sosialite.solite_pos.data.source.local.entity.room.master.Supplier
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
+import java.util.*
 
 @Entity(
 	tableName = OrderDetail.DB_NAME,
@@ -32,34 +34,52 @@ import java.io.Serializable
 data class OrderDetail(
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
-		var id: Int,
+		var id: Long,
 
 		@ColumnInfo(name = Order.NO)
 		var orderNo: String,
 
 		@ColumnInfo(name = Product.ID)
-		var idProduct: Int,
+		var idProduct: Long,
 
 		@ColumnInfo(name = AMOUNT)
-		var amount: Int
+		var amount: Int,
+
+		@ColumnInfo(name = UPLOAD)
+		var isUpload: Boolean
 ): Serializable{
-	companion object{
+	companion object: RemoteUtils<OrderDetail>{
 		const val ID = "id_order_detail"
 		const val AMOUNT = "amount"
 
 		const val DB_NAME = "order_detail"
-	}
 
-	constructor(orderNo: String, idProduct: Int, amount: Int): this(0, orderNo, idProduct, amount)
-	constructor(): this("", 0, 0)
-
-	val hashMap: HashMap<String, Any?>
-		get() {
+		override fun toHashMap(data: OrderDetail): HashMap<String, Any?> {
 			return hashMapOf(
-				ID to id,
-				Order.NO to orderNo,
-				Product.ID to idProduct,
-				AMOUNT to amount
+					ID to data.id,
+					Order.NO to data.orderNo,
+					Product.ID to data.idProduct,
+					AMOUNT to data.amount,
+					UPLOAD to data.isUpload
 			)
 		}
+
+		override fun toListClass(result: QuerySnapshot): List<OrderDetail> {
+			val array: ArrayList<OrderDetail> = ArrayList()
+			for (document in result){
+				val detail = OrderDetail(
+						document.data[ID] as Long,
+						document.data[Order.NO] as String,
+						document.data[Product.ID] as Long,
+						(document.data[AMOUNT] as Long).toInt(),
+						document.data[UPLOAD] as Boolean
+				)
+				array.add(detail)
+			}
+			return array
+		}
+	}
+
+	constructor(orderNo: String, idProduct: Long, amount: Int): this(0, orderNo, idProduct, amount, false)
+	constructor(): this(0,"", 0, 0, false)
 }

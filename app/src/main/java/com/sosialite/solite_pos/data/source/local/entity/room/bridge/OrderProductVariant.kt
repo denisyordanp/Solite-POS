@@ -1,8 +1,15 @@
 package com.sosialite.solite_pos.data.source.local.entity.room.bridge
 
 import androidx.room.*
+import com.google.firebase.firestore.QuerySnapshot
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
+import java.util.ArrayList
 
 @Entity(
 	tableName = OrderProductVariant.DB_NAME,
@@ -29,28 +36,45 @@ import java.io.Serializable
 data class OrderProductVariant(
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
-		var id: Int,
+		var id: Long,
 
 		@ColumnInfo(name = OrderDetail.ID)
-		var idOrderDetail: Int,
+		var idOrderDetail: Long,
 
 		@ColumnInfo(name = VariantOption.ID)
-		var idVariantOption: Int
+		var idVariantOption: Long,
+
+		@ColumnInfo(name = UPLOAD)
+		var isUpload: Boolean
 ): Serializable{
-	companion object{
+	companion object: RemoteUtils<OrderProductVariant>{
 		const val ID = "id_order_product_variant"
 
 		const val DB_NAME = "order_product_variant"
-	}
 
-	constructor(idOrderDetail: Int, idVariantOption: Int): this(0, idOrderDetail, idVariantOption)
-
-	val hashMap: HashMap<String, Any?>
-		get() {
+		override fun toHashMap(data: OrderProductVariant): HashMap<String, Any?> {
 			return hashMapOf(
-				ID to id,
-				OrderDetail.ID to idOrderDetail,
-				VariantOption.ID to idVariantOption
+					ID to data.id,
+					OrderDetail.ID to data.idOrderDetail,
+					VariantOption.ID to data.idVariantOption,
+					UPLOAD to data.isUpload
 			)
 		}
+
+		override fun toListClass(result: QuerySnapshot): List<OrderProductVariant> {
+			val array: ArrayList<OrderProductVariant> = ArrayList()
+			for (document in result){
+				val variant = OrderProductVariant(
+						document.data[ID] as Long,
+						document.data[OrderDetail.ID] as Long,
+						document.data[VariantOption.ID] as Long,
+						document.data[UPLOAD] as Boolean
+				)
+				array.add(variant)
+			}
+			return array
+		}
+	}
+
+	constructor(idOrderDetail: Long, idVariantOption: Long): this(0, idOrderDetail, idVariantOption, false)
 }

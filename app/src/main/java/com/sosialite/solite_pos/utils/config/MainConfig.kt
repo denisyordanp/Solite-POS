@@ -68,14 +68,14 @@ class MainConfig {
 			return SimpleDateFormat(dbFormat, Locale.getDefault()).format(currentTime)
 		}
 
-		fun toRupiah(amount: Int?): String{
+		fun toRupiah(amount: Long?): String{
 			if (amount != null){
 				return "Rp. ${thousand(amount)}"
 			}
 			return ""
 		}
 
-		fun thousand(amount: Int?): String{
+		fun thousand(amount: Long?): String{
 			return NumberFormat.getNumberInstance(Locale.getDefault()).format(amount)
 		}
 

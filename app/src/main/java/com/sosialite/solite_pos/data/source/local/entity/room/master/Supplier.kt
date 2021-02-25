@@ -4,9 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
+import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
+import java.util.ArrayList
 
 @Entity(
 		tableName = Supplier.DB_NAME,
@@ -17,7 +19,7 @@ import java.io.Serializable
 data class Supplier(
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
-		var id: Int,
+		var id: Long,
 
 		@ColumnInfo(name = NAME)
 		var name: String,
@@ -34,7 +36,7 @@ data class Supplier(
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable{
-	companion object{
+	companion object: RemoteUtils<Supplier>{
 		const val ID_ADD = -1
 
 		const val ID = "id_supplier"
@@ -44,19 +46,35 @@ data class Supplier(
 		const val DESC = "desc"
 
 		const val DB_NAME = "supplier"
-	}
 
-	constructor(name: String, phone: String, address: String, desc: String): this(0, name, phone, address, desc, false)
-
-	val hashMap: HashMap<String, Any?>
-		get() {
+		override fun toHashMap(data: Supplier): HashMap<String, Any?> {
 			return hashMapOf(
-					ID to id,
-					NAME to name,
-					PHONE to phone,
-					ADDRESS to address,
-					DESC to desc,
-					UPLOAD to isUploaded
+					ID to data.id,
+					NAME to data.name,
+					PHONE to data.phone,
+					ADDRESS to data.address,
+					DESC to data.desc,
+					UPLOAD to data.isUploaded
 			)
 		}
+
+		override fun toListClass(result: QuerySnapshot): List<Supplier> {
+			val array: ArrayList<Supplier> = ArrayList()
+			for (document in result){
+				val supplier = Supplier(
+						document.data[ID] as Long,
+						document.data[NAME] as String,
+						document.data[PHONE] as String,
+						document.data[ADDRESS] as String,
+						document.data[DESC] as String,
+						document.data[UPLOAD] as Boolean
+				)
+				array.add(supplier)
+			}
+			return array
+		}
+	}
+
+	constructor(id: Long, name: String, phone: String, address: String, desc: String): this(id, name, phone, address, desc, false)
+	constructor(name: String, phone: String, address: String, desc: String): this(0, name, phone, address, desc, false)
 }

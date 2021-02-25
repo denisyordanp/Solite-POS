@@ -14,6 +14,7 @@ import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 
 class ProductMasterActivity : SocialiteActivity() {
@@ -42,8 +43,13 @@ class ProductMasterActivity : SocialiteActivity() {
 
 	private fun getCategories(){
 		viewModel.getCategories(Category.getFilter(Category.ALL)).observe(this, {
-			if (!it.isNullOrEmpty()) {
-				setAdapter(ArrayList(it))
+			when(it.status){
+				Status.SUCCESS -> {
+					if (!it.data.isNullOrEmpty()){
+						setAdapter(ArrayList(it.data))
+					}
+				}
+				else -> {}
 			}
 		})
 	}

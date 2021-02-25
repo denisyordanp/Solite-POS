@@ -39,7 +39,7 @@ class CategoryMasterAdapter(
 		holder.binding.swCmStatus.setOnCheckedChangeListener{ v, _ ->
 			run {
 				c.isActive = v.isChecked
-				viewModel.updateCategory(c)
+				viewModel.updateCategory(c) {}
 			}
 		}
 	}

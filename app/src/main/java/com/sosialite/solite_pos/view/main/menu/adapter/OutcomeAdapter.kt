@@ -23,9 +23,23 @@ class OutcomeAdapter(private val fragmentManager: FragmentManager) : RecyclerVie
 			notifyDataSetChanged()
 		}
 
-	val grandTotal: Int
+	fun addItem(outcome: Outcome){
+		items.add(outcome)
+		notifyItemInserted(0)
+	}
+
+	fun editItem(outcome: Outcome){
+		for ((i, item) in items.withIndex()){
+			if (item.id == outcome.id){
+				items[i] = outcome
+				notifyItemChanged(i)
+			}
+		}
+	}
+
+	private val grandTotal: Long
 	get() {
-		var total = 0
+		var total = 0L
 		for (item in items){
 			total += item.total
 		}

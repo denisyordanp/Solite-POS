@@ -16,6 +16,7 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 import com.sosialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.sosialite.solite_pos.data.source.repository.SoliteRepository
+import com.sosialite.solite_pos.vo.Resource
 
 class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 
@@ -27,12 +28,12 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		return repository.insertPaymentOrder(payment)
 	}
 
-	fun newOrder(order: OrderWithProduct){
-		repository.newOrder(order)
+	fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.newOrder(order, callback)
 	}
 
-	fun updateOrder(order: Order) {
-		repository.updateOrder(order)
+	fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
+		repository.updateOrder(order, callback)
 	}
 
 	fun cancelOrder(order: OrderWithProduct) {
@@ -47,97 +48,99 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.newPurchase(data)
 	}
 
-	fun getDataProduct(idCategory: Int): LiveData<List<DataProduct>> {
+	fun getDataProduct(idCategory: Long): LiveData<Resource<List<DataProduct>>> {
 		return repository.getDataProduct(idCategory)
 	}
 
-	fun getVariantProduct(idProduct: Int, idVariantOption: Int): List<VariantProduct>{
+	fun getVariantProduct(idProduct: Long, idVariantOption: Long): List<VariantProduct>{
 		return repository.getVariantProduct(idProduct, idVariantOption)
 	}
 
-	fun getVariantProductById(idProduct: Int): VariantProduct?{
+	fun getVariantProductById(idProduct: Long): VariantProduct?{
 		return repository.getVariantProductById(idProduct)
 	}
 
-	fun insertVariantProduct(data: VariantProduct) {
-		repository.insertVariantProduct(data)
+	fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit) {
+		repository.insertVariantProduct(data, callback)
 	}
 
-	fun removeVariantProduct(data: VariantProduct) {
-		repository.removeVariantProduct(data)
+	fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+		repository.removeVariantProduct(data, callback)
 	}
 
-	fun getProducts(category: Int): LiveData<List<ProductWithCategory>>{
-		return repository.getProductWithCategories(category)
-	}
+//	fun getProducts(category: Long): LiveData<List<ProductWithCategory>>{
+//		return repository.getProductWithCategories(category)
+//	}
 
-	fun getLiveVariantMixProduct(idVariant: Int): LiveData<VariantWithVariantMix>{
+	fun getLiveVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>{
 		return repository.getLiveVariantMixProduct(idVariant)
 	}
 
-	fun getVariantMixProduct(idVariant: Int): VariantWithVariantMix {
+	fun getVariantMixProduct(idVariant: Long): VariantWithVariantMix {
 		return repository.getVariantMixProduct(idVariant)
 	}
 
-	fun insertVariantMix(data: VariantMix){
-		repository.insertVariantMix(data)
+	fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertVariantMix(data, callback)
 	}
 
-	fun removeVariantMix(data: VariantMix){
-		repository.removeVariantMix(data)
+	fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.removeVariantMix(data, callback)
 	}
 
-	fun getProductWithCategories(category: Int): LiveData<List<ProductWithCategory>> {
+	fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>> {
 		return repository.getProductWithCategories(category)
 	}
 
-	fun insertProduct(data: Product): Long{
-		return repository.insertProduct(data)
+	fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertProduct(data, callback)
 	}
 
-	fun updateProduct(data: Product){
-		repository.updateProduct(data)
+	fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateProduct(data, callback)
 	}
 
-	fun getCategories(query: SimpleSQLiteQuery): LiveData<List<Category>>{
+	fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>> {
 		return repository.getCategories(query)
 	}
 
-	fun insertCategory(data: Category){
-		repository.insertCategory(data)
+	fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertCategory(data, callback)
 	}
 
-	fun updateCategory(data: Category){
-		repository.updateCategory(data)
+	fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateCategory(data, callback)
 	}
 
-	val variants: LiveData<List<Variant>>
-		get() = repository.variants
-
-	fun insertVariants(data: Variant){
-		repository.insertVariant(data)
+	fun getVariants(callback: (ApiResponse<List<Variant>>) -> Unit){
+		repository.getVariants(callback)
 	}
 
-	fun updateVariant(data: Variant){
-		repository.updateVariant(data)
+	fun insertVariants(data: Variant, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertVariant(data, callback)
 	}
 
-	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<List<VariantOption>>{
+	fun updateVariant(data: Variant, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateVariant(data, callback)
+	}
+
+	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>>{
 		return repository.getVariantOptions(query)
 	}
 
-	fun insertVariantOption(data: VariantOption){
-		repository.insertVariantOption(data)
+	fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertVariantOption(data, callback)
 	}
 
-	fun updateVariantOption(data: VariantOption){
-		repository.updateVariantOption(data)
+	fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateVariantOption(data, callback)
 	}
 
-	val customers: LiveData<List<Customer>>
-		get() = repository.customers
+	fun getCustomers(callback: (ApiResponse<List<Customer>>) -> Unit){
+		repository.getCustomers(callback)
+	}
 
-	fun insertCustomers(data: Customer, callback: (ApiResponse<Int>) -> Unit){
+	fun insertCustomers(data: Customer, callback: (ApiResponse<Long>) -> Unit){
 		return repository.insertCustomer(data, callback)
 	}
 
@@ -145,38 +148,40 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateCustomer(data, callback)
 	}
 
-	val suppliers: LiveData<List<Supplier>>
-	get() = repository.suppliers
-
-	fun insertSupplier(data: Supplier): Long{
-		return repository.insertSupplier(data)
+	fun getSuppliers(callback: (ApiResponse<List<Supplier>>) -> Unit){
+		repository.getSuppliers(callback)
 	}
 
-	fun updateSupplier(data: Supplier){
-		repository.updateSupplier(data)
+	fun insertSupplier(data: Supplier, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertSupplier(data, callback)
 	}
 
-	val payments: LiveData<List<Payment>>
-		get() = repository.payments
-
-	fun insertPayment(data: Payment){
-		repository.insertPayment(data)
+	fun updateSupplier(data: Supplier, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateSupplier(data, callback)
 	}
 
-	fun updatePayment(data: Payment){
-		repository.updatePayment(data)
+	fun getPayments(callback: (ApiResponse<List<Payment>>) -> Unit){
+		repository.getPayments(callback)
 	}
 
-	fun getOutcome(date: String): LiveData<List<Outcome>> {
-		return repository.getOutcome(date)
+	fun insertPayment(data: Payment, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertPayment(data, callback)
 	}
 
-	fun insertOutcome(data: Outcome) {
-		repository.insertOutcome(data)
+	fun updatePayment(data: Payment, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updatePayment(data, callback)
 	}
 
-	fun updateOutcome(data: Outcome) {
-		repository.updateOutcome(data)
+	fun getOutcome(date: String, callback: (ApiResponse<List<Outcome>>) -> Unit) {
+		repository.getOutcomes(date, callback)
+	}
+
+	fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit) {
+		repository.insertOutcome(data, callback)
+	}
+
+	fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit) {
+		repository.updateOutcome(data, callback)
 	}
 
 	fun fillData(){

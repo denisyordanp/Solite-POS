@@ -4,12 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.sosialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.sosialite.solite_pos.data.source.remote.RemoteDataSource
-import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
+import androidx.appcompat.app.AppCompatDelegate
 import com.sosialite.solite_pos.databinding.ActivityOpeningBinding
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 
@@ -18,6 +13,7 @@ class OpeningActivity : SocialiteActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ActivityOpeningBinding.inflate(layoutInflater).root)
+		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 		Handler(Looper.getMainLooper()).postDelayed({toMain()}, 2000)
     }
 

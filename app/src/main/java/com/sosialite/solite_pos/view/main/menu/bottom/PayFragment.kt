@@ -93,7 +93,7 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 					MessageBottom(childFragmentManager)
 						.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
 						.setPositiveListener("Ya"){
-							pay(payment!!, cashPay.toInt())
+							pay(payment!!, cashPay.toLong())
 						}
 						.setNegativeListener("Batal"){
 							it?.dismiss()
@@ -134,7 +134,7 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 		startActivityForResult(Intent(context, SelectPaymentsActivity::class.java), SelectPaymentsActivity.RQ_PAYMENT)
 	}
 
-	private fun pay(payment: Payment, pay: Int){
+	private fun pay(payment: Payment, pay: Long){
 		if (this.order != null){
 			val order = viewModel.insertPaymentOrder(OrderPayment(this.order!!.order.orderNo, payment.id, pay))
 			printBill(order)

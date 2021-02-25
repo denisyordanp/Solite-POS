@@ -2,12 +2,12 @@ package com.sosialite.solite_pos.view.main.menu.master
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
+import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.ActivityListMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -22,6 +22,7 @@ import com.sosialite.solite_pos.view.main.menu.master.bottom.PaymentMasterFragme
 import com.sosialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragment
 import com.sosialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class ListMasterActivity : SocialiteActivity() {
 
@@ -91,11 +92,14 @@ class ListMasterActivity : SocialiteActivity() {
 	}
 
 	private fun getSuppliers(callback: (ArrayList<Supplier>) -> Unit){
-		viewModel.suppliers.observe(this, {
-			if (!it.isNullOrEmpty()){
-				callback.invoke(ArrayList(it))
+		viewModel.getSuppliers {
+			when(it.status){
+				StatusResponse.SUCCESS -> {
+					callback.invoke(ArrayList(it.body))
+				}
+				else -> {}
 			}
-		})
+		}
 	}
 
 	private fun setCategory(){
@@ -125,8 +129,11 @@ class ListMasterActivity : SocialiteActivity() {
 
 	private fun getCategories(callback: (ArrayList<Category>) -> Unit){
 		viewModel.getCategories(Category.getFilter(Category.ALL)).observe(this, {
-			if (!it.isNullOrEmpty()){
-				callback.invoke(ArrayList(it))
+			when(it.status){
+				Status.SUCCESS -> {
+					callback.invoke(ArrayList(it.data))
+				}
+				else -> {}
 			}
 		})
 	}
@@ -164,21 +171,26 @@ class ListMasterActivity : SocialiteActivity() {
 	}
 
 	private fun getVariants(isMix: Boolean?, callback: ((ArrayList<Variant>) -> Unit)){
-		viewModel.variants.observe(this, {
-			if (!it.isNullOrEmpty()){
-				val variants: ArrayList<Variant> = ArrayList()
-				for (item in it){
-					if (isMix != null){
-						if (item.isMix == isMix){
-							variants.add(item)
+		viewModel.getVariants {
+			when(it.status){
+				StatusResponse.SUCCESS -> {
+					if (!it.body.isNullOrEmpty()){
+						val variants: ArrayList<Variant> = ArrayList()
+						for (item in it.body){
+							if (isMix != null){
+								if (item.isMix == isMix){
+									variants.add(item)
+								}
+							}else{
+								variants.add(item)
+							}
 						}
-					}else{
-						variants.add(item)
+						callback.invoke(variants)
 					}
 				}
-				callback.invoke(variants)
+				else -> {}
 			}
-		})
+		}
 	}
 
 	private fun setPayment(){
@@ -191,10 +203,13 @@ class ListMasterActivity : SocialiteActivity() {
 		val adapter = PaymentMasterAdapter(viewModel, supportFragmentManager)
 		_binding.rvListMaster.adapter = adapter
 
-		viewModel.payments.observe(this, {
-			if (!it.isNullOrEmpty()){
-				adapter.items = ArrayList(it)
+		viewModel.getPayments {
+			when(it.status){
+				StatusResponse.SUCCESS -> {
+					adapter.items = ArrayList(it.body)
+				}
+				else -> {}
 			}
-		})
+		}
 	}
 }

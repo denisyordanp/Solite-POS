@@ -13,6 +13,8 @@ import java.util.*
 
 class DoneCook(private var context: Context?) : BroadcastReceiver() {
 
+	constructor(): this(null)
+
 	companion object{
 		const val EXTRA_NAME = "extra_name"
 	}

@@ -18,7 +18,7 @@ import java.io.Serializable
 data class Customer(
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = ID)
-	var id: Int,
+	var id: Long,
 
 	@ColumnInfo(name = NAME)
 	var name: String,
@@ -27,18 +27,18 @@ data class Customer(
 	var isUploaded: Boolean
 ): Serializable{
 	companion object: RemoteUtils<Customer> {
-		const val ID_ADD = -1
+		const val ID_ADD = -1L
 
 		const val ID = "id_customer"
 		const val NAME = "name"
 
 		const val DB_NAME = "customer"
 
-		override fun convertToListClass(result: QuerySnapshot): List<Customer> {
+		override fun toListClass(result: QuerySnapshot): List<Customer> {
 			val array: ArrayList<Customer> = ArrayList()
 			for (document in result){
 				val customer = Customer(
-						(document.data[ID] as Long).toInt(),
+						document.data[ID] as Long,
 						document.data[NAME] as String,
 						document.data[UPLOAD] as Boolean
 				)
@@ -47,7 +47,7 @@ data class Customer(
 			return array
 		}
 
-		override fun convertToHashMap(data: Customer): HashMap<String, Any?> {
+		override fun toHashMap(data: Customer): HashMap<String, Any?> {
 			return hashMapOf(
 					ID to data.id,
 					NAME to data.name,

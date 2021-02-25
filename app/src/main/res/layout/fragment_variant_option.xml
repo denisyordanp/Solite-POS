@@ -49,21 +49,6 @@
 
 		</com.google.android.material.textfield.TextInputLayout>
 
-		<com.google.android.material.textfield.TextInputLayout
-			style="@style/TextLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
-
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edt_vo_price"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="number"
-				android:maxLines="1"
-				android:hint="Masukan harga pilihan varian"/>
-
-		</com.google.android.material.textfield.TextInputLayout>
-
 		<com.google.android.material.checkbox.MaterialCheckBox
 			android:id="@+id/cb_vo_many"
 			android:layout_width="match_parent"

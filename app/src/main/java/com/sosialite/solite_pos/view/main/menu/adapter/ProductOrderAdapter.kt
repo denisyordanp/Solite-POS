@@ -69,7 +69,7 @@ class ProductOrderAdapter(
 	}
 
 	class ListViewHolder(val binding: RvProductBinding) : RecyclerView.ViewHolder(binding.root){
-		fun setPrice(price: Int?){
+		fun setPrice(price: Long?){
 			if (price != null){
 				binding.tvPmvPrice.text = toRupiah(price)
 			}

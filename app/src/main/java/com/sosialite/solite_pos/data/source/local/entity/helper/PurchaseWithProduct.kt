@@ -27,9 +27,9 @@ data class PurchaseWithProduct(
         return array
     }
 
-    val totalPurchase: Int
+    val totalPurchase: Long
     get() {
-        var total = 0
+        var total = 0L
         for (item in products){
             if (item.purchaseProduct != null && item.product != null){
                total += item.purchaseProduct!!.amount * item.product!!.buyPrice

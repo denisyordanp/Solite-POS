@@ -64,9 +64,9 @@ class ItemPurchaseListAdapter(private val type: Int) : RecyclerView.Adapter<Item
 		return items
 	}
 
-	private val grandTotal: Int
+	private val grandTotal: Long
 	get() {
-		var total = 0
+		var total = 0L
 		for (item in items){
 			if (item.product != null && item.purchaseProduct != null){
 				total += item.product!!.buyPrice * item.purchaseProduct!!.amount

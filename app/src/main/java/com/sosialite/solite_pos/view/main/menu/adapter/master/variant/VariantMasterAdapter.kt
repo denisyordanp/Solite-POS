@@ -13,6 +13,7 @@ import com.sosialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragme
 import com.sosialite.solite_pos.view.main.menu.master.detail.VariantMixOptionActivity
 import com.sosialite.solite_pos.view.main.menu.master.detail.VariantOptionActivity
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class VariantMasterAdapter(
 		private val activity: SocialiteActivity
@@ -58,12 +59,22 @@ class VariantMasterAdapter(
 		fun setData(v: Variant){
 			if(v.isMix){
 				viewModel.getLiveVariantMixProduct(v.id).observe(activity, {
-					val count = "Terdapat ${it.products.size} pilihan"
+					var count = "Mengambil data ..."
+					when(it.status){
+						Status.SUCCESS ->
+							count = "Terdapat ${it.data?.products?.size} pilihan"
+						else -> {}
+					}
 					binding.tvRvVrOption.text = count
 				})
 			}else{
 				viewModel.getVariantOptions(VariantOption.getFilter(v.id, VariantOption.ALL)).observe(activity, {
-					val count = "Terdapat ${it.size} pilihan"
+					var count = "Mengambil data ..."
+					when(it.status){
+						Status.SUCCESS ->
+							count = "Terdapat ${it.data?.size} pilihan"
+						else -> {}
+					}
 					binding.tvRvVrOption.text = count
 				})
 			}

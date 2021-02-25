@@ -110,12 +110,12 @@ class SupplierMasterFragment(
 		}
 
 	private fun saveData(supplier: Supplier){
-		viewModel.insertSupplier(supplier)
+		viewModel.insertSupplier(supplier) {}
 		dialog?.dismiss()
 	}
 
 	private fun updateData(supplier: Supplier){
-		viewModel.updateSupplier(supplier)
+		viewModel.updateSupplier(supplier) {}
 		dialog?.dismiss()
 	}
 

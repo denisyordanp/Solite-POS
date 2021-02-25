@@ -9,7 +9,7 @@ import com.sosialite.solite_pos.data.source.remote.response.helper.StatusRespons
 import com.sosialite.solite_pos.utils.database.AppExecutors
 import com.sosialite.solite_pos.vo.Resource
 
-abstract class NetworkBoundResourceLiveData<ResultType, RequestType> protected constructor(private val mExecutors: AppExecutors, private val isFetch: Boolean) {
+abstract class NetworkBoundResource<ResultType, RequestType> protected constructor(private val mExecutors: AppExecutors) {
 
 	protected abstract fun loadFromDB(): LiveData<ResultType>
 	protected abstract fun shouldFetch(data: ResultType): Boolean
@@ -26,12 +26,8 @@ abstract class NetworkBoundResourceLiveData<ResultType, RequestType> protected c
 			if (shouldFetch(data)) {
 				fetchFromNetwork(dbSource)
 			} else {
-				if (isFetch) {
-					fetchFromNetwork(dbSource)
-				} else {
-					result.addSource(dbSource) { newData: ResultType ->
-						result.setValue(Resource.success(newData))
-					}
+				result.addSource(dbSource) { newData: ResultType ->
+					result.setValue(Resource.success(newData))
 				}
 			}
 		}
@@ -54,11 +50,11 @@ abstract class NetworkBoundResourceLiveData<ResultType, RequestType> protected c
 						}
 					}
 				}
-//				StatusResponse.EMPTY -> mExecutors.mainThread().execute {
-//					result.addSource(loadFromDB()) { newData: ResultType ->
-//						result.setValue(Resource.success(newData))
-//					}
-//				}
+				StatusResponse.EMPTY -> mExecutors.mainThread().execute {
+					result.addSource(loadFromDB()) { newData: ResultType ->
+						result.setValue(Resource.success(newData))
+					}
+				}
 				StatusResponse.ERROR -> {
 					onFetchFailed()
 					result.addSource(dbSource) { newData: ResultType ->

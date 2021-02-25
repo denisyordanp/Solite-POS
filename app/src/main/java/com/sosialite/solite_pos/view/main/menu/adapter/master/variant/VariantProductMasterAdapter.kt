@@ -15,6 +15,7 @@ import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.master.detail.VariantMixOptionActivity
 import com.sosialite.solite_pos.view.main.menu.master.detail.VariantOptionActivity
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class VariantProductMasterAdapter(
 	private val product: Product,
@@ -58,14 +59,20 @@ class VariantProductMasterAdapter(
 				binding.cbVmMix.isChecked = viewModel.getVariantProductById(product.id) != null
 				binding.cbVmMix.setOnCheckedChangeListener{ _, b ->
 					if (b){
-						viewModel.insertVariantProduct(VariantProduct(v.id, 1, product.id))
+						viewModel.insertVariantProduct(VariantProduct(v.id, 1, product.id)) {}
 					}else{
-						viewModel.removeVariantProduct(VariantProduct(v.id, 1, product.id))
+						viewModel.removeVariantProduct(VariantProduct(v.id, 1, product.id)) {}
 					}
 				}
 			}else{
 				viewModel.getVariantOptions(VariantOption.getFilter(v.id, VariantOption.ACTIVE)).observe(activity, {
-					val count = "Terdapat ${it.size} pilihan"
+					var count = "Mengambil data ..."
+					when(it.status){
+						Status.SUCCESS -> {
+							count = "Terdapat ${it.data?.size} pilihan"
+						}
+						else -> {}
+					}
 					binding.tvRvVrOption.text = count
 				})
 			}

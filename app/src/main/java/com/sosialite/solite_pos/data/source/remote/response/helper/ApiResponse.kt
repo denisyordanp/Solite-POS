@@ -19,6 +19,10 @@ class ApiResponse<T> private constructor(
 			return ApiResponse(StatusResponse.FINISH, body, null)
 		}
 
+		fun <T> empty(msg: String?): ApiResponse<T> {
+			return ApiResponse(StatusResponse.EMPTY, null, msg)
+		}
+
 		fun <T> error(msg: String?): ApiResponse<T> {
 			return ApiResponse(StatusResponse.ERROR, null, msg)
 		}

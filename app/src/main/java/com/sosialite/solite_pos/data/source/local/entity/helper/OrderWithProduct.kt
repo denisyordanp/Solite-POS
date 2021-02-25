@@ -15,9 +15,9 @@ data class OrderWithProduct(
 	constructor(order: Order, payment: OrderWithPayment?, customer: Customer): this(order, payment, customer, ArrayList())
 	constructor(order: Order, customer: Customer, products: ArrayList<ProductOrderDetail>): this(order, null, customer, products)
 
-	val grandTotal: Int
+	val grandTotal: Long
 	get() {
-		var total = 0
+		var total = 0L
 		for (item in products){
 			if (item.product != null){
 				total += item.product!!.sellPrice * item.amount

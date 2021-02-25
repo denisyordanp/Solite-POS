@@ -14,12 +14,12 @@ import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class VariantOptionFragment(
-	private val idVariant: Int,
+	private val idVariant: Long,
 	private val variant: VariantOption?
 	) : BottomSheetDialogFragment() {
 
 	constructor(variant: VariantOption): this(variant.idVariant, variant)
-	constructor(idVariant: Int?): this(idVariant ?: 0, null)
+	constructor(idVariant: Long?): this(idVariant ?: 0L, null)
 	constructor(): this(0, null)
 
 	private lateinit var _binding: FragmentVariantOptionBinding
@@ -30,8 +30,6 @@ class VariantOptionFragment(
 		get() = _binding.edtVoName.text.toString().trim()
 	private val desc: String
 		get() = _binding.edtVoDesc.text.toString().trim()
-	private val price: String
-		get() = _binding.edtVoPrice.text.toString().trim()
 	private val isCount: Boolean
 		get() = _binding.cbVoMany.isChecked
 
@@ -57,7 +55,7 @@ class VariantOptionFragment(
 			}else{
 				_binding.btnVoSave.setOnClickListener {
 					if (isCheck){
-						saveData(getOption(name, desc, price, isCount, false))
+						saveData(getOption(name, desc, isCount, false))
 					}
 				}
 			}
@@ -70,11 +68,10 @@ class VariantOptionFragment(
 		if (variant != null){
 			_binding.edtVoName.setText(variant.name)
 			_binding.edtVoDesc.setText(variant.desc)
-			_binding.edtVoPrice.setText(variant.price.toString())
 
 			_binding.btnVoSave.setOnClickListener {
 				if (isCheck){
-					updateData(getOption(name, desc, price, isCount, variant.isActive))
+					updateData(getOption(name, desc, isCount, variant.isActive))
 				}
 			}
 		}
@@ -91,10 +88,6 @@ class VariantOptionFragment(
 					_binding.edtVoDesc.error = "Tidak boleh kosong"
 					false
 				}
-				price.isEmpty() -> {
-					_binding.edtVoPrice.error = "Tidak boleh kosong"
-					false
-				}
 				else -> {
 					true
 				}
@@ -102,24 +95,24 @@ class VariantOptionFragment(
 		}
 
 	private fun saveData(data: VariantOption){
-		viewModel.insertVariantOption(data)
+		viewModel.insertVariantOption(data) {}
 		dialog?.dismiss()
 	}
 
 	private fun updateData(data: VariantOption){
-		viewModel.updateVariantOption(data)
+		viewModel.updateVariantOption(data) {}
 		dialog?.dismiss()
 	}
 
-	private fun getOption(name: String, desc: String, price: String, isCount: Boolean, isActive: Boolean?): VariantOption {
+	private fun getOption(name: String, desc: String, isCount: Boolean, isActive: Boolean?): VariantOption {
 		return if (variant != null){
 			if (isActive != null){
-				VariantOption(variant.id, variant.idVariant, name, desc, price.toInt(), isCount, isActive)
+				VariantOption(variant.id, variant.idVariant, name, desc, isCount, false)
 			}else{
-				VariantOption(variant.id, variant.idVariant, name, desc, price.toInt(), isCount,false)
+				VariantOption(variant.id, variant.idVariant, name, desc, isCount, false)
 			}
 		}else{
-			VariantOption(idVariant, name, desc, price.toInt(), isCount, false)
+			VariantOption(idVariant, name, desc, isCount, false)
 		}
 	}
 }

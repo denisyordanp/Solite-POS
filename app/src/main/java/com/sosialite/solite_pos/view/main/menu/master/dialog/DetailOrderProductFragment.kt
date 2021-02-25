@@ -36,13 +36,13 @@ class DetailOrderProductFragment(
 	}
 
 	private var amount: Int = 0
-	private var maxAmount: Int = 0
+	private var maxAmount: Long = 0
 	private var radioColor: Int = 0
 
 	private var arrayRg: ArrayList<OptionWithRadioButton> = ArrayList()
 	private val variants: ArrayList<Variant>
 	get() {
-		var idVariant = 0
+		var idVariant = 0L
 		val array: ArrayList<Variant> = ArrayList()
 		for (item in product.options){
 			if (item.variants.id != idVariant){
@@ -147,7 +147,7 @@ class DetailOrderProductFragment(
 		}
 	}
 
-	private fun addRadioGroup(id: Int){
+	private fun addRadioGroup(id: Long){
 		if (activity != null){
 			val rg = RadioGroup(activity)
 			rg.orientation = RadioGroup.HORIZONTAL
@@ -171,7 +171,7 @@ class DetailOrderProductFragment(
 		}
 	}
 
-	private fun sortOptions(id: Int, isActive: Boolean): ArrayList<VariantOption>{
+	private fun sortOptions(id: Long, isActive: Boolean): ArrayList<VariantOption>{
 		val array: ArrayList<VariantOption> = ArrayList()
 		for (item in product.options){
 			if (item.options.idVariant == id){
