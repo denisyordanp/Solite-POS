@@ -92,12 +92,13 @@ class ListMasterActivity : SocialiteActivity() {
 	}
 
 	private fun getSuppliers(callback: (ArrayList<Supplier>) -> Unit){
-		viewModel.getSuppliers {
+		viewModel.suppliers.observe(this) {
 			when(it.status){
-				StatusResponse.SUCCESS -> {
-					callback.invoke(ArrayList(it.body))
+				Status.LOADING-> {}
+				Status.SUCCESS -> {
+					callback.invoke(ArrayList(it.data))
 				}
-				else -> {}
+				Status.ERROR -> {}
 			}
 		}
 	}
@@ -171,12 +172,13 @@ class ListMasterActivity : SocialiteActivity() {
 	}
 
 	private fun getVariants(isMix: Boolean?, callback: ((ArrayList<Variant>) -> Unit)){
-		viewModel.getVariants {
+		viewModel.variants.observe(this){
 			when(it.status){
-				StatusResponse.SUCCESS -> {
-					if (!it.body.isNullOrEmpty()){
+				Status.LOADING -> {}
+				Status.SUCCESS -> {
+					if (!it.data.isNullOrEmpty()){
 						val variants: ArrayList<Variant> = ArrayList()
-						for (item in it.body){
+						for (item in it.data){
 							if (isMix != null){
 								if (item.isMix == isMix){
 									variants.add(item)
@@ -188,7 +190,7 @@ class ListMasterActivity : SocialiteActivity() {
 						callback.invoke(variants)
 					}
 				}
-				else -> {}
+				Status.ERROR -> {}
 			}
 		}
 	}
@@ -203,12 +205,13 @@ class ListMasterActivity : SocialiteActivity() {
 		val adapter = PaymentMasterAdapter(viewModel, supportFragmentManager)
 		_binding.rvListMaster.adapter = adapter
 
-		viewModel.getPayments {
+		viewModel.payments.observe(this) {
 			when(it.status){
-				StatusResponse.SUCCESS -> {
-					adapter.items = ArrayList(it.body)
+				Status.LOADING -> {}
+				Status.SUCCESS -> {
+					adapter.items = ArrayList(it.data)
 				}
-				else -> {}
+				Status.ERROR -> {}
 			}
 		}
 	}

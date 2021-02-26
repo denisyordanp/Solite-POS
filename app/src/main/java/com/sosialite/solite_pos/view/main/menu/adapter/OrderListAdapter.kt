@@ -53,25 +53,6 @@ class OrderListAdapter(
 		cook = ResourcesCompat.getDrawable(r, R.drawable.ic_cooking_50dp, null)
 	}
 
-	fun addItem(item: OrderWithProduct){
-		val pos = orderIndex(items, item)
-		if (pos != null){
-			items[pos] = item
-			notifyItemChanged(pos)
-		}else{
-			items.add(0, item)
-			notifyItemInserted(0)
-		}
-	}
-
-	fun removeItem(item: OrderWithProduct){
-		val pos = orderIndex(items, item)
-		if (pos != null){
-			items.removeAt(pos)
-			notifyItemRemoved(pos)
-		}
-	}
-
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
 		return ListViewHolder(RvOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 	}
@@ -104,12 +85,15 @@ class OrderListAdapter(
 				Order.ON_PROCESS -> v.setImageDrawable(cook)
 				Order.NEED_PAY -> v.setImageDrawable(pay)
 				Order.DONE -> v.setImageDrawable(done)
+				Order.CANCEL -> v.setImageDrawable(done)
+
 			}
 		}
 	}
 
 	private fun setCookTime(v: TextView, order: Order?, pos: Int){
 		if (order?.status == Order.ON_PROCESS){
+			v.visibility = View.VISIBLE
 			val text: String
 			if(order.finishToString(context).isNullOrEmpty()){
 				v.setBackgroundColor(Color.RED)

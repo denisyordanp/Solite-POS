@@ -28,8 +28,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="@dimen/LText"
-            android:layout_gravity="center"
-            android:text="Rabu, 24 Februari 2021" />
+            android:layout_gravity="center" />
 
         <TextView
             android:layout_width="match_parent"
@@ -87,7 +86,7 @@
                     android:paddingEnd="0dp"
                     android:textSize="@dimen/MText"
                     android:layout_gravity="end"
-                    android:text="Rp. 200.000"/>
+                    android:text="Rp. 0"/>
 
             </TableRow>
 
@@ -117,7 +116,7 @@
                     android:paddingEnd="0dp"
                     android:textSize="@dimen/MText"
                     android:layout_gravity="end"
-                    android:text="Rp. 20.000"/>
+                    android:text="Rp. 0"/>
 
             </TableRow>
 
@@ -162,7 +161,7 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/MText"
                     android:layout_gravity="end"
-                    android:text="Rp. 200.000"/>
+                    android:text="Rp. 0"/>
 
             </TableRow>
 

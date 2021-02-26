@@ -13,6 +13,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.CustomerAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -108,18 +109,19 @@ class SelectCustomerActivity : SocialiteActivity() {
 		}
 
 	private fun getCustomer(){
-		viewModel.getCustomers {
+		viewModel.customers.observe(this) {
 			when(it.status){
-				StatusResponse.SUCCESS -> {
-					if (!it.body.isNullOrEmpty()){
+				Status.LOADING -> {}
+				Status.SUCCESS -> {
+					if (!it.data.isNullOrEmpty()){
 						if (customers.isNotEmpty()){
 							customers.clear()
 						}
-						customers.addAll(it.body)
+						customers.addAll(it.data)
 					}
 					setFilter(null)
 				}
-				else -> {}
+				Status.ERROR -> {}
 			}
 		}
 	}

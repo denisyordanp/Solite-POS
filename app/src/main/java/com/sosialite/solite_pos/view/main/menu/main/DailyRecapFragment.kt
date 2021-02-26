@@ -18,6 +18,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.sdFormat
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.view.main.menu.adapter.RecapAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class DailyRecapFragment : Fragment() {
 
@@ -51,48 +52,53 @@ class DailyRecapFragment : Fragment() {
 
             viewModel = getViewModel(activity!!)
 
+            _binding.tvRcDate.text = dateFormat(currentDate, sdFormat)
             getIncome()
+            getOutCome()
 
             _binding.btnRcRefresh.setOnClickListener{ getIncome() }
         }
     }
 
     private fun getIncome(){
-        val income = viewModel.getOrderDetail(Order.DONE, currentDate)
-        val incomes: ArrayList<RecapData>  = ArrayList()
-        for (item in income){
-            incomes.add(RecapData(item.order.orderNo, item.grandTotal))
+        viewModel.getOrderDetail(Order.DONE, currentDate).observe(activity!!){
+            when(it.status){
+                Status.LOADING -> {}
+                Status.SUCCESS -> {
+                    if (!it.data.isNullOrEmpty()){
+                        val incomes: ArrayList<RecapData>  = ArrayList()
+                        for (item in it.data){
+                            incomes.add(RecapData(item.order.orderNo, item.grandTotal))
+                        }
+                        incomeRecapAdapter.items = incomes
+                    }
+                    setData()
+                }
+                Status.ERROR -> {}
+            }
         }
-        incomeRecapAdapter.items = incomes
-        getOutCome()
     }
 
     private fun getOutCome(){
-        viewModel.getOutcome(currentDate){
+        viewModel.getOutcome(currentDate).observe(activity!!){
             when(it.status){
-                StatusResponse.SUCCESS -> {
+                Status.LOADING -> {}
+                Status.SUCCESS -> {
                     val outcomes: ArrayList<RecapData>  = ArrayList()
-                    if (it.body != null){
-                        for (item in it.body){
+                    if (it.data != null){
+                        for (item in it.data){
                             outcomes.add(RecapData("${item.amount}x ${item.name}", item.total))
                         }
                     }
                     outcomeRecapAdapter.items = outcomes
                     setData()
                 }
-                StatusResponse.EMPTY -> {
-
-                }
-                StatusResponse.ERROR -> {
-                    Log.w(TAG, "error get outcome")
-                }
-                else -> {}
+                Status.ERROR -> {}
             }
         }
     }
 
     private fun setData(){
-        _binding.tvRcDate.text = dateFormat(currentDate, sdFormat)
         _binding.tvRcTotalIncome.text = toRupiah(incomeRecapAdapter.grandTotal)
         _binding.tvRcTotalOutcome.text = toRupiah(outcomeRecapAdapter.grandTotal)
         _binding.tvRcGrandTotal.text =

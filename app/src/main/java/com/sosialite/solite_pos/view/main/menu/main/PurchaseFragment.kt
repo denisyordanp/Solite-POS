@@ -12,6 +12,7 @@ import com.sosialite.solite_pos.databinding.FragmentPurchaseBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.view.main.menu.adapter.PurchaseAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class PurchaseFragment : Fragment() {
 
@@ -39,11 +40,15 @@ class PurchaseFragment : Fragment() {
         }
     }
 
-    fun addPurchase(purchase: PurchaseWithProduct){
-        adapter.addPurchase(purchase)
-    }
-
     private fun getPurchases(){
-        adapter.items = ArrayList(viewModel.getPurchase())
+        viewModel.purchases.observe(activity!!){
+            when(it.status){
+                Status.LOADING -> {}
+                Status.SUCCESS -> {
+                    adapter.items = ArrayList(it.data)
+                }
+                Status.ERROR -> {}
+            }
+        }
     }
 }

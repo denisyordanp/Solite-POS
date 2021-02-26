@@ -86,7 +86,6 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 				val order = data.getSerializableExtra(MainActivity.EXTRA_ORDER) as OrderWithProduct?
 				if (order != null){
 					this.order = order
-					mainActivity?.addOrder(order)
 					setData()
 				}
 			}

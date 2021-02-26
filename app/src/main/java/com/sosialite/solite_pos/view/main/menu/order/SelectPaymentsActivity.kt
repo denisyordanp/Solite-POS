@@ -10,6 +10,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.PaymentsAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class SelectPaymentsActivity : SocialiteActivity() {
 
@@ -42,14 +43,15 @@ class SelectPaymentsActivity : SocialiteActivity() {
 	}
 
 	private fun getPayments(){
-		viewModel.getPayments {
+		viewModel.payments.observe(this) {
 			when(it.status){
-				StatusResponse.SUCCESS -> {
-					if (!it.body.isNullOrEmpty()){
-						adapter.items = ArrayList(it.body)
+				Status.LOADING -> {}
+				Status.SUCCESS -> {
+					if (!it.data.isNullOrEmpty()){
+						adapter.items = ArrayList(it.data)
 					}
 				}
-				else -> {}
+				Status.ERROR -> {}
 			}
 		}
 	}

@@ -54,7 +54,7 @@ data class Payment(
 					ID to data.id,
 					NAME to data.name,
 					DESC to data.desc,
-					TAX to data.tax,
+					TAX to data.tax.toString(),
 					CASH to data.isCash,
 					STATUS to data.isActive,
 					UPLOAD to data.isUploaded

@@ -13,6 +13,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class CancelFragment : Fragment() {
 
@@ -41,6 +42,14 @@ class CancelFragment : Fragment() {
     }
 
     private fun getData(){
-        adapter.items = ArrayList(viewModel.getOrderDetail(Order.CANCEL, currentDate))
+        viewModel.getOrderDetail(Order.CANCEL, currentDate).observe(activity!!){
+            when(it.status){
+                Status.LOADING -> {}
+                Status.SUCCESS -> {
+                    adapter.items = ArrayList(it.data)
+                }
+                Status.ERROR -> {}
+            }
+        }
     }
 }

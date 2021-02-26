@@ -27,7 +27,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> protected construct
 				fetchFromNetwork(dbSource)
 			} else {
 				result.addSource(dbSource) { newData: ResultType ->
-					result.setValue(Resource.success(newData))
+					result.value = Resource.success(newData)
 				}
 			}
 		}

@@ -151,7 +151,7 @@ data class Order(
 						document.data[NO] as String,
 						document.data[Customer.ID] as Long,
 						document.data[ORDER_DATE] as String,
-						document.data[COOK_TIME] as String,
+						document.data[COOK_TIME] as String?,
 						document.data[TAKE_AWAY] as Boolean,
 						(document.data[STATUS] as Long).toInt(),
 						document.data[UPLOAD] as Boolean

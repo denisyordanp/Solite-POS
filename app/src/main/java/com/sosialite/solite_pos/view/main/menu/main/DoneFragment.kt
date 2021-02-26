@@ -13,6 +13,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class DoneFragment : Fragment() {
 
@@ -42,15 +43,14 @@ class DoneFragment : Fragment() {
 	}
 
 	private fun getData(){
-		adapter.items = ArrayList(viewModel.getOrderDetail(Order.DONE, currentDate))
-		adapter.cookCallback = { updateOrder(it) }
-	}
-
-	private fun updateOrder(order: Order){
-		viewModel.updateOrder(order) {}
-	}
-
-	fun addItem(order: OrderWithProduct){
-		adapter.addItem(order)
+		viewModel.getOrderDetail(Order.DONE, currentDate).observe(activity!!){ response ->
+			when(response.status){
+				Status.LOADING -> {}
+				Status.SUCCESS -> {
+					adapter.items = ArrayList(response.data)
+				}
+				Status.ERROR -> {}
+			}
+		}
 	}
 }

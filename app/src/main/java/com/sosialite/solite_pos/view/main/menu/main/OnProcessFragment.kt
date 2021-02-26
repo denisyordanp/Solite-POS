@@ -1,6 +1,7 @@
 package com.sosialite.solite_pos.view.main.menu.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class OnProcessFragment : Fragment() {
 
@@ -43,19 +45,19 @@ class OnProcessFragment : Fragment() {
 	}
 
 	private fun getData(){
-		adapter.items = ArrayList(viewModel.getOrderDetail(Order.ON_PROCESS, currentDate))
-		adapter.cookCallback = { updateOrder(it) }
+		viewModel.getOrderDetail(Order.ON_PROCESS, currentDate).observe(activity!!){ response ->
+			when(response.status){
+				Status.LOADING -> {}
+				Status.SUCCESS -> {
+					adapter.items = ArrayList(response.data)
+					adapter.cookCallback = { updateOrder(it) }
+				}
+				Status.ERROR -> {}
+			}
+		}
 	}
 
 	private fun updateOrder(order: Order){
 		viewModel.updateOrder(order) {}
-	}
-
-	fun addItem(order: OrderWithProduct){
-		adapter.addItem(order)
-	}
-
-	fun removeItem(order: OrderWithProduct){
-		adapter.removeItem(order)
 	}
 }

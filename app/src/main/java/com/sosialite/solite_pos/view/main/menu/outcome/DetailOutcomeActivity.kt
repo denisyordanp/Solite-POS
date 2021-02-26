@@ -13,6 +13,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.sdFormat
 import com.sosialite.solite_pos.view.main.menu.adapter.OutcomeAdapter
 import com.sosialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class DetailOutcomeActivity : AppCompatActivity() {
 
@@ -46,18 +47,13 @@ class DetailOutcomeActivity : AppCompatActivity() {
     private fun setData() {
         _binding.tvOcDate.text = dateFormat(currentDate, sdFormat)
 
-        viewModel.getOutcome(currentDate){
+        viewModel.getOutcome(currentDate).observe(this) {
             when(it.status){
-                StatusResponse.SUCCESS -> {
-                    adapter.items = ArrayList(it.body)
+                Status.LOADING -> {}
+                Status.SUCCESS -> {
+                    adapter.items = ArrayList(it.data)
                 }
-                StatusResponse.EMPTY -> {
-                    Log.w(TAG, "empty get outcome")
-                }
-                StatusResponse.ERROR -> {
-                    Log.w(TAG, "error get outcome")
-                }
-                else -> {}
+                Status.ERROR -> {}
             }
         }
     }

@@ -19,6 +19,7 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.view.main.menu.adapter.SelectSupplierAdapter
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -70,18 +71,19 @@ class SelectSupplierFragment(private val callback: (Supplier?) -> Unit) : Bottom
     }
 
     private fun getSuppliers(){
-        viewModel.getSuppliers {
+        viewModel.suppliers.observe(activity!!) {
             when(it.status){
-                StatusResponse.SUCCESS -> {
-                    if (!it.body.isNullOrEmpty()){
+                Status.LOADING -> {}
+                Status.SUCCESS -> {
+                    if (!it.data.isNullOrEmpty()){
                         if (suppliers.isNotEmpty()){
                             suppliers.clear()
                         }
-                        suppliers.addAll(it.body)
+                        suppliers.addAll(it.data)
                     }
                     setFilter(null)
                 }
-                else -> {}
+                Status.ERROR -> {}
             }
         }
     }
