@@ -18,24 +18,23 @@ import com.sosialite.solite_pos.vo.Resource
 
 internal interface SoliteDataSource{
 
-	fun getOrderDetail(status: Int, date: String): List<OrderWithProduct>
-	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct
+	fun getOrderDetail(status: Int, date: String): LiveData<Resource<List<OrderWithProduct>>>
+	fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderWithProduct>>) -> Unit)
 	fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 	fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit)
-	fun cancelOrder(order: OrderWithProduct)
+	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
-	fun getPurchase(): List<PurchaseWithProduct>
-	fun newPurchase(data: PurchaseWithProduct)
+	val purchases: LiveData<Resource<List<PurchaseWithProduct>>>
+	fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
 	fun getDataProduct(idCategory: Long): LiveData<Resource<List<DataProduct>>>
 
-	fun getVariantProduct(idProduct: Long, idVariantOption: Long): List<VariantProduct>
-	fun getVariantProductById(idProduct: Long): VariantProduct?
+	fun getVariantProduct(idProduct: Long, idVariantOption: Long): LiveData<Resource<List<VariantProduct>>>
+	fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>>
 	fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit)
 	fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
-	fun getLiveVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>
-	fun getVariantMixProduct(idVariant: Long): VariantWithVariantMix
+	fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>
 	fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit)
 	fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit)
 
@@ -47,7 +46,7 @@ internal interface SoliteDataSource{
 	fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit)
 	fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit)
 
-	fun getVariants(callback: (ApiResponse<List<Variant>>) -> Unit)
+	val variants: LiveData<Resource<List<Variant>>>
 	fun insertVariant(data: Variant, callback: (ApiResponse<Long>) -> Unit)
 	fun updateVariant(data: Variant, callback: (ApiResponse<Boolean>) -> Unit)
 
@@ -55,19 +54,19 @@ internal interface SoliteDataSource{
 	fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit)
 	fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit)
 
-	fun getCustomers(callback: (ApiResponse<List<Customer>>) -> Unit)
+	val customers: LiveData<Resource<List<Customer>>>
 	fun insertCustomer(data: Customer, callback: (ApiResponse<Long>) -> Unit)
 	fun updateCustomer(data: Customer, callback: (ApiResponse<Boolean>) -> Unit)
 
-	fun getSuppliers(callback: (ApiResponse<List<Supplier>>) -> Unit)
+	val suppliers: LiveData<Resource<List<Supplier>>>
 	fun insertSupplier(data: Supplier, callback: (ApiResponse<Long>) -> Unit)
 	fun updateSupplier(data: Supplier, callback: (ApiResponse<Boolean>) -> Unit)
 
-	fun getPayments(callback: (ApiResponse<List<Payment>>) -> Unit)
+	val payments: LiveData<Resource<List<Payment>>>
 	fun insertPayment(data: Payment, callback: (ApiResponse<Long>) -> Unit)
 	fun updatePayment(data: Payment, callback: (ApiResponse<Boolean>) -> Unit)
 
-	fun getOutcomes(date: String, callback: (ApiResponse<List<Outcome>>) -> Unit)
+	fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>>
 	fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit)
 	fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit)
 	fun fillData()

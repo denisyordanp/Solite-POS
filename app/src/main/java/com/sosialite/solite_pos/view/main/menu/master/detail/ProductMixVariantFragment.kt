@@ -63,15 +63,22 @@ class ProductMixVariantFragment(
 
 	private fun getProductSelected(){
 		if (variant != null){
-			val data = viewModel.getVariantMixProduct(variant.id)
-			if (!data.products.isNullOrEmpty()){
-				val array: ArrayList<Product> = ArrayList()
-				for (product in data.products){
-					array.add(product)
+			val data = viewModel.getVariantMixProduct(variant.id).observe(activity!!){
+				when(it.status){
+					Status.LOADING -> {}
+					Status.SUCCESS -> {
+						if (!it.data?.products.isNullOrEmpty()){
+							val array: ArrayList<Product> = ArrayList()
+							for (product in it.data!!.products){
+								array.add(product)
+							}
+							adapter.selected = array
+						}
+						getProduct()
+					}
+					Status.ERROR -> {}
 				}
-				adapter.selected = array
 			}
-			getProduct()
 		}
 	}
 

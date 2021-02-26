@@ -7,7 +7,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sosialite.solite_pos.data.NetworkBoundResource
 import com.sosialite.solite_pos.data.NetworkFunBound
-import com.sosialite.solite_pos.data.NetworkGetBound
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
@@ -17,31 +16,28 @@ import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase
-import com.sosialite.solite_pos.data.source.local.room.SoliteDao
+import com.sosialite.solite_pos.data.source.local.room.LocalDataSource
 import com.sosialite.solite_pos.data.source.remote.RemoteDataSource
-import com.sosialite.solite_pos.data.source.remote.response.entity.BatchWithData
-import com.sosialite.solite_pos.data.source.remote.response.entity.BatchWithObject
-import com.sosialite.solite_pos.data.source.remote.response.entity.DataProductResponse
+import com.sosialite.solite_pos.data.source.remote.response.entity.*
 import com.sosialite.solite_pos.data.source.remote.response.helper.ApiResponse
-import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.utils.database.AppExecutors
 import com.sosialite.solite_pos.vo.Resource
 
 class SoliteRepository private constructor(
 		private val remoteDataSource: RemoteDataSource,
-		private val soliteDao: SoliteDao,
-		private val appExecutors: AppExecutors
+		private val appExecutors: AppExecutors,
+		private val localDataSource: LocalDataSource
 ) : SoliteDataSource {
 
 	companion object {
 		@Volatile
 		private var INSTANCE: SoliteRepository? = null
 
-		fun getInstance(remoteData: RemoteDataSource, soliteDao: SoliteDao, appExecutors: AppExecutors): SoliteRepository {
+		fun getInstance(remoteData: RemoteDataSource, appExecutors: AppExecutors, localDataSource: LocalDataSource): SoliteRepository {
 			if (INSTANCE == null) {
 				synchronized(SoliteRepository::class.java) {
 					if (INSTANCE == null) {
-						INSTANCE = SoliteRepository(remoteData, soliteDao, appExecutors)
+						INSTANCE = SoliteRepository(remoteData, appExecutors, localDataSource)
 					}
 				}
 			}
@@ -49,18 +45,64 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun getOrderDetail(status: Int, date: String): List<OrderWithProduct>{
-		val orders = soliteDao.getOrdersByStatus(status, date)
-		val list: ArrayList<OrderWithProduct> = ArrayList()
-		for (item in orders){
-			list.add(soliteDao.getOrderWithProduct(item))
-		}
-		return list
+	override fun getOrderDetail(status: Int, date: String): LiveData<Resource<List<OrderWithProduct>>> {
+		return object : NetworkBoundResource<List<OrderWithProduct>, OrderResponse>(appExecutors){
+			override fun loadFromDB(): LiveData<List<OrderWithProduct>> {
+				return localDataSource.getListOrderDetail(status, date)
+			}
+
+			override fun shouldFetch(data: List<OrderWithProduct>): Boolean {
+				return data.isNullOrEmpty()
+			}
+
+			override fun createCall(): LiveData<ApiResponse<OrderResponse>> {
+				return remoteDataSource.getOrderDetail()
+			}
+
+			override fun saveCallResult(data: OrderResponse?) {
+				if (data != null){
+					localDataSource.soliteDao.insertCustomers(data.customer)
+					localDataSource.soliteDao.insertOrders(data.order)
+					localDataSource.soliteDao.insertPayments(data.payments)
+					localDataSource.soliteDao.insertPaymentOrders(data.orderPayment)
+
+					insertDataProduct(data.products)
+				}
+			}
+		}.asLiveData()
 	}
 
-	override fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct{
-		soliteDao.insertPaymentOrder(payment)
-		return soliteDao.getOrderDetail(payment.orderNO)
+	private fun insertDataProduct(product: DataProductResponse){
+		localDataSource.soliteDao.insertCategories(product.categories)
+		localDataSource.soliteDao.insertProducts(product.products)
+		localDataSource.soliteDao.insertVariants(product.variants)
+		localDataSource.soliteDao.insertVariantOptions(product.variantOptions)
+	}
+
+	override fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderWithProduct>>) -> Unit) {
+		object : NetworkFunBound<Boolean, LiveData<OrderWithProduct>, LiveData<OrderWithProduct>>(callback) {
+			var id = 0L
+			override fun dbOperation(): LiveData<OrderWithProduct>{
+				this.id = localDataSource.soliteDao.insertPaymentOrder(payment)
+				return localDataSource.getOrderDetail(payment.orderNO)
+			}
+
+			override fun createCall(savedData: LiveData<OrderWithProduct>, inCallback: (ApiResponse<Boolean>) -> Unit) {
+				payment.id = id
+				return remoteDataSource.setOrderPayment(payment, inCallback)
+			}
+
+			override fun successUpload(before: LiveData<OrderWithProduct>) {
+				payment.id = id
+				payment.isUpload = true
+				localDataSource.soliteDao.updatePaymentOrder(payment)
+				callback.invoke(ApiResponse.success(before))
+			}
+
+			override fun dbFinish(savedData: LiveData<OrderWithProduct>) {
+				callback.invoke(ApiResponse.finish(savedData))
+			}
+		}
 	}
 
 	override fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
@@ -112,37 +154,11 @@ class SoliteRepository private constructor(
 		}
 
 		remoteDataSource.batch(batches, callback)
-
-//		soliteDao.insertOrder(order.order)
-//		for (item in order.products){
-//			if (item.product != null){
-//
-//				val idOrder = soliteDao.insertDetailOrder(OrderDetail(order.order.orderNo, item.product!!.id, item.amount))
-//
-//				if (item.product!!.isMix){
-//					for (p in item.mixProducts){
-//						soliteDao.decreaseProductStock(p.product.id, p.amount)
-//
-//						val idMix = soliteDao.insertVariantMixOrder(OrderProductVariantMix(idOrder, p.product.id, p.amount))
-//
-//						for (variant in p.variants){
-//							soliteDao.insertMixVariantOrder(OrderMixProductVariant(idMix, variant.id))
-//						}
-//					}
-//				}else{
-//					soliteDao.decreaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
-//
-//					for (variant in item.variants){
-//						soliteDao.insertVariantOrder(OrderProductVariant(idOrder, variant.id))
-//					}
-//				}
-//			}
-//		}
 	}
 
 	private fun insertOrder(order: Order)
 	: BatchWithObject<Order> {
-		soliteDao.insertOrder(order)
+		localDataSource.soliteDao.insertOrder(order)
 		val doc = Firebase.firestore
 				.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -153,7 +169,7 @@ class SoliteRepository private constructor(
 
 	private fun insertDetailOrder(detail: OrderDetail)
 	: BatchWithObject<OrderDetail> {
-		detail.id = soliteDao.insertDetailOrder(detail)
+		detail.id = localDataSource.soliteDao.insertDetailOrder(detail)
 		val doc = Firebase.firestore
 				.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -164,7 +180,7 @@ class SoliteRepository private constructor(
 
 	private fun decreaseStock(idProduct: Long, amount: Int)
 	: BatchWithObject<Product> {
-		val product = soliteDao.decreaseAndGetProduct(idProduct, amount)
+		val product = localDataSource.soliteDao.decreaseAndGetProduct(idProduct, amount)
 		val doc = Firebase.firestore
 				.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -175,7 +191,7 @@ class SoliteRepository private constructor(
 
 	private fun insertVariantMixOrder(variant: OrderProductVariantMix)
 	: BatchWithObject<OrderProductVariantMix> {
-		variant.id = soliteDao.insertVariantMixOrder(variant)
+		variant.id = localDataSource.soliteDao.insertVariantMixOrder(variant)
 		val doc = Firebase.firestore
 				.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -186,7 +202,7 @@ class SoliteRepository private constructor(
 
 	private fun insertMixVariantOrder(mixVariant: OrderMixProductVariant)
 	: BatchWithObject<OrderMixProductVariant> {
-		mixVariant.id = soliteDao.insertMixVariantOrder(mixVariant)
+		mixVariant.id = localDataSource.soliteDao.insertMixVariantOrder(mixVariant)
 		val doc = Firebase.firestore
 				.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -197,7 +213,7 @@ class SoliteRepository private constructor(
 
 	private fun insertVariantOrder(variant: OrderProductVariant)
 	: BatchWithObject<OrderProductVariant> {
-		variant.id = soliteDao.insertVariantOrder(variant)
+		variant.id = localDataSource.soliteDao.insertVariantOrder(variant)
 		val doc = Firebase.firestore
 				.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -210,7 +226,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Order, Boolean>(callback) {
 			override fun dbOperation(): Order{
 				order.isUploaded = false
-				soliteDao.updateOrder(order)
+				localDataSource.soliteDao.updateOrder(order)
 				return order
 			}
 
@@ -220,7 +236,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Order) {
 				before.isUploaded = true
-				soliteDao.updateOrder(before)
+				localDataSource.soliteDao.updateOrder(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -230,52 +246,115 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun cancelOrder(order: OrderWithProduct){
-		soliteDao.updateOrder(order.order)
+	override fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+		val batches: ArrayList<BatchWithData> = ArrayList()
+		batches.add(updateOrder(order.order).batch)
 		for (item in order.products){
 			if (item.product != null){
 
 				if (item.product!!.isMix){
 					for (p in item.mixProducts){
-						soliteDao.increaseProductStock(p.product.id, p.amount)
+						batches.add(increaseStock(p.product.id, p.amount).batch)
 					}
 				}else{
-					soliteDao.increaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
+					batches.add(increaseStock(item.product!!.id, (item.amount * item.product!!.portion)).batch)
 				}
 			}
 		}
+		remoteDataSource.batch(batches, callback)
 	}
 
-	override fun getPurchase(): List<PurchaseWithProduct> {
-		val purchases = soliteDao.getPurchases()
-		val list: ArrayList<PurchaseWithProduct> = ArrayList()
-		for (purchase in purchases){
-			val purchaseProduct = soliteDao.getPurchasesProduct(purchase.purchaseNo)
-			val supplier = soliteDao.getSupplierById(purchase.idSupplier)
-			val array: ArrayList<PurchaseProductWithProduct> = ArrayList()
-			for (products in purchaseProduct){
-				val product = soliteDao.getProduct(products.idProduct)
-				array.add(PurchaseProductWithProduct(products, product))
+	private fun updateOrder(order: Order)
+			: BatchWithObject<Order> {
+		localDataSource.soliteDao.updateOrder(order)
+		val doc = Firebase.firestore
+				.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(Order.DB_NAME)
+				.document(order.orderNo)
+		return BatchWithObject(order, BatchWithData(doc, Order.toHashMap(order)))
+	}
+
+	override val purchases: LiveData<Resource<List<PurchaseWithProduct>>>
+	get() {
+		return object : NetworkBoundResource<List<PurchaseWithProduct>, PurchaseResponse>(appExecutors){
+			override fun loadFromDB(): LiveData<List<PurchaseWithProduct>> {
+				return localDataSource.getPurchaseData()
 			}
-			list.add(PurchaseWithProduct(purchase, supplier, array))
-		}
-		return list
+
+			override fun shouldFetch(data: List<PurchaseWithProduct>): Boolean {
+				return data.isNullOrEmpty()
+			}
+
+			override fun createCall(): LiveData<ApiResponse<PurchaseResponse>> {
+				return remoteDataSource.purchaseDetails
+			}
+
+			override fun saveCallResult(data: PurchaseResponse?) {
+				if (data != null){
+					localDataSource.soliteDao.insertSuppliers(data.suppliers)
+					localDataSource.soliteDao.insertPurchases(data.purchases)
+					insertDataProduct(data.products)
+					localDataSource.soliteDao.insertPurchaseProducts(data.purchaseProducts)
+				}
+			}
+		}.asLiveData()
 	}
 
-	override fun newPurchase(data: PurchaseWithProduct) {
-		soliteDao.insertPurchase(data.purchase)
-		soliteDao.insertPurchaseProduct(data.purchaseProduct)
+	override fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+		val batches: ArrayList<BatchWithData> = ArrayList()
+		batches.add(insertPurchase(data.purchase).batch)
+
+		for (item in data.purchaseProduct){
+			batches.add(insertPurchaseProduct(item).batch)
+		}
+
 		for (product in data.products){
 			if (product.purchaseProduct != null){
-				soliteDao.increaseProductStock(product.purchaseProduct!!.idProduct, product.purchaseProduct!!.amount)
+				batches.add(increaseStock(product.purchaseProduct!!.idProduct, product.purchaseProduct!!.amount).batch)
 			}
 		}
+
+		remoteDataSource.batch(batches, callback)
+	}
+
+	private fun insertPurchase(purchase: Purchase)
+			: BatchWithObject<Purchase> {
+		localDataSource.soliteDao.insertPurchase(purchase)
+		val doc = Firebase.firestore
+				.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(Purchase.DB_NAME)
+				.document(purchase.purchaseNo)
+		return BatchWithObject(purchase, BatchWithData(doc, Purchase.toHashMap(purchase)))
+	}
+
+	private fun insertPurchaseProduct(product: PurchaseProduct)
+			: BatchWithObject<PurchaseProduct> {
+		localDataSource.soliteDao.insertPurchaseProduct(product)
+		val doc = Firebase.firestore
+				.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(PurchaseProduct.DB_NAME)
+				.document(product.id.toString())
+		return BatchWithObject(product, BatchWithData(doc, PurchaseProduct.toHashMap(product)))
+	}
+
+	private fun increaseStock(idProduct: Long, amount: Int)
+			: BatchWithObject<Product> {
+		val product = localDataSource.soliteDao.increaseAndGetProduct(idProduct, amount)
+		val doc = Firebase.firestore
+				.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(Product.DB_NAME)
+				.document(product.id.toString())
+		return BatchWithObject(product, BatchWithData(doc, Product.toHashMap(product)))
 	}
 
 	override fun getDataProduct(idCategory: Long): LiveData<Resource<List<DataProduct>>> {
 		return object : NetworkBoundResource<List<DataProduct>, DataProductResponse>(appExecutors){
 			override fun loadFromDB(): LiveData<List<DataProduct>> {
-				return soliteDao.getDataProduct(idCategory)
+				return localDataSource.soliteDao.getDataProduct(idCategory)
 			}
 
 			override fun shouldFetch(data: List<DataProduct>): Boolean {
@@ -283,31 +362,61 @@ class SoliteRepository private constructor(
 			}
 
 			override fun createCall(): LiveData<ApiResponse<DataProductResponse>> {
-				return remoteDataSource.getDataProduct()
+				return remoteDataSource.dataProducts
 			}
 
 			override fun saveCallResult(data: DataProductResponse?) {
 				if (data != null){
-					soliteDao.insertProducts(data.products)
-					soliteDao.insertCategories(data.categories)
-					soliteDao.insertVariantOptions(data.variants)
+					insertDataProduct(data)
 				}
 			}
 		}.asLiveData()
 	}
 
-	override fun getVariantProduct(idProduct: Long, idVariantOption: Long): List<VariantProduct>{
-		return soliteDao.getVariantProduct(idProduct, idVariantOption)
+	override fun getVariantProduct(idProduct: Long, idVariantOption: Long): LiveData<Resource<List<VariantProduct>>> {
+		return object : NetworkBoundResource<List<VariantProduct>, List<VariantProduct>>(appExecutors){
+			override fun loadFromDB(): LiveData<List<VariantProduct>> {
+				return localDataSource.soliteDao.getVariantProduct(idProduct, idVariantOption)
+			}
+
+			override fun shouldFetch(data: List<VariantProduct>): Boolean {
+				return data.isNullOrEmpty()
+			}
+
+			override fun createCall(): LiveData<ApiResponse<List<VariantProduct>>> {
+				return remoteDataSource.getVariantProducts()
+			}
+
+			override fun saveCallResult(data: List<VariantProduct>?) {
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertVariantProducts(data)
+			}
+		}.asLiveData()
 	}
 
-	override fun getVariantProductById(idProduct: Long): VariantProduct?{
-		return soliteDao.getVariantProductById(idProduct)
+	override fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>> {
+		return object : NetworkBoundResource<VariantProduct?, List<VariantProduct>>(appExecutors){
+			override fun loadFromDB(): LiveData<VariantProduct?> {
+				return localDataSource.soliteDao.getVariantProductById(idProduct)
+			}
+
+			override fun shouldFetch(data: VariantProduct?): Boolean {
+				return data == null
+			}
+
+			override fun createCall(): LiveData<ApiResponse<List<VariantProduct>>> {
+				return remoteDataSource.getVariantProducts()
+			}
+
+			override fun saveCallResult(data: List<VariantProduct>?) {
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertVariantProducts(data)
+			}
+		}.asLiveData()
 	}
 
 	override fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, VariantProduct, Long>(callback) {
 			override fun dbOperation(): VariantProduct{
-				val id = soliteDao.insertVariantProduct(data)
+				val id = localDataSource.soliteDao.insertVariantProduct(data)
 				data.id = id
 				return data
 			}
@@ -318,7 +427,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: VariantProduct) {
 				before.isUploaded = true
-				soliteDao.updateVariantProduct(before)
+				localDataSource.soliteDao.updateVariantProduct(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -331,7 +440,7 @@ class SoliteRepository private constructor(
 	override fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit) {
 		object : NetworkFunBound<Boolean, VariantProduct, Boolean>(callback) {
 			override fun dbOperation(): VariantProduct{
-				soliteDao.removeVariantProduct(data.idVariantOption, data.idProduct)
+				localDataSource.soliteDao.removeVariantProduct(data.idVariantOption, data.idProduct)
 				return data
 			}
 
@@ -349,10 +458,10 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun getLiveVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>{
+	override fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>{
 		return object : NetworkBoundResource<VariantWithVariantMix, List<Product>>(appExecutors){
 			override fun loadFromDB(): LiveData<VariantWithVariantMix> {
-				return soliteDao.getLiveVariantMixProduct(idVariant)
+				return localDataSource.soliteDao.getLiveVariantMixProduct(idVariant)
 			}
 
 			override fun shouldFetch(data: VariantWithVariantMix): Boolean {
@@ -364,19 +473,15 @@ class SoliteRepository private constructor(
 			}
 
 			override fun saveCallResult(data: List<Product>?) {
-				if (!data.isNullOrEmpty()) soliteDao.insertProducts(data)
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertProducts(data)
 			}
 		}.asLiveData()
-	}
-
-	override fun getVariantMixProduct(idVariant: Long): VariantWithVariantMix {
-		return soliteDao.getVariantMixProduct(idVariant)
 	}
 
 	override fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, VariantMix, Long>(callback) {
 			override fun dbOperation(): VariantMix{
-				val id = soliteDao.insertVariantMix(data)
+				val id = localDataSource.soliteDao.insertVariantMix(data)
 				data.id = id
 				return data
 			}
@@ -387,7 +492,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: VariantMix) {
 				before.isUploaded = true
-				soliteDao.updateVariantMix(before)
+				localDataSource.soliteDao.updateVariantMix(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -400,7 +505,7 @@ class SoliteRepository private constructor(
 	override fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit) {
 		object : NetworkFunBound<Boolean, VariantMix, Boolean>(callback) {
 			override fun dbOperation(): VariantMix{
-				soliteDao.removeVariantMix(data.idVariant, data.idProduct)
+				localDataSource.soliteDao.removeVariantMix(data.idVariant, data.idProduct)
 				return data
 			}
 
@@ -421,7 +526,7 @@ class SoliteRepository private constructor(
 	override fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>> {
 		return object : NetworkBoundResource<List<ProductWithCategory>, List<Product>>(appExecutors){
 			override fun loadFromDB(): LiveData<List<ProductWithCategory>> {
-				return soliteDao.getProductWithCategories(category)
+				return localDataSource.soliteDao.getProductWithCategories(category)
 			}
 
 			override fun shouldFetch(data: List<ProductWithCategory>): Boolean {
@@ -433,7 +538,7 @@ class SoliteRepository private constructor(
 			}
 
 			override fun saveCallResult(data: List<Product>?) {
-				if (!data.isNullOrEmpty()) soliteDao.insertProducts(data)
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertProducts(data)
 			}
 
 		}.asLiveData()
@@ -442,7 +547,7 @@ class SoliteRepository private constructor(
 	override fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, Product, Long>(callback) {
 			override fun dbOperation(): Product{
-				val id = soliteDao.insertProduct(data)
+				val id = localDataSource.soliteDao.insertProduct(data)
 				data.id = id
 				return data
 			}
@@ -453,7 +558,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Product) {
 				before.isUploaded = true
-				soliteDao.updateProduct(before)
+				localDataSource.soliteDao.updateProduct(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -467,7 +572,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Product, Boolean>(callback) {
 			override fun dbOperation(): Product{
 				data.isUploaded = false
-				soliteDao.insertProduct(data)
+				localDataSource.soliteDao.insertProduct(data)
 				return data
 			}
 
@@ -477,7 +582,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Product) {
 				before.isUploaded = true
-				soliteDao.updateProduct(before)
+				localDataSource.soliteDao.updateProduct(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -490,7 +595,7 @@ class SoliteRepository private constructor(
 	override fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>>{
 		return object : NetworkBoundResource<List<Category>, List<Category>>(appExecutors){
 			override fun loadFromDB(): LiveData<List<Category>> {
-				return soliteDao.getCategories(query)
+				return localDataSource.soliteDao.getCategories(query)
 			}
 
 			override fun shouldFetch(data: List<Category>): Boolean {
@@ -502,7 +607,7 @@ class SoliteRepository private constructor(
 			}
 
 			override fun saveCallResult(data: List<Category>?) {
-				if (!data.isNullOrEmpty()) soliteDao.insertCategories(data)
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertCategories(data)
 			}
 
 		}.asLiveData()
@@ -511,7 +616,7 @@ class SoliteRepository private constructor(
 	override fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, Category, Long>(callback) {
 			override fun dbOperation(): Category{
-				val id = soliteDao.insertCategory(data)
+				val id = localDataSource.soliteDao.insertCategory(data)
 				data.id = id
 				return data
 			}
@@ -522,7 +627,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Category) {
 				before.isUploaded = true
-				soliteDao.updateCategory(before)
+				localDataSource.soliteDao.updateCategory(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -536,7 +641,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Category, Boolean>(callback) {
 			override fun dbOperation(): Category{
 				data.isUploaded = false
-				soliteDao.insertCategory(data)
+				localDataSource.soliteDao.insertCategory(data)
 				return data
 			}
 
@@ -546,7 +651,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Category) {
 				before.isUploaded = true
-				soliteDao.updateCategory(before)
+				localDataSource.soliteDao.updateCategory(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -556,34 +661,32 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun getVariants(callback: (ApiResponse<List<Variant>>) -> Unit){
-		object : NetworkGetBound<List<Variant>>(callback){
-			override fun dbOperation(): List<Variant> {
-				return soliteDao.getVariants()
+	override val variants: LiveData<Resource<List<Variant>>>
+	get() {
+		return object : NetworkBoundResource<List<Variant>, List<Variant>>(appExecutors){
+			override fun loadFromDB(): LiveData<List<Variant>> {
+				return localDataSource.soliteDao.getVariants()
 			}
 
-			override fun shouldCall(data: List<Variant>): Boolean {
+			override fun shouldFetch(data: List<Variant>): Boolean {
 				return data.isNullOrEmpty()
 			}
 
-			override fun createCall(inCallback: (ApiResponse<List<Variant>>) -> Unit) {
-				remoteDataSource.getVariants(inCallback)
+			override fun createCall(): LiveData<ApiResponse<List<Variant>>> {
+				return remoteDataSource.getVariants()
 			}
 
-			override fun successCall(result: List<Variant>) {
-				soliteDao.insertVariants(result)
+			override fun saveCallResult(data: List<Variant>?) {
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertVariants(data)
 			}
 
-			override fun dbFinish(savedData: ApiResponse<List<Variant>>) {
-				callback.invoke(savedData)
-			}
-		}
+		}.asLiveData()
 	}
 
 	override fun insertVariant(data: Variant, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, Variant, Long>(callback) {
 			override fun dbOperation(): Variant{
-				val id = soliteDao.insertVariant(data)
+				val id = localDataSource.soliteDao.insertVariant(data)
 				data.id = id
 				return data
 			}
@@ -594,7 +697,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Variant) {
 				before.isUploaded = true
-				soliteDao.updateVariant(before)
+				localDataSource.soliteDao.updateVariant(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -608,7 +711,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Variant, Boolean>(callback) {
 			override fun dbOperation(): Variant{
 				data.isUploaded = true
-				soliteDao.insertVariant(data)
+				localDataSource.soliteDao.insertVariant(data)
 				return data
 			}
 
@@ -618,7 +721,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Variant) {
 				before.isUploaded = true
-				soliteDao.updateVariant(before)
+				localDataSource.soliteDao.updateVariant(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -631,7 +734,7 @@ class SoliteRepository private constructor(
 	override fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>>{
 		return object : NetworkBoundResource<List<VariantOption>, List<VariantOption>>(appExecutors){
 			override fun loadFromDB(): LiveData<List<VariantOption>> {
-				return soliteDao.getVariantOptions(query)
+				return localDataSource.soliteDao.getVariantOptions(query)
 			}
 
 			override fun shouldFetch(data: List<VariantOption>): Boolean {
@@ -639,11 +742,11 @@ class SoliteRepository private constructor(
 			}
 
 			override fun createCall(): LiveData<ApiResponse<List<VariantOption>>> {
-				return remoteDataSource.getVariantOptions()
+				return remoteDataSource.variantOptions
 			}
 
 			override fun saveCallResult(data: List<VariantOption>?) {
-				if (!data.isNullOrEmpty()) soliteDao.insertVariantOptions(data)
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertVariantOptions(data)
 			}
 
 		}.asLiveData()
@@ -652,7 +755,7 @@ class SoliteRepository private constructor(
 	override fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, VariantOption, Long>(callback) {
 			override fun dbOperation(): VariantOption{
-				val id = soliteDao.insertVariantOption(data)
+				val id = localDataSource.soliteDao.insertVariantOption(data)
 				data.id = id
 				return data
 			}
@@ -663,7 +766,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: VariantOption) {
 				before.isUploaded = true
-				soliteDao.updateVariantOption(before)
+				localDataSource.soliteDao.updateVariantOption(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -677,7 +780,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, VariantOption, Boolean>(callback) {
 			override fun dbOperation(): VariantOption{
 				data.isUploaded = false
-				soliteDao.insertVariantOption(data)
+				localDataSource.soliteDao.insertVariantOption(data)
 				return data
 			}
 
@@ -687,7 +790,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: VariantOption) {
 				before.isUploaded = true
-				soliteDao.updateVariantOption(before)
+				localDataSource.soliteDao.updateVariantOption(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -697,34 +800,31 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun getCustomers(callback: (ApiResponse<List<Customer>>) -> Unit){
-		object : NetworkGetBound<List<Customer>>(callback){
-			override fun dbOperation(): List<Customer> {
-				return soliteDao.getCustomers()
-			}
+	override val customers: LiveData<Resource<List<Customer>>>
+		get() {
+			return object : NetworkBoundResource<List<Customer>, List<Customer>>(appExecutors){
+				override fun loadFromDB(): LiveData<List<Customer>> {
+					return localDataSource.soliteDao.getCustomers()
+				}
 
-			override fun shouldCall(data: List<Customer>): Boolean {
-				return data.isNullOrEmpty()
-			}
+				override fun shouldFetch(data: List<Customer>): Boolean {
+					return data.isNullOrEmpty()
+				}
 
-			override fun createCall(inCallback: (ApiResponse<List<Customer>>) -> Unit) {
-				remoteDataSource.getCustomer(inCallback)
-			}
+				override fun createCall(): LiveData<ApiResponse<List<Customer>>> {
+					return remoteDataSource.customers
+				}
 
-			override fun successCall(result: List<Customer>) {
-				soliteDao.insertCustomers(result)
-			}
-
-			override fun dbFinish(savedData: ApiResponse<List<Customer>>) {
-				callback.invoke(savedData)
-			}
+				override fun saveCallResult(data: List<Customer>?) {
+					if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertCustomers(data)
+				}
+			}.asLiveData()
 		}
-	}
 
 	override fun insertCustomer(data: Customer, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, Customer, Long>(callback) {
 			override fun dbOperation(): Customer{
-				val id = soliteDao.insertCustomer(data)
+				val id = localDataSource.soliteDao.insertCustomer(data)
 				data.id = id
 				return data
 			}
@@ -735,7 +835,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Customer) {
 				before.isUploaded = true
-				soliteDao.updateCustomer(before)
+				localDataSource.soliteDao.updateCustomer(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -749,7 +849,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Customer, Boolean>(callback) {
 			override fun dbOperation(): Customer{
 				data.isUploaded = false
-				soliteDao.updateCustomer(data)
+				localDataSource.soliteDao.updateCustomer(data)
 				return data
 			}
 
@@ -759,7 +859,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Customer) {
 				before.isUploaded = true
-				soliteDao.updateCustomer(before)
+				localDataSource.soliteDao.updateCustomer(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -769,34 +869,31 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun getSuppliers(callback: (ApiResponse<List<Supplier>>) -> Unit){
-		object : NetworkGetBound<List<Supplier>>(callback){
-			override fun dbOperation(): List<Supplier> {
-				return soliteDao.getSuppliers()
+	override val suppliers: LiveData<Resource<List<Supplier>>>
+	get() {
+		return object : NetworkBoundResource<List<Supplier>, List<Supplier>>(appExecutors){
+			override fun loadFromDB(): LiveData<List<Supplier>> {
+				return localDataSource.soliteDao.getSuppliers()
 			}
 
-			override fun shouldCall(data: List<Supplier>): Boolean {
+			override fun shouldFetch(data: List<Supplier>): Boolean {
 				return data.isNullOrEmpty()
 			}
 
-			override fun createCall(inCallback: (ApiResponse<List<Supplier>>) -> Unit) {
-				remoteDataSource.getSuppliers(inCallback)
+			override fun createCall(): LiveData<ApiResponse<List<Supplier>>> {
+				return remoteDataSource.suppliers
 			}
 
-			override fun successCall(result: List<Supplier>) {
-				soliteDao.insertSuppliers(result)
+			override fun saveCallResult(data: List<Supplier>?) {
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertSuppliers(data)
 			}
-
-			override fun dbFinish(savedData: ApiResponse<List<Supplier>>) {
-				callback.invoke(savedData)
-			}
-		}
+		}.asLiveData()
 	}
 
 	override fun insertSupplier(data: Supplier, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, Supplier, Long>(callback) {
 			override fun dbOperation(): Supplier{
-				val id = soliteDao.insertSupplier(data)
+				val id = localDataSource.soliteDao.insertSupplier(data)
 				data.id = id
 				return data
 			}
@@ -807,7 +904,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Supplier) {
 				before.isUploaded = true
-				soliteDao.updateSupplier(before)
+				localDataSource.soliteDao.updateSupplier(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -821,7 +918,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Supplier, Boolean>(callback) {
 			override fun dbOperation(): Supplier{
 				data.isUploaded = false
-				soliteDao.updateSupplier(data)
+				localDataSource.soliteDao.updateSupplier(data)
 				return data
 			}
 
@@ -831,7 +928,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Supplier) {
 				before.isUploaded = true
-				soliteDao.updateSupplier(before)
+				localDataSource.soliteDao.updateSupplier(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -841,34 +938,32 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun getPayments(callback: (ApiResponse<List<Payment>>) -> Unit){
-		object : NetworkGetBound<List<Payment>>(callback){
-			override fun dbOperation(): List<Payment> {
-				return soliteDao.getPayments()
+	override val payments: LiveData<Resource<List<Payment>>>
+	get() {
+		return object : NetworkBoundResource<List<Payment>, List<Payment>>(appExecutors){
+			override fun loadFromDB(): LiveData<List<Payment>> {
+				return localDataSource.soliteDao.getPayments()
 			}
 
-			override fun shouldCall(data: List<Payment>): Boolean {
+			override fun shouldFetch(data: List<Payment>): Boolean {
 				return data.isNullOrEmpty()
 			}
 
-			override fun createCall(inCallback: (ApiResponse<List<Payment>>) -> Unit) {
-				remoteDataSource.getPayments(inCallback)
+			override fun createCall(): LiveData<ApiResponse<List<Payment>>> {
+				return remoteDataSource.payments
 			}
 
-			override fun successCall(result: List<Payment>) {
-				soliteDao.insertPayments(result)
+			override fun saveCallResult(data: List<Payment>?) {
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertPayments(data)
 			}
 
-			override fun dbFinish(savedData: ApiResponse<List<Payment>>) {
-				callback.invoke(savedData)
-			}
-		}
+		}.asLiveData()
 	}
 
 	override fun insertPayment(data: Payment, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, Payment, Long>(callback) {
 			override fun dbOperation(): Payment{
-				val id = soliteDao.insertPayment(data)
+				val id = localDataSource.soliteDao.insertPayment(data)
 				data.id = id
 				return data
 			}
@@ -879,7 +974,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Payment) {
 				before.isUploaded = true
-				soliteDao.updatePayment(before)
+				localDataSource.soliteDao.updatePayment(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -893,7 +988,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Payment, Boolean>(callback) {
 			override fun dbOperation(): Payment{
 				data.isUploaded = false
-				soliteDao.updatePayment(data)
+				localDataSource.soliteDao.updatePayment(data)
 				return data
 			}
 
@@ -903,7 +998,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Payment) {
 				before.isUploaded = true
-				soliteDao.updatePayment(before)
+				localDataSource.soliteDao.updatePayment(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -913,34 +1008,31 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun getOutcomes(date: String, callback: (ApiResponse<List<Outcome>>) -> Unit) {
-		object : NetworkGetBound<List<Outcome>>(callback){
-			override fun dbOperation(): List<Outcome> {
-				return soliteDao.getOutcome(date)
+	override fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>> {
+		return object : NetworkBoundResource<List<Outcome>, List<Outcome>>(appExecutors){
+			override fun loadFromDB(): LiveData<List<Outcome>> {
+				return localDataSource.soliteDao.getOutcome(date)
 			}
 
-			override fun shouldCall(data: List<Outcome>): Boolean {
+			override fun shouldFetch(data: List<Outcome>): Boolean {
 				return data.isNullOrEmpty()
 			}
 
-			override fun createCall(inCallback: (ApiResponse<List<Outcome>>) -> Unit) {
-				remoteDataSource.getOutcomes(inCallback)
+			override fun createCall(): LiveData<ApiResponse<List<Outcome>>> {
+				return remoteDataSource.outcomes
 			}
 
-			override fun successCall(result: List<Outcome>) {
-				soliteDao.insertOutcomes(result)
+			override fun saveCallResult(data: List<Outcome>?) {
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertOutcomes(data)
 			}
 
-			override fun dbFinish(savedData: ApiResponse<List<Outcome>>) {
-				callback.invoke(savedData)
-			}
-		}
+		}.asLiveData()
 	}
 
 	override fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit) {
 		object : NetworkFunBound<Boolean, Outcome, Long>(callback) {
 			override fun dbOperation(): Outcome{
-				val id = soliteDao.insertOutcome(data)
+				val id = localDataSource.soliteDao.insertOutcome(data)
 				data.id = id
 				return data
 			}
@@ -951,7 +1043,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Outcome) {
 				before.isUploaded = true
-				soliteDao.updateOutcome(before)
+				localDataSource.soliteDao.updateOutcome(before)
 				callback.invoke(ApiResponse.success(before.id))
 			}
 
@@ -965,7 +1057,7 @@ class SoliteRepository private constructor(
 		object : NetworkFunBound<Boolean, Outcome, Boolean>(callback) {
 			override fun dbOperation(): Outcome{
 				data.isUploaded = false
-				soliteDao.updateOutcome(data)
+				localDataSource.soliteDao.updateOutcome(data)
 				return data
 			}
 
@@ -975,7 +1067,7 @@ class SoliteRepository private constructor(
 
 			override fun successUpload(before: Outcome) {
 				before.isUploaded = true
-				soliteDao.updateOutcome(before)
+				localDataSource.soliteDao.updateOutcome(before)
 				callback.invoke(ApiResponse.success(true))
 			}
 
@@ -986,6 +1078,6 @@ class SoliteRepository private constructor(
 	}
 
 	override fun fillData(){
-		soliteDao.fillData()
+		localDataSource.soliteDao.fillData()
 	}
 }

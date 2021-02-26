@@ -13,7 +13,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.sosialite.solite_pos.data.source.local.entity.room.helper.OrderWithPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.FragmentPayBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
@@ -136,8 +138,16 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 
 	private fun pay(payment: Payment, pay: Long){
 		if (this.order != null){
-			val order = viewModel.insertPaymentOrder(OrderPayment(this.order!!.order.orderNo, payment.id, pay))
-			printBill(order)
+			val paymentOrder = OrderPayment(this.order!!.order.orderNo, payment.id, pay)
+			order!!.payment = OrderWithPayment(order!!.order, paymentOrder, payment)
+			viewModel.insertPaymentOrder(paymentOrder){
+				when(it.status){
+					StatusResponse.SUCCESS -> {
+						printBill(order!!)
+					}
+					else -> {}
+				}
+			}
 		}
 	}
 

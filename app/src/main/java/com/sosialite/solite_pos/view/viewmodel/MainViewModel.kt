@@ -20,12 +20,12 @@ import com.sosialite.solite_pos.vo.Resource
 
 class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 
-	fun getOrderDetail(status: Int, date: String): List<OrderWithProduct>{
+	fun getOrderDetail(status: Int, date: String): LiveData<Resource<List<OrderWithProduct>>> {
 		return repository.getOrderDetail(status, date)
 	}
 
-	fun insertPaymentOrder(payment: OrderPayment): OrderWithProduct{
-		return repository.insertPaymentOrder(payment)
+	fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderWithProduct>>) -> Unit) {
+		return repository.insertPaymentOrder(payment, callback)
 	}
 
 	fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit){
@@ -36,27 +36,26 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateOrder(order, callback)
 	}
 
-	fun cancelOrder(order: OrderWithProduct) {
-		repository.cancelOrder(order)
+	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+		repository.cancelOrder(order, callback)
 	}
 
-	fun getPurchase(): List<PurchaseWithProduct>{
-		return repository.getPurchase()
-	}
+	val purchases: LiveData<Resource<List<PurchaseWithProduct>>>
+	get() = repository.purchases
 
-	fun newPurchase(data: PurchaseWithProduct){
-		repository.newPurchase(data)
+	fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.newPurchase(data, callback)
 	}
 
 	fun getDataProduct(idCategory: Long): LiveData<Resource<List<DataProduct>>> {
 		return repository.getDataProduct(idCategory)
 	}
 
-	fun getVariantProduct(idProduct: Long, idVariantOption: Long): List<VariantProduct>{
+	fun getVariantProduct(idProduct: Long, idVariantOption: Long): LiveData<Resource<List<VariantProduct>>> {
 		return repository.getVariantProduct(idProduct, idVariantOption)
 	}
 
-	fun getVariantProductById(idProduct: Long): VariantProduct?{
+	fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>> {
 		return repository.getVariantProductById(idProduct)
 	}
 
@@ -72,11 +71,7 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 //		return repository.getProductWithCategories(category)
 //	}
 
-	fun getLiveVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>{
-		return repository.getLiveVariantMixProduct(idVariant)
-	}
-
-	fun getVariantMixProduct(idVariant: Long): VariantWithVariantMix {
+	fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>{
 		return repository.getVariantMixProduct(idVariant)
 	}
 
@@ -112,9 +107,8 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateCategory(data, callback)
 	}
 
-	fun getVariants(callback: (ApiResponse<List<Variant>>) -> Unit){
-		repository.getVariants(callback)
-	}
+	val variants: LiveData<Resource<List<Variant>>>
+	get() = repository.variants
 
 	fun insertVariants(data: Variant, callback: (ApiResponse<Long>) -> Unit){
 		repository.insertVariant(data, callback)
@@ -136,9 +130,8 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateVariantOption(data, callback)
 	}
 
-	fun getCustomers(callback: (ApiResponse<List<Customer>>) -> Unit){
-		repository.getCustomers(callback)
-	}
+	val customers: LiveData<Resource<List<Customer>>>
+	get() = repository.customers
 
 	fun insertCustomers(data: Customer, callback: (ApiResponse<Long>) -> Unit){
 		return repository.insertCustomer(data, callback)
@@ -148,9 +141,8 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateCustomer(data, callback)
 	}
 
-	fun getSuppliers(callback: (ApiResponse<List<Supplier>>) -> Unit){
-		repository.getSuppliers(callback)
-	}
+	val suppliers: LiveData<Resource<List<Supplier>>>
+	get() = repository.suppliers
 
 	fun insertSupplier(data: Supplier, callback: (ApiResponse<Long>) -> Unit){
 		repository.insertSupplier(data, callback)
@@ -160,9 +152,8 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updateSupplier(data, callback)
 	}
 
-	fun getPayments(callback: (ApiResponse<List<Payment>>) -> Unit){
-		repository.getPayments(callback)
-	}
+	val payments: LiveData<Resource<List<Payment>>>
+	get() = repository.payments
 
 	fun insertPayment(data: Payment, callback: (ApiResponse<Long>) -> Unit){
 		repository.insertPayment(data, callback)
@@ -172,8 +163,8 @@ class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
 		repository.updatePayment(data, callback)
 	}
 
-	fun getOutcome(date: String, callback: (ApiResponse<List<Outcome>>) -> Unit) {
-		repository.getOutcomes(date, callback)
+	fun getOutcome(date: String): LiveData<Resource<List<Outcome>>> {
+		return repository.getOutcomes(date)
 	}
 
 	fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit) {

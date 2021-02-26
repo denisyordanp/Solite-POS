@@ -5,16 +5,16 @@ package com.sosialite.solite_pos.data
 import com.sosialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 
-abstract class NetworkGetBound<T>
+abstract class NetworkGetBound<RequestType, ResultType>
 protected constructor(
-		val callback: (ApiResponse<T>) -> Unit
+		val callback: (ApiResponse<RequestType>) -> Unit
 ) {
 
-	protected abstract fun dbOperation() : T
-	protected abstract fun shouldCall(data: T): Boolean
-	protected abstract fun createCall(inCallback: (ApiResponse<T>) -> Unit)
-	protected abstract fun successCall(result: T)
-	protected abstract fun dbFinish(savedData: ApiResponse<T>)
+	protected abstract fun dbOperation() : RequestType
+	protected abstract fun shouldCall(data: RequestType): Boolean
+	protected abstract fun createCall(inCallback: (ApiResponse<ResultType>) -> Unit)
+	protected abstract fun successCall(result: ResultType)
+	protected abstract fun dbFinish(savedData: ApiResponse<RequestType>)
 
 	init {
 		val get = dbOperation()

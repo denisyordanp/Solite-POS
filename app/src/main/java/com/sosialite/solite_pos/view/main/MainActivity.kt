@@ -116,8 +116,6 @@ class MainActivity : SocialiteActivity() {
 		if (order != null){
 			order.order.status = Order.NEED_PAY
 			viewModel.updateOrder(order.order) {}
-			onProcessFragment.removeItem(order)
-			notPayFragment.addItem(order)
 		}
 	}
 
@@ -125,28 +123,22 @@ class MainActivity : SocialiteActivity() {
 		order.order.status = Order.DONE
 		viewModel.updateOrder(order.order) {}
 		printBill.doPrint(order)
-		onProcessFragment.removeItem(order)
-		notPayFragment.removeItem(order)
-		doneFragment.addItem(order)
 	}
 
-	fun addOrder(order: OrderWithProduct){
+	private fun addOrder(order: OrderWithProduct){
 		viewModel.newOrder(order) {}
-		onProcessFragment.addItem(order)
 	}
 
 	fun cancelOrder(order: OrderWithProduct?){
 		if (order != null){
 			order.order.status = Order.CANCEL
-			viewModel.cancelOrder(order)
-			onProcessFragment.removeItem(order)
+			viewModel.cancelOrder(order) {}
 		}
 	}
 
 	private fun addPurchase(purchase: PurchaseWithProduct){
 		Purchase.add(this)
-		viewModel.newPurchase(purchase)
-		purchaseFragment.addPurchase(purchase)
+		viewModel.newPurchase(purchase) {}
 	}
 
 	private fun setPager(){

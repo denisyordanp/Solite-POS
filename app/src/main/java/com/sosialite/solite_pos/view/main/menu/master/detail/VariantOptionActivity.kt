@@ -39,7 +39,12 @@ class VariantOptionActivity : SocialiteActivity() {
 
 		viewModel = getViewModel(this)
 
-		adapter = VariantOptionMasterAdapter(product, viewModel, supportFragmentManager)
+		adapter = VariantOptionMasterAdapter(
+				product,
+				viewModel,
+				supportFragmentManager,
+				this
+		)
 		_binding.rvVoOptions.layoutManager = LinearLayoutManager(this)
 		_binding.rvVoOptions.adapter = adapter
 

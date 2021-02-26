@@ -3,16 +3,17 @@ package com.sosialite.solite_pos.data.source.remote
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import com.sosialite.solite_pos.data.source.remote.response.entity.BatchWithData
 import com.sosialite.solite_pos.data.source.remote.response.entity.DataProductResponse
+import com.sosialite.solite_pos.data.source.remote.response.entity.OrderResponse
+import com.sosialite.solite_pos.data.source.remote.response.entity.PurchaseResponse
 import com.sosialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 
@@ -31,6 +32,116 @@ class RemoteDataSource {
 		}
 	}
 
+	fun getOrderDetail(): LiveData<ApiResponse<OrderResponse>> {
+		val result: MediatorLiveData<ApiResponse<OrderResponse>> = MediatorLiveData()
+		val data = OrderResponse()
+		result.addSource(orders){ rOrders ->
+			when (rOrders.status) {
+				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+					result.removeSource(orders)
+					if (!rOrders.body.isNullOrEmpty()){
+						data.order = rOrders.body
+
+						result.addSource(payments){ rPayments ->
+							when (rPayments.status) {
+								StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+									result.removeSource(payments)
+									if (!rPayments.body.isNullOrEmpty()){
+										data.payments = rPayments.body
+
+										result.addSource(orderPayments){ rOrderPayments ->
+											when (rOrderPayments.status) {
+												StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+													result.removeSource(orderPayments)
+													if (!rOrderPayments.body.isNullOrEmpty()){
+														data.orderPayment = rOrderPayments.body
+
+														result.addSource(customers){ rCustomers ->
+															when (rCustomers.status) {
+																StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+																	result.removeSource(customers)
+																	if (!rCustomers.body.isNullOrEmpty()){
+																		data.customer = rCustomers.body
+
+																		result.addSource(dataProducts){ product ->
+																			when (product.status) {
+																				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+																					result.removeSource(dataProducts)
+																					if (product.body != null){
+																						data.products = product.body
+																						result.value = ApiResponse.success(data)
+																					}else{
+																						result.value = ApiResponse.empty(null)
+																					}
+																				}
+																				else -> {
+																					result.value = ApiResponse.error(null)
+																				}
+																			}
+																		}
+
+																	}else{
+																		result.value = ApiResponse.empty(null)
+																	}
+																}
+																else -> {
+																	result.value = ApiResponse.error(null)
+																}
+															}
+														}
+
+													}else{
+														result.value = ApiResponse.empty(null)
+													}
+												}
+												else -> {
+													result.value = ApiResponse.error(null)
+												}
+											}
+										}
+
+									}else{
+										result.value = ApiResponse.empty(null)
+									}
+								}
+								else -> {
+									result.value = ApiResponse.error(null)
+								}
+							}
+						}
+
+					}else{
+						result.value = ApiResponse.empty(null)
+					}
+				}
+				else -> {
+					result.value = ApiResponse.error(null)
+				}
+			}
+		}
+		return result
+	}
+
+	private val orders: LiveData<ApiResponse<List<Order>>>
+	get() {
+		val result: MutableLiveData<ApiResponse<List<Order>>> = MutableLiveData()
+		db.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(Order.DB_NAME)
+				.get()
+				.addOnSuccessListener {
+					val data = Order.toListClass(it)
+					if (data.isNullOrEmpty())
+						result.value = ApiResponse.empty(null)
+					else
+						result.value = ApiResponse.success(data)
+				}
+				.addOnFailureListener {
+					result.value = ApiResponse.error(null)
+				}
+		return result
+	}
+
 	fun setOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -45,7 +156,43 @@ class RemoteDataSource {
 				}
 	}
 
-	fun getCustomer(callback: ((ApiResponse<List<Customer>>) -> Unit)) {
+	private val orderPayments: LiveData<ApiResponse<List<OrderPayment>>>
+	get() {
+		val result: MutableLiveData<ApiResponse<List<OrderPayment>>> = MutableLiveData()
+		db.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(OrderPayment.DB_NAME)
+				.get()
+				.addOnSuccessListener {
+					val data = OrderPayment.toListClass(it)
+					if (data.isNullOrEmpty())
+						result.value = ApiResponse.empty(null)
+					else
+						result.value = ApiResponse.success(data)
+				}
+				.addOnFailureListener {
+					result.value = ApiResponse.error(null)
+				}
+		return result
+	}
+
+	fun setOrderPayment(order: OrderPayment, callback: (ApiResponse<Boolean>) -> Unit) {
+		db.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(OrderPayment.DB_NAME)
+				.document(order.id.toString())
+				.set(OrderPayment.toHashMap(order))
+				.addOnSuccessListener {
+					callback.invoke(ApiResponse.success(true))
+				}
+				.addOnFailureListener {
+					callback.invoke(ApiResponse.error(null))
+				}
+	}
+
+	val customers: LiveData<ApiResponse<List<Customer>>>
+	get() {
+		val result: MutableLiveData<ApiResponse<List<Customer>>> = MutableLiveData()
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
 				.collection(Customer.DB_NAME)
@@ -53,13 +200,14 @@ class RemoteDataSource {
 				.addOnSuccessListener {
 					val data = Customer.toListClass(it)
 					if (data.isNullOrEmpty())
-						callback.invoke(ApiResponse.empty(null))
+						result.value = ApiResponse.empty(null)
 					else
-						callback.invoke(ApiResponse.success(data))
+						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
+					result.value = ApiResponse.error(null)
 				}
+		return result
 	}
 
 	fun setCustomer(customer: Customer, callback: (ApiResponse<Boolean>) -> Unit) {
@@ -76,7 +224,123 @@ class RemoteDataSource {
 				}
 	}
 
-	fun getOutcomes(callback: ((ApiResponse<List<Outcome>>) -> Unit)) {
+	val purchaseDetails: LiveData<ApiResponse<PurchaseResponse>>
+	get() {
+		val result: MediatorLiveData<ApiResponse<PurchaseResponse>> = MediatorLiveData()
+		val data = PurchaseResponse()
+		result.addSource(suppliers){ rSuppliers ->
+			when (rSuppliers.status) {
+				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+					result.removeSource(suppliers)
+					if (rSuppliers.body != null){
+						data.suppliers = rSuppliers.body
+
+						result.addSource(purchases){ rPurchases ->
+							when (rPurchases.status) {
+								StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+									result.removeSource(purchases)
+									if (rPurchases.body != null){
+										data.purchases = rPurchases.body
+
+										result.addSource(dataProducts){ rDataProducts ->
+											when (rDataProducts.status) {
+												StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+													result.removeSource(dataProducts)
+													if (rDataProducts.body != null){
+														data.products = rDataProducts.body
+
+														result.addSource(purchaseProducts){ rPurchaseProducts ->
+															when (rPurchaseProducts.status) {
+																StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+																	result.removeSource(purchaseProducts)
+																	if (rPurchaseProducts.body != null){
+																		data.purchaseProducts = rPurchaseProducts.body
+																		result.value = ApiResponse.success(data)
+																	}else{
+																		result.value = ApiResponse.empty(null)
+																	}
+																}
+																else -> {
+																	result.value = ApiResponse.error(null)
+																}
+															}
+														}
+
+													}else{
+														result.value = ApiResponse.empty(null)
+													}
+												}
+												else -> {
+													result.value = ApiResponse.error(null)
+												}
+											}
+										}
+
+									}else{
+										result.value = ApiResponse.empty(null)
+									}
+								}
+								else -> {
+									result.value = ApiResponse.error(null)
+								}
+							}
+						}
+
+					}else{
+						result.value = ApiResponse.empty(null)
+					}
+				}
+				else -> {
+					result.value = ApiResponse.error(null)
+				}
+			}
+		}
+		return result
+	}
+
+	private val purchases: LiveData<ApiResponse<List<Purchase>>>
+	get() {
+		val result: MutableLiveData<ApiResponse<List<Purchase>>> = MutableLiveData()
+		db.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(Purchase.DB_NAME)
+				.get()
+				.addOnSuccessListener {
+					val data = Purchase.toListClass(it)
+					if (data.isNullOrEmpty())
+						result.value = ApiResponse.empty(null)
+					else
+						result.value = ApiResponse.success(data)
+				}
+				.addOnFailureListener {
+					result.value = ApiResponse.error(null)
+				}
+		return result
+	}
+
+	private val purchaseProducts: LiveData<ApiResponse<List<PurchaseProduct>>>
+		get() {
+			val result: MutableLiveData<ApiResponse<List<PurchaseProduct>>> = MutableLiveData()
+			db.collection(AppDatabase.DB_NAME)
+					.document(AppDatabase.MAIN)
+					.collection(PurchaseProduct.DB_NAME)
+					.get()
+					.addOnSuccessListener {
+						val data = PurchaseProduct.toListClass(it)
+						if (data.isNullOrEmpty())
+							result.value = ApiResponse.empty(null)
+						else
+							result.value = ApiResponse.success(data)
+					}
+					.addOnFailureListener {
+						result.value = ApiResponse.error(null)
+					}
+			return result
+		}
+
+	val outcomes: LiveData<ApiResponse<List<Outcome>>>
+	get() {
+		val result: MutableLiveData<ApiResponse<List<Outcome>>> = MutableLiveData()
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
 				.collection(Outcome.DB_NAME)
@@ -84,13 +348,14 @@ class RemoteDataSource {
 				.addOnSuccessListener {
 					val data = Outcome.toListClass(it)
 					if (data.isNullOrEmpty())
-						callback.invoke(ApiResponse.empty(null))
+						result.value = ApiResponse.empty(null)
 					else
-						callback.invoke(ApiResponse.success(data))
+						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
+					result.value = ApiResponse.error(null)
 				}
+		return result
 	}
 
 	fun setOutcome(outcome: Outcome, callback: (ApiResponse<Boolean>) -> Unit) {
@@ -107,7 +372,8 @@ class RemoteDataSource {
 				}
 	}
 
-	fun getVariantOptions(): LiveData<ApiResponse<List<VariantOption>>> {
+	val variantOptions: LiveData<ApiResponse<List<VariantOption>>>
+	get() {
 		val result: MutableLiveData<ApiResponse<List<VariantOption>>> = MutableLiveData()
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -140,7 +406,8 @@ class RemoteDataSource {
 				}
 	}
 
-	fun getVariants(callback: ((ApiResponse<List<Variant>>) -> Unit)) {
+	fun getVariants(): LiveData<ApiResponse<List<Variant>>> {
+		val result: MutableLiveData<ApiResponse<List<Variant>>> = MutableLiveData()
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
 				.collection(Variant.DB_NAME)
@@ -148,13 +415,14 @@ class RemoteDataSource {
 				.addOnSuccessListener {
 					val data = Variant.toListClass(it)
 					if (data.isNullOrEmpty())
-						callback.invoke(ApiResponse.empty(null))
+						result.value = ApiResponse.empty(null)
 					else
-						callback.invoke(ApiResponse.success(Variant.toListClass(it)))
+						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
+					result.value = ApiResponse.error(null)
 				}
+		return result
 	}
 
 	fun setVariant(variant: Variant, callback: (ApiResponse<Boolean>) -> Unit) {
@@ -180,9 +448,9 @@ class RemoteDataSource {
 				.addOnSuccessListener {
 					val data = Category.toListClass(it)
 					if (data.isNullOrEmpty())
-						result.value = ApiResponse.success(data)
-					else
 						result.value = ApiResponse.empty(null)
+					else
+						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
 					result.value = ApiResponse.error(null)
@@ -204,42 +472,70 @@ class RemoteDataSource {
 				}
 	}
 
-	fun getDataProduct(): LiveData<ApiResponse<DataProductResponse>> {
+	val dataProducts: LiveData<ApiResponse<DataProductResponse>>
+	get() {
 		val result: MediatorLiveData<ApiResponse<DataProductResponse>> = MediatorLiveData()
 		val data = DataProductResponse()
-		result.addSource(getCategories()){categories ->
+		result.addSource(getCategories()){ categories ->
 			when (categories.status) {
 				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
 					result.removeSource(getCategories())
 					if (!categories.body.isNullOrEmpty()){
 						data.categories = categories.body
-					}
-					result.addSource(getProducts()){ products ->
-						when (products.status) {
-							StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-								result.removeSource(getProducts())
-								if (!products.body.isNullOrEmpty()){
-									data.products = products.body
-								}
-								result.addSource(getVariantOptions()){
-									when (it.status) {
-										StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-											result.removeSource(getVariantOptions())
-											if (!it.body.isNullOrEmpty()){
-												data.variants = it.body
+
+						result.addSource(getProducts()){ products ->
+							when (products.status) {
+								StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+									result.removeSource(getProducts())
+									if (!products.body.isNullOrEmpty()){
+										data.products = products.body
+
+										result.addSource(getVariants()){ variants ->
+											when (variants.status) {
+												StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+													result.removeSource(getVariants())
+													if (!variants.body.isNullOrEmpty()){
+														data.variants = variants.body
+
+														result.addSource(variantOptions){
+															when (it.status) {
+																StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+																	result.removeSource(variantOptions)
+																	if (!it.body.isNullOrEmpty()){
+																		data.variantOptions = it.body
+																		result.value = ApiResponse.success(data)
+																	}else{
+																		result.value = ApiResponse.empty(null)
+																	}
+																}
+																else -> {
+																	result.value = ApiResponse.error(null)
+																}
+															}
+														}
+
+													}else{
+														result.value = ApiResponse.empty(null)
+													}
+												}
+												else -> {
+													result.value = ApiResponse.error(null)
+												}
 											}
-											result.value = ApiResponse.success(data)
 										}
-										else -> {
-											result.value = ApiResponse.error(null)
-										}
+
+									}else{
+										result.value = ApiResponse.empty(null)
 									}
 								}
-							}
-							else -> {
-								result.value = ApiResponse.error(null)
+								else -> {
+									result.value = ApiResponse.error(null)
+								}
 							}
 						}
+
+					}else{
+						result.value = ApiResponse.empty(null)
 					}
 				}
 				else -> {
@@ -259,9 +555,9 @@ class RemoteDataSource {
 				.addOnSuccessListener {
 					val data = Product.toListClass(it)
 					if (data.isNullOrEmpty())
-						result.value = ApiResponse.success(data)
-					else
 						result.value = ApiResponse.empty(null)
+					else
+						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
 					result.value = ApiResponse.error(null)
@@ -297,6 +593,25 @@ class RemoteDataSource {
 				}
 	}
 
+	fun getVariantProducts(): LiveData<ApiResponse<List<VariantProduct>>> {
+		val result: MutableLiveData<ApiResponse<List<VariantProduct>>> = MutableLiveData()
+		db.collection(AppDatabase.DB_NAME)
+				.document(AppDatabase.MAIN)
+				.collection(VariantProduct.DB_NAME)
+				.get()
+				.addOnSuccessListener {
+					val data = VariantProduct.toListClass(it)
+					if (data.isNullOrEmpty())
+						result.value = ApiResponse.empty(null)
+					else
+						result.value = ApiResponse.success(data)
+				}
+				.addOnFailureListener {
+					result.value = ApiResponse.error(null)
+				}
+		return result
+	}
+
 	fun setVariantProduct(product: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit) {
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
@@ -325,7 +640,9 @@ class RemoteDataSource {
 				}
 	}
 
-	fun getSuppliers(callback: ((ApiResponse<List<Supplier>>) -> Unit)) {
+	val suppliers: LiveData<ApiResponse<List<Supplier>>>
+	get() {
+		val result: MutableLiveData<ApiResponse<List<Supplier>>> = MutableLiveData()
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
 				.collection(Supplier.DB_NAME)
@@ -333,13 +650,14 @@ class RemoteDataSource {
 				.addOnSuccessListener {
 					val data = Supplier.toListClass(it)
 					if (data.isNullOrEmpty())
-						callback.invoke(ApiResponse.empty(null))
+						result.value = ApiResponse.empty(null)
 					else
-						callback.invoke(ApiResponse.success(data))
+						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
+					result.value = ApiResponse.error(null)
 				}
+		return result
 	}
 
 	fun setSupplier(supplier: Supplier, callback: (ApiResponse<Boolean>) -> Unit) {
@@ -356,7 +674,9 @@ class RemoteDataSource {
 				}
 	}
 
-	fun getPayments(callback: ((ApiResponse<List<Payment>>) -> Unit)) {
+	val payments: LiveData<ApiResponse<List<Payment>>>
+	get() {
+		val result: MutableLiveData<ApiResponse<List<Payment>>> = MutableLiveData()
 		db.collection(AppDatabase.DB_NAME)
 				.document(AppDatabase.MAIN)
 				.collection(Payment.DB_NAME)
@@ -364,13 +684,14 @@ class RemoteDataSource {
 				.addOnSuccessListener {
 					val data = Payment.toListClass(it)
 					if (data.isNullOrEmpty())
-						callback.invoke(ApiResponse.empty(null))
+						result.value = ApiResponse.empty(null)
 					else
-						callback.invoke(ApiResponse.success(data))
+						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
+					result.value = ApiResponse.error(null)
 				}
+		return result
 	}
 
 	fun setPayment(payment: Payment, callback: (ApiResponse<Boolean>) -> Unit) {

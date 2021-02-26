@@ -56,7 +56,15 @@ class VariantProductMasterAdapter(
 				binding.btnVmOptions.visibility = View.INVISIBLE
 				binding.tvRvVrOption.visibility = View.INVISIBLE
 
-				binding.cbVmMix.isChecked = viewModel.getVariantProductById(product.id) != null
+				viewModel.getVariantProductById(product.id).observe(activity){
+					when(it.status){
+						Status.LOADING -> { }
+						Status.SUCCESS -> {
+							binding.cbVmMix.isChecked = it.data != null
+						}
+						Status.ERROR -> {}
+					}
+				}
 				binding.cbVmMix.setOnCheckedChangeListener{ _, b ->
 					if (b){
 						viewModel.insertVariantProduct(VariantProduct(v.id, 1, product.id)) {}

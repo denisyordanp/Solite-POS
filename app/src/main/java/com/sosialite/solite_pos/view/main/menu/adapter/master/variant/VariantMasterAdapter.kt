@@ -58,7 +58,7 @@ class VariantMasterAdapter(
 
 		fun setData(v: Variant){
 			if(v.isMix){
-				viewModel.getLiveVariantMixProduct(v.id).observe(activity, {
+				viewModel.getVariantMixProduct(v.id).observe(activity, {
 					var count = "Mengambil data ..."
 					when(it.status){
 						Status.SUCCESS ->

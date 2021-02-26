@@ -9,13 +9,16 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.databinding.RvVariantOptionMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
+import com.sosialite.solite_pos.vo.Status
 
 class VariantOptionMasterAdapter(
 	private val product: Product?,
 	private val viewModel: MainViewModel,
-	private val fragmentManager: FragmentManager
+	private val fragmentManager: FragmentManager,
+	private val activity: SocialiteActivity
 ) : RecyclerView.Adapter<VariantOptionMasterAdapter.ListViewHolder>() {
 
 	var items: ArrayList<VariantOption> = ArrayList()
@@ -48,8 +51,16 @@ class VariantOptionMasterAdapter(
 
 		fun checkOption(vo: VariantOption){
 			if (product != null){
-				val data = viewModel.getVariantProduct(product.id, vo.id)
-				binding.swVoOptions.isChecked = !data.isNullOrEmpty()
+				viewModel.getVariantProduct(product.id, vo.id)
+						.observe(activity){
+							when(it.status){
+								Status.LOADING -> { }
+								Status.SUCCESS -> {
+									binding.swVoOptions.isChecked = !it.data.isNullOrEmpty()
+								}
+								Status.ERROR -> { }
+							}
+						}
 			}
 			setOption(vo)
 		}
