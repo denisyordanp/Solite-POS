@@ -1,7 +1,6 @@
 package com.sosialite.solite_pos.view.main.menu.master.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,7 @@ class ProductMixVariantFragment(
 
 	private fun getProductSelected(){
 		if (variant != null){
-			val data = viewModel.getVariantMixProduct(variant.id).observe(activity!!){
+			viewModel.getVariantMixProduct(variant.id).observe(activity!!){
 				when(it.status){
 					Status.LOADING -> {}
 					Status.SUCCESS -> {

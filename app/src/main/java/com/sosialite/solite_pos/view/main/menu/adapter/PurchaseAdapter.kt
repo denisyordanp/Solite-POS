@@ -21,11 +21,6 @@ class PurchaseAdapter(private val fragmentManager: FragmentManager) : RecyclerVi
 			notifyDataSetChanged()
 		}
 
-	fun addPurchase(purchase: PurchaseWithProduct){
-		items.add(0, purchase)
-		notifyItemInserted(0)
-	}
-
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
 		return ListViewHolder(RvPurchaseBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 	}

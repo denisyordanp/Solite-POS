@@ -1,10 +1,10 @@
 package com.sosialite.solite_pos.data.source.local.room
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.sosialite.solite_pos.data.source.local.entity.helper.*
+import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.*
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.*
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
@@ -15,24 +15,30 @@ interface SoliteDao{
 
 //	ORDER
 
+	@Transaction
 	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.STATUS} = :status AND date(${Order.ORDER_DATE}) = date(:date)")
 	fun getOrdersByStatus(status: Int, date: String): LiveData<List<OrderWithCustomer>>
 
+	@Transaction
 	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
 	fun getOrdersByNo(orderNo: String): OrderWithCustomer
 
 	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
 	fun getDetailOrders(orderNo: String): LiveData<List<OrderDetail>>
 
+	@Transaction
 	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
 	fun getOrderPayment(orderNo: String): LiveData<OrderWithPayment?>
 
+	@Transaction
 	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
 	fun getOrderVariants(idDetail: Long): DetailWithVariantOption
 
+	@Transaction
 	@Query("SELECT * FROM ${OrderProductVariantMix.DB_NAME} WHERE ${OrderProductVariantMix.ID} = :idMix")
 	fun getOrderMixVariantsOption(idMix: Long): DetailProductMixWithVariantOption
 
+	@Transaction
 	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
 	fun getOrderVariantsMix(idDetail: Long): DetailWithVariantMixOption
 
@@ -63,54 +69,8 @@ interface SoliteDao{
 	@Update
 	fun updatePaymentOrder(order: OrderPayment)
 
-	@Transaction
-	fun newOrder(order: OrderWithProduct){
-		insertOrder(order.order)
-		for (item in order.products){
-			if (item.product != null){
-
-				val idOrder = insertDetailOrder(OrderDetail(order.order.orderNo, item.product!!.id, item.amount))
-
-				if (item.product!!.isMix){
-					for (p in item.mixProducts){
-						decreaseProductStock(p.product.id, p.amount)
-
-						val idMix = insertVariantMixOrder(OrderProductVariantMix(idOrder, p.product.id, p.amount))
-
-						for (variant in p.variants){
-							insertMixVariantOrder(OrderMixProductVariant(idMix, variant.id))
-						}
-					}
-				}else{
-					decreaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
-
-					for (variant in item.variants){
-						insertVariantOrder(OrderProductVariant(idOrder, variant.id))
-					}
-				}
-			}
-		}
-	}
-
 	@Update
 	fun updateOrder(order: Order)
-
-	@Transaction
-	fun cancelOrder(order: OrderWithProduct){
-		updateOrder(order.order)
-		for (item in order.products){
-			if (item.product != null){
-
-				if (item.product!!.isMix){
-					for (p in item.mixProducts){
-						increaseProductStock(p.product.id, p.amount)
-					}
-				}else{
-					increaseProductStock(item.product!!.id, (item.amount * item.product!!.portion))
-				}
-			}
-		}
-	}
 
 //	PURCHASE
 
@@ -138,22 +98,12 @@ interface SoliteDao{
 	@Update
 	fun updatePurchaseProduct(data: PurchaseProduct)
 
-	@Transaction
-	fun newPurchase(data: PurchaseWithProduct){
-		insertPurchase(data.purchase)
-		insertPurchaseProducts(data.purchaseProduct)
-		for (product in data.products){
-			if (product.purchaseProduct != null){
-				increaseProductStock(product.purchaseProduct!!.idProduct, product.purchaseProduct!!.amount)
-			}
-		}
-	}
-
 //	PRODUCT
 
 	@Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
 	fun getProduct(idProduct: Long): Product
 
+	@Transaction
 	@Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :category")
 	fun getProductWithCategories(category: Long): LiveData<List<ProductWithCategory>>
 
@@ -186,6 +136,7 @@ interface SoliteDao{
 
 //	VARIANT PRODUCT
 
+	@Transaction
 	@Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :idCategory")
 	fun getDataProduct(idCategory: Long): LiveData<List<DataProduct>>
 
@@ -209,9 +160,11 @@ interface SoliteDao{
 
 //	VARIANT MIX
 
+	@Transaction
 	@Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
 	fun getVariantMixProduct(idVariant: Long): VariantWithVariantMix
 
+	@Transaction
 	@Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
 	fun getLiveVariantMixProduct(idVariant: Long): LiveData<VariantWithVariantMix>
 
@@ -327,26 +280,4 @@ interface SoliteDao{
 
 	@Update
 	fun updateOutcome(data: Outcome)
-
-	// FILL DATA
-	@Transaction
-	fun fillData(){
-		insertVariant(Variant(1, "Cara Masak", Variant.ONE_OPTION, isMust = true, isMix = false))
-		insertVariant(Variant(2, "Mix Variant", Variant.MULTIPLE_OPTION, isMust = true, isMix = true))
-		insertVariantOption(VariantOption(1, 1, "Kukus", "Dimsum Kukus", isCount = false, isActive = true, false))
-		insertVariantOption(VariantOption(2, 1, "Goreng", "Dimsum Goreng", isCount = false, isActive = true, false))
-		insertCategory(Category(1, "Dimsum", "Dimsum Porsian", isStock = true, isActive = true, false))
-		insertCategory(Category(2, "Mix Variant", "Dimsum Mix", isStock = false, isActive = true, false))
-		insertProduct(Product(1, "Siomay Ayam", 1, "", "Siomay Ayam", 14000, 2250, 4, 10, isMix = false, isActive = true, false))
-		insertProduct(Product(2, "Kwotie", 1, "", "Kwotie", 15000, 2500, 4, 10, isMix = false, isActive = true, false))
-		insertProduct(Product(3, "Small Mix", 2, "", "Small Mix", 18000, 1, 5, 0, isMix = true, isActive = true, false))
-		insertVariantMix(VariantMix(1, 2, 1))
-		insertVariantMix(VariantMix(2, 2, 2))
-		insertVariantProduct(VariantProduct(1, 1, 1, 1))
-		insertVariantProduct(VariantProduct(2, 1, 2, 2))
-		insertVariantProduct(VariantProduct(3, 2, 1, 3))
-		insertPayment(Payment(1, "Cash", "Pembayaran Tunai", 0f, isCash = true, isActive = true, false))
-		insertPayment(Payment(2, "Debit", "Pembayaran Debit", 0.1f, isCash = false, isActive = true, false))
-		insertSupplier(Supplier(1, "Dimsum Almaris", "1654156123", "Setrasari", "Lumanyun", false))
-	}
 }

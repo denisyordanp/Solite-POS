@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 
@@ -55,15 +53,6 @@
 			android:layout_height="wrap_content"
 			app:backgroundTint="@color/white"
 			android:text="Supplier"/>
-
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/btn_mt_test"
-			style="@style/TextButton"
-			android:padding="@dimen/baseMargin"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:backgroundTint="@color/white"
-			android:text="Isi data"/>
 
 	</LinearLayout>
 

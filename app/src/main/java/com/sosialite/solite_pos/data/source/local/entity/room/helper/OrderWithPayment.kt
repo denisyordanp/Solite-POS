@@ -4,8 +4,8 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.sosialite.solite_pos.data.source.local.entity.room.master.*
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
+import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
 import java.io.Serializable
 
 data class OrderWithPayment(

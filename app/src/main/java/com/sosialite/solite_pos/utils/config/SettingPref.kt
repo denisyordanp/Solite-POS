@@ -18,13 +18,8 @@ class SettingPref(context: Context) {
 		private const val ORDER_ID = "order_id"
 	}
 
-	private var preferences: SharedPreferences
-	private var editor: SharedPreferences.Editor
-
-	init {
-		preferences = context.getSharedPreferences(PREF_SETTING, Context.MODE_PRIVATE)
-		editor = preferences.edit()
-	}
+	private var preferences: SharedPreferences = context.getSharedPreferences(PREF_SETTING, Context.MODE_PRIVATE)
+	private var editor: SharedPreferences.Editor = preferences.edit()
 
 	var printerDevice: String?
 		get() {

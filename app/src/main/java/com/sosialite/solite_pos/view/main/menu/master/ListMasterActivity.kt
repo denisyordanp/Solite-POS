@@ -7,14 +7,13 @@ import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
-import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.ActivityListMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.sosialite.solite_pos.view.main.menu.adapter.master.category.CategoryMasterAdapter
-import com.sosialite.solite_pos.view.main.menu.adapter.master.category.CategoryProductMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.PaymentMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.SupplierMasterAdapter
+import com.sosialite.solite_pos.view.main.menu.adapter.master.category.CategoryMasterAdapter
+import com.sosialite.solite_pos.view.main.menu.adapter.master.category.CategoryProductMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.variant.VariantMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.adapter.master.variant.VariantProductMasterAdapter
 import com.sosialite.solite_pos.view.main.menu.master.bottom.CategoryMasterFragment

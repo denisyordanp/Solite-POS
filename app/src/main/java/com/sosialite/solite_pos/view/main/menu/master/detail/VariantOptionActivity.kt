@@ -1,7 +1,6 @@
 package com.sosialite.solite_pos.view.main.menu.master.detail
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
@@ -70,7 +69,6 @@ class VariantOptionActivity : SocialiteActivity() {
 			}
 
 			viewModel.getVariantOptions(query).observe(this, {
-				var count = "Mengambil data ..."
 				when(it.status){
 					Status.SUCCESS -> adapter.items = ArrayList(it.data)
 					else -> {}

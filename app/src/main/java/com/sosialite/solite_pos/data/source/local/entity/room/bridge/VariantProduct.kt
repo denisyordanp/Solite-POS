@@ -5,11 +5,10 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 @Entity(
 		tableName = VariantProduct.DB_NAME,
@@ -34,11 +33,10 @@ import java.util.ArrayList
 			)
 		],
 		indices = [
-			Index(value = [
-				VariantProduct.ID,
-				VariantOption.ID,
-				Product.ID
-			])
+			Index(value = [VariantProduct.ID]),
+			Index(value = [Variant.ID]),
+			Index(value = [VariantOption.ID]),
+			Index(value = [Product.ID])
 		]
 )
 data class VariantProduct(

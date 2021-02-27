@@ -10,7 +10,7 @@ import com.sosialite.solite_pos.databinding.RvItemOrderMixListBinding
 import com.sosialite.solite_pos.databinding.RvTotalItemOrderMixListBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.productOrderIndex
 
-class ItemOrderMixListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrderMixListAdapter.BaseViewHolder<ProductOrderDetail>>() {
+class ItemOrderMixListAdapter : RecyclerView.Adapter<ItemOrderMixListAdapter.BaseViewHolder<ProductOrderDetail>>() {
 
 	var btnCallback: ((Boolean) -> Unit)? = null
 

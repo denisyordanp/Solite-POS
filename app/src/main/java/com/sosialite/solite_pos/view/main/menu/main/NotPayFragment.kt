@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.FragmentNotPayBinding
 import com.sosialite.solite_pos.utils.config.MainConfig

@@ -8,7 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 @Entity(
 		tableName = Supplier.DB_NAME,
@@ -37,8 +37,6 @@ data class Supplier(
 		var isUploaded: Boolean
 ): Serializable{
 	companion object: RemoteUtils<Supplier>{
-		const val ID_ADD = -1
-
 		const val ID = "id_supplier"
 		const val ADDRESS = "address"
 		const val PHONE = "phone"

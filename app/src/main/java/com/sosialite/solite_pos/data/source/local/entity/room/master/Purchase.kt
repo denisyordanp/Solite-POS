@@ -6,16 +6,13 @@ import androidx.room.Entity
 import androidx.room.Index
 import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentTime
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
 import com.sosialite.solite_pos.utils.config.SettingPref
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 @Entity(
 		tableName = Purchase.DB_NAME,
@@ -122,10 +119,5 @@ data class Purchase(
 	}
 
 	constructor(context: Context, idSupplier: Long): this(purchaseNo(context), idSupplier, currentDate, false)
-
-	val timeString: String
-		get() {
-			return dateFormat(purchaseTime, MainConfig.ldFormat)
-		}
 
 }

@@ -4,7 +4,6 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.R
@@ -51,26 +50,6 @@ class ProductMixVariantAdapter(
 		holder.setContent(position)
 		holder.binding.tvPmvName.text = p.product?.name
 		holder.setSelected(p.product)
-//		set image
-
-//		holder.binding.btnPlMin.setOnClickListener {
-//			if (order?.status == Order.NEED_PAY){
-//				if (holder.firstAmount != null){
-//					val amount = min(position, holder.binding.tvPlAmount)
-//					if (amount <= holder.firstAmount!!){
-//						holder.setMinButton(false)
-//					}else{
-//						holder.setMinButton(amount)
-//					}
-//				}
-//			}else{
-//				holder.setMinButton(min(position, holder.binding.tvPlAmount))
-//			}
-//
-//		}
-//		holder.binding.btnPlPlus.setOnClickListener {
-//			holder.setMinButton(add(position, holder.binding.tvPlAmount))
-//		}
 	}
 
 	override fun getItemCount(): Int {
@@ -78,7 +57,6 @@ class ProductMixVariantAdapter(
 	}
 
 	inner class ListViewHolder(val binding: RvProductBinding) : RecyclerView.ViewHolder(binding.root){
-		var firstAmount: Int? = null
 
 		private var isChecked: Boolean = false
 
@@ -141,49 +119,5 @@ class ProductMixVariantAdapter(
 				binding.contPmv.setCardBackgroundColor(ColorStateList.valueOf(ResourcesCompat.getColor(binding.root.resources, R.color.white, null)))
 			}
 		}
-
-//		fun setFirst(amount: Int){
-//			if (firstAmount == null){
-//				firstAmount = amount
-//			}
-//		}
-
-//		fun setMinButton(am: Int){
-//			if (am <= 0){
-//				setMinButton(false)
-//			}else{
-//				setMinButton(true)
-//			}
-//		}
-
-//		fun setMinButton(state: Boolean){
-//			if (state){
-//				binding.btnPlMin.visibility = View.VISIBLE
-//			}else{
-//				binding.btnPlMin.visibility = View.INVISIBLE
-//			}
-//		}
-	}
-
-	private fun add(pos: Int, view: TextView): Int{
-//		val amount = items[pos].amount+1
-//		items[pos].amount = amount
-//		view.text = amount.toString()
-
-//		callback?.invoke(true, items[pos])
-
-//		return amount
-		return 0
-	}
-
-	private fun min(pos: Int, view: TextView): Int{
-//		val amount = items[pos].amount-1
-//		items[pos].amount = amount
-//		view.text = amount.toString()
-//
-//		callback?.invoke(false, items[pos])
-//
-//		return amount
-		return 0
 	}
 }

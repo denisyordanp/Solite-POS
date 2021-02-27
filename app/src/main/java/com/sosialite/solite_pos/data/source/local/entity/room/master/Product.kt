@@ -16,10 +16,8 @@ import java.io.Serializable
 				onDelete = CASCADE)
 		],
 		indices = [
-			Index(value = [
-				Product.ID,
-				Category.ID
-			])
+			Index(value = [Product.ID]),
+			Index(value = [Category.ID])
 		]
 )
 data class Product(

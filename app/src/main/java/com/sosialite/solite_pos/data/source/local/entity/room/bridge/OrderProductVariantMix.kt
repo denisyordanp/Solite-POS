@@ -3,12 +3,10 @@ package com.sosialite.solite_pos.data.source.local.entity.room.bridge
 import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
-import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
-import com.sosialite.solite_pos.data.source.local.room.AppDatabase
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 @Entity(
 	tableName = OrderProductVariantMix.DB_NAME,
@@ -25,11 +23,9 @@ import java.util.ArrayList
 			onDelete = ForeignKey.CASCADE)
 	],
 	indices = [
-		Index(value = [
-			OrderProductVariantMix.ID,
-			OrderDetail.ID,
-			Product.ID
-		])
+		Index(value = [OrderProductVariantMix.ID]),
+		Index(value = [OrderDetail.ID]),
+		Index(value = [Product.ID])
 	]
 )
 data class OrderProductVariantMix(

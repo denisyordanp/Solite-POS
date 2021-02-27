@@ -5,7 +5,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 @Entity(
 		tableName = PurchaseProduct.DB_NAME,
@@ -24,11 +24,9 @@ import java.util.ArrayList
 			)
 		],
 		indices = [
-			Index(value = [
-				PurchaseProduct.ID,
-				Purchase.NO,
-				Product.ID
-			])
+			Index(value = [PurchaseProduct.ID]),
+			Index(value = [Purchase.NO]),
+			Index(value = [Product.ID])
 		]
 )
 data class PurchaseProduct(

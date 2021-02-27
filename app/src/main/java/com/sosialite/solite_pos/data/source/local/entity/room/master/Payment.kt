@@ -8,7 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 @Entity(
 		tableName = Payment.DB_NAME,

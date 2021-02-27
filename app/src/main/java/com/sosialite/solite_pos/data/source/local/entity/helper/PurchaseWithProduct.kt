@@ -1,8 +1,5 @@
 package com.sosialite.solite_pos.data.source.local.entity.helper
 
-import androidx.room.Embedded
-import androidx.room.Relation
-import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.sosialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Supplier

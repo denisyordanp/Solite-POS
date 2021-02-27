@@ -6,7 +6,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 @Entity(
 		tableName = VariantOption.DB_NAME,
@@ -18,7 +18,8 @@ import java.util.ArrayList
 					onDelete = ForeignKey.CASCADE)
 		],
 		indices = [
-			Index(value = [VariantOption.ID, Variant.ID])
+			Index(value = [VariantOption.ID]),
+			Index(value = [Variant.ID])
 		]
 )
 data class VariantOption(

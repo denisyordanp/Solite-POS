@@ -24,11 +24,9 @@ import java.util.*
 					onDelete = ForeignKey.CASCADE)
 		],
 		indices = [
-			Index(value = [
-				VariantMix.ID,
-				Variant.ID,
-				Product.ID
-			])
+			Index(value = [VariantMix.ID]),
+			Index(value = [Variant.ID]),
+			Index(value = [Product.ID])
 		]
 )
 data class VariantMix(

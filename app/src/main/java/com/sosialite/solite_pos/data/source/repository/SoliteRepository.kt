@@ -8,7 +8,6 @@ import com.google.firebase.ktx.Firebase
 import com.sosialite.solite_pos.data.NetworkBoundResource
 import com.sosialite.solite_pos.data.NetworkFunBound
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.*
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
@@ -1075,9 +1074,5 @@ class SoliteRepository private constructor(
 				callback.invoke(ApiResponse.finish(true))
 			}
 		}
-	}
-
-	override fun fillData(){
-		localDataSource.soliteDao.fillData()
 	}
 }

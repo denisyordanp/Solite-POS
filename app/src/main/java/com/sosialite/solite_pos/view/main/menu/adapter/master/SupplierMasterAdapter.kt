@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.sosialite.solite_pos.databinding.RvSupplierMasterBinding
 import com.sosialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragment
-import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 
 class SupplierMasterAdapter(
 	private val fragmentManager: FragmentManager

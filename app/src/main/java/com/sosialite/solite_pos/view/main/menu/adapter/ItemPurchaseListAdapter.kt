@@ -228,7 +228,6 @@ class ItemPurchaseListAdapter(private val type: Int) : RecyclerView.Adapter<Item
 			binding.tvIoPrice.text = "Total :"
 			binding.tvIoTotal.text = toRupiah(grandTotal)
 		}
-
 	}
 
 	abstract class BaseViewHolder<ProductOrderDetail>(itemView: View) : RecyclerView.ViewHolder(itemView){

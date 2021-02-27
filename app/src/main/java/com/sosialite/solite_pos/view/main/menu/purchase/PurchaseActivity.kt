@@ -2,7 +2,6 @@ package com.sosialite.solite_pos.view.main.menu.purchase
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct

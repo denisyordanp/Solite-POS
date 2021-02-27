@@ -1,11 +1,7 @@
 package com.sosialite.solite_pos.view.main.menu.master.product
 
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.tabs.TabLayoutMediator
-import com.sosialite.solite_pos.R
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Category
 import com.sosialite.solite_pos.databinding.ActivityProductMasterBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel

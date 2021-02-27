@@ -1,10 +1,8 @@
 package com.sosialite.solite_pos.view.main.menu.outcome
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.ActivityDetailOutcomeBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate

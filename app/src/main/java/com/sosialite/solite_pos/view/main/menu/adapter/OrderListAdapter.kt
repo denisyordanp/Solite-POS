@@ -3,7 +3,6 @@ package com.sosialite.solite_pos.view.main.menu.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.databinding.RvOrderListBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.orderIndex
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.thousand
 import com.sosialite.solite_pos.utils.tools.DoneCook
 import com.sosialite.solite_pos.utils.tools.MessageBottom
@@ -32,7 +30,7 @@ class OrderListAdapter(
 
 	var items: ArrayList<OrderWithProduct> = ArrayList()
 		set(value) {
-			if (field.isNotEmpty()){
+			if (field.isNotEmpty()) {
 				field.clear()
 			}
 			field.addAll(value)
@@ -40,9 +38,10 @@ class OrderListAdapter(
 		}
 
 	private var warning: Drawable? = null
-	private var pay: Drawable? = null
+	private var cancel: Drawable? = null
 	private var done: Drawable? = null
 	private var cook: Drawable? = null
+	private var pay: Drawable? = null
 
 	init {
 		val r = context.resources
@@ -51,6 +50,7 @@ class OrderListAdapter(
 		pay = ResourcesCompat.getDrawable(r, R.drawable.ic_payments_50dp, null)
 		done = ResourcesCompat.getDrawable(r, R.drawable.ic_done_all_50dp, null)
 		cook = ResourcesCompat.getDrawable(r, R.drawable.ic_cooking_50dp, null)
+		cancel = ResourcesCompat.getDrawable(r, R.drawable.ic_cross_50dp, null)
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -81,11 +81,11 @@ class OrderListAdapter(
 
 	private fun setImage(v: ImageView, status: Int?){
 		if (status != null){
-			when(status){
+			when (status) {
 				Order.ON_PROCESS -> v.setImageDrawable(cook)
 				Order.NEED_PAY -> v.setImageDrawable(pay)
 				Order.DONE -> v.setImageDrawable(done)
-				Order.CANCEL -> v.setImageDrawable(done)
+				Order.CANCEL -> v.setImageDrawable(cancel)
 
 			}
 		}

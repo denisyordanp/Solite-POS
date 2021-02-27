@@ -8,7 +8,6 @@ import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProd
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Product
 import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.databinding.RvVariantOptionMasterBinding
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.sosialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel

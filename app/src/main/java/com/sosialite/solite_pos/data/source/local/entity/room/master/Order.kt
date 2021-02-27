@@ -17,7 +17,6 @@ import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 @Entity(
 		tableName = Order.DB_NAME,

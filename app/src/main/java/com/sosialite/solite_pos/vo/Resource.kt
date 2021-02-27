@@ -1,6 +1,6 @@
 package com.sosialite.solite_pos.vo
 
-class Resource<T> private constructor(val status: Status, val data: T?, val message: String?) {
+class Resource<T> private constructor(val status: Status, val data: T?, private val message: String?) {
 	override fun equals(other: Any?): Boolean {
 		if (this === other) {
 			return true

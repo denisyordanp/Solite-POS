@@ -2,7 +2,6 @@ package com.sosialite.solite_pos.view.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.sosialite.solite_pos.R
@@ -16,10 +15,10 @@ import com.sosialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
 import com.sosialite.solite_pos.utils.printer.PrintBill
 import com.sosialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.sosialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.sosialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.sosialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.sosialite.solite_pos.view.main.menu.main.*
 import com.sosialite.solite_pos.view.main.menu.order.OrderActivity
+import com.sosialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.sosialite.solite_pos.view.main.menu.purchase.PurchaseActivity
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
 

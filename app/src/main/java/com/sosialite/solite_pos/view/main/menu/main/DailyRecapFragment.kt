@@ -1,7 +1,6 @@
 package com.sosialite.solite_pos.view.main.menu.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sosialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
-import com.sosialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.sosialite.solite_pos.databinding.FragmentDailyRecapBinding
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.currentDate
 import com.sosialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
@@ -53,10 +51,9 @@ class DailyRecapFragment : Fragment() {
             viewModel = getViewModel(activity!!)
 
             _binding.tvRcDate.text = dateFormat(currentDate, sdFormat)
+
             getIncome()
             getOutCome()
-
-            _binding.btnRcRefresh.setOnClickListener{ getIncome() }
         }
     }
 

@@ -7,8 +7,7 @@
 	<color name="whiteGrey">#F1F1F1</color>
 	<color name="shimmer">#CACACA</color>
 	<color name="grey">#FF018786</color>
-	<color name="black">#FF000000</color>
-	<color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
 
 	<color name="selected">#F2FFAA</color>
 	<color name="red">#FF3333</color>

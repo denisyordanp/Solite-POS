@@ -6,12 +6,11 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.sosialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
+import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.sosialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
-import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.sosialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.data.source.local.entity.room.master.*
 import com.sosialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.sosialite.solite_pos.vo.Resource
@@ -69,5 +68,4 @@ internal interface SoliteDataSource{
 	fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>>
 	fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit)
 	fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit)
-	fun fillData()
 }

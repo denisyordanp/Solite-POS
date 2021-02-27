@@ -4,11 +4,10 @@ import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Order
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.sosialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.sosialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.sosialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 @Entity(
 	tableName = OrderPayment.DB_NAME,
@@ -25,11 +24,9 @@ import java.util.ArrayList
 			onDelete = ForeignKey.CASCADE)
 	],
 	indices = [
-		Index(value = [
-			OrderPayment.ID,
-			Order.NO,
-			Payment.ID
-		])
+		Index(value = [OrderPayment.ID]),
+		Index(value = [Order.NO]),
+		Index(value = [Payment.ID])
 	]
 ) data class OrderPayment(
 		@PrimaryKey(autoGenerate = true)

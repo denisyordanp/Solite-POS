@@ -44,7 +44,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
 
         viewModel = getViewModel(this)
 
-        adapter = ItemOrderMixListAdapter(0)
+        adapter = ItemOrderMixListAdapter()
         _order.rvOrderList.layoutManager = LinearLayoutManager(this)
         _order.rvOrderList.adapter = adapter
         adapter.btnCallback = { setButton(it) }

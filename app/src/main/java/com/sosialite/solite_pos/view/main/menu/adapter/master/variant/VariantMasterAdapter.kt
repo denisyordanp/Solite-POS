@@ -19,11 +19,6 @@ class VariantMasterAdapter(
 		private val activity: SocialiteActivity
 ) : RecyclerView.Adapter<VariantMasterAdapter.ListViewHolder>() {
 
-	companion object{
-		const val MASTER = 1
-		const val PRODUCT = 2
-	}
-
 	var items: ArrayList<Variant> = ArrayList()
 		set(value) {
 			if (field.isNotEmpty()){

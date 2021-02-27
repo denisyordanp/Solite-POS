@@ -10,7 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sosialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.sosialite.solite_pos.databinding.FragmentDetailOutcomeBinding
 import com.sosialite.solite_pos.utils.config.MainConfig
-import com.sosialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
 import com.sosialite.solite_pos.utils.tools.BottomSheet
 import com.sosialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.sosialite.solite_pos.view.viewmodel.MainViewModel
