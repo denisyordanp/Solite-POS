@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sosialite.solite_pos">
+    package="com.socialite.solite_pos">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -12,40 +12,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
         <activity
-            android:name=".view.main.menu.outcome.DetailOutcomeActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.order.SelectMixVariantOrderActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.order.SelectMixVariantOrderActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.purchase.PurchaseActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.master.detail.VariantMixOptionActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.master.detail.VariantMasterMixOptionActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.master.detail.VariantOptionActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.master.detail.VariantOptionActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.order.SelectPaymentsActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.master.product.ProductMasterActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.master.ListMasterActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.master.ListMasterActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".view.main.menu.order.SelectCustomerActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.order.SelectCustomerActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".view.main.menu.order.OrderActivity"
+            android:name="com.socialite.solite_pos.view.main.menu.order.OrderActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".view.bluetooth.BluetoothDeviceListActivity"
+            android:name="com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".view.main.OpeningActivity"
+            android:name="com.socialite.solite_pos.view.main.OpeningActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,10 +54,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.main.MainActivity"
+            android:name="com.socialite.solite_pos.view.main.MainActivity"
             android:screenOrientation="landscape" />
 
-        <receiver android:name=".utils.tools.DoneCook" />
+        <receiver android:name="com.socialite.solite_pos.utils.tools.DoneCook" />
     </application>
 
 </manifest>

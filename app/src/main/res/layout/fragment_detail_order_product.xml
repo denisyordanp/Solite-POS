@@ -1,167 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:background="@drawable/bg_dialog_fragment"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical">
+	android:layout_height="match_parent">
 
 	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:orientation="vertical"
-		android:layout_margin="@dimen/baseMargin">
-
-		<ImageView
-			android:id="@+id/iv_pmv_logo"
-			android:layout_width="100dp"
-			android:layout_height="100dp"
-			android:src="@drawable/ic_dimsum_50dp"
-			android:layout_gravity="center"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+		android:background="@drawable/bg_dialog_fragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
 		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/baseMargin"
+			android:layout_gravity="center"
 			android:orientation="vertical"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toEndOf="@+id/iv_pmv_logo"
-			app:layout_constraintTop_toTopOf="parent">
+			android:layout_margin="@dimen/baseMargin">
 
-			<TextView
-				android:id="@+id/tv_dop_name"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textAlignment="center"
-				android:text="Siomay Ayam"
-				android:textSize="@dimen/MText"
-				android:textStyle="bold" />
+			<ImageView
+				android:id="@+id/iv_pmv_logo"
+				android:layout_width="100dp"
+				android:layout_height="100dp"
+				android:src="@drawable/ic_dimsum_50dp"
+				android:layout_gravity="center"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
 
 			<LinearLayout
-				android:id="@+id/cont_variant"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/baseMargin"
-				android:orientation="vertical" />
-
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/cont_pl_value"
-				android:visibility="gone"
-				style="@style/TextLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-
-				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/edt_pl_value"
-					android:layout_width="250dp"
-					android:layout_height="wrap_content"
-					android:inputType="text"
-					android:maxLines="1"
-					android:hint="Masukan jumlah pcs"/>
-
-			</com.google.android.material.textfield.TextInputLayout>
-
-			<LinearLayout
-				android:id="@+id/cont_pl_plus_minus"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:orientation="horizontal">
+				android:layout_margin="@dimen/baseMargin"
+				android:orientation="vertical"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/iv_pmv_logo"
+				app:layout_constraintTop_toTopOf="parent">
 
 				<TextView
-					android:layout_width="wrap_content"
+					android:id="@+id/tv_dop_name"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:layout_marginStart="@dimen/baseMargin"
-					android:layout_marginEnd="@dimen/baseMargin"
-					android:text="Jumlah :"
 					android:textAlignment="center"
+					android:text="Siomay Ayam"
+					android:textSize="@dimen/MText"
 					android:textStyle="bold" />
 
-				<com.google.android.material.card.MaterialCardView
-					android:id="@+id/btn_pl_min"
-					android:layout_width="50dp"
-					android:layout_height="50dp"
-					android:layout_weight="1"
-					app:cardElevation="0dp">
+				<LinearLayout
+					android:id="@+id/cont_variant"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/baseMargin"
+					android:orientation="vertical" />
 
-					<ImageView
-						android:layout_width="match_parent"
-						android:layout_height="match_parent"
-						android:padding="@dimen/MMargin"
-						android:src="@drawable/ic_remove_circle" />
+				<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/cont_pl_value"
+					android:visibility="gone"
+					style="@style/TextLayout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-				</com.google.android.material.card.MaterialCardView>
+					<com.google.android.material.textfield.TextInputEditText
+						android:id="@+id/edt_pl_value"
+						android:layout_width="250dp"
+						android:layout_height="wrap_content"
+						android:inputType="text"
+						android:maxLines="1"
+						android:hint="Masukan jumlah pcs"/>
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<LinearLayout
+					android:id="@+id/cont_pl_plus_minus"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal">
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:layout_marginStart="@dimen/baseMargin"
+						android:layout_marginEnd="@dimen/baseMargin"
+						android:text="Jumlah :"
+						android:textAlignment="center"
+						android:textStyle="bold" />
+
+					<com.google.android.material.card.MaterialCardView
+						android:id="@+id/btn_pl_min"
+						android:layout_width="50dp"
+						android:layout_height="50dp"
+						android:layout_weight="1"
+						app:cardElevation="0dp">
+
+						<ImageView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:padding="@dimen/MMargin"
+							android:src="@drawable/ic_remove_circle" />
+
+					</com.google.android.material.card.MaterialCardView>
+
+					<TextView
+						android:id="@+id/tv_pl_amount"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:layout_marginStart="@dimen/baseMargin"
+						android:layout_marginEnd="@dimen/baseMargin"
+						android:text="0"
+						android:textAlignment="center"
+						android:textSize="@dimen/LText"
+						android:textStyle="bold" />
+
+					<com.google.android.material.card.MaterialCardView
+						android:id="@+id/btn_pl_plus"
+						android:layout_width="50dp"
+						android:layout_height="50dp"
+						android:layout_weight="1"
+						app:cardElevation="0dp">
+
+						<ImageView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:padding="@dimen/MMargin"
+							android:src="@drawable/ic_add_circle" />
+
+					</com.google.android.material.card.MaterialCardView>
+
+				</LinearLayout>
 
 				<TextView
-					android:id="@+id/tv_pl_amount"
-					android:layout_width="wrap_content"
+					android:id="@+id/tv_pl_stock"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:layout_marginStart="@dimen/baseMargin"
-					android:layout_marginEnd="@dimen/baseMargin"
-					android:text="0"
-					android:textAlignment="center"
-					android:textSize="@dimen/LText"
-					android:textStyle="bold" />
-
-				<com.google.android.material.card.MaterialCardView
-					android:id="@+id/btn_pl_plus"
-					android:layout_width="50dp"
-					android:layout_height="50dp"
-					android:layout_weight="1"
-					app:cardElevation="0dp">
-
-					<ImageView
-						android:layout_width="match_parent"
-						android:layout_height="match_parent"
-						android:padding="@dimen/MMargin"
-						android:src="@drawable/ic_add_circle" />
-
-				</com.google.android.material.card.MaterialCardView>
+					android:layout_marginTop="@dimen/baseMargin"
+					android:text="Sisa : 8 Porsi"
+					android:textSize="@dimen/MText"
+					android:textAlignment="center"/>
 
 			</LinearLayout>
 
-			<TextView
-				android:id="@+id/tv_pl_stock"
-				android:layout_width="match_parent"
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:orientation="horizontal">
+
+			<Button
+				style="@style/ButtonStyle"
+				android:id="@+id/btn_cm_save"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/baseMargin"
-				android:text="Sisa : 8 Porsi"
-				android:textSize="@dimen/MText"
-				android:textAlignment="center"/>
+				android:layout_margin="@dimen/SMargin"
+				android:text="Simpan" />
+
+			<Button
+				style="@style/ButtonStyle"
+				android:id="@+id/btn_cm_cancel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/SMargin"
+				android:text="Batal" />
 
 		</LinearLayout>
 
 	</LinearLayout>
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:orientation="horizontal">
-
-		<Button
-			style="@style/ButtonStyle"
-			android:id="@+id/btn_cm_save"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/SMargin"
-			android:text="Simpan" />
-
-		<Button
-			style="@style/ButtonStyle"
-			android:id="@+id/btn_cm_cancel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/SMargin"
-			android:text="Batal" />
-
-	</LinearLayout>
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

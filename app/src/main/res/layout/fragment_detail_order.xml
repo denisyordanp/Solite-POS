@@ -26,6 +26,7 @@
 				android:id="@+id/tv_do_detail_order"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/baseMargin"
 				android:text="Rincian Pesanan"
 				android:textSize="@dimen/LLText"
 				android:textStyle="bold"
@@ -175,6 +176,7 @@
 				android:id="@+id/materialCardView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/baseMargin"
 				app:cardCornerRadius="@dimen/MMargin"
 				app:cardElevation="@dimen/MMargin"
 				app:layout_constraintStart_toStartOf="parent"
@@ -221,7 +223,7 @@
 				android:orientation="vertical"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+				app:layout_constraintTop_toBottomOf="@+id/materialCardView">
 
 				<com.google.android.material.card.MaterialCardView
 					android:id="@+id/materialCardView2"

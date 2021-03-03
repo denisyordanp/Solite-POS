@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:978878280713:android:7f083bfad1a0cca501b4d8",
+        "android_client_info": {
+          "package_name": "com.socialite.solite_pos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978878280713-k7rhu6gs4p8gkvorocg26c18thr22u7h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQFkQr35R9_kyuuJUaaM1JEgfc8aeHCx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978878280713-k7rhu6gs4p8gkvorocg26c18thr22u7h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:978878280713:android:dfac9406ac11530701b4d8",
         "android_client_info": {
           "package_name": "com.sosialite.solite_pos"
@@ -14,11 +43,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "978878280713-ni4m2emi09mhmvu43cl3bgeao6et9bnh.apps.googleusercontent.com",
+          "client_id": "978878280713-lmb453qf0845akmfnke839hdpuudr13j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sosialite.solite_pos",
-            "certificate_hash": "b6358d4521e1899a7dcf0eb131a4c6a1384f7562"
+            "certificate_hash": "371346571e60480216651632b43dca0ab67be564"
           }
         },
         {
