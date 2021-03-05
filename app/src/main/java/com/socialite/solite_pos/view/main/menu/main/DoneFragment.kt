@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDoneBinding
-import com.socialite.solite_pos.utils.config.MainConfig
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.vo.Status
 
 class DoneFragment : Fragment() {
@@ -32,7 +32,7 @@ class DoneFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = MainConfig.getViewModel(activity!!)
+			viewModel = getViewModel(activity!!)
 
 			adapter = OrderListAdapter(activity!!, viewModel)
 
@@ -44,7 +44,7 @@ class DoneFragment : Fragment() {
 	}
 
 	private fun getData(){
-		viewModel.getOrderDetail(Order.DONE, currentDate).observe(activity!!){
+		viewModel.getOrderList(Order.DONE, currentDate).observe(activity!!){
 			when(it.status){
 				Status.LOADING -> {}
 				Status.SUCCESS -> {

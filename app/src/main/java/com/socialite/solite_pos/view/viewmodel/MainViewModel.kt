@@ -1,7 +1,9 @@
 package com.socialite.solite_pos.view.viewmodel
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.*
@@ -14,11 +16,18 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWith
 import com.socialite.solite_pos.data.source.local.entity.room.master.*
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.viewmodelFactory.ViewModelFactory
 import com.socialite.solite_pos.vo.Resource
 
-class MainViewModel(private val repository: SoliteRepository) : ViewModel(){
+class MainViewModel(private val repository: SoliteRepository) : ViewModel() {
 
-	fun getOrderDetail(status: Int, date: String): LiveData<Resource<List<OrderData>>> {
+	companion object{
+		fun getViewModel(context: FragmentActivity): MainViewModel{
+			return ViewModelProvider(context, ViewModelFactory.getInstance(context.applicationContext)).get(MainViewModel::class.java)
+		}
+	}
+
+	fun getOrderList(status: Int, date: String): LiveData<Resource<List<OrderData>>> {
 		return repository.getOrderList(status, date)
 	}
 

@@ -16,8 +16,8 @@ import com.socialite.solite_pos.data.source.local.entity.helper.*
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.FragmentDetailOrderProductBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.setDialogFragment
+import com.socialite.solite_pos.utils.config.CustomDialogFragment
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
@@ -25,7 +25,7 @@ class DetailOrderProductFragment(
 		private val type: Int,
 		private val product: ProductWithCategory,
 		private var callback: ((ProductOrderDetail) -> Unit)?
-		) : DialogFragment() {
+		) : CustomDialogFragment() {
 
 	private lateinit var _binding: FragmentDetailOrderProductBinding
 	private lateinit var viewModel: MainViewModel
@@ -50,7 +50,6 @@ class DetailOrderProductFragment(
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View {
 		_binding = FragmentDetailOrderProductBinding.inflate(inflater, container, false)
-		setDialogFragment(dialog?.window)
 		return _binding.root
 	}
 
@@ -197,7 +196,7 @@ class DetailOrderProductFragment(
 	}
 
 	private fun setResult(){
-		var isOkay = false
+		var isOkay = type == PURCHASE
 		val arrayVariants: ArrayList<VariantOption> = ArrayList()
 		for (item in arrayRg){
 			if (item.radioGroup.checkedRadioButtonId == -1){

@@ -17,7 +17,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.FragmentProductMasterBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.viewmodel.MainViewModel

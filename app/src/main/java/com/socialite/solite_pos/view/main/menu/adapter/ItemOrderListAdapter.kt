@@ -10,8 +10,8 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.*
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.productOrderIndex
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.utils.config.FindProductOrderIndex
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 
 class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrderListAdapter.BaseViewHolder<ProductOrderDetail>>() {
 
@@ -25,7 +25,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 				items.clear()
 			}
 			items.addAll(value.products)
-			if (type == DETAIL || type == EDIT){
+			if (type == DETAIL){
 				setData()
 			}
 			btnCallback?.invoke(false)
@@ -88,7 +88,7 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 	}
 
 	private fun add(detail: ProductOrderDetail){
-		val pos = productOrderIndex(items, detail)
+		val pos = FindProductOrderIndex.find(items, detail)
 		if (pos != null){
 			if (detail.amount == 0){
 				delItem(pos)
@@ -128,7 +128,6 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 
 		const val DETAIL = 1
 		const val ORDER = 2
-		const val EDIT = 3
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ProductOrderDetail> {
@@ -139,14 +138,14 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 			VALUE_COLUMN -> {
 				when(type){
 					DETAIL -> ValueDetailColumnViewHolder(RvDetailItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-					ORDER, EDIT -> ValueOrderColumnViewHolder(RvItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+					ORDER -> ValueOrderColumnViewHolder(RvItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 					else -> throw IllegalArgumentException("Invalid adapterType")
 				}
 			}
 			TOTAL_COLUMN -> {
 				when(type){
 					DETAIL -> TotalDetailColumnViewHolder(RvTotalDetailItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-					ORDER, EDIT -> TotalOrderColumnViewHolder(RvTotalItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+					ORDER -> TotalOrderColumnViewHolder(RvTotalItemOrderListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 					else -> throw IllegalArgumentException("Invalid adapterType")
 				}
 			}

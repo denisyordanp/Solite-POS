@@ -9,7 +9,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.ActivitySelectMixVariantOrderBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity

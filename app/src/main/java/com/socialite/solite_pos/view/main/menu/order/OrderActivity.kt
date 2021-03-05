@@ -12,8 +12,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.ActivityOrderBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -33,16 +33,9 @@ class OrderActivity : SocialiteActivity() {
 	private lateinit var viewModel: MainViewModel
 
 	private var order: OrderWithProduct? = null
-	private var type: Int = 0
 
 	companion object{
 		const val NEW_ORDER_RQ_CODE = 101
-		const val EDIT_ORDER_RQ_CODE = 202
-
-		const val ORDER_DATA = "order_data"
-		const val ORDER_TYPE = "order_type"
-		const val EDIT_ORDER = 11
-		const val NEW_ORDER = 22
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,18 +46,12 @@ class OrderActivity : SocialiteActivity() {
 
 		viewModel = getViewModel(this)
 
-		order = intent.getSerializableExtra(ORDER_DATA) as OrderWithProduct?
-		type = intent.getIntExtra(ORDER_TYPE, 0)
-
 		vpAdapter = ViewPagerAdapter(this)
 		_binding.vpNewOrder.adapter = vpAdapter
 
 		_order.rvOrderList.layoutManager = LinearLayoutManager(this)
 
-		when(type){
-			NEW_ORDER -> startActivityForResult(Intent(this, SelectCustomerActivity::class.java), SelectCustomerActivity.RC_COSTUMER)
-			EDIT_ORDER -> setEditOrder(order!!)
-		}
+		startActivityForResult(Intent(this, SelectCustomerActivity::class.java), SelectCustomerActivity.RC_COSTUMER)
 
 		_binding.btnNwBack.setOnClickListener { onBackPressed() }
 		_order.btnOlCreate.setOnClickListener { setDine() }
@@ -107,13 +94,6 @@ class OrderActivity : SocialiteActivity() {
 		adapter.btnCallback = { setButton(it) }
 		adapter.order = order
 		setContent(order!!)
-	}
-
-	private fun setEditOrder(order: OrderWithProduct){
-		adapter = ItemOrderListAdapter(ItemOrderListAdapter.EDIT)
-		adapter.btnCallback = { setButton(it) }
-		adapter.order = order
-		setContent(order)
 	}
 
 	private fun setContent(order: OrderWithProduct){

@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.databinding.FragmentSelectSupplierBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.adapter.SelectSupplierAdapter
 import com.socialite.solite_pos.view.viewmodel.MainViewModel

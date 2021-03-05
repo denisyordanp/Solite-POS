@@ -23,11 +23,11 @@ class LocalDataSource private constructor(val soliteDao: SoliteDao) {
 		result.addSource(soliteDao.getProducts(idCategory)){ products ->
 			val dataProducts: ArrayList<Products> = ArrayList()
 			for (product in products){
-				val category = soliteDao.getCategoryById(product.product!!.category)
+				val category = soliteDao.getCategoryById(product.product.category)
 				val data = Products()
 				data.category = category
-				data.product = product.product!!
-				data.variants = getProductVariantOptions(product.product!!.id)
+				data.product = product.product
+				data.variants = getProductVariantOptions(product.product.id)
 				dataProducts.add(data)
 			}
 			result.value = dataProducts
@@ -107,8 +107,7 @@ class LocalDataSource private constructor(val soliteDao: SoliteDao) {
 
 	fun getProductOrder(orderNo: String): LiveData<List<ProductOrderDetail>> {
 		val result: MediatorLiveData<List<ProductOrderDetail>> = MediatorLiveData()
-		val details = soliteDao.getDetailOrders(orderNo)
-		result.addSource(details){ listDetail ->
+		result.addSource(soliteDao.getDetailOrders(orderNo)){ listDetail ->
 			val products: ArrayList<ProductOrderDetail> = ArrayList()
 			for (item2 in listDetail){
 				val product = soliteDao.getProduct(item2.idProduct)

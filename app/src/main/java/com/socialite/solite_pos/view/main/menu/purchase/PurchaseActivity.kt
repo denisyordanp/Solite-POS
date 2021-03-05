@@ -12,7 +12,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.PurchasePro
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.databinding.ActivityPurchaseBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
-import com.socialite.solite_pos.utils.config.MainConfig
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -22,6 +21,7 @@ import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.main.menu.order.SelectProductOrderByCategoryFragment
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.vo.Status
 
 class PurchaseActivity : SocialiteActivity() {
@@ -45,7 +45,7 @@ class PurchaseActivity : SocialiteActivity() {
 		_order = _binding.purchaseList
         setContentView(_binding.root)
 
-		viewModel = MainConfig.getViewModel(this)
+		viewModel = getViewModel(this)
 
 		vpAdapter = ViewPagerAdapter(this)
 		_binding.vpPurchase.adapter = vpAdapter

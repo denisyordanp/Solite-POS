@@ -12,7 +12,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.FragmentMasterProductMixVariantBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.view.main.menu.adapter.master.product.ProductMixVariantAdapter
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
 import com.socialite.solite_pos.vo.Status

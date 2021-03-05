@@ -16,8 +16,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.socialite.solite_pos.databinding.FragmentPayBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.main.MainActivity
@@ -25,7 +25,10 @@ import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
 
 
-class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
+class PayFragment(
+		private var order: OrderWithProduct?,
+		private val detailFragment: DetailOrderFragment?
+) : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentPayBinding
 	private lateinit var viewModel: MainViewModel
@@ -36,7 +39,7 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 	private val cashPay: String
 	get() = _binding.edtPayCash.text.toString()
 
-	constructor(): this(null)
+	constructor(): this(null, null)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -151,6 +154,8 @@ class PayFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragm
 	}
 
 	private fun printBill(order: OrderWithProduct){
+		val payment = order.order.payment
+		if (payment != null) if (payment.isCash) detailFragment?.showReturn(order)
 		mainActivity?.setPay(order)
 		dialog?.dismiss()
 	}

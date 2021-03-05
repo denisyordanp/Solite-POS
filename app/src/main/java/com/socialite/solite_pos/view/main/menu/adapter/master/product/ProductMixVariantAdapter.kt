@@ -68,7 +68,7 @@ class ProductMixVariantAdapter(
 									}
 								}else{
 									isSelected(false)
-									binding.root.setOnClickListener { _ ->
+									binding.root.setOnClickListener {
 										addMix(product)
 									}
 								}

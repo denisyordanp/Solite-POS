@@ -1,25 +1,21 @@
 package com.socialite.solite_pos.view.main.menu.adapter
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.RvOrderListBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.thousand
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.tools.DoneCook
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOrderFragment
@@ -84,12 +80,15 @@ class OrderListAdapter(
 				when(it.status){
 					Status.LOADING -> {}
 					Status.SUCCESS -> {
+						Log.w("TESTINGDATA", "product ${it.data}")
 						if (!it.data.isNullOrEmpty()){
 							orderWithProduct.products = it.data
 						}
 						setItems(orderWithProduct)
 					}
-					Status.ERROR -> {}
+					Status.ERROR -> {
+						Log.w("TESTINGDATA", "product error")
+					}
 				}
 			}
 		}

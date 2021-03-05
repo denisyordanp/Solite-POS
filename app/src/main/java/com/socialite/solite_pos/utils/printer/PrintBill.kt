@@ -4,8 +4,8 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.thousand
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import java.io.IOException
 import java.io.OutputStream

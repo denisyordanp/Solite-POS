@@ -8,7 +8,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductMixOrderD
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.databinding.RvItemOrderMixListBinding
 import com.socialite.solite_pos.databinding.RvTotalItemOrderMixListBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.productOrderIndex
+import com.socialite.solite_pos.utils.config.FindProductOrderIndex
 
 class ItemOrderMixListAdapter : RecyclerView.Adapter<ItemOrderMixListAdapter.BaseViewHolder<ProductOrderDetail>>() {
 
@@ -49,7 +49,7 @@ class ItemOrderMixListAdapter : RecyclerView.Adapter<ItemOrderMixListAdapter.Bas
 	}
 
 	private fun add(detail: ProductOrderDetail){
-		val pos = productOrderIndex(items, detail)
+		val pos = FindProductOrderIndex.find(items, detail)
 		if (pos != null){
 			if (detail.amount == 0){
 				delItem(pos)

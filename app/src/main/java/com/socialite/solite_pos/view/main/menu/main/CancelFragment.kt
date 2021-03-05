@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentCancelBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
 import com.socialite.solite_pos.vo.Status
@@ -41,7 +41,7 @@ class CancelFragment : Fragment() {
     }
 
     private fun getData(){
-        viewModel.getOrderDetail(Order.CANCEL, currentDate).observe(activity!!){
+        viewModel.getOrderList(Order.CANCEL, currentDate).observe(activity!!){
             when(it.status){
                 Status.LOADING -> {}
                 Status.SUCCESS -> {

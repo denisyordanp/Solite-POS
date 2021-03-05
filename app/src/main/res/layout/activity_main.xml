@@ -34,6 +34,7 @@
 		android:layout_height="wrap_content"
 		app:icon="@drawable/ic_add"
 		android:text="Pesanan baru"
+		android:textColor="@color/blackGrey"
 		android:layout_gravity="bottom|end"
 		android:layout_margin="@dimen/floatMargin"
 		tools:ignore="ContentDescription" />

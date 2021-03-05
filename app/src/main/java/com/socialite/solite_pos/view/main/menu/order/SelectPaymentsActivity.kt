@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.ActivityPaymentsBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.PaymentsAdapter
 import com.socialite.solite_pos.view.viewmodel.MainViewModel

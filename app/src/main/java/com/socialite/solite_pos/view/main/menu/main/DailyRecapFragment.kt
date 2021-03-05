@@ -10,11 +10,11 @@ import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDailyRecapBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.sdFormat
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.main.menu.adapter.RecapAdapter
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
 import com.socialite.solite_pos.vo.Status
@@ -51,7 +51,7 @@ class DailyRecapFragment : Fragment() {
 
             viewModel = getViewModel(activity!!)
 
-            _binding.tvRcDate.text = dateFormat(currentDate, sdFormat)
+            _binding.tvRcDate.text = dateFormat(currentDate, dateWithDayFormat)
 
             getIncome()
             getOutCome()
@@ -59,7 +59,7 @@ class DailyRecapFragment : Fragment() {
     }
 
     private fun getIncome(){
-        viewModel.getOrderDetail(Order.DONE, currentDate).observe(activity!!){ orders ->
+        viewModel.getOrderList(Order.DONE, currentDate).observe(activity!!){ orders ->
             when(orders.status){
                 Status.LOADING -> {}
                 Status.SUCCESS -> {
@@ -74,15 +74,19 @@ class DailyRecapFragment : Fragment() {
                                         if (!products.data.isNullOrEmpty()){
                                             orderWithProduct.products = products.data
                                             incomes.add(
-                                                RecapData(orderWithProduct.order.order.orderNo, orderWithProduct.grandTotal
+                                                RecapData(
+                                                        orderWithProduct.order.order.orderNo,
+                                                        orderWithProduct.order.payment?.name,
+                                                        orderWithProduct.grandTotal,
+                                                        orderWithProduct.order.payment?.isCash
                                                 ))
                                         }
+                                        incomeRecapAdapter.items = incomes
                                     }
                                     Status.ERROR -> {}
                                 }
                             }
                         }
-                        incomeRecapAdapter.items = incomes
                     }
                     setData()
                 }
@@ -99,7 +103,7 @@ class DailyRecapFragment : Fragment() {
                     val outcomes: ArrayList<RecapData>  = ArrayList()
                     if (it.data != null){
                         for (item in it.data){
-                            outcomes.add(RecapData("${item.amount}x ${item.name}", item.total))
+                            outcomes.add(RecapData("${item.amount}x", item.name, item.total, null))
                         }
                     }
                     outcomeRecapAdapter.items = outcomes
@@ -111,8 +115,13 @@ class DailyRecapFragment : Fragment() {
     }
 
     private fun setData(){
-        _binding.tvRcTotalIncome.text = toRupiah(incomeRecapAdapter.grandTotal)
-        _binding.tvRcTotalOutcome.text = toRupiah(outcomeRecapAdapter.grandTotal)
+        val incomeCash = incomeRecapAdapter.getIncome(true)
+        val outcome = outcomeRecapAdapter.grandTotal
+        val incomeNonCash = incomeRecapAdapter.getIncome(false)
+        _binding.tvRcIncomeCash.text = toRupiah(incomeCash)
+        _binding.tvRcTotalOutcome.text = toRupiah(outcome)
+        _binding.tvRcTotalCash.text = toRupiah(incomeCash - outcome)
+        _binding.tvRcIncomeNonCash.text = toRupiah(incomeNonCash)
         _binding.tvRcGrandTotal.text =
             toRupiah(incomeRecapAdapter.grandTotal - outcomeRecapAdapter.grandTotal)
     }

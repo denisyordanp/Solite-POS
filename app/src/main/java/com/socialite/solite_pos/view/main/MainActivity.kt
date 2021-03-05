@@ -11,7 +11,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.socialite.solite_pos.databinding.ActivityMainBinding
 import com.socialite.solite_pos.databinding.MainMenuBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -120,6 +120,7 @@ class MainActivity : SocialiteActivity() {
 
 	fun setPay(order: OrderWithProduct){
 		order.order.order.status = Order.DONE
+
 		viewModel.updateOrder(order.order.order) {}
 		printBill.doPrint(order)
 	}
@@ -186,8 +187,7 @@ class MainActivity : SocialiteActivity() {
 				_binding.fabMainNewOrder.text = "Pesanan baru"
 				_binding.fabMainNewOrder.setOnClickListener {
 					startActivityForResult(
-							Intent(this, OrderActivity::class.java)
-									.putExtra(OrderActivity.ORDER_TYPE, OrderActivity.NEW_ORDER),
+							Intent(this, OrderActivity::class.java),
 							OrderActivity.NEW_ORDER_RQ_CODE)
 				}
 			}

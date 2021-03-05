@@ -9,10 +9,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.databinding.FragmentDetailOutcomeBinding
-import com.socialite.solite_pos.utils.config.MainConfig
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 
 class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFragment() {
 
@@ -54,7 +55,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (detailActivity != null){
-            viewModel = MainConfig.getViewModel(detailActivity!!)
+            viewModel = getViewModel(detailActivity!!)
 
             if (outcome != null){
                 setData()
@@ -62,7 +63,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
                 _binding.btnOcSave.setOnClickListener {
                     if (isCheck){
                         saveData(getOutcome(name, desc, amount.toInt(), price.toLong(),
-                            MainConfig.currentDate
+                            currentDate
                         ))
                     }
                 }
@@ -81,7 +82,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
             _binding.btnOcSave.setOnClickListener {
                 if (isCheck){
                     updateData(getOutcome(name, desc, amount.toInt(), price.toLong(),
-                        MainConfig.currentDate
+                        currentDate
                     ))
                 }
             }

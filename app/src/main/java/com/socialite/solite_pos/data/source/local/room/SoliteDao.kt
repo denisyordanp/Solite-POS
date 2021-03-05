@@ -40,40 +40,40 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
 	fun getOrderVariantsMix(idDetail: Long): DetailWithVariantMixOption
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertOrder(order: Order): Long
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertOrders(order: List<Order>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertDetailOrder(detail: OrderDetail): Long
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertDetailOrders(detail: List<OrderDetail>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantOrder(variants: OrderProductVariant): Long
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantOrders(variants: List<OrderProductVariant>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertMixVariantOrder(variants: OrderMixProductVariant): Long
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertMixVariantOrders(variants: List<OrderMixProductVariant>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantMixOrder(variants: OrderProductVariantMix): Long
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantMixOrders(variants: List<OrderProductVariantMix>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPaymentOrders(payment: List<OrderPayment>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPaymentOrder(payment: OrderPayment): Long
 
 	@Update
@@ -87,10 +87,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Purchase.DB_NAME}")
 	fun getPurchases(): LiveData<List<Purchase>>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPurchases(data: List<Purchase>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPurchase(data: Purchase)
 
 	@Update
@@ -99,10 +99,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${PurchaseProduct.DB_NAME} WHERE ${Purchase.NO} = :purchaseNo")
 	fun getPurchasesProduct(purchaseNo: String): List<PurchaseProduct>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPurchaseProducts(data: List<PurchaseProduct>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPurchaseProduct(data: PurchaseProduct)
 
 	@Update
@@ -117,10 +117,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :category")
 	fun getProductWithCategories(category: Long): LiveData<List<ProductWithCategory>>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertProducts(data: List<Product>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertProduct(data: Product): Long
 
 	@Update
@@ -163,10 +163,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
 	fun getVariantProductById(idProduct: Long): LiveData<VariantProduct?>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantProducts(data: List<VariantProduct>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantProduct(data: VariantProduct): Long
 
 	@Update
@@ -185,10 +185,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${VariantMix.DB_NAME} WHERE ${Variant.ID} = :idVariant AND ${Product.ID} = :idProduct")
 	fun getVariantMixProductById(idVariant: Long, idProduct: Long): LiveData<VariantMix?>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantMixes(data: List<VariantMix>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantMix(data: VariantMix): Long
 
 	@Update
@@ -205,10 +205,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Category.DB_NAME} WHERE ${Category.ID} = :idCategory")
 	fun getCategoryById(idCategory: Long): Category
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertCategories(data: List<Category>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertCategory(data: Category): Long
 
 	@Update
@@ -222,10 +222,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
 	fun getVariantById(idVariant: Long): Variant
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariants(data: List<Variant>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariant(data: Variant): Long
 
 	@Update
@@ -236,10 +236,10 @@ interface SoliteDao{
 	@RawQuery(observedEntities = [VariantOption::class])
 	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<List<VariantOption>>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantOptions(data: List<VariantOption>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertVariantOption(data: VariantOption): Long
 
 	@Update
@@ -250,10 +250,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Customer.DB_NAME}")
 	fun getCustomers(): LiveData<List<Customer>>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertCustomers(data: List<Customer>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertCustomer(data: Customer): Long
 
 	@Update
@@ -267,10 +267,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Supplier.DB_NAME} WHERE ${Supplier.ID} = :idSupplier")
 	fun getSupplierById(idSupplier: Long): LiveData<Supplier>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertSuppliers(data: List<Supplier>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertSupplier(data: Supplier): Long
 
 	@Update
@@ -281,10 +281,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Payment.DB_NAME}")
 	fun getPayments(): LiveData<List<Payment>>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPayments(data: List<Payment>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPayment(data: Payment): Long
 
 	@Update
@@ -295,10 +295,10 @@ interface SoliteDao{
 	@Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) = date(:date)")
 	fun getOutcome(date: String): LiveData<List<Outcome>>
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertOutcomes(data: List<Outcome>)
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertOutcome(data: Outcome): Long
 
 	@Update

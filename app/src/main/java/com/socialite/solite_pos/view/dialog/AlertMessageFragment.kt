@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import com.socialite.solite_pos.databinding.FragmentAlertMessageBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.setDialogFragment
+import com.socialite.solite_pos.utils.config.CustomDialogFragment
 
-class AlertMessageFragment : DialogFragment() {
+class AlertMessageFragment : CustomDialogFragment() {
 
 	private lateinit var _binding: FragmentAlertMessageBinding
 	var name: String? = ""
@@ -16,7 +15,6 @@ class AlertMessageFragment : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentAlertMessageBinding.inflate(inflater, container, false)
-		setDialogFragment(dialog?.window)
         return _binding.root
     }
 

@@ -8,8 +8,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.socialite.solite_pos.databinding.*
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.productPurchaseIndex
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 
 class ItemPurchaseListAdapter(private val type: Int) : RecyclerView.Adapter<ItemPurchaseListAdapter.BaseViewHolder<PurchaseProductWithProduct>>() {
 
@@ -87,7 +86,7 @@ class ItemPurchaseListAdapter(private val type: Int) : RecyclerView.Adapter<Item
 	}
 
 	private fun add(detail: PurchaseProductWithProduct){
-		val pos = productPurchaseIndex(items, detail)
+		val pos = findProductPurchaseIndex(items, detail)
 		if (pos != null){
 			if (detail.purchaseProduct?.amount == 0){
 				delItem(pos)
@@ -107,6 +106,17 @@ class ItemPurchaseListAdapter(private val type: Int) : RecyclerView.Adapter<Item
 			}
 		}
 		notifyItemChanged(items.size-1)
+	}
+
+	private fun findProductPurchaseIndex(array: ArrayList<PurchaseProductWithProduct>, detail: PurchaseProductWithProduct?): Int?{
+		for ((i, v) in array.withIndex()){
+			if (v.product != null){
+				if (v.product == detail?.product){
+					return i
+				}
+			}
+		}
+		return null
 	}
 
 	private fun delItem(pos: Int){
@@ -223,14 +233,7 @@ class ItemPurchaseListAdapter(private val type: Int) : RecyclerView.Adapter<Item
 
 	}
 
-	inner class TotalDetailColumnViewHolder(private val binding: RvTotalDetailItemOrderListBinding) : BaseViewHolder<PurchaseProductWithProduct>(binding.root) {
-		override fun bind(detail: PurchaseProductWithProduct) {
-			binding.tvIoPrice.text = "Total :"
-			binding.tvIoTotal.text = toRupiah(grandTotal)
-		}
-	}
-
-	abstract class BaseViewHolder<ProductOrderDetail>(itemView: View) : RecyclerView.ViewHolder(itemView){
+	abstract class BaseViewHolder<ProductOrderDetail>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		abstract fun bind(detail: PurchaseProductWithProduct)
 	}
 }

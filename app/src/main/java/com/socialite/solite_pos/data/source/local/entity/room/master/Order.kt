@@ -8,10 +8,10 @@ import androidx.room.Index
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.config.MainConfig
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentTime
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.strToDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
 import com.socialite.solite_pos.utils.config.SettingPref
 import com.socialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
@@ -173,7 +173,7 @@ data class Order(
 
 	val timeString: String
 		get() {
-			return dateFormat(orderTime, MainConfig.ldFormat)
+			return dateFormat(orderTime, dateWithTimeFormat)
 		}
 
 	fun getFinishCook(context: Context): Calendar{

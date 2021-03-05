@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentNotPayBinding
-import com.socialite.solite_pos.utils.config.MainConfig
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.vo.Status
 
 class NotPayFragment : Fragment() {
@@ -32,7 +32,7 @@ class NotPayFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = MainConfig.getViewModel(activity!!)
+			viewModel = getViewModel(activity!!)
 
 			adapter = OrderListAdapter(activity!!, viewModel)
 			_binding.rvNp.layoutManager = GridLayoutManager(activity, 4)
@@ -43,7 +43,7 @@ class NotPayFragment : Fragment() {
 	}
 
 	private fun getData(){
-		viewModel.getOrderDetail(Order.NEED_PAY, currentDate).observe(activity!!){
+		viewModel.getOrderList(Order.NEED_PAY, currentDate).observe(activity!!){
 			when(it.status){
 				Status.LOADING -> {}
 				Status.SUCCESS -> {

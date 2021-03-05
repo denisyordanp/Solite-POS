@@ -35,62 +35,43 @@ class RemoteDataSource {
 			when (rOrders.status) {
 				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
 					result.removeSource(orders)
-					if (!rOrders.body.isNullOrEmpty()){
-						data.order = rOrders.body
+					data.order = rOrders.body ?: emptyList()
 
-						result.addSource(payments){ rPayments ->
-							when (rPayments.status) {
-								StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-									result.removeSource(payments)
-									if (!rPayments.body.isNullOrEmpty()){
-										data.payments = rPayments.body
+					result.addSource(payments){ rPayments ->
+						when (rPayments.status) {
+							StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+								result.removeSource(payments)
+								data.payments = rPayments.body ?: emptyList()
 
-										result.addSource(orderPayments){ rOrderPayments ->
-											when (rOrderPayments.status) {
-												StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-													result.removeSource(orderPayments)
-													if (!rOrderPayments.body.isNullOrEmpty()){
-														data.orderPayment = rOrderPayments.body
+								result.addSource(orderPayments){ rOrderPayments ->
+									when (rOrderPayments.status) {
+										StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+											result.removeSource(orderPayments)
+											data.orderPayment = rOrderPayments.body ?: emptyList()
 
-														result.addSource(customers){ rCustomers ->
-															when (rCustomers.status) {
-																StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-																	result.removeSource(customers)
-																	if (!rCustomers.body.isNullOrEmpty()){
-																		data.customer = rCustomers.body
-																		result.value = ApiResponse.success(data)
-																	}else{
-																		result.value = ApiResponse.empty(null)
-																	}
-																}
-																else -> {
-																	result.value = ApiResponse.error(null)
-																}
-															}
-														}
-
-													}else{
-														result.value = ApiResponse.empty(null)
+											result.addSource(customers){ rCustomers ->
+												when (rCustomers.status) {
+													StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+														result.removeSource(customers)
+														data.customer = rCustomers.body ?: emptyList()
+														result.value = ApiResponse.success(data)
 													}
-												}
-												else -> {
-													result.value = ApiResponse.error(null)
+													else -> {
+														result.value = ApiResponse.error(null)
+													}
 												}
 											}
 										}
-
-									}else{
-										result.value = ApiResponse.empty(null)
+										else -> {
+											result.value = ApiResponse.error(null)
+										}
 									}
 								}
-								else -> {
-									result.value = ApiResponse.error(null)
-								}
+							}
+							else -> {
+								result.value = ApiResponse.error(null)
 							}
 						}
-
-					}else{
-						result.value = ApiResponse.empty(null)
 					}
 				}
 				else -> {
@@ -108,50 +89,32 @@ class RemoteDataSource {
 			when (rProducts.status) {
 				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
 					result.removeSource(dataProducts)
-					if (rProducts.body != null){
-						data.products = rProducts.body
+					data.products = rProducts.body ?: DataProductResponse()
 
-						result.addSource(details){ rDetail ->
-							when (rDetail.status) {
-								StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-									result.removeSource(details)
-									if (!rDetail.body.isNullOrEmpty()){
-										data.details = rDetail.body
+					result.addSource(details){ rDetail ->
+						when (rDetail.status) {
+							StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+								result.removeSource(details)
+								data.details = rDetail.body ?: emptyList()
 
-										result.addSource(orderMixVariants){ rMixes ->
-											when (rMixes.status) {
-												StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-													result.removeSource(orderMixVariants)
-													if (!rMixes.body.isNullOrEmpty()){
-														data.mixOrders = rMixes.body
+								result.addSource(orderMixVariants){ rMixes ->
+									when (rMixes.status) {
+										StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+											result.removeSource(orderMixVariants)
+											data.mixOrders = rMixes.body ?: emptyList()
 
-														result.addSource(orderMixProductsVariant){ rOrderMixProductsVariant ->
-															when (rOrderMixProductsVariant.status) {
+											result.addSource(orderMixProductsVariant){ rOrderMixProductsVariant ->
+												when (rOrderMixProductsVariant.status) {
+													StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+														result.removeSource(orderMixProductsVariant)
+														data.mixVariants = rOrderMixProductsVariant.body ?: emptyList()
+
+														result.addSource(orderVariants){ rOrderVariants ->
+															when (rOrderVariants.status) {
 																StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-																	result.removeSource(orderMixProductsVariant)
-																	if (!rOrderMixProductsVariant.body.isNullOrEmpty()){
-																		data.mixVariants = rOrderMixProductsVariant.body
-
-																		result.addSource(orderVariants){ rOrderVariants ->
-																			when (rOrderVariants.status) {
-																				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-																					result.removeSource(orderVariants)
-																					if (!rOrderVariants.body.isNullOrEmpty()){
-																						data.variants = rOrderVariants.body
-																						result.value = ApiResponse.success(data)
-																					}else{
-																						result.value = ApiResponse.empty(null)
-																					}
-																				}
-																				else -> {
-																					result.value = ApiResponse.error(null)
-																				}
-																			}
-																		}
-
-																	}else{
-																		result.value = ApiResponse.empty(null)
-																	}
+																	result.removeSource(orderVariants)
+																	data.variants = rOrderVariants.body ?: emptyList()
+																	result.value = ApiResponse.success(data)
 																}
 																else -> {
 																	result.value = ApiResponse.error(null)
@@ -159,28 +122,23 @@ class RemoteDataSource {
 															}
 														}
 
-													}else{
-														result.value = ApiResponse.empty(null)
 													}
-												}
-												else -> {
-													result.value = ApiResponse.error(null)
+													else -> {
+														result.value = ApiResponse.error(null)
+													}
 												}
 											}
 										}
-
-									}else{
-										result.value = ApiResponse.empty(null)
+										else -> {
+											result.value = ApiResponse.error(null)
+										}
 									}
 								}
-								else -> {
-									result.value = ApiResponse.error(null)
-								}
+							}
+							else -> {
+								result.value = ApiResponse.error(null)
 							}
 						}
-
-					}else{
-						result.value = ApiResponse.empty(null)
 					}
 				}
 				else -> {
@@ -381,62 +339,45 @@ class RemoteDataSource {
 			when (rSuppliers.status) {
 				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
 					result.removeSource(suppliers)
-					if (rSuppliers.body != null){
-						data.suppliers = rSuppliers.body
+					data.suppliers = rSuppliers.body ?: emptyList()
 
-						result.addSource(purchases){ rPurchases ->
-							when (rPurchases.status) {
-								StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-									result.removeSource(purchases)
-									if (rPurchases.body != null){
-										data.purchases = rPurchases.body
+					result.addSource(purchases){ rPurchases ->
+						when (rPurchases.status) {
+							StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+								result.removeSource(purchases)
+								data.purchases = rPurchases.body ?: emptyList()
 
-										result.addSource(dataProducts){ rDataProducts ->
-											when (rDataProducts.status) {
-												StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-													result.removeSource(dataProducts)
-													if (rDataProducts.body != null){
-														data.products = rDataProducts.body
+								result.addSource(dataProducts){ rDataProducts ->
+									when (rDataProducts.status) {
+										StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+											result.removeSource(dataProducts)
+											data.products = rDataProducts.body ?: DataProductResponse()
 
-														result.addSource(purchaseProducts){ rPurchaseProducts ->
-															when (rPurchaseProducts.status) {
-																StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-																	result.removeSource(purchaseProducts)
-																	if (rPurchaseProducts.body != null){
-																		data.purchaseProducts = rPurchaseProducts.body
-																		result.value = ApiResponse.success(data)
-																	}else{
-																		result.value = ApiResponse.empty(null)
-																	}
-																}
-																else -> {
-																	result.value = ApiResponse.error(null)
-																}
-															}
-														}
+											result.addSource(purchaseProducts){ rPurchaseProducts ->
+												when (rPurchaseProducts.status) {
+													StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+														result.removeSource(purchaseProducts)
 
-													}else{
-														result.value = ApiResponse.empty(null)
+														data.purchaseProducts = rPurchaseProducts.body ?: emptyList()
+														result.value = ApiResponse.success(data)
 													}
-												}
-												else -> {
-													result.value = ApiResponse.error(null)
+													else -> {
+														result.value = ApiResponse.error(null)
+													}
 												}
 											}
 										}
-
-									}else{
-										result.value = ApiResponse.empty(null)
+										else -> {
+											result.value = ApiResponse.error(null)
+										}
 									}
 								}
-								else -> {
-									result.value = ApiResponse.error(null)
-								}
+
+							}
+							else -> {
+								result.value = ApiResponse.error(null)
 							}
 						}
-
-					}else{
-						result.value = ApiResponse.empty(null)
 					}
 				}
 				else -> {
@@ -629,71 +570,47 @@ class RemoteDataSource {
 			when (categories.status) {
 				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
 					result.removeSource(getCategories())
-					if (!categories.body.isNullOrEmpty()){
-						data.categories = categories.body
+					data.categories = categories.body ?: emptyList()
 
-						result.addSource(getVariants()){ variants ->
-							when (variants.status) {
-								StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-									result.removeSource(getVariants())
-									if (!variants.body.isNullOrEmpty()){
-										data.variants = variants.body
+					result.addSource(getVariants()){ variants ->
+						when (variants.status) {
+							StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+								result.removeSource(getVariants())
+								data.variants = variants.body ?: emptyList()
 
-										result.addSource(variantOptions){ options ->
-											when (options.status) {
-												StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-													result.removeSource(variantOptions)
-													if (!options.body.isNullOrEmpty()){
-														data.variantOptions = options.body
+								result.addSource(variantOptions){ options ->
+									when (options.status) {
+										StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+											result.removeSource(variantOptions)
+											data.variantOptions = options.body ?: emptyList()
 
-														result.addSource(getProducts()){ products ->
-															when (products.status) {
-																StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-																	result.removeSource(getProducts())
-																	if (!products.body.isNullOrEmpty()){
-																		data.products = products.body
-																		result.value = ApiResponse.success(data)
-																	}else{
-																		Log.w("TESTINGDATA", "p empty")
-																		result.value = ApiResponse.empty(null)
-																	}
-																}
-																else -> {
-																	Log.w("TESTINGDATA", "p error")
-																	result.value = ApiResponse.error(null)
-																}
-															}
-														}
-													}else{
-														Log.w("TESTINGDATA", "o empty")
-														result.value = ApiResponse.empty(null)
+											result.addSource(getProducts()){ products ->
+												when (products.status) {
+													StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+														result.removeSource(getProducts())
+
+														data.products = products.body ?: emptyList()
+														result.value = ApiResponse.success(data)
 													}
-												}
-												else -> {
-													Log.w("TESTINGDATA", "o error")
-													result.value = ApiResponse.error(null)
+													else -> {
+														result.value = ApiResponse.error(null)
+													}
 												}
 											}
 										}
-
-									}else{
-										Log.w("TESTINGDATA", "v empty")
-										result.value = ApiResponse.empty(null)
+										else -> {
+											result.value = ApiResponse.error(null)
+										}
 									}
 								}
-								else -> {
-									Log.w("TESTINGDATA", "v error")
-									result.value = ApiResponse.error(null)
-								}
+							}
+							else -> {
+								result.value = ApiResponse.error(null)
 							}
 						}
-					}else{
-						Log.w("TESTINGDATA", "c empty")
-						result.value = ApiResponse.empty(null)
 					}
 				}
 				else -> {
-					Log.w("TESTINGDATA", "c error")
 					result.value = ApiResponse.error(null)
 				}
 			}

@@ -6,10 +6,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.databinding.RvOutcomeBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.dateFormat
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.sdFormat
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
 
 class OutcomeAdapter(private val fragmentManager: FragmentManager) : RecyclerView.Adapter<OutcomeAdapter.ListViewHolder>() {
@@ -53,7 +53,7 @@ class OutcomeAdapter(private val fragmentManager: FragmentManager) : RecyclerVie
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		if (position == 0){
 			holder.binding.tvRvOcName.text = "Total pengeluaran : "
-			holder.binding.tvRvOcDesc.text = dateFormat(currentDate, sdFormat)
+			holder.binding.tvRvOcDesc.text = dateFormat(currentDate, dateWithDayFormat)
 			holder.binding.tvRvOcTotal.text = toRupiah(grandTotal)
 		}else{
 			val o = items[position-1]

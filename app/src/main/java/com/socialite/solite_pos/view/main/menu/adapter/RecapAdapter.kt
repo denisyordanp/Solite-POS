@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.databinding.RvRecapBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 
 class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 
@@ -28,6 +28,16 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 		return total
 	}
 
+	fun getIncome(isCash: Boolean): Long {
+		var total = 0L
+		for (item in items){
+			if (item.isCash != null){
+				if (item.isCash!! == isCash) total += item.total
+			}
+		}
+		return total
+	}
+
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
 		return ListViewHolder(RvRecapBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 	}
@@ -43,6 +53,7 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 			val r = items[position]
 
 			holder.binding.tvRvRcName.text = r.name
+			holder.binding.tvRvRcDesc.text = r.desc
 			holder.binding.tvRvRcTotal.text = toRupiah(r.total)
 		}
 	}

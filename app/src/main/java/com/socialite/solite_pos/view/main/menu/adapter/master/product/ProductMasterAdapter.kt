@@ -1,19 +1,12 @@
 package com.socialite.solite_pos.view.main.menu.adapter.master.product
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.socialite.solite_pos.data.source.local.entity.helper.Products
-import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithOption
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.RvProductMasterBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.toRupiah
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
 import com.socialite.solite_pos.vo.Status

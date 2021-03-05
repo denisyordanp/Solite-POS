@@ -6,8 +6,8 @@ import androidx.room.Entity
 import androidx.room.Index
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentDate
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.currentTime
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import com.socialite.solite_pos.utils.config.SettingPref
 import com.socialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable

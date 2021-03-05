@@ -12,12 +12,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDetailOrderBinding
-import com.socialite.solite_pos.utils.config.MainConfig.Companion.getViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.main.MainActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
-import com.socialite.solite_pos.view.main.menu.order.OrderActivity
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
 
 class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
@@ -65,30 +65,19 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 				mainActivity?.printBill?.doPrint(order)
 			}
 			_binding.btnDoPay.setOnClickListener{
-				PayFragment(order).show(childFragmentManager, "pay")
+				PayFragment(order, this).show(childFragmentManager, "pay")
 			}
 			_binding.btnDoDone.setOnClickListener { doneOrder() }
-			_binding.btnDoEdit.setOnClickListener {
-				startActivityForResult(
-						Intent(context, OrderActivity::class.java)
-								.putExtra(OrderActivity.ORDER_TYPE, OrderActivity.EDIT_ORDER)
-								.putExtra(OrderActivity.ORDER_DATA, order), OrderActivity.EDIT_ORDER_RQ_CODE
-				)
-			}
 		}
 	}
 
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		super.onActivityResult(requestCode, resultCode, data)
-		if (requestCode == OrderActivity.EDIT_ORDER_RQ_CODE){
-			if (data != null){
-				val order = data.getSerializableExtra(MainActivity.EXTRA_ORDER) as OrderWithProduct?
-				if (order != null){
-					this.order = order
-					setData()
-				}
-			}
-		}
+	fun showReturn(order: OrderWithProduct){
+		val inReturn = toRupiah(order.order.orderPayment?.inReturn(order.grandTotal))
+		MessageBottom(childFragmentManager)
+				.setMessage("Kembalian : $inReturn")
+				.setNegativeListener("Ok"){
+					it?.dismiss()
+				}.show()
 	}
 
 	private fun setData(){
@@ -106,7 +95,6 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 				Order.DONE -> {
 					_binding.contDoPrint.visibility = View.VISIBLE
-					_binding.btnDoEdit.visibility = View.GONE
 				}
 
 				else -> {

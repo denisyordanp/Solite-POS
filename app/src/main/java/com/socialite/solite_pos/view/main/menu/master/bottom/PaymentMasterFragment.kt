@@ -9,9 +9,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.FragmentPaymentMasterBinding
-import com.socialite.solite_pos.utils.config.MainConfig
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 
 class PaymentMasterFragment(private val payment: Payment?) : BottomSheetDialogFragment() {
 
@@ -44,7 +44,7 @@ class PaymentMasterFragment(private val payment: Payment?) : BottomSheetDialogFr
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = MainConfig.getViewModel(activity!!)
+			viewModel = getViewModel(activity!!)
 
 			if (payment != null){
 				setData()
