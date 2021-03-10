@@ -84,27 +84,6 @@ class LocalDataSource private constructor(val soliteDao: SoliteDao) {
 		return result
 	}
 
-	fun getPurchaseData(): LiveData<List<PurchaseWithProduct>> {
-		val result: MediatorLiveData<List<PurchaseWithProduct>> = MediatorLiveData()
-		result.addSource(soliteDao.getPurchases()){
-			val list: ArrayList<PurchaseWithProduct> = ArrayList()
-			for (purchase in it){
-				val purchaseProduct = soliteDao.getPurchasesProduct(purchase.purchaseNo)
-				result.addSource(soliteDao.getSupplierById(purchase.idSupplier)) { supplier ->
-					val array: ArrayList<PurchaseProductWithProduct> = ArrayList()
-					for (products in purchaseProduct){
-						val product = soliteDao.getProduct(products.idProduct)
-						array.add(PurchaseProductWithProduct(products, product))
-					}
-					if (list.isNotEmpty()) list.clear()
-					list.add(PurchaseWithProduct(purchase, supplier, array))
-					result.value = list
-				}
-			}
-		}
-		return result
-	}
-
 	fun getProductOrder(orderNo: String): LiveData<List<ProductOrderDetail>> {
 		val result: MediatorLiveData<List<ProductOrderDetail>> = MediatorLiveData()
 		result.addSource(soliteDao.getDetailOrders(orderNo)){ listDetail ->

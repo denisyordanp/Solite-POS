@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.socialite.solite_pos.databinding.ActivityCustomerNameBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.CustomerAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 import java.util.*
 import kotlin.collections.ArrayList
@@ -37,7 +37,7 @@ class SelectCustomerActivity : SocialiteActivity() {
 		_binding = ActivityCustomerNameBinding.inflate(layoutInflater)
         setContentView(_binding.root)
 
-		viewModel = getViewModel(this)
+		viewModel = getMainViewModel(this)
 		
 		adapter = CustomerAdapter { setResult(it) }
 		_binding.rvCustomerName.layoutManager = LinearLayoutManager(this)

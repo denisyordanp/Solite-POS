@@ -16,14 +16,13 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.socialite.solite_pos.databinding.FragmentPayBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.view.main.MainActivity
+import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
-
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 
 class PayFragment(
 		private var order: OrderWithProduct?,
@@ -31,7 +30,7 @@ class PayFragment(
 ) : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentPayBinding
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: OrderViewModel
 
 	private var mainActivity: MainActivity? = null
 	private var payment: Payment? = null
@@ -63,7 +62,7 @@ class PayFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (mainActivity != null){
 
-			viewModel = getViewModel(mainActivity!!)
+			viewModel = getOrderViewModel(mainActivity!!)
 
 			val total = "Total : ${toRupiah(order?.grandTotal)}"
 			_binding.tvPayTotal.text = total

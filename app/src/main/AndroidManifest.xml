@@ -11,41 +11,42 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
+        <activity android:name=".view.main.opening.LoginActivity"></activity>
         <activity
-            android:name="com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.order.SelectMixVariantOrderActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.master.detail.VariantMasterMixOptionActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.master.detail.VariantOptionActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.master.ListMasterActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name="com.socialite.solite_pos.view.main.menu.order.SelectCustomerActivity"
+            android:name=".view.main.menu.outcome.DetailOutcomeActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.socialite.solite_pos.view.main.menu.order.OrderActivity"
+            android:name=".view.main.menu.order.SelectMixVariantOrderActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity"
+            android:name=".view.main.menu.purchase.PurchaseActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.socialite.solite_pos.view.main.OpeningActivity"
+            android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.menu.master.detail.VariantOptionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.menu.order.SelectPaymentsActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.menu.master.product.ProductMasterActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.menu.master.ListMasterActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.menu.order.SelectCustomerActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.menu.order.OrderActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.bluetooth.BluetoothDeviceListActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".view.main.opening.OpeningActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,10 +55,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.socialite.solite_pos.view.main.MainActivity"
+            android:name=".view.main.opening.MainActivity"
             android:screenOrientation="landscape" />
 
-        <receiver android:name="com.socialite.solite_pos.utils.tools.DoneCook" />
+        <receiver android:name=".utils.tools.DoneCook" />
     </application>
 
 </manifest>

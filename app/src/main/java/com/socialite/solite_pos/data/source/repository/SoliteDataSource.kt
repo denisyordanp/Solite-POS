@@ -9,6 +9,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.*
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
@@ -24,7 +25,8 @@ internal interface SoliteDataSource{
 	fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit)
 	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
-	val purchases: LiveData<Resource<List<PurchaseWithProduct>>>
+	val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>
+	fun getPurchaseProducts(purchaseNo: String): LiveData<Resource<List<PurchaseProductWithProduct>>>
 	fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
 	fun getProductList(idCategory: Long): LiveData<Resource<List<Products>>>

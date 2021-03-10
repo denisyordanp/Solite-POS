@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.FragmentProductOrderBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ProductOrderAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class SelectProductOrderByCategoryFragment(
@@ -38,7 +38,7 @@ class SelectProductOrderByCategoryFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getViewModel(activity)
+			viewModel = getMainViewModel(activity)
 			adapter = ProductOrderAdapter(type, activity, callback)
 
 			_binding.rvProductOrder.layoutManager = GridLayoutManager(activity, 4)

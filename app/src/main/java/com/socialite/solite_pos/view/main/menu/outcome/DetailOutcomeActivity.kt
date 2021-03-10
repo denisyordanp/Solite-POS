@@ -9,8 +9,8 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateFormat
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
 import com.socialite.solite_pos.view.main.menu.adapter.OutcomeAdapter
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class DetailOutcomeActivity : AppCompatActivity() {
@@ -28,7 +28,7 @@ class DetailOutcomeActivity : AppCompatActivity() {
         _binding = ActivityDetailOutcomeBinding.inflate(layoutInflater)
         setContentView(_binding.root)
 
-        viewModel = getViewModel(this)
+        viewModel = getMainViewModel(this)
 
         adapter = OutcomeAdapter(supportFragmentManager)
         _binding.rvOutcome.layoutManager = LinearLayoutManager(this)

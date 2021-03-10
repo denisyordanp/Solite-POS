@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.RvCategoryMasterBinding
 import com.socialite.solite_pos.view.main.menu.master.bottom.PaymentMasterFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 class PaymentMasterAdapter(
 	private val viewModel: MainViewModel,

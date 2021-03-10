@@ -8,7 +8,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.ActivityListMasterBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.master.PaymentMasterAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.master.SupplierMasterAdapter
@@ -20,7 +20,7 @@ import com.socialite.solite_pos.view.main.menu.master.bottom.CategoryMasterFragm
 import com.socialite.solite_pos.view.main.menu.master.bottom.PaymentMasterFragment
 import com.socialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragment
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ListMasterActivity : SocialiteActivity() {
@@ -50,7 +50,7 @@ class ListMasterActivity : SocialiteActivity() {
 		_binding = ActivityListMasterBinding.inflate(layoutInflater)
 		setContentView(_binding.root)
 
-		viewModel = getViewModel(this)
+		viewModel = getMainViewModel(this)
 		_binding.rvListMaster.layoutManager = LinearLayoutManager(this)
 
 		code = intent.getIntExtra(REQUEST_CODE, 0)

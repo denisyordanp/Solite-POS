@@ -9,9 +9,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.FragmentVariantOptionBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 class VariantOptionFragment(
 	private val idVariant: Long,
@@ -48,7 +48,7 @@ class VariantOptionFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getMainViewModel(activity!!)
 
 			if (variant != null){
 				setData()

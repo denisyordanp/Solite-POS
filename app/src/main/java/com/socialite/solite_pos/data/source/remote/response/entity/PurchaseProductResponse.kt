@@ -4,9 +4,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 
-data class PurchaseResponse(
-        var suppliers: List<Supplier>,
-        var purchases: List<Purchase>
+data class PurchaseProductResponse(
+        var purchases: List<PurchaseProduct>,
+        var products: DataProductResponse
 ){
-    constructor(): this(emptyList(), emptyList())
+    constructor(): this(emptyList(), DataProductResponse())
 }

@@ -10,8 +10,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.FragmentVariantMasterBinding
 import com.socialite.solite_pos.utils.tools.BottomSheet
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 
 class VariantMasterFragment(private val variant: Variant?) : BottomSheetDialogFragment() {
 
@@ -50,7 +50,7 @@ class VariantMasterFragment(private val variant: Variant?) : BottomSheetDialogFr
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getMainViewModel(activity!!)
 
 			if (variant != null){
 				setData()

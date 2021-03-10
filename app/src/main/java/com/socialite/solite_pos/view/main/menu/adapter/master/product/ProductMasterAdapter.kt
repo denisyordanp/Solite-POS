@@ -8,7 +8,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.databinding.RvProductMasterBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMasterAdapter(

@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.view.main.OpeningActivity
+import com.socialite.solite_pos.view.main.opening.OpeningActivity
 
 class SendNotification {
 	private lateinit var context: Context

@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.main
+package com.socialite.solite_pos.view.main.opening
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,11 +14,11 @@ class OpeningActivity : SocialiteActivity() {
         super.onCreate(savedInstanceState)
         setContentView(ActivityOpeningBinding.inflate(layoutInflater).root)
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-		Handler(Looper.getMainLooper()).postDelayed({toMain()}, 2000)
+		Handler(Looper.getMainLooper()).postDelayed({toLogin()}, 2000)
     }
 
-	private fun toMain(){
+	private fun toLogin(){
 		finish()
-		startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
+		startActivity(Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
 	}
 }

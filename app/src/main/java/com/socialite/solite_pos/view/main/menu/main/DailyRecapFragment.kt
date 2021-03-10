@@ -13,10 +13,10 @@ import com.socialite.solite_pos.databinding.FragmentDailyRecapBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateFormat
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.main.menu.adapter.RecapAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.vo.Status
 
 class DailyRecapFragment : Fragment() {
@@ -24,6 +24,7 @@ class DailyRecapFragment : Fragment() {
     private lateinit var _binding: FragmentDailyRecapBinding
     private lateinit var outcomeRecapAdapter: RecapAdapter
     private lateinit var incomeRecapAdapter: RecapAdapter
+    private lateinit var orderViewModel: OrderViewModel
     private lateinit var viewModel: MainViewModel
 
     companion object{
@@ -49,17 +50,26 @@ class DailyRecapFragment : Fragment() {
             _binding.rvRcIncome.layoutManager = LinearLayoutManager(activity)
             _binding.rvRcIncome.adapter = incomeRecapAdapter
 
-            viewModel = getViewModel(activity!!)
+            orderViewModel = OrderViewModel.getOrderViewModel(activity!!)
+            viewModel = MainViewModel.getMainViewModel(activity!!)
 
             _binding.tvRcDate.text = dateFormat(currentDate, dateWithDayFormat)
 
-            getIncome()
-            getOutCome()
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        getRecap()
+    }
+
+    private fun getRecap(){
+        getIncome()
+        getOutCome()
+    }
+
     private fun getIncome(){
-        viewModel.getOrderList(Order.DONE, currentDate).observe(activity!!){ orders ->
+        orderViewModel.getOrderList(Order.DONE, currentDate).observe(activity!!){ orders ->
             when(orders.status){
                 Status.LOADING -> {}
                 Status.SUCCESS -> {
@@ -67,7 +77,7 @@ class DailyRecapFragment : Fragment() {
                         val incomes: ArrayList<RecapData>  = ArrayList()
                         for (item in orders.data){
                             val orderWithProduct = OrderWithProduct(item)
-                            viewModel.getProductOrder(item.order.orderNo).observe(activity!!){ products ->
+                            orderViewModel.getProductOrder(item.order.orderNo).observe(activity!!){ products ->
                                 when(products.status){
                                     Status.LOADING -> {}
                                     Status.SUCCESS -> {

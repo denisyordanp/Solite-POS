@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.main
+package com.socialite.solite_pos.view.main.opening
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +11,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.socialite.solite_pos.databinding.ActivityMainBinding
 import com.socialite.solite_pos.databinding.MainMenuBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -20,7 +19,9 @@ import com.socialite.solite_pos.view.main.menu.main.*
 import com.socialite.solite_pos.view.main.menu.order.OrderActivity
 import com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 
 class MainActivity : SocialiteActivity() {
 
@@ -28,6 +29,7 @@ class MainActivity : SocialiteActivity() {
 	private lateinit var _menu: MainMenuBinding
 	private lateinit var adapter: ViewPagerAdapter
 	private lateinit var viewModel: MainViewModel
+	private lateinit var orderViewModel: OrderViewModel
 
 	lateinit var printBill: PrintBill
 
@@ -54,7 +56,8 @@ class MainActivity : SocialiteActivity() {
 		_menu = _binding.mainMenu
         setContentView(_binding.root)
 
-		viewModel = getViewModel(this)
+		orderViewModel = getOrderViewModel(this)
+		viewModel = MainViewModel.getMainViewModel(this)
 
 		printBill = PrintBill(this)
 
@@ -114,25 +117,25 @@ class MainActivity : SocialiteActivity() {
 	fun setToNotPay(order: OrderWithProduct?){
 		if (order != null){
 			order.order.order.status = Order.NEED_PAY
-			viewModel.updateOrder(order.order.order) {}
+			orderViewModel.updateOrder(order.order.order) {}
 		}
 	}
 
 	fun setPay(order: OrderWithProduct){
 		order.order.order.status = Order.DONE
 
-		viewModel.updateOrder(order.order.order) {}
+		orderViewModel.updateOrder(order.order.order) {}
 		printBill.doPrint(order)
 	}
 
 	private fun addOrder(order: OrderWithProduct){
-		viewModel.newOrder(order) {}
+		orderViewModel.newOrder(order) {}
 	}
 
 	fun cancelOrder(order: OrderWithProduct?){
 		if (order != null){
 			order.order.order.status = Order.CANCEL
-			viewModel.cancelOrder(order) {}
+			orderViewModel.cancelOrder(order) {}
 		}
 	}
 

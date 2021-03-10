@@ -3,6 +3,7 @@ package com.socialite.solite_pos.data.source.local.room
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.*
 import com.socialite.solite_pos.data.source.local.entity.room.helper.*
 import com.socialite.solite_pos.data.source.local.entity.room.master.*
@@ -85,7 +86,7 @@ interface SoliteDao{
 //	PURCHASE
 
 	@Query("SELECT * FROM ${Purchase.DB_NAME}")
-	fun getPurchases(): LiveData<List<Purchase>>
+	fun getPurchases(): LiveData<List<PurchaseWithSupplier>>
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPurchases(data: List<Purchase>)
@@ -97,7 +98,7 @@ interface SoliteDao{
 	fun updatePurchase(data: Purchase)
 
 	@Query("SELECT * FROM ${PurchaseProduct.DB_NAME} WHERE ${Purchase.NO} = :purchaseNo")
-	fun getPurchasesProduct(purchaseNo: String): List<PurchaseProduct>
+	fun getPurchasesProduct(purchaseNo: String): LiveData<List<PurchaseProductWithProduct>>
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertPurchaseProducts(data: List<PurchaseProduct>)

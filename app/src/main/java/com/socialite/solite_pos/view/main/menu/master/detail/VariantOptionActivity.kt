@@ -7,11 +7,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.ActivityVariantOptionBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.master.variant.VariantOptionMasterAdapter
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class VariantOptionActivity : SocialiteActivity() {
@@ -36,7 +36,7 @@ class VariantOptionActivity : SocialiteActivity() {
 		product = intent.getSerializableExtra(PRODUCT) as Product?
 		variant = intent.getSerializableExtra(VARIANT) as Variant?
 
-		viewModel = getViewModel(this)
+		viewModel = getMainViewModel(this)
 
 		adapter = VariantOptionMasterAdapter(
 				product,

@@ -9,9 +9,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.FragmentCategoryMasterBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 class CategoryMasterFragment(private val category: Category?) : BottomSheetDialogFragment() {
 
@@ -42,7 +42,7 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getMainViewModel(activity!!)
 
 			if (category != null){
 				setData()

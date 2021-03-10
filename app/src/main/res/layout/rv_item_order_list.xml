@@ -37,9 +37,10 @@
 
 			<TextView
 				android:id="@+id/tv_io_name"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:text="Angsio Ceker Ayam"
+				app:layout_constraintEnd_toStartOf="@+id/btn_ol_delete"
 				app:layout_constraintStart_toEndOf="@+id/tv_io_amount"
 				app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,6 +54,7 @@
 
 			<TextView
 				android:id="@+id/tv_io_variant"
+				android:visibility="gone"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Kukus"

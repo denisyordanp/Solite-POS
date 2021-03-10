@@ -346,32 +346,7 @@ class RemoteDataSource {
 							StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
 								result.removeSource(purchases)
 								data.purchases = rPurchases.body ?: emptyList()
-
-								result.addSource(dataProducts){ rDataProducts ->
-									when (rDataProducts.status) {
-										StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-											result.removeSource(dataProducts)
-											data.products = rDataProducts.body ?: DataProductResponse()
-
-											result.addSource(purchaseProducts){ rPurchaseProducts ->
-												when (rPurchaseProducts.status) {
-													StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
-														result.removeSource(purchaseProducts)
-
-														data.purchaseProducts = rPurchaseProducts.body ?: emptyList()
-														result.value = ApiResponse.success(data)
-													}
-													else -> {
-														result.value = ApiResponse.error(null)
-													}
-												}
-											}
-										}
-										else -> {
-											result.value = ApiResponse.error(null)
-										}
-									}
-								}
+								result.value = ApiResponse.success(data)
 
 							}
 							else -> {
@@ -405,6 +380,38 @@ class RemoteDataSource {
 				.addOnFailureListener {
 					result.value = ApiResponse.error(null)
 				}
+		return result
+	}
+
+	val purchaseProductsWithProducts: LiveData<ApiResponse<PurchaseProductResponse>>
+	get() {
+		val result: MediatorLiveData<ApiResponse<PurchaseProductResponse>> = MediatorLiveData()
+		val data = PurchaseProductResponse()
+		result.addSource(purchaseProducts){ rPurchaseProducts ->
+			when (rPurchaseProducts.status) {
+				StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+					result.removeSource(purchaseProducts)
+					data.purchases = rPurchaseProducts.body ?: emptyList()
+
+					result.addSource(dataProducts){ rProducts ->
+						when (rProducts.status) {
+							StatusResponse.SUCCESS, StatusResponse.EMPTY -> {
+								result.removeSource(dataProducts)
+								data.products = rProducts.body ?: DataProductResponse()
+								result.value = ApiResponse.success(data)
+
+							}
+							else -> {
+								result.value = ApiResponse.error(null)
+							}
+						}
+					}
+				}
+				else -> {
+					result.value = ApiResponse.error(null)
+				}
+			}
+		}
 		return result
 	}
 

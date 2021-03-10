@@ -10,7 +10,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import com.socialite.solite_pos.databinding.RvVariantOptionMasterBinding
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class VariantOptionMasterAdapter(

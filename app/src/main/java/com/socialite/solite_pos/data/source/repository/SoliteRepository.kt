@@ -1,6 +1,5 @@
 package com.socialite.solite_pos.data.source.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -12,6 +11,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.*
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.*
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.*
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
@@ -299,14 +299,14 @@ class SoliteRepository private constructor(
 		return BatchWithObject(order, BatchWithData(doc, Order.toHashMap(order)))
 	}
 
-	override val purchases: LiveData<Resource<List<PurchaseWithProduct>>>
+	override val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>
 	get() {
-		return object : NetworkBoundResource<List<PurchaseWithProduct>, PurchaseResponse>(appExecutors){
-			override fun loadFromDB(): LiveData<List<PurchaseWithProduct>> {
-				return localDataSource.getPurchaseData()
+		return object : NetworkBoundResource<List<PurchaseWithSupplier>, PurchaseResponse>(appExecutors){
+			override fun loadFromDB(): LiveData<List<PurchaseWithSupplier>> {
+				return localDataSource.soliteDao.getPurchases()
 			}
 
-			override fun shouldFetch(data: List<PurchaseWithProduct>): Boolean {
+			override fun shouldFetch(data: List<PurchaseWithSupplier>): Boolean {
 				return data.isNullOrEmpty()
 			}
 
@@ -318,8 +318,29 @@ class SoliteRepository private constructor(
 				if (data != null){
 					localDataSource.soliteDao.insertSuppliers(data.suppliers)
 					localDataSource.soliteDao.insertPurchases(data.purchases)
+				}
+			}
+		}.asLiveData()
+	}
+
+	override fun getPurchaseProducts(purchaseNo: String): LiveData<Resource<List<PurchaseProductWithProduct>>> {
+		return object : NetworkBoundResource<List<PurchaseProductWithProduct>, PurchaseProductResponse>(appExecutors){
+			override fun loadFromDB(): LiveData<List<PurchaseProductWithProduct>> {
+				return localDataSource.soliteDao.getPurchasesProduct(purchaseNo)
+			}
+
+			override fun shouldFetch(data: List<PurchaseProductWithProduct>): Boolean {
+				return data.isNullOrEmpty()
+			}
+
+			override fun createCall(): LiveData<ApiResponse<PurchaseProductResponse>> {
+				return remoteDataSource.purchaseProductsWithProducts
+			}
+
+			override fun saveCallResult(data: PurchaseProductResponse?) {
+				if (data != null){
 					insertDataProduct(data.products)
-					localDataSource.soliteDao.insertPurchaseProducts(data.purchaseProducts)
+					localDataSource.soliteDao.insertPurchaseProducts(data.purchases)
 				}
 			}
 		}.asLiveData()

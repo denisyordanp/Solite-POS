@@ -5,10 +5,10 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.ActivityPaymentsBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.PaymentsAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class SelectPaymentsActivity : SocialiteActivity() {
@@ -27,7 +27,7 @@ class SelectPaymentsActivity : SocialiteActivity() {
 		_binding = ActivityPaymentsBinding.inflate(layoutInflater)
 		setContentView(_binding.root)
 
-		viewModel = getViewModel(this)
+		viewModel = getMainViewModel(this)
 
 		adapter = PaymentsAdapter{ setResult(it) }
 		_binding.rvCustomerName.layoutManager = LinearLayoutManager(this)

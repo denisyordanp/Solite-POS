@@ -9,7 +9,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.*
@@ -17,8 +16,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.FragmentDetailOrderProductBinding
 import com.socialite.solite_pos.utils.config.CustomDialogFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class DetailOrderProductFragment(
@@ -60,7 +59,7 @@ class DetailOrderProductFragment(
 			radioColor = ResourcesCompat.getColor(activity!!.resources, R.color.primary, null)
 			textError = ResourcesCompat.getColor(activity!!.resources, R.color.red, null)
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getMainViewModel(activity!!)
 
 			setData()
 
@@ -150,39 +149,39 @@ class DetailOrderProductFragment(
 	}
 
 	private fun addVariantView(variants: VariantWithOptions){
-		if (activity != null && variants.variant != null){
-			_binding.contVariant.addView(addTextView(variants.variant!!.name, activity!!))
-			val rg = RadioGroup(activity)
-			if (variants.options.size > 2)
-				rg.orientation = RadioGroup.VERTICAL
-			else
-				rg.orientation = RadioGroup.HORIZONTAL
+		if (activity == null || variants.variant == null) return
 
-			val optRd: ArrayList<OptionWithRadioButton> = ArrayList()
-			for (item in variants.options){
-				val rb = RadioButton(activity)
-				rb.text = item.name
-				rb.id = View.generateViewId()
-				rb.buttonTintList = ColorStateList.valueOf(radioColor)
-				if (variants.options.size == 1){
-					if (item.isActive){
-						rb.isChecked = true
-					}
+		_binding.contVariant.addView(addTextView(variants.variant!!.name, activity!!))
+		val rg = RadioGroup(activity)
+		if (variants.options.size > 2)
+			rg.orientation = RadioGroup.VERTICAL
+		else
+			rg.orientation = RadioGroup.HORIZONTAL
+
+		val optRd: ArrayList<OptionWithRadioButton> = ArrayList()
+		for (item in variants.options){
+			val rb = RadioButton(activity)
+			rb.text = item.name
+			rb.id = View.generateViewId()
+			rb.buttonTintList = ColorStateList.valueOf(radioColor)
+			if (variants.options.size == 1){
+				if (item.isActive){
+					rb.isChecked = true
 				}
-				rg.addView(rb)
-				if (!item.isActive){
-					rb.isEnabled = false
-				}
-				optRd.add(OptionWithRadioButton(item, rb))
 			}
-			val tvError = addTextView("Pilih salah satu", activity!!)
-			tvError.visibility = View.GONE
-			tvError.setTextColor(textError)
-
-			arrayRg.add(VariantView(variants.variant!!, tvError, rg, optRd))
-			_binding.contVariant.addView(rg)
-			_binding.contVariant.addView(tvError)
+			rg.addView(rb)
+			if (!item.isActive){
+				rb.isEnabled = false
+			}
+			optRd.add(OptionWithRadioButton(item, rb))
 		}
+		val tvError = addTextView("Pilih salah satu", activity!!)
+		tvError.visibility = View.GONE
+		tvError.setTextColor(textError)
+
+		arrayRg.add(VariantView(variants.variant!!, tvError, rg, optRd))
+		_binding.contVariant.addView(rg)
+		_binding.contVariant.addView(tvError)
 	}
 
 	private fun addTextView(text: String, activity: FragmentActivity): TextView{
@@ -198,18 +197,22 @@ class DetailOrderProductFragment(
 	private fun setResult(){
 		var isOkay = type == PURCHASE
 		val arrayVariants: ArrayList<VariantOption> = ArrayList()
-		for (item in arrayRg){
-			if (item.radioGroup.checkedRadioButtonId == -1){
-				isOkay = false
-				item.textError.visibility = View.VISIBLE
-			}else{
-				isOkay = true
-				for (item2 in item.options){
-					if (item2.radioButton.isChecked){
-						arrayVariants.add(item2.variantOption)
+		if (arrayRg.isNotEmpty()){
+			for (item in arrayRg){
+				if (item.radioGroup.checkedRadioButtonId == -1){
+					isOkay = false
+					item.textError.visibility = View.VISIBLE
+				}else{
+					isOkay = true
+					for (item2 in item.options){
+						if (item2.radioButton.isChecked){
+							arrayVariants.add(item2.variantOption)
+						}
 					}
 				}
 			}
+		}else{
+			isOkay = true
 		}
 
 		if (isOkay){

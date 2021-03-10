@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentOnProcessBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
 import com.socialite.solite_pos.view.main.menu.adapter.OrderListAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 import com.socialite.solite_pos.vo.Status
 
 class OnProcessFragment : Fragment() {
 
 	private lateinit var _binding: FragmentOnProcessBinding
 	private lateinit var adapter: OrderListAdapter
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: OrderViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,14 +32,18 @@ class OnProcessFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getOrderViewModel(activity!!)
 
 			adapter = OrderListAdapter(activity!!, viewModel)
 			_binding.rvOp.layoutManager = GridLayoutManager(activity, 4)
 			_binding.rvOp.adapter = adapter
 
-			getData()
 		}
+	}
+
+	override fun onStart() {
+		super.onStart()
+		getData()
 	}
 
 	private fun getData(){

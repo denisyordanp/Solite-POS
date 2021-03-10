@@ -7,14 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.FragmentMasterProductMixVariantBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.view.main.menu.adapter.master.product.ProductMixVariantAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMasterMixVariantFragment(
@@ -40,7 +38,7 @@ class ProductMasterMixVariantFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getMainViewModel(activity!!)
 			setAdapter()
 
 			_binding.rvProductMixVariant.layoutManager = GridLayoutManager(activity, 5)

@@ -13,15 +13,15 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.ActivityOrderBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.MainActivity
+import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class OrderActivity : SocialiteActivity() {
@@ -44,7 +44,7 @@ class OrderActivity : SocialiteActivity() {
 		_order = _binding.newOrderList
 		setContentView(_binding.root)
 
-		viewModel = getViewModel(this)
+		viewModel = getMainViewModel(this)
 
 		vpAdapter = ViewPagerAdapter(this)
 		_binding.vpNewOrder.adapter = vpAdapter

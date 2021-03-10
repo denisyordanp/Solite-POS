@@ -7,8 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.*
 import com.socialite.solite_pos.utils.config.FindProductOrderIndex
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
@@ -213,23 +215,30 @@ class ItemOrderListAdapter(private val type: Int) : RecyclerView.Adapter<ItemOrd
 
 			val no = "$adapterPosition."
 			val amount = "${detail.amount}x"
-			val variants = StringBuilder()
-			for (variant in detail.variants){
-				if (variants.isNotEmpty()){
-					variants.append(", ")
-				}
-				variants.append(variant.name)
-			}
 
 			binding.tvIoNo.text = no
 			binding.tvIoAmount.text = amount
 			binding.tvIoName.text = detail.product?.name
-			binding.tvIoVariant.text = variants
 			binding.tvIoPrice.text = toRupiah(detail.product?.sellPrice)
 			binding.tvIoTotal.text = toRupiah(getTotal(detail))
 
+			setVariants(detail.variants)
 			setMix(detail)
 			setBtnDelete(detail)
+		}
+
+		private fun setVariants(variants: ArrayList<VariantOption>){
+			if (variants.isNotEmpty()){
+				val variantText = StringBuilder()
+				for (variant in variants) {
+					if (variants.isNotEmpty()){
+						variantText.append(", ")
+					}
+					variantText.append(variant.name)
+				}
+				binding.tvIoVariant.visibility = View.VISIBLE
+				binding.tvIoVariant.text = variantText
+			}
 		}
 
 		private fun getTotal(detail: ProductOrderDetail): Long{

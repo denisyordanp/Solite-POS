@@ -2,7 +2,6 @@ package com.socialite.solite_pos.view.main.menu.adapter
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +18,12 @@ import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.tools.DoneCook
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOrderFragment
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.vo.Status
 
 class OrderListAdapter(
 		private var activity: FragmentActivity,
-		private var viewModel: MainViewModel
+		private var viewModel: OrderViewModel
 		) : RecyclerView.Adapter<OrderListAdapter.ListViewHolder>() {
 
 	var cookCallback: ((Order) -> Unit)? = null
@@ -80,15 +79,12 @@ class OrderListAdapter(
 				when(it.status){
 					Status.LOADING -> {}
 					Status.SUCCESS -> {
-						Log.w("TESTINGDATA", "product ${it.data}")
 						if (!it.data.isNullOrEmpty()){
 							orderWithProduct.products = it.data
 						}
 						setItems(orderWithProduct)
 					}
-					Status.ERROR -> {
-						Log.w("TESTINGDATA", "product error")
-					}
+					Status.ERROR -> { }
 				}
 			}
 		}

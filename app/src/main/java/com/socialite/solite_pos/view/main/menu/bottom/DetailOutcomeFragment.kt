@@ -12,8 +12,8 @@ import com.socialite.solite_pos.databinding.FragmentDetailOutcomeBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 
 class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFragment() {
 
@@ -55,7 +55,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (detailActivity != null){
-            viewModel = getViewModel(detailActivity!!)
+            viewModel = getMainViewModel(detailActivity!!)
 
             if (outcome != null){
                 setData()

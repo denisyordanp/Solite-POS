@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 class ViewModelFactory private constructor(private val repository: SoliteRepository) : NewInstanceFactory() {
 	companion object {
@@ -30,6 +31,8 @@ class ViewModelFactory private constructor(private val repository: SoliteReposit
 	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
 			return MainViewModel(repository) as T
+		} else if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
+			return OrderViewModel(repository) as T
 		}
 		throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
 	}

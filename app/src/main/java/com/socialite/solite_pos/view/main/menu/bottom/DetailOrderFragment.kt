@@ -1,7 +1,6 @@
 package com.socialite.solite_pos.view.main.menu.bottom
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +11,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDetailOrderBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.view.main.MainActivity
+import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
 
@@ -52,7 +51,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 		super.onViewCreated(view, savedInstanceState)
 		if (mainActivity != null){
 
-			viewModel = getViewModel(mainActivity!!)
+			viewModel = getMainViewModel(mainActivity!!)
 
 			adapter = ItemOrderListAdapter(ItemOrderListAdapter.DETAIL)
 			_binding.rvDetailOrder.layoutManager = LinearLayoutManager(mainActivity)

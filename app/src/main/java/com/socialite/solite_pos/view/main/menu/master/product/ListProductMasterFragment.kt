@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.FragmentListProductMasterBinding
 import com.socialite.solite_pos.view.main.menu.adapter.master.product.ProductMasterAdapter
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ListProductMasterFragment(private var category: Category) : Fragment() {
@@ -29,7 +29,7 @@ class ListProductMasterFragment(private var category: Category) : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getMainViewModel(activity!!)
 
 			adapter = ProductMasterAdapter(activity!!, viewModel)
 			_binding.rvProductMaster.layoutManager = LinearLayoutManager(activity)

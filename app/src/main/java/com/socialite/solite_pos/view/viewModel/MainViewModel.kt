@@ -1,65 +1,38 @@
-package com.socialite.solite_pos.view.viewmodel
+package com.socialite.solite_pos.view.viewModel
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.*
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.*
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
-import com.socialite.solite_pos.viewmodelFactory.ViewModelFactory
 import com.socialite.solite_pos.vo.Resource
 
 class MainViewModel(private val repository: SoliteRepository) : ViewModel() {
 
-	companion object{
-		fun getViewModel(context: FragmentActivity): MainViewModel{
-			return ViewModelProvider(context, ViewModelFactory.getInstance(context.applicationContext)).get(MainViewModel::class.java)
+	companion object : ViewModelFromFactory<MainViewModel>(){
+		fun getMainViewModel(activity: FragmentActivity): MainViewModel {
+			return buildViewModel(activity, MainViewModel::class.java)
 		}
 	}
 
-	fun getOrderList(status: Int, date: String): LiveData<Resource<List<OrderData>>> {
-		return repository.getOrderList(status, date)
-	}
-
-	fun getProductOrder(orderNo: String): LiveData<Resource<List<ProductOrderDetail>>>{
-		return repository.getProductOrder(orderNo)
-	}
-
-	fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit) {
-		return repository.insertPaymentOrder(payment, callback)
-	}
-
-	fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit){
-		repository.newOrder(order, callback)
-	}
-
-	fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
-		repository.updateOrder(order, callback)
-	}
-
-	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-		repository.cancelOrder(order, callback)
-	}
-
-	val purchases: LiveData<Resource<List<PurchaseWithProduct>>>
+	val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>
 	get() = repository.purchases
+
+	fun getPurchaseProducts(purchaseNo: String): LiveData<Resource<List<PurchaseProductWithProduct>>>{
+		return repository.getPurchaseProducts(purchaseNo)
+	}
 
 	fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit){
 		repository.newPurchase(data, callback)
-	}
-
-	fun getProductList(idCategory: Long): LiveData<Resource<List<Products>>>{
-		return repository.getProductList(idCategory)
 	}
 
 	fun getProducts(idCategory: Long): LiveData<Resource<List<ProductWithCategory>>>{

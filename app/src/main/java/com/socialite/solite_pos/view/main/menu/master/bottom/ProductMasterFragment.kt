@@ -11,16 +11,14 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.data.source.local.entity.helper.Products
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.FragmentProductMasterBinding
-import com.socialite.solite_pos.view.viewmodel.MainViewModel.Companion.getViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
-import com.socialite.solite_pos.view.viewmodel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMasterFragment(private val product: ProductWithCategory?) : BottomSheetDialogFragment() {
@@ -68,7 +66,7 @@ class ProductMasterFragment(private val product: ProductWithCategory?) : BottomS
 			red = ResourcesCompat.getColor(activity!!.resources, android.R.color.holo_red_light, null)
 			white = ResourcesCompat.getColor(activity!!.resources, R.color.white, null)
 
-			viewModel = getViewModel(activity!!)
+			viewModel = getMainViewModel(activity!!)
 			if (product != null){
 				setData()
 			}else{
