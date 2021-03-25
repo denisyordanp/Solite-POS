@@ -98,15 +98,25 @@
 				android:background="@color/white"
 				android:orientation="vertical">
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Perangkat printer bluetooth"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Perangkat printer bluetooth" />
 
-			</LinearLayout>
+            </LinearLayout>
 
-		</com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
 
-	</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_mt_logout"
+            style="@style/TextButton"
+            android:padding="@dimen/baseMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/MMargin"
+            app:backgroundTint="@color/primary"
+            android:text="Logout" />
+
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

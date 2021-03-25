@@ -8,8 +8,8 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.ActivitySelectMixVariantOrderBinding
+import com.socialite.solite_pos.databinding.ItemAmountLayoutBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
@@ -17,19 +17,24 @@ import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderMixListAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class SelectMixVariantOrderActivity : SocialiteActivity() {
 
     private lateinit var _binding: ActivitySelectMixVariantOrderBinding
     private lateinit var adapter: ItemOrderMixListAdapter
+    private lateinit var _amount: ItemAmountLayoutBinding
     private lateinit var _order: OrderListBinding
     private lateinit var vpAdapter: ViewPagerAdapter
     private lateinit var viewModel: MainViewModel
 
+    private var productOrderDetail: ProductOrderDetail? = null
     private var product: Product? = null
+    private var amount: Int = 1
 
     companion object{
+        const val PRODUCT_ORDER_DETAIL = "product_order_detail"
         const val PRODUCT = "product"
         const val RC_MIX = 12
     }
@@ -38,27 +43,49 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivitySelectMixVariantOrderBinding.inflate(layoutInflater)
         _order = _binding.mixProductList
+        _amount = _order.contItemAmount
         setContentView(_binding.root)
-
-        product = intent.getSerializableExtra(PRODUCT) as Product?
 
         viewModel = getMainViewModel(this)
 
-        adapter = ItemOrderMixListAdapter()
-        _order.rvOrderList.layoutManager = LinearLayoutManager(this)
-        _order.rvOrderList.adapter = adapter
-        adapter.btnCallback = { setButton(it) }
-
-        vpAdapter = ViewPagerAdapter(this)
-        _binding.vpMixOrder.adapter = vpAdapter
-
+        setAdapter()
+        checkIntent()
         setPager()
 
         _binding.btnMixBack.setOnClickListener { onBackPressed() }
+        _amount.btnPlPlus.setOnClickListener { addAmount() }
+        _amount.btnPlMin.setOnClickListener { minAmount() }
     }
 
-    private fun setPager(){
-        if (product != null){
+    private fun setAdapter() {
+        adapter = ItemOrderMixListAdapter()
+        _order.rvOrderList.layoutManager = LinearLayoutManager(this)
+        _order.rvOrderList.adapter = adapter
+        _amount.tvPlAmount.text = amount.toString()
+        adapter.btnCallback = { setButton(it) }
+    }
+
+    private fun checkIntent() {
+        productOrderDetail = intent.getSerializableExtra(PRODUCT_ORDER_DETAIL) as ProductOrderDetail?
+        if (productOrderDetail != null) {
+            setItems(productOrderDetail!!)
+            return
+        }
+
+        product = intent.getSerializableExtra(PRODUCT) as Product?
+    }
+
+    private fun setItems(detail: ProductOrderDetail) {
+        product = detail.product
+        adapter.setItems(detail.mixProducts)
+        _amount.tvPlAmount.text = detail.amount.toString()
+    }
+
+    private fun setPager() {
+        vpAdapter = ViewPagerAdapter(this)
+        _binding.vpMixOrder.adapter = vpAdapter
+
+        if (product != null) {
             _order.tvOlName.text = product!!.name
             _order.tvOlNo.text = product!!.desc
             _order.btnOlCreate.text = "Simpan pesanan"
@@ -107,8 +134,9 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
 
     private fun validate(): Boolean {
         if (product != null){
+            val check = checkStock()
             val bottom = MessageBottom(supportFragmentManager)
-            bottom.setNegativeListener("Oke") { it?.dismiss() }
+            bottom.setNegativeListener(getString(android.R.string.ok)) { it?.dismiss() }
             return when {
                 adapter.totalItem < product!!.portion -> {
                     bottom.setMessage("Jumlah varian kurang dari porsi")
@@ -120,6 +148,11 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
                     bottom.show()
                     false
                 }
+                check != null -> {
+                    bottom.setMessage("Stok untuk produk ${check["name"]} hanya sisa ${check["stock"]}.")
+                    bottom.show()
+                    false
+                }
                 else -> {
                     true
                 }
@@ -128,11 +161,35 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
         return false
     }
 
-    private fun setResult(){
+    private fun checkStock(): HashMap<String, String>? {
+        for (item in adapter.sortedItems) {
+            if (item.product.stock < (item.amount * amount)) {
+                val map: HashMap<String, String> = HashMap()
+                map["name"] = item.product.name
+                map["stock"] = item.product.stock.toString()
+                return map
+            }
+        }
+        return null
+    }
+
+    private fun setResult() {
         val intent = Intent()
-        val data = ProductOrderDetail.createMix(product, adapter.sortedItems, 1)
+        val data = ProductOrderDetail.createMix(product, adapter.sortedItems, amount)
         intent.putExtra(PRODUCT, data)
         setResult(RESULT_OK, intent)
         finish()
+    }
+
+    private fun addAmount() {
+        amount += 1
+        _amount.tvPlAmount.text = amount.toString()
+    }
+
+    private fun minAmount() {
+        if (amount > 1) {
+            amount -= 1
+            _amount.tvPlAmount.text = amount.toString()
+        }
     }
 }

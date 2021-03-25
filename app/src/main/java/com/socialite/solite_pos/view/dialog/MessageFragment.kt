@@ -51,23 +51,23 @@ class MessageFragment : BottomSheetDialogFragment() {
 			}
 		}
 		if (!negativeTxt.isNullOrEmpty()){
-			_binding.btnMsNegative.text = negativeTxt
-			_binding.btnMsNegative.visibility = View.VISIBLE
-			_binding.btnMsNegative.setOnClickListener { negativeCallback?.invoke(dialog) }
-		}
-	}
+            _binding.btnMsNegative.text = negativeTxt
+            _binding.btnMsNegative.visibility = View.VISIBLE
+            _binding.btnMsNegative.setOnClickListener { negativeCallback?.invoke(dialog) }
+        }
+    }
 
-	fun setMessage(message: String){
-		this.message = message
-	}
+    fun setMessage(message: String) {
+        this.message = message
+    }
 
-	fun setOnPositiveButton(text: String, callback: (() -> Unit)){
-		positiveTxt = text
-		positiveCallback = callback
-	}
+    fun setOnPositiveButton(text: String, callback: (() -> Unit)?) {
+        positiveTxt = text
+        positiveCallback = callback
+    }
 
-	fun setOnNegativeButton(text: String, callback: ((Dialog?) -> Unit)){
-		negativeTxt = text
-		negativeCallback = callback
-	}
+    fun setOnNegativeButton(text: String, callback: ((Dialog?) -> Unit)?) {
+        negativeTxt = text
+        negativeCallback = callback
+    }
 }

@@ -14,47 +14,55 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 import com.socialite.solite_pos.vo.Status
 
-class NotPayFragment : Fragment() {
+class NotPayFragment(private var queryDate: String) : Fragment() {
 
-	private lateinit var _binding: FragmentNotPayBinding
-	private lateinit var adapter: OrderListAdapter
-	private lateinit var viewModel: OrderViewModel
+    private lateinit var _binding: FragmentNotPayBinding
+    private lateinit var adapter: OrderListAdapter
+    private lateinit var viewModel: OrderViewModel
+
+    constructor() : this(currentDate)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?,
     ): View {
-		_binding = FragmentNotPayBinding.inflate(inflater, container, false)
+        _binding = FragmentNotPayBinding.inflate(inflater, container, false)
         return _binding.root
     }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (activity != null) {
 
-			viewModel = getOrderViewModel(activity!!)
+            viewModel = getOrderViewModel(activity!!)
 
-			adapter = OrderListAdapter(activity!!, viewModel)
-			_binding.rvNp.layoutManager = GridLayoutManager(activity, 4)
-			_binding.rvNp.adapter = adapter
+            setDate(queryDate)
+            setUpAdapter()
+        }
+    }
 
-		}
-	}
+    private fun setUpAdapter() {
+        adapter = OrderListAdapter(activity!!, viewModel)
+        _binding.rvNp.layoutManager = GridLayoutManager(activity, 4)
+        _binding.rvNp.adapter = adapter
+    }
 
-	override fun onStart() {
-		super.onStart()
-		getData()
-	}
+    fun setDate(newDate: String) {
+        queryDate = newDate
+        getData()
+    }
 
-	private fun getData(){
-		viewModel.getOrderList(Order.NEED_PAY, currentDate).observe(activity!!){
-			when(it.status){
-				Status.LOADING -> {}
-				Status.SUCCESS -> {
-					adapter.items = ArrayList(it.data)
-				}
-				Status.ERROR -> {}
-			}
-		}
-	}
+    private fun getData() {
+        viewModel.getOrderList(Order.NEED_PAY, queryDate).observe(activity!!) {
+            when (it.status) {
+                Status.LOADING -> {
+                }
+                Status.SUCCESS -> {
+                    adapter.items = ArrayList(it.data)
+                }
+                Status.ERROR -> {
+                }
+            }
+        }
+    }
 }

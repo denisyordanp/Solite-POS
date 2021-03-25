@@ -11,32 +11,37 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.data.source.local.entity.helper.*
-import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.source.local.entity.helper.OptionWithRadioButton
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.source.local.entity.helper.VariantView
+import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
+import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.FragmentDetailOrderProductBinding
+import com.socialite.solite_pos.databinding.ItemAmountLayoutBinding
 import com.socialite.solite_pos.utils.config.CustomDialogFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class DetailOrderProductFragment(
-		private val type: Int,
-		private val product: ProductWithCategory,
-		private var callback: ((ProductOrderDetail) -> Unit)?
-		) : CustomDialogFragment() {
+        private val type: Int,
+        private val product: Product,
+        private var callback: ((ProductOrderDetail) -> Unit)?,
+) : CustomDialogFragment() {
 
-	private lateinit var _binding: FragmentDetailOrderProductBinding
-	private lateinit var viewModel: MainViewModel
+    private lateinit var _binding: FragmentDetailOrderProductBinding
+    private lateinit var _amount: ItemAmountLayoutBinding
+    private lateinit var viewModel: MainViewModel
 
-	companion object{
-		const val MIX: Int = 0
-		const val ORDER: Int = 1
-		const val PURCHASE: Int = 2
-	}
+    companion object {
+        const val MIX: Int = 0
+        const val ORDER: Int = 1
+        const val PURCHASE: Int = 2
+    }
 
-	private var amount: Int = 0
-	private var maxAmount: Long = 0
+    private var amount: Int = 0
+    private var maxAmount: Long = 0
 	private var radioColor: Int = 0
 	private var textError: Int = 0
 
@@ -48,9 +53,10 @@ class DetailOrderProductFragment(
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View {
-		_binding = FragmentDetailOrderProductBinding.inflate(inflater, container, false)
-		return _binding.root
-	}
+        _binding = FragmentDetailOrderProductBinding.inflate(inflater, container, false)
+        _amount = _binding.contPlPlusMinus
+        return _binding.root
+    }
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -63,47 +69,47 @@ class DetailOrderProductFragment(
 
 			setData()
 
-			_binding.btnCmCancel.setOnClickListener { dialog?.dismiss() }
-			_binding.btnCmSave.setOnClickListener {
-				if (type == PURCHASE){
-					if (validate()){
-						setResult()
-					}
-				}else{
-					setResult()
-				}
-			}
-			_binding.btnPlPlus.setOnClickListener { addAmount() }
-			_binding.btnPlMin.setOnClickListener { minAmount() }
-		}
+            _binding.btnCmCancel.setOnClickListener { dialog?.dismiss() }
+            _binding.btnCmSave.setOnClickListener {
+                if (type == PURCHASE) {
+                    if (validate()) {
+                        setResult()
+                    }
+                } else {
+                    setResult()
+                }
+            }
+            _amount.btnPlPlus.setOnClickListener { addAmount() }
+            _amount.btnPlMin.setOnClickListener { minAmount() }
+        }
 	}
 
-	private fun setData(){
-		_binding.tvDopName.text = product.product.name
+	private fun setData() {
+        _binding.tvDopName.text = product.name
 
-		when(type){
-			ORDER -> {
-				setVariants()
-				_binding.tvPlStock.visibility = View.VISIBLE
+        when (type) {
+            ORDER -> {
+                setVariants()
+                _binding.tvPlStock.visibility = View.VISIBLE
 
-				maxAmount = product.product.stock / 4
-				_binding.tvPlStock.text = "Sisa : $maxAmount Porsi"
+                maxAmount = product.stock / 4
+                _binding.tvPlStock.text = "Sisa : $maxAmount Porsi"
 
-			}
-			PURCHASE -> {
-				_binding.contPlPlusMinus.visibility = View.GONE
-				_binding.contPlValue.visibility = View.VISIBLE
-				_binding.tvPlStock.visibility = View.GONE
-			}
-			MIX -> {
-				setVariants()
-				_binding.contPlPlusMinus.visibility = View.VISIBLE
-				_binding.contPlValue.visibility = View.GONE
-				_binding.tvPlStock.visibility = View.VISIBLE
+            }
+            PURCHASE -> {
+                _amount.root.visibility = View.GONE
+                _binding.contPlValue.visibility = View.VISIBLE
+                _binding.tvPlStock.visibility = View.GONE
+            }
+            MIX -> {
+                setVariants()
+                _amount.root.visibility = View.VISIBLE
+                _binding.contPlValue.visibility = View.GONE
+                _binding.tvPlStock.visibility = View.VISIBLE
 
-				maxAmount = product.product.stock
-				_binding.tvPlStock.text = "Sisa : $maxAmount Pcs"
-			}
+                maxAmount = product.stock
+                _binding.tvPlStock.text = "Sisa : $maxAmount Pcs"
+            }
 		}
 	}
 
@@ -117,32 +123,34 @@ class DetailOrderProductFragment(
 	}
 
 	private fun addAmount(){
-		if (amount < maxAmount){
-			amount += 1
-			_binding.tvPlAmount.text = amount.toString()
-		}
+		if (amount < maxAmount) {
+            amount += 1
+            _amount.tvPlAmount.text = amount.toString()
+        }
 	}
 
 	private fun minAmount(){
-		if (amount > 0){
-			amount -= 1
-			_binding.tvPlAmount.text = amount.toString()
-		}
+		if (amount > 0) {
+            amount -= 1
+            _amount.tvPlAmount.text = amount.toString()
+        }
 	}
 
 	private fun setVariants(){
-		if (activity != null){
-			viewModel.getProductVariantOptions(product.product.id).observe(activity!!){
-				when(it.status){
-					Status.LOADING -> {}
-					Status.SUCCESS -> {
-						if (!it.data.isNullOrEmpty()) {
-							for (item in it.data){
-								addVariantView(item)
-							}
-						}
-					}
-					Status.ERROR -> {}
+		if (activity != null) {
+            viewModel.getProductVariantOptions(product.id).observe(activity!!) {
+                when (it.status) {
+                    Status.LOADING -> {
+                    }
+                    Status.SUCCESS -> {
+                        if (!it.data.isNullOrEmpty()) {
+                            for (item in it.data) {
+                                addVariantView(item)
+                            }
+                        }
+                    }
+                    Status.ERROR -> {
+                    }
 				}
 			}
 		}
@@ -216,11 +224,11 @@ class DetailOrderProductFragment(
 		}
 
 		if (isOkay){
-			val detail = if (type == PURCHASE){
-				ProductOrderDetail.createProduct(product.product, arrayVariants, values.toInt())
-			}else{
-				ProductOrderDetail.createProduct(product.product, arrayVariants, amount)
-			}
+			val detail = if (type == PURCHASE) {
+                ProductOrderDetail.createProduct(product, arrayVariants, values.toInt())
+            }else {
+                ProductOrderDetail.createProduct(product, arrayVariants, amount)
+            }
 			callback?.invoke(detail)
 			dialog?.dismiss()
 		}

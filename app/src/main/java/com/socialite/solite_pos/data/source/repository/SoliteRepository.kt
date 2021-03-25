@@ -1185,4 +1185,25 @@ class SoliteRepository private constructor(
 			}
 		}
 	}
+
+	override fun getUsers(userId: String): LiveData<Resource<User?>> {
+		return object : NetworkBoundResource<User?, List<User>>(appExecutors) {
+			override fun loadFromDB(): LiveData<User?> {
+				return localDataSource.soliteDao.getUser(userId)
+			}
+
+			override fun shouldFetch(data: User?): Boolean {
+				return data == null
+			}
+
+			override fun createCall(): LiveData<ApiResponse<List<User>>> {
+				return remoteDataSource.users
+			}
+
+			override fun saveCallResult(data: List<User>?) {
+				if (!data.isNullOrEmpty()) localDataSource.soliteDao.insertUsers(data)
+			}
+
+		}.asLiveData()
+	}
 }

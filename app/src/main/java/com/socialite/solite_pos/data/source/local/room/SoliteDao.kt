@@ -294,14 +294,20 @@ interface SoliteDao{
 //	OUTCOME
 
 	@Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) = date(:date)")
-	fun getOutcome(date: String): LiveData<List<Outcome>>
+    fun getOutcome(date: String): LiveData<List<Outcome>>
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertOutcomes(data: List<Outcome>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertOutcomes(data: List<Outcome>)
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertOutcome(data: Outcome): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertOutcome(data: Outcome): Long
 
-	@Update
-	fun updateOutcome(data: Outcome)
+    @Update
+    fun updateOutcome(data: Outcome)
+
+    @Query("SELECT * FROM ${User.DB_NAME} WHERE ${User.ID} = :userId")
+    fun getUser(userId: String): LiveData<User?>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertUsers(data: List<User>)
 }

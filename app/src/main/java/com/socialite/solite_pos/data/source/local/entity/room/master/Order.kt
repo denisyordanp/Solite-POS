@@ -8,11 +8,12 @@ import androidx.room.Index
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateFormat
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFormat
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
-import com.socialite.solite_pos.utils.config.SettingPref
+import com.socialite.solite_pos.utils.preference.OrderPref
+import com.socialite.solite_pos.utils.preference.SettingPref
 import com.socialite.solite_pos.utils.tools.RemoteUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -70,29 +71,29 @@ data class Order(
 		const val CANCEL = 2
 		const val DONE = 3
 
-		fun getFilter(status: Int): SimpleSQLiteQuery {
-			val query = StringBuilder().append("SELECT * FROM ")
-			query.append(DB_NAME)
-			query.append(" WHERE ")
-			query.append(STATUS)
-			query.append(" = ").append(status)
-			return SimpleSQLiteQuery(query.toString())
-		}
+        fun getFilter(status: Int): SimpleSQLiteQuery {
+            val query = StringBuilder().append("SELECT * FROM ")
+            query.append(DB_NAME)
+            query.append(" WHERE ")
+            query.append(STATUS)
+            query.append(" = ").append(status)
+            return SimpleSQLiteQuery(query.toString())
+        }
 
-		private var setting: SettingPref? = null
+        private var orderPref: OrderPref? = null
 
-		fun orderNo(context: Context): String{
-			setting = SettingPref(context)
-			return id
-		}
+        fun orderNo(context: Context): String {
+            orderPref = OrderPref(context)
+            return id
+        }
 
-		private val id: String
-			get() {
-				if (date != savedDate){
-					saveDate()
-				}
-				return "$savedDate${setNumber(setting!!.orderCount)}"
-			}
+        private val id: String
+            get() {
+                if (date != savedDate) {
+                    saveDate()
+                }
+                return "$savedDate${setNumber(orderPref!!.orderCount)}"
+            }
 
 		private fun setNumber(i: Int): String{
 			var str = i.toString()
@@ -111,25 +112,25 @@ data class Order(
 
 		private val savedDate: String
 			get() {
-				val date = setting!!.orderDate
-				return date ?: ""
-			}
+                val date = orderPref!!.orderDate
+                return date ?: ""
+            }
 
-		private fun saveDate(){
-			setting!!.orderDate = date
-			reset()
-		}
+		private fun saveDate() {
+            orderPref!!.orderDate = date
+            reset()
+        }
 
-		fun add(context: Context){
-			if (setting == null){
-				setting = SettingPref(context)
-			}
-			setting!!.orderCount = setting!!.orderCount+1
-		}
+		fun add(context: Context) {
+            if (orderPref == null) {
+                orderPref = OrderPref(context)
+            }
+            orderPref!!.orderCount = orderPref!!.orderCount + 1
+        }
 
-		private fun reset(){
-			setting!!.orderCount = 1
-		}
+		private fun reset() {
+            orderPref!!.orderCount = 1
+        }
 
 		override fun toHashMap(data: Order): HashMap<String, Any?> {
 			return hashMapOf(
@@ -173,8 +174,8 @@ data class Order(
 
 	val timeString: String
 		get() {
-			return dateFormat(orderTime, dateWithTimeFormat)
-		}
+            return convertDateFromDb(orderTime, dateWithTimeFormat)
+        }
 
 	fun getFinishCook(context: Context): Calendar{
 		return if (cookTime != null){

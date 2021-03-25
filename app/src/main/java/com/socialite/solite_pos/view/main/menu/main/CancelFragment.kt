@@ -1,7 +1,6 @@
 package com.socialite.solite_pos.view.main.menu.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,44 +14,54 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 import com.socialite.solite_pos.vo.Status
 
-class CancelFragment : Fragment() {
+class CancelFragment(private var queryDate: String) : Fragment() {
 
     private lateinit var _binding: FragmentCancelBinding
     private lateinit var adapter: OrderListAdapter
     private lateinit var viewModel: OrderViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    constructor() : this(currentDate)
+
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?,
+    ): View {
         _binding = FragmentCancelBinding.inflate(inflater, container, false)
         return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (activity != null){
+        if (activity != null) {
 
             viewModel = getOrderViewModel(activity!!)
 
-            adapter = OrderListAdapter(activity!!, viewModel)
-            _binding.rvCl.adapter = adapter
-            _binding.rvCl.layoutManager = GridLayoutManager(activity, 4)
-
+            setDate(queryDate)
+            setUpAdapter()
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun setUpAdapter() {
+        adapter = OrderListAdapter(activity!!, viewModel)
+        _binding.rvCl.adapter = adapter
+        _binding.rvCl.layoutManager = GridLayoutManager(activity, 4)
+    }
+
+    fun setDate(newDate: String) {
+        queryDate = newDate
         getData()
     }
 
-    private fun getData(){
-        viewModel.getOrderList(Order.CANCEL, currentDate).observe(activity!!){
-            when(it.status){
-                Status.LOADING -> {}
+    private fun getData() {
+        viewModel.getOrderList(Order.CANCEL, queryDate).observe(activity!!) {
+            when (it.status) {
+                Status.LOADING -> {
+                }
                 Status.SUCCESS -> {
                     adapter.items = ArrayList(it.data)
                 }
-                Status.ERROR -> {}
+                Status.ERROR -> {
+                }
             }
         }
     }

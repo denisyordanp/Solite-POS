@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Intent
 import android.widget.Toast
-import com.socialite.solite_pos.utils.config.SettingPref
+import com.socialite.solite_pos.utils.preference.SettingPref
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException

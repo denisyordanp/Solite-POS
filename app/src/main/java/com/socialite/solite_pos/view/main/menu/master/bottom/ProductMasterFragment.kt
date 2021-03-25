@@ -15,10 +15,10 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.FragmentProductMasterBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMasterFragment(private val product: ProductWithCategory?) : BottomSheetDialogFragment() {
@@ -211,7 +211,7 @@ class ProductMasterFragment(private val product: ProductWithCategory?) : BottomS
 
 	private fun getProduct(): Product{
 		return if (product != null){
-			Product(product.product.id, name, category!!.id, "", desc, sellPrice.toLong(), buyPrice.toLong(), portion.toInt(), product.product!!.stock, isMix, product.product!!.isActive)
+			Product(product.product.id, name, category!!.id, "", desc, sellPrice.toLong(), buyPrice.toLong(), portion.toInt(), product.product.stock, isMix, product.product.isActive)
 		}else{
 			Product(name, category!!.id, "", desc, sellPrice.toLong(), buyPrice.toLong(), portion.toInt(), 0, isMix, false)
 		}

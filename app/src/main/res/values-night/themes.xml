@@ -8,26 +8,31 @@
 		<item name="colorOnPrimary">@color/onPrimary</item>
 		<!-- Secondary brand color. -->
 		<item name="colorSecondary">@color/whiteGrey</item>
-		<item name="colorSecondaryVariant">@color/grey</item>
-		<item name="colorOnSecondary">@color/grey</item>
-		<item name="android:windowBackground">@color/whiteGrey</item>
-		<item name="extendedFloatingActionButtonStyle">@style/FloatingButton</item>
-		<!-- Status bar color. -->
-		<item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-		<!-- Customize your theme here. -->
-		<item name="android:textColor">@color/blackGrey</item>
-		<item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
-		<item name="buttonStyle">@style/ButtonStyle</item>
-	</style>
+        <item name="colorSecondaryVariant">@color/grey</item>
+        <item name="colorOnSecondary">@color/grey</item>
+        <item name="android:windowBackground">@color/whiteGrey</item>
+        <item name="extendedFloatingActionButtonStyle">@style/FloatingButton</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textColor">@color/blackGrey</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
+        <item name="android:datePickerStyle">@style/MyDatePicker</item>
+    </style>
 
-	<style name="TextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-		<item name="boxCornerRadiusTopStart">@dimen/MMargin</item>
-		<item name="boxCornerRadiusTopEnd">@dimen/MMargin</item>
-		<item name="boxCornerRadiusBottomEnd">@dimen/MMargin</item>
-		<item name="boxCornerRadiusBottomStart">@dimen/MMargin</item>
-		<item name="boxBackgroundColor">@color/white</item>
+    <style name="MyDatePicker" parent="android:Widget.Material.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
+    </style>
 
-	</style>
+    <style name="TextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/MMargin</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/MMargin</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/MMargin</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/MMargin</item>
+        <item name="boxBackgroundColor">@color/white</item>
+
+    </style>
 
 	<style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
 		<item name="textAllCaps">false</item>

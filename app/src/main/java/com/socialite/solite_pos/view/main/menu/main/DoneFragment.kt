@@ -14,47 +14,56 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 import com.socialite.solite_pos.vo.Status
 
-class DoneFragment : Fragment() {
+class DoneFragment(private var queryDate: String) : Fragment() {
 
-	private lateinit var _binding: FragmentDoneBinding
-	private lateinit var adapter: OrderListAdapter
-	private lateinit var viewModel: OrderViewModel
+    private lateinit var _binding: FragmentDoneBinding
+    private lateinit var adapter: OrderListAdapter
+    private lateinit var viewModel: OrderViewModel
+
+    constructor() : this(currentDate)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?,
     ): View {
-		_binding = FragmentDoneBinding.inflate(inflater, container, false)
+        _binding = FragmentDoneBinding.inflate(inflater, container, false)
         return _binding.root
     }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (activity != null) {
 
-			viewModel = getOrderViewModel(activity!!)
+            viewModel = getOrderViewModel(activity!!)
 
-			adapter = OrderListAdapter(activity!!, viewModel)
+            setDate(queryDate)
+            setUpAdapter()
+        }
+    }
 
-			_binding.rvDn.layoutManager = GridLayoutManager(activity, 4)
-			_binding.rvDn.adapter = adapter
-		}
-	}
+    private fun setUpAdapter() {
+        adapter = OrderListAdapter(activity!!, viewModel)
 
-	override fun onStart() {
-		super.onStart()
-		getData()
-	}
+        _binding.rvDn.layoutManager = GridLayoutManager(activity, 4)
+        _binding.rvDn.adapter = adapter
+    }
 
-	private fun getData(){
-		viewModel.getOrderList(Order.DONE, currentDate).observe(activity!!){
-			when(it.status){
-				Status.LOADING -> {}
-				Status.SUCCESS -> {
-					adapter.items = ArrayList(it.data)
-				}
-				Status.ERROR -> {}
-			}
-		}
-	}
+    fun setDate(newDate: String) {
+        queryDate = newDate
+        getData()
+    }
+
+    private fun getData() {
+        viewModel.getOrderList(Order.DONE, queryDate).observe(activity!!) {
+            when (it.status) {
+                Status.LOADING -> {
+                }
+                Status.SUCCESS -> {
+                    adapter.items = ArrayList(it.data)
+                }
+                Status.ERROR -> {
+                }
+            }
+        }
+    }
 }

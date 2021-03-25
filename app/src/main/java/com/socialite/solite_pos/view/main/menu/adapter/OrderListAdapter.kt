@@ -13,7 +13,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.RvOrderListBinding
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.tools.DoneCook
 import com.socialite.solite_pos.utils.tools.MessageBottom
@@ -137,12 +137,12 @@ class OrderListAdapter(
 			}
 		}
 
-		private fun updateTime(pos: Int){
-			val order = items[pos]
-			order.order.cookTime = currentDate
-			DoneCook(activity).set(order)
-			cookCallback?.invoke(order.order)
-			notifyItemChanged(pos)
-		}
+		private fun updateTime(pos: Int) {
+            val order = items[pos]
+            order.order.cookTime = currentDateTime
+            DoneCook(activity).set(order)
+            cookCallback?.invoke(order.order)
+            notifyItemChanged(pos)
+        }
 	}
 }

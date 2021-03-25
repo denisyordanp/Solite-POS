@@ -1,27 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:background="@drawable/bg_main_menu"
-	android:layout_width="0dp"
+	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:layout_weight="1">
+	android:background="@drawable/bg_main_menu"
+	android:orientation="vertical">
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/menu_back"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Kembali"
+		style="@style/TextButton.Menu"
+		android:layout_marginStart="@dimen/baseMargin"
+		android:layout_marginEnd="@dimen/baseMargin"
+		app:backgroundTint="@color/primary"
+		app:icon="@drawable/ic_back"
+		app:iconTint="@color/blackGrey" />
 
 	<androidx.core.widget.NestedScrollView
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent">
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/white">
 
 		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:padding="@dimen/basePadding"
 			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/tv_menu_date"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Tanggal"
+				android:textColor="@color/primaryVariant" />
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/menu_date"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				style="@style/TextButton.Menu"
+				app:icon="@drawable/ic_date"
+				android:text="Pilih tanggal" />
 
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Pesanan"
-				android:textColor="@color/primaryVariant"/>
+				android:textColor="@color/primaryVariant" />
 
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/menu_order"
@@ -86,10 +113,11 @@
 				android:text="Riwayat"/>
 
 			<TextView
+				android:id="@+id/tv_menu_data"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Data"
-				android:textColor="@color/primaryVariant"/>
+				android:textColor="@color/primaryVariant" />
 
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/menu_master"
@@ -100,10 +128,11 @@
 				android:text="Master"/>
 
 			<TextView
+				android:id="@+id/tv_menu_application"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Aplikasi"
-				android:textColor="@color/primaryVariant"/>
+				android:textColor="@color/primaryVariant" />
 
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/menu_setting"
@@ -111,10 +140,10 @@
 				android:layout_height="wrap_content"
 				style="@style/TextButton.Menu"
 				app:icon="@drawable/ic_settings"
-				android:text="Pengaturan"/>
+				android:text="Pengaturan" />
 
 		</LinearLayout>
 
 	</androidx.core.widget.NestedScrollView>
 
-</FrameLayout>
+</LinearLayout>

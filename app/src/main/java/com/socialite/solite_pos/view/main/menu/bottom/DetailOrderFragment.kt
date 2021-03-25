@@ -11,13 +11,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDetailOrderBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
+import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 
 class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
 
@@ -51,19 +51,19 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 		super.onViewCreated(view, savedInstanceState)
 		if (mainActivity != null){
 
-			viewModel = getMainViewModel(mainActivity!!)
+            viewModel = getMainViewModel(mainActivity!!)
 
-			adapter = ItemOrderListAdapter(ItemOrderListAdapter.DETAIL)
-			_binding.rvDetailOrder.layoutManager = LinearLayoutManager(mainActivity)
-			_binding.rvDetailOrder.adapter = adapter
+            adapter = ItemOrderListAdapter(mainActivity!!, ItemOrderListAdapter.DETAIL)
+            _binding.rvDetailOrder.layoutManager = LinearLayoutManager(mainActivity)
+            _binding.rvDetailOrder.adapter = adapter
 
-			setData()
+            setData()
 
-			_binding.btnDoCancel.setOnClickListener{ cancelOrder() }
-			_binding.btnDoPrint.setOnClickListener{
-				mainActivity?.printBill?.doPrint(order)
-			}
-			_binding.btnDoPay.setOnClickListener{
+            _binding.btnDoCancel.setOnClickListener { cancelOrder() }
+            _binding.btnDoPrint.setOnClickListener {
+                mainActivity?.printBill?.doPrint(order)
+            }
+            _binding.btnDoPay.setOnClickListener {
 				PayFragment(order, this).show(childFragmentManager, "pay")
 			}
 			_binding.btnDoDone.setOnClickListener { doneOrder() }

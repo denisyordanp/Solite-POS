@@ -14,7 +14,6 @@
 		android:id="@+id/tv_ol_name"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Denis Yordan"
 		android:textSize="@dimen/LText"
 		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -40,25 +39,34 @@
 		app:layout_constraintTop_toBottomOf="@+id/tv_ol_date" />
 
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/rv_order_list"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_margin="@dimen/SMargin"
-		app:layout_constraintBottom_toTopOf="@+id/btn_ol_create"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/tv_ol_no"
-		tools:listitem="@layout/rv_item_order_list" />
+        android:id="@+id/rv_order_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/SMargin"
+        app:layout_constraintBottom_toTopOf="@+id/cont_item_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ol_no"
+        tools:listitem="@layout/rv_item_order_list" />
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/btn_ol_create"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/MMargin"
-		android:text="Buat Pesanan"
-		android:enabled="false"
-		android:textColor="@color/blackGrey"
-		app:layout_constraintBottom_toBottomOf="parent"
+    <include
+        android:id="@+id/cont_item_amount"
+        layout="@layout/item_amount_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/btn_ol_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_ol_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/MMargin"
+        android:text="Buat Pesanan"
+        android:enabled="false"
+        android:textColor="@color/blackGrey"
+        app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 

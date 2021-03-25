@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.databinding.FragmentDetailOutcomeBinding
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
@@ -63,7 +63,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
                 _binding.btnOcSave.setOnClickListener {
                     if (isCheck){
                         saveData(getOutcome(name, desc, amount.toInt(), price.toLong(),
-                            currentDate
+                                currentDateTime
                         ))
                     }
                 }
@@ -82,7 +82,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
             _binding.btnOcSave.setOnClickListener {
                 if (isCheck){
                     updateData(getOutcome(name, desc, amount.toInt(), price.toLong(),
-                        currentDate
+                            currentDateTime
                     ))
                 }
             }

@@ -23,15 +23,4 @@ data class PurchaseWithProduct(
         }
         return array
     }
-
-    val totalPurchase: Long
-    get() {
-        var total = 0L
-        for (item in products){
-            if (item.purchaseProduct != null && item.product != null){
-               total += item.purchaseProduct!!.amount * item.product!!.buyPrice
-            }
-        }
-        return total
-    }
 }

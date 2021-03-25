@@ -58,8 +58,8 @@ class ProductOrderAdapter(
 						SelectMixVariantOrderActivity.RC_MIX
 				)
 			}else{
-				DetailOrderProductFragment(type, p, callback).show(activity.supportFragmentManager, "detail-order-product")
-			}
+                DetailOrderProductFragment(type, p.product, callback).show(activity.supportFragmentManager, "detail-order-product")
+            }
 		}
 	}
 

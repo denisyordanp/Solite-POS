@@ -21,6 +21,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.*
             Variant::class,
             Outcome::class,
             Supplier::class,
+            User::class,
             OrderDetail::class,
             OrderPayment::class,
             OrderProductVariant::class,

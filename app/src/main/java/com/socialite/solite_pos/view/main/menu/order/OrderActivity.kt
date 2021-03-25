@@ -2,6 +2,7 @@ package com.socialite.solite_pos.view.main.menu.order
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
@@ -12,16 +13,16 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.ActivityOrderBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
+import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class OrderActivity : SocialiteActivity() {
@@ -39,19 +40,20 @@ class OrderActivity : SocialiteActivity() {
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		_binding = ActivityOrderBinding.inflate(layoutInflater)
-		_order = _binding.newOrderList
-		setContentView(_binding.root)
+        super.onCreate(savedInstanceState)
+        _binding = ActivityOrderBinding.inflate(layoutInflater)
+        _order = _binding.newOrderList
+        _order.contItemAmount.root.visibility = View.GONE
+        setContentView(_binding.root)
 
-		viewModel = getMainViewModel(this)
+        viewModel = getMainViewModel(this)
 
-		vpAdapter = ViewPagerAdapter(this)
-		_binding.vpNewOrder.adapter = vpAdapter
+        vpAdapter = ViewPagerAdapter(this)
+        _binding.vpNewOrder.adapter = vpAdapter
 
-		_order.rvOrderList.layoutManager = LinearLayoutManager(this)
+        _order.rvOrderList.layoutManager = LinearLayoutManager(this)
 
-		startActivityForResult(Intent(this, SelectCustomerActivity::class.java), SelectCustomerActivity.RC_COSTUMER)
+        startActivityForResult(Intent(this, SelectCustomerActivity::class.java), SelectCustomerActivity.RC_COSTUMER)
 
 		_binding.btnNwBack.setOnClickListener { onBackPressed() }
 		_order.btnOlCreate.setOnClickListener { setDine() }
@@ -85,16 +87,16 @@ class OrderActivity : SocialiteActivity() {
 		_order.rvOrderList.scrollToPosition(0)
 	}
 
-	private fun setNewOrder(customer: Customer){
-		order = OrderWithProduct(OrderData(
-				Order(Order.orderNo(this), customer.id, currentDate),
-				customer
-		))
-		adapter = ItemOrderListAdapter(ItemOrderListAdapter.ORDER)
-		adapter.btnCallback = { setButton(it) }
-		adapter.order = order
-		setContent(order!!)
-	}
+	private fun setNewOrder(customer: Customer) {
+        order = OrderWithProduct(OrderData(
+                Order(Order.orderNo(this), customer.id, currentDateTime),
+                customer
+        ))
+        adapter = ItemOrderListAdapter(this, ItemOrderListAdapter.ORDER)
+        adapter.btnCallback = { setButton(it) }
+        adapter.order = order
+        setContent(order!!)
+    }
 
 	private fun setContent(order: OrderWithProduct){
 		_order.rvOrderList.adapter = adapter

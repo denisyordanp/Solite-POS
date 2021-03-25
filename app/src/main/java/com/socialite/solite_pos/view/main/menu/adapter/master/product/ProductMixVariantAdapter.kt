@@ -39,7 +39,7 @@ class ProductMixVariantAdapter(
 		val p = items[position]
 
 		holder.setContent(position, p.product)
-		holder.binding.tvPmvName.text = p.product?.name
+		holder.binding.tvPmvName.text = p.product.name
 	}
 
 	override fun getItemCount(): Int {

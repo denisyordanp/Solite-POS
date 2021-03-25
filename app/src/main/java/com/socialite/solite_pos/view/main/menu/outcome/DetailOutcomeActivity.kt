@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.databinding.ActivityDetailOutcomeBinding
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
 import com.socialite.solite_pos.view.main.menu.adapter.OutcomeAdapter
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
@@ -18,10 +18,6 @@ class DetailOutcomeActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityDetailOutcomeBinding
     private lateinit var viewModel: MainViewModel
     lateinit var adapter: OutcomeAdapter
-
-    companion object{
-        private val TAG = DetailOutcomeActivity::class.java.simpleName
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +39,17 @@ class DetailOutcomeActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        _binding.tvOcDate.text = dateFormat(currentDate, dateWithDayFormat)
+        _binding.tvOcDate.text = convertDateFromDb(currentDateTime, dateWithDayFormat)
 
-        viewModel.getOutcome(currentDate).observe(this) {
-            when(it.status){
-                Status.LOADING -> {}
+        viewModel.getOutcome(currentDateTime).observe(this) {
+            when (it.status) {
+                Status.LOADING -> {
+                }
                 Status.SUCCESS -> {
                     adapter.items = ArrayList(it.data)
                 }
-                Status.ERROR -> {}
+                Status.ERROR -> {
+                }
             }
         }
     }

@@ -5,39 +5,69 @@ import java.util.*
 
 class DateUtils {
     companion object{
-        private const val databaseDateFormat = "yyyy-MM-dd HH:mm:ss"
+        private const val dbDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+        private const val dbDateFormat = "yyyy-MM-dd"
         const val dateWithTimeFormat = "dd MMMM yyyy HH:mm"
         const val dateWithDayFormat = "EEE, dd MMMM yyyy"
 
-        private val dbSimpleDateFormat = SimpleDateFormat(databaseDateFormat, locale)
+        private val dbDateTimeSimpleFormat = SimpleDateFormat(dbDateTimeFormat, locale)
+        private val dbDateSimpleFormat = SimpleDateFormat(dbDateFormat, locale)
 
         private val locale: Locale
-        get() = Locale.getDefault()
+            get() = Locale.getDefault()
 
-        fun dateFormat(date: String?, format: String): String {
+        fun convertDateFromDb(date: String?, format: String): String {
             return if (!date.isNullOrEmpty()) {
                 val ld = SimpleDateFormat(format, locale)
-                val d = dbSimpleDateFormat.parse(date)
+                val d = dbDateTimeSimpleFormat.parse(date)
                 if (d != null) ld.format(d) else ""
-            }else{
+            } else {
                 ""
             }
         }
 
-        fun strToDate(date: String?): Date{
-            return if (date.isNullOrEmpty()){
-                Date()
-            }else{
-                return dbSimpleDateFormat.parse(date)!!
+        fun convertDateFromDate(date: String?, format: String): String {
+            return if (!date.isNullOrEmpty()) {
+                val ld = SimpleDateFormat(format, locale)
+                val d = dbDateSimpleFormat.parse(date)
+                if (d != null) ld.format(d) else ""
+            } else {
+                ""
             }
         }
+
+        fun calendarToStr(calendar: Calendar): String {
+            return dbDateTimeSimpleFormat.format(calendar.time)
+        }
+
+        fun strToCalendar(calendar: String): Calendar {
+            val cal = Calendar.getInstance()
+            val date = dbDateSimpleFormat.parse(calendar)
+            if (date != null) cal.time = date
+            return cal
+        }
+
+        fun strToDate(date: String?): Date {
+            return if (date.isNullOrEmpty()) {
+                Date()
+            } else {
+                return dbDateTimeSimpleFormat.parse(date)!!
+            }
+        }
+
+        val currentDate: String
+            get() {
+                return dbDateSimpleFormat.format(currentTime)
+            }
+
+        val currentDateTime: String
+            get() {
+                return dbDateTimeSimpleFormat.format(currentTime)
+            }
 
         val currentTime: Date
             get() = Calendar.getInstance().time
 
-        val currentDate: String
-            get() {
-                return dbSimpleDateFormat.format(currentTime)
-            }
+
     }
 }

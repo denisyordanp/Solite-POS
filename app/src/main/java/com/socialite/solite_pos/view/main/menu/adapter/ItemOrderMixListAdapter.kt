@@ -12,77 +12,86 @@ import com.socialite.solite_pos.utils.config.FindProductOrderIndex
 
 class ItemOrderMixListAdapter : RecyclerView.Adapter<ItemOrderMixListAdapter.BaseViewHolder<ProductOrderDetail>>() {
 
-	var btnCallback: ((Boolean) -> Unit)? = null
+    var btnCallback: ((Boolean) -> Unit)? = null
 
-	val items: ArrayList<ProductOrderDetail> = ArrayList()
-	val sortedItems: ArrayList<ProductMixOrderDetail>
-	get() {
-		val items: ArrayList<ProductMixOrderDetail> = ArrayList()
-		for (item in this.items){
-			if (item.product != null){
-				items.add(ProductMixOrderDetail(item.product!!, item.variants, item.amount))
-			}
-		}
-		return items
-	}
+    private val items: ArrayList<ProductOrderDetail> = ArrayList()
+    val sortedItems: ArrayList<ProductMixOrderDetail>
+        get() {
+            val items: ArrayList<ProductMixOrderDetail> = ArrayList()
+            for (item in this.items) {
+                if (item.product != null) {
+                    items.add(ProductMixOrderDetail(item.product!!, item.variants, item.amount))
+                }
+            }
+            return items
+        }
 
 	val totalItem: Int
-	get() {
-		var total = 0
-		for (item in items){
-			if (item.type != ProductOrderDetail.GRAND_TOTAL){
-				total += item.amount
-			}
-		}
-		return total
-	}
+        get() {
+            var total = 0
+            for (item in items) {
+                if (item.type != ProductOrderDetail.GRAND_TOTAL) {
+                    total += item.amount
+                }
+            }
+            return total
+        }
 
-	fun addItem(detail: ProductOrderDetail){
-		if (items.isEmpty()){
+    fun setItems(items: ArrayList<ProductMixOrderDetail>) {
+        if (this.items.isNotEmpty()) this.items.clear()
+        for (item in items) {
+            this.items.add(ProductOrderDetail.createProduct(item.product, item.variants, item.amount))
+        }
+        setData()
+        notifyDataSetChanged()
+    }
+
+    fun addItem(detail: ProductOrderDetail) {
+        if (items.isEmpty()) {
+            if (detail.amount != 0) {
+                setData()
+                add(detail)
+            }
+        } else {
+            add(detail)
+        }
+    }
+
+    private fun add(detail: ProductOrderDetail) {
+        val pos = FindProductOrderIndex.find(items, detail)
+        if (pos != null) {
+            if (detail.amount == 0) {
+                delItem(pos)
+                btnCallback?.invoke(false)
+            } else {
+                items[pos] = detail
+                notifyItemChanged(pos)
+                btnCallback?.invoke(true)
+            }
+		}else{
 			if (detail.amount != 0){
-				setData()
-				add(detail)
-			}
-		}else{
-			add(detail)
-		}
-	}
+                items.add(0, detail)
+                notifyItemInserted(0)
+                btnCallback?.invoke(true)
+            } else {
+                btnCallback?.invoke(false)
+            }
+        }
+        notifyItemChanged(items.size - 1)
+    }
 
-	private fun add(detail: ProductOrderDetail){
-		val pos = FindProductOrderIndex.find(items, detail)
-		if (pos != null){
-			if (detail.amount == 0){
-				delItem(pos)
-				btnCallback?.invoke(false)
-			}else{
-				items[pos] = detail
-				notifyItemChanged(pos)
-				btnCallback?.invoke(true)
-			}
-		}else{
-			if (detail.amount != 0){
-				items.add(0, detail)
-				notifyItemInserted(0)
-				btnCallback?.invoke(true)
-			}else{
-				btnCallback?.invoke(false)
-			}
-		}
-		notifyItemChanged(items.size-1)
-	}
+    private fun delItem(pos: Int) {
+        if (items.size == 2) {
+            items.clear()
+            notifyDataSetChanged()
+        } else {
+            items.removeAt(pos)
+            notifyItemRemoved(pos)
+            notifyItemChanged(items.size - 1)
+        }
+    }
 
-	private fun delItem(pos: Int){
-		if (items.size == 2){
-			items.clear()
-			notifyDataSetChanged()
-		}else{
-			items.removeAt(pos)
-			notifyItemRemoved(pos)
-			notifyItemChanged(items.size-1)
-		}
-	}
-
-	companion object{
+    companion object{
 		private const val VALUE_COLUMN = 1
 		private const val TOTAL_COLUMN = 2
 	}

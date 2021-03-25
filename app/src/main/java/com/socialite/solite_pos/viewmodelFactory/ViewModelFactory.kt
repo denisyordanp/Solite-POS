@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.view.viewModel.UserViewModel
 
 class ViewModelFactory private constructor(private val repository: SoliteRepository) : NewInstanceFactory() {
 	companion object {
@@ -29,11 +30,17 @@ class ViewModelFactory private constructor(private val repository: SoliteReposit
 
 	@Suppress("UNCHECKED_CAST")
 	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-		if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-			return MainViewModel(repository) as T
-		} else if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
-			return OrderViewModel(repository) as T
+		return when {
+			modelClass.isAssignableFrom(MainViewModel::class.java) -> {
+				MainViewModel(repository) as T
+			}
+			modelClass.isAssignableFrom(OrderViewModel::class.java) -> {
+				OrderViewModel(repository) as T
+			}
+			modelClass.isAssignableFrom(UserViewModel::class.java) -> {
+				UserViewModel(repository) as T
+			}
+			else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
 		}
-		throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
 	}
 }

@@ -821,15 +821,36 @@ class RemoteDataSource {
 				}
 	}
 
-	fun batch(batches: ArrayList<BatchWithData>, callback: (ApiResponse<Boolean>) -> Unit){
+	val users: LiveData<ApiResponse<List<User>>>
+		get() {
+			val result: MutableLiveData<ApiResponse<List<User>>> = MutableLiveData()
+			db.collection(AppDatabase.DB_NAME)
+					.document(AppDatabase.MAIN)
+					.collection(User.DB_NAME)
+					.get()
+					.addOnSuccessListener {
+						val data = User.toListClass(it)
+						Log.w("TESTINGDATA", " users : $data")
+						if (data.isNullOrEmpty())
+							result.value = ApiResponse.empty(null)
+						else
+							result.value = ApiResponse.success(data)
+					}
+					.addOnFailureListener {
+						result.value = ApiResponse.error(null)
+					}
+			return result
+		}
+
+	fun batch(batches: ArrayList<BatchWithData>, callback: (ApiResponse<Boolean>) -> Unit) {
 		db.runBatch {
-			for (batch in batches){
+			for (batch in batches) {
 				it.set(batch.doc, batch.hashMap)
 			}
 		}.addOnCompleteListener {
-			if (it.isSuccessful){
+			if (it.isSuccessful) {
 				callback.invoke(ApiResponse.success(true))
-			}else{
+			} else {
 				callback.invoke(ApiResponse.error(null))
 			}
 		}
