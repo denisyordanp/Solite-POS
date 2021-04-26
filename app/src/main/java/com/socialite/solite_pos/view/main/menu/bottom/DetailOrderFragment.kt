@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.view.main.menu.bottom
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,9 @@ import com.socialite.solite_pos.databinding.FragmentDetailOrderBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
+import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
+import com.socialite.solite_pos.view.main.menu.order.OrderActivity
 import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
@@ -31,8 +34,12 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		if (activity != null){
-			mainActivity = activity as MainActivity
+		if (activity != null) {
+			try {
+				mainActivity = activity as MainActivity
+			} catch (e: ClassCastException) {
+				e.printStackTrace()
+			}
 		}
 	}
 
@@ -49,24 +56,31 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (mainActivity != null){
 
-            viewModel = getMainViewModel(mainActivity!!)
+		var act: SocialiteActivity = activity as SocialiteActivity
 
-            adapter = ItemOrderListAdapter(mainActivity!!, ItemOrderListAdapter.DETAIL)
-            _binding.rvDetailOrder.layoutManager = LinearLayoutManager(mainActivity)
-            _binding.rvDetailOrder.adapter = adapter
+		if (mainActivity != null) {
 
-            setData()
+			act = mainActivity!!
+            viewModel = getMainViewModel(act)
 
             _binding.btnDoCancel.setOnClickListener { cancelOrder() }
             _binding.btnDoPrint.setOnClickListener {
                 mainActivity?.printBill?.doPrint(order)
             }
-            _binding.btnDoPay.setOnClickListener {
-				PayFragment(order, this).show(childFragmentManager, "pay")
-			}
 			_binding.btnDoDone.setOnClickListener { doneOrder() }
+			_binding.btnDoEdit.setOnClickListener { editOrder(order!!) }
+
+		}
+
+		adapter = ItemOrderListAdapter(act, ItemOrderListAdapter.DETAIL)
+		_binding.rvDetailOrder.layoutManager = LinearLayoutManager(act)
+		_binding.rvDetailOrder.adapter = adapter
+
+		setData()
+
+		_binding.btnDoPay.setOnClickListener {
+			PayFragment(order, this).show(childFragmentManager, "pay")
 		}
 	}
 
@@ -79,7 +93,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 				}.show()
 	}
 
-	private fun setData(){
+	private fun setData() {
 		if (order != null){
 			when(order!!.order.order.status){
 				Order.ON_PROCESS -> {
@@ -123,7 +137,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 	private fun cancelOrder(){
 		if (order != null){
-			val isCancelAble = order!!.order.order.isCancelable(mainActivity!!)
+			val isCancelAble = order!!.order.order.isCancelable(activity!!)
 
 			val message: String
 			val negative: String
@@ -146,5 +160,12 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 			}
 			bottom.show()
 		}
+	}
+
+	private fun editOrder(order: OrderWithProduct) {
+		val intent = Intent(requireContext(), OrderActivity::class.java)
+		intent.putExtra(OrderActivity.EDIT_ORDER, order)
+		startActivity(intent)
+		dialog?.dismiss()
 	}
 }

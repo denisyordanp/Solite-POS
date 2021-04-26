@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.*
@@ -842,10 +843,24 @@ class RemoteDataSource {
 			return result
 		}
 
-	fun batch(batches: ArrayList<BatchWithData>, callback: (ApiResponse<Boolean>) -> Unit) {
+	fun batchUpdate(batches: ArrayList<BatchWithData>, callback: (ApiResponse<Boolean>) -> Unit) {
 		db.runBatch {
 			for (batch in batches) {
 				it.set(batch.doc, batch.hashMap)
+			}
+		}.addOnCompleteListener {
+			if (it.isSuccessful) {
+				callback.invoke(ApiResponse.success(true))
+			} else {
+				callback.invoke(ApiResponse.error(null))
+			}
+		}
+	}
+
+	fun batchDelete(batches: ArrayList<DocumentReference>, callback: (ApiResponse<Boolean>) -> Unit) {
+		db.runBatch {
+			for (batch in batches) {
+				it.delete(batch)
 			}
 		}.addOnCompleteListener {
 			if (it.isSuccessful) {

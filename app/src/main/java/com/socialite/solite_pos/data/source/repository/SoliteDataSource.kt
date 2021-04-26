@@ -23,6 +23,7 @@ internal interface SoliteDataSource{
 	fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit)
 	fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 	fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit)
+	fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
 	val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>

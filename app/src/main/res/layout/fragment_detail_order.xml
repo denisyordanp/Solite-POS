@@ -241,6 +241,16 @@
 
 				</com.google.android.material.card.MaterialCardView>
 
+				<com.google.android.material.button.MaterialButton
+					android:id="@+id/btn_do_edit"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/blackGrey"
+					app:backgroundTint="@color/onPrimary"
+					android:layout_gravity="end"
+					android:layout_margin="@dimen/baseMargin"
+					android:text="Rubah pesanan"/>
+
 			</LinearLayout>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>

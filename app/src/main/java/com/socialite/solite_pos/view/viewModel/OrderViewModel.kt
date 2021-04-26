@@ -42,4 +42,8 @@ class OrderViewModel(private val repository: SoliteRepository) : ViewModel() {
 	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
 		repository.cancelOrder(order, callback)
 	}
+
+	fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+		repository.replaceProductOrder(old, new, callback)
+	}
 }

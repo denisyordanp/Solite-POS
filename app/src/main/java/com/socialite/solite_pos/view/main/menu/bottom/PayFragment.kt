@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
+import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.socialite.solite_pos.databinding.FragmentPayBinding
@@ -23,6 +24,7 @@ import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
+import java.lang.ClassCastException
 
 class PayFragment(
 		private var order: OrderWithProduct?,
@@ -43,7 +45,11 @@ class PayFragment(
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		if (activity != null){
-			mainActivity = activity as MainActivity
+			try {
+				mainActivity = activity as MainActivity
+			} catch (e: ClassCastException) {
+				e.printStackTrace()
+			}
 		}
 	}
 
@@ -60,14 +66,14 @@ class PayFragment(
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (mainActivity != null){
+		if (activity != null){
 
-			viewModel = getOrderViewModel(mainActivity!!)
+			viewModel = getOrderViewModel(activity!!)
 
 			val total = "Total : ${toRupiah(order?.grandTotal)}"
 			_binding.tvPayTotal.text = total
 
-			_binding.btnPayMethod.setOnClickListener { getPayment(mainActivity!!) }
+			_binding.btnPayMethod.setOnClickListener { getPayment(activity!!) }
 			_binding.btnPayPay.setOnClickListener { payBill() }
 			_binding.btnPayCancel.setOnClickListener { dialog?.dismiss() }
 		}
@@ -155,7 +161,14 @@ class PayFragment(
 	private fun printBill(order: OrderWithProduct){
 		val payment = order.order.payment
 		if (payment != null) if (payment.isCash) detailFragment?.showReturn(order)
-		mainActivity?.setPay(order)
+		setPay(order)
 		dialog?.dismiss()
+	}
+
+	private fun setPay(order: OrderWithProduct){
+		order.order.order.status = Order.DONE
+
+		viewModel.updateOrder(order.order.order) {}
+		mainActivity?.printBill?.doPrint(order)
 	}
 }

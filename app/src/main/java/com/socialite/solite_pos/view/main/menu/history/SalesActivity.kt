@@ -11,11 +11,12 @@ import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
+import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.helper.DatePickerFragment
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.main.*
 
-class SalesActivity : AppCompatActivity() {
+class SalesActivity : SocialiteActivity() {
 
     private lateinit var _binding: ActivitySalesBinding
     private lateinit var adapter: ViewPagerAdapter

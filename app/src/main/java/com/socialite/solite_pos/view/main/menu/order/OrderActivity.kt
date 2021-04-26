@@ -11,6 +11,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.socialite.solite_pos.databinding.ActivityOrderBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
@@ -23,20 +24,26 @@ import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductF
 import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 import com.socialite.solite_pos.vo.Status
 
 class OrderActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityOrderBinding
+	private lateinit var _order: OrderListBinding
+
 	private lateinit var adapter: ItemOrderListAdapter
 	private lateinit var vpAdapter: ViewPagerAdapter
-	private lateinit var _order: OrderListBinding
+
+	private lateinit var orderViewModel: OrderViewModel
 	private lateinit var viewModel: MainViewModel
 
 	private var order: OrderWithProduct? = null
 
 	companion object{
 		const val NEW_ORDER_RQ_CODE = 101
+		const val EDIT_ORDER = "edit_order"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,16 +54,29 @@ class OrderActivity : SocialiteActivity() {
         setContentView(_binding.root)
 
         viewModel = getMainViewModel(this)
+		orderViewModel = getOrderViewModel(this)
 
         vpAdapter = ViewPagerAdapter(this)
         _binding.vpNewOrder.adapter = vpAdapter
 
         _order.rvOrderList.layoutManager = LinearLayoutManager(this)
 
-        startActivityForResult(Intent(this, SelectCustomerActivity::class.java), SelectCustomerActivity.RC_COSTUMER)
+		order = intent.getSerializableExtra(EDIT_ORDER) as OrderWithProduct?
+
+		if (order != null) {
+			setEditOrder(order!!)
+		} else {
+			startActivityForResult(Intent(this, SelectCustomerActivity::class.java), SelectCustomerActivity.RC_COSTUMER)
+		}
 
 		_binding.btnNwBack.setOnClickListener { onBackPressed() }
-		_order.btnOlCreate.setOnClickListener { setDine() }
+		_order.btnOlCreate.setOnClickListener {
+			if (order != null) {
+				editOrder(order!!)
+			} else {
+				setDine()
+			}
+		}
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -88,15 +108,24 @@ class OrderActivity : SocialiteActivity() {
 	}
 
 	private fun setNewOrder(customer: Customer) {
-        order = OrderWithProduct(OrderData(
+        val order = OrderWithProduct(OrderData(
                 Order(Order.orderNo(this), customer.id, currentDateTime),
                 customer
         ))
-        adapter = ItemOrderListAdapter(this, ItemOrderListAdapter.ORDER)
-        adapter.btnCallback = { setButton(it) }
-        adapter.order = order
-        setContent(order!!)
+        setAdapter(order)
+        setContent(order)
     }
+
+	private fun setAdapter(order: OrderWithProduct) {
+		adapter = ItemOrderListAdapter(this, ItemOrderListAdapter.ORDER)
+		adapter.btnCallback = { setButton(it) }
+		adapter.order = order
+	}
+
+	private fun setEditOrder(order: OrderWithProduct) {
+		setAdapter(order)
+		setContent(order)
+	}
 
 	private fun setContent(order: OrderWithProduct){
 		_order.rvOrderList.adapter = adapter
@@ -161,4 +190,23 @@ class OrderActivity : SocialiteActivity() {
 			finish()
 		}
 	}
+
+	private fun editOrder(order: OrderWithProduct) {
+
+		val new = adapter.newOrder
+
+		if (new != null) {
+			orderViewModel.replaceProductOrder(order, new) {
+				when(it.status) {
+					StatusResponse.SUCCESS -> {
+						finish()
+					}
+					StatusResponse.ERROR -> {}
+					else -> {}
+				}
+			}
+		}
+
+	}
+
 }

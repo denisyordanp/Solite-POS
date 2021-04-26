@@ -3,7 +3,6 @@ package com.socialite.solite_pos.data.source.local.room
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.socialite.solite_pos.data.source.local.entity.helper.*
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 
 class LocalDataSource private constructor(val soliteDao: SoliteDao) {
 
@@ -86,7 +85,7 @@ class LocalDataSource private constructor(val soliteDao: SoliteDao) {
 
 	fun getProductOrder(orderNo: String): LiveData<List<ProductOrderDetail>> {
 		val result: MediatorLiveData<List<ProductOrderDetail>> = MediatorLiveData()
-		result.addSource(soliteDao.getDetailOrders(orderNo)){ listDetail ->
+		result.addSource(soliteDao.getDetailOrdersLiveData(orderNo)){ listDetail ->
 			val products: ArrayList<ProductOrderDetail> = ArrayList()
 			for (item2 in listDetail){
 				val product = soliteDao.getProduct(item2.idProduct)
