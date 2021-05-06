@@ -12,7 +12,6 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
-import com.socialite.solite_pos.vo.Status
 
 class OnProcessFragment(private var queryDate: String) : Fragment() {
 
@@ -53,21 +52,13 @@ class OnProcessFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun getData() {
-        viewModel.getOrderList(Order.ON_PROCESS, queryDate).observe(activity!!) { response ->
-            when (response.status) {
-                Status.LOADING -> {
-                }
-                Status.SUCCESS -> {
-                    adapter.items = ArrayList(response.data)
-                    adapter.cookCallback = { updateOrder(it) }
-                }
-                Status.ERROR -> {
-                }
-            }
+        viewModel.getLocalOrders(Order.ON_PROCESS, queryDate).observe(activity!!) { orders ->
+            adapter.items = ArrayList(orders)
+            adapter.cookCallback = { updateOrder(it) }
         }
     }
 
 	private fun updateOrder(order: Order){
-		viewModel.updateOrder(order) {}
+		viewModel.updateOrder(order)
 	}
 }

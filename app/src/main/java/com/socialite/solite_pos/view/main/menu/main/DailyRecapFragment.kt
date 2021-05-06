@@ -84,6 +84,8 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
                 Status.SUCCESS -> {
                     if (!orders.data.isNullOrEmpty()) {
                         getProductOrder(orders.data)
+                    } else {
+                        incomeRecapAdapter.items = ArrayList()
                     }
                 }
                 Status.ERROR -> {}

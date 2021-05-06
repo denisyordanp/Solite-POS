@@ -45,6 +45,7 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		if (position == items.size){
 			holder.binding.tvRvRcName.text = "Grand Total : "
+			holder.binding.tvRvRcDesc.text = ""
 			holder.binding.tvRvRcTotal.text = toRupiah(grandTotal)
 		}else{
 			if (position == 0){

@@ -114,7 +114,8 @@ class OrderListAdapter(
 			if (order?.status == Order.ON_PROCESS){
 				binding.tvOrTime.visibility = View.VISIBLE
 				val text: String
-				if(order.finishToString(activity).isNullOrEmpty()){
+				val finish = order.finishToString(activity)
+				if(finish.isNullOrEmpty()){
 					binding.tvOrTime.setBackgroundColor(Color.RED)
 					binding.tvOrTime.setCompoundDrawablesWithIntrinsicBounds(warning, null,null,null)
 					binding.tvOrTime.setOnClickListener {
@@ -129,7 +130,7 @@ class OrderListAdapter(
 					}
 					text = "Atur"
 				}else{
-					text = order.finishToString(activity)!!
+					text = finish
 				}
 				binding.tvOrTime.text = text
 			}else{

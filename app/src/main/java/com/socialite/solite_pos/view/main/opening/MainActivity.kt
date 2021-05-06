@@ -87,15 +87,6 @@ class MainActivity : SocialiteActivity() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		when (requestCode){
-			OrderActivity.NEW_ORDER_RQ_CODE -> {
-				if (data != null){
-					val order: OrderWithProduct? = data.getSerializableExtra(EXTRA_ORDER) as OrderWithProduct?
-					if (order != null){
-						Order.add(this)
-						addOrder(order)
-					}
-				}
-			}
 			PrintBill.REQUEST_CONNECT_BT -> printBill.onSetSocket()
 			PurchaseActivity.NEW_PURCHASE -> {
 				if (data != null) {
@@ -167,31 +158,6 @@ class MainActivity : SocialiteActivity() {
 		_menu.menuOrder.performClick()
 	}
 
-	fun setToNotPay(order: OrderWithProduct?){
-		if (order != null){
-			order.order.order.status = Order.NEED_PAY
-			orderViewModel.updateOrder(order.order.order) {}
-		}
-	}
-
-	fun setPay(order: OrderWithProduct){
-		order.order.order.status = Order.DONE
-
-		orderViewModel.updateOrder(order.order.order) {}
-		printBill.doPrint(order)
-	}
-
-	private fun addOrder(order: OrderWithProduct){
-		orderViewModel.newOrder(order) {}
-	}
-
-	fun cancelOrder(order: OrderWithProduct?){
-		if (order != null){
-			order.order.order.status = Order.CANCEL
-			orderViewModel.cancelOrder(order) {}
-		}
-	}
-
 	private fun addPurchase(purchase: PurchaseWithProduct){
 		Purchase.add(this)
 		viewModel.newPurchase(purchase) {}
@@ -243,9 +209,7 @@ class MainActivity : SocialiteActivity() {
 			1 -> {
 				_binding.fabMainNewOrder.text = "Pesanan baru"
 				_binding.fabMainNewOrder.setOnClickListener {
-					startActivityForResult(
-							Intent(this, OrderActivity::class.java),
-							OrderActivity.NEW_ORDER_RQ_CODE)
+					startActivity(Intent(this, OrderActivity::class.java))
 				}
 			}
 			2 -> {

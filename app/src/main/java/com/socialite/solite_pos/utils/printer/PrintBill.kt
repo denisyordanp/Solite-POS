@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.utils.printer
 
+import android.bluetooth.BluetoothSocket
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.socialite.solite_pos.R
@@ -15,47 +16,35 @@ import java.util.*
 class PrintBill(private var activity: SocialiteActivity) {
 
 	private var outputStream: OutputStream? = null
+	private var callback: ((Boolean) -> Unit)? = null
 	private var order: OrderWithProduct? = null
 
 	companion object{
 		const val REQUEST_CONNECT_BT = 2
 	}
 
-	fun doPrint(order: OrderWithProduct?){
+	fun doPrint(order: OrderWithProduct, callback: (Boolean) -> Unit){
 		this.order = order
+		this.callback = callback
 		setData()
 	}
 
 	private fun setData(){
-
-		if (DeviceConnection.mbtSocket == null){
+		val socket = DeviceConnection.mbtSocket
+		if (socket == null){
 			DeviceConnection(activity).getDevice{
-				if (it){
-					setPaper()
-				}
+				if (it != null) setPaper(it)
 			}
 		}else{
-			setPaper()
+			setPaper(socket)
 		}
 	}
 
-	private fun setPaper(){
-		var opstream: OutputStream? = null
-		try {
-			opstream = DeviceConnection.mbtSocket?.outputStream
-		} catch (e: IOException) {
-			e.printStackTrace()
-		}
-		outputStream = opstream
+	private fun setPaper(socket: BluetoothSocket){
 
 		//print command
 		try {
-			try {
-				Thread.sleep(1000)
-			} catch (e: InterruptedException) {
-				e.printStackTrace()
-			}
-			outputStream = DeviceConnection.mbtSocket?.outputStream
+			outputStream = socket.outputStream
 
 //			print header
 			setHeader()
@@ -68,8 +57,10 @@ class PrintBill(private var activity: SocialiteActivity) {
 			//resetPrint(); //reset printer
 
 			outputStream?.flush()
+			callback?.invoke(true)
 		} catch (e: IOException) {
 			e.printStackTrace()
+			callback?.invoke(false)
 		}
 	}
 

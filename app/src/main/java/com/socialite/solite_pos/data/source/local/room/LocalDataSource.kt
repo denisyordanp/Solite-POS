@@ -87,12 +87,12 @@ class LocalDataSource private constructor(val soliteDao: SoliteDao) {
 		val result: MediatorLiveData<List<ProductOrderDetail>> = MediatorLiveData()
 		result.addSource(soliteDao.getDetailOrdersLiveData(orderNo)){ listDetail ->
 			val products: ArrayList<ProductOrderDetail> = ArrayList()
-			for (item2 in listDetail){
+			for (item2 in listDetail) {
 				val product = soliteDao.getProduct(item2.idProduct)
-				if (product.isMix){
+				if (product.isMix) {
 					val mixes = soliteDao.getOrderVariantsMix(item2.id)
 					val mixProduct: ArrayList<ProductMixOrderDetail> = ArrayList()
-					for (mix in mixes.variantsMix){
+					for (mix in mixes.variantsMix) {
 						val variants = soliteDao.getOrderMixVariantsOption(mix.id)
 						mixProduct.add(ProductMixOrderDetail(
 								soliteDao.getProduct(mix.idProduct),

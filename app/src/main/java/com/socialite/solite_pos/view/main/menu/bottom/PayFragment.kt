@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
@@ -15,22 +16,23 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPaymen
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.socialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.socialite.solite_pos.databinding.FragmentPayBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.view.main.opening.MainActivity
+import com.socialite.solite_pos.view.main.menu.adapter.AmountSuggestionsAdapter
 import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
+import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
-import java.lang.ClassCastException
+import kotlin.math.roundToInt
 
 class PayFragment(
 		private var order: OrderWithProduct?,
 		private val detailFragment: DetailOrderFragment?
 ) : BottomSheetDialogFragment() {
 
+	private lateinit var adapter: AmountSuggestionsAdapter
 	private lateinit var _binding: FragmentPayBinding
 	private lateinit var viewModel: OrderViewModel
 
@@ -38,13 +40,13 @@ class PayFragment(
 	private var payment: Payment? = null
 
 	private val cashPay: String
-	get() = _binding.edtPayCash.text.toString()
+		get() = _binding.edtPayCash.text.toString()
 
-	constructor(): this(null, null)
+	constructor() : this(null, null)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		if (activity != null){
+		if (activity != null) {
 			try {
 				mainActivity = activity as MainActivity
 			} catch (e: ClassCastException) {
@@ -66,9 +68,10 @@ class PayFragment(
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+		if (activity != null) {
 
 			viewModel = getOrderViewModel(activity!!)
+			setAdapter()
 
 			val total = "Total : ${toRupiah(order?.grandTotal)}"
 			_binding.tvPayTotal.text = total
@@ -81,34 +84,71 @@ class PayFragment(
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		if (requestCode == SelectPaymentsActivity.RQ_PAYMENT && resultCode == Activity.RESULT_OK){
+		if (requestCode == SelectPaymentsActivity.RQ_PAYMENT && resultCode == Activity.RESULT_OK) {
 			payment = data?.getSerializableExtra(SelectPaymentsActivity.PAYMENT) as Payment
-			if (payment != null){
-				_binding.btnPayMethod.text = payment!!.name
-				_binding.btnPayPay.isEnabled = true
 
-				if (payment!!.isCash)
-					_binding.layEdtPayCash.visibility = View.VISIBLE
-				else
-					_binding.layEdtPayCash.visibility = View.GONE
-			}
+			if (payment == null) return
+
+			_binding.btnPayMethod.text = payment!!.name
+			_binding.btnPayPay.isEnabled = true
+			setPaymentMode(payment!!.isCash)
 		}
 	}
 
-	private fun payBill(){
-		if (payment != null && order != null){
-			if (payment!!.isCash){
-				if (isCheck){
+	private fun setAdapter() {
+		adapter = AmountSuggestionsAdapter { setAmountCallback(it) }
+		_binding.rvPaySuggestions.layoutManager = GridLayoutManager(activity, 6)
+		_binding.rvPaySuggestions.adapter = adapter
+	}
+
+	private fun setPaymentMode(isCash: Boolean) {
+		if (isCash) {
+			_binding.layEdtPayCash.visibility = View.VISIBLE
+			_binding.rvPaySuggestions.visibility = View.VISIBLE
+			setSuggestions(order!!.grandTotal.toInt())
+		} else {
+			_binding.layEdtPayCash.visibility = View.GONE
+			_binding.rvPaySuggestions.visibility = View.GONE
+		}
+	}
+
+	private fun setSuggestions(total: Int) {
+		val suggestions = getSuggestions(total)
+		adapter.items = suggestions
+	}
+
+	private fun getSuggestions(total: Int): ArrayList<Int> {
+		val array = ArrayList<Int>()
+		array.add(total)
+		val thousand = (total / 10000).toDouble()
+		val round = thousand.roundToInt() * 10000
+		array.add(round)
+		var i = round
+		do {
+			i += 5000
+			array.add(i)
+		} while (i < 100000)
+		return array
+	}
+
+	private fun setAmountCallback(amount: Int) {
+		_binding.edtPayCash.setText(amount.toString())
+	}
+
+	private fun payBill() {
+		if (payment != null && order != null) {
+			if (payment!!.isCash) {
+				if (isCheck) {
 					MessageBottom(childFragmentManager)
 						.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
-						.setPositiveListener("Ya"){
+						.setPositiveListener("Ya") {
 							pay(payment!!, cashPay.toLong())
 						}
-						.setNegativeListener("Batal"){
+						.setNegativeListener("Batal") {
 							it?.dismiss()
 						}.show()
 				}
-			}else{
+			} else {
 				MessageBottom(childFragmentManager)
 					.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
 					.setPositiveListener("Ya"){
@@ -139,36 +179,41 @@ class PayFragment(
 		}
 	}
 
-	private fun getPayment(context: Context){
-		startActivityForResult(Intent(context, SelectPaymentsActivity::class.java), SelectPaymentsActivity.RQ_PAYMENT)
+	private fun getPayment(context: Context) {
+		startActivityForResult(
+			Intent(context, SelectPaymentsActivity::class.java),
+			SelectPaymentsActivity.RQ_PAYMENT
+		)
 	}
 
-	private fun pay(payment: Payment, pay: Long){
-		if (this.order != null){
+	private fun pay(payment: Payment, pay: Long) {
+		if (this.order != null) {
 			val paymentOrder = OrderPayment(this.order!!.order.order.orderNo, payment.id, pay)
-			order!!.order = OrderData(order!!.order.order, order!!.order.customer, paymentOrder, payment)
-			viewModel.insertPaymentOrder(paymentOrder){
-				when(it.status){
-					StatusResponse.SUCCESS -> {
-						printBill(order!!)
-					}
-					else -> {}
-				}
+			order!!.order =
+				OrderData(order!!.order.order, order!!.order.customer, paymentOrder, payment)
+			printBill(order!!)
+		}
+	}
+
+	private fun printBill(order: OrderWithProduct) {
+		val payment = order.order.payment
+		if (payment != null) if (payment.isCash) detailFragment?.showReturn(order)
+		setPay(order)
+	}
+
+	private fun setPay(order: OrderWithProduct) {
+		mainActivity?.printBill?.doPrint(order) {
+			if (it) {
+				updateOrder(order)
+				dialog?.dismiss()
 			}
 		}
 	}
 
-	private fun printBill(order: OrderWithProduct){
-		val payment = order.order.payment
-		if (payment != null) if (payment.isCash) detailFragment?.showReturn(order)
-		setPay(order)
-		dialog?.dismiss()
-	}
-
-	private fun setPay(order: OrderWithProduct){
+	private fun updateOrder(order: OrderWithProduct) {
+		val orderPaymentWithId = viewModel.insertPaymentOrder(order.order.orderPayment!!)
 		order.order.order.status = Order.DONE
-
-		viewModel.updateOrder(order.order.order) {}
-		mainActivity?.printBill?.doPrint(order)
+		order.order.orderPayment = orderPaymentWithId
+		viewModel.doneOrder(order)
 	}
 }

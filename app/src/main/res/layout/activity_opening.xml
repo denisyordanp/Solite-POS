@@ -18,10 +18,10 @@
 		android:contentDescription="@string/solite_logo_image" />
 
 	<TextView
+		android:id="@+id/tv_opening_version"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="@dimen/baseMargin"
-		android:text="@string/app_version"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintRight_toRightOf="parent" />
 

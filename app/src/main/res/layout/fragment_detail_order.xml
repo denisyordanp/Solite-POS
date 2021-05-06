@@ -212,6 +212,15 @@
 						android:textSize="@dimen/MText"
 						android:textStyle="bold" />
 
+					<TextView
+						android:id="@+id/tv_do_take_away"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="@dimen/baseMargin"
+						android:text="Take Away"
+						android:textSize="@dimen/LText"
+						android:textStyle="bold|italic" />
+
 				</LinearLayout>
 
 			</com.google.android.material.card.MaterialCardView>
@@ -246,10 +255,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/blackGrey"
-					app:backgroundTint="@color/onPrimary"
+					app:backgroundTint="@color/white"
 					android:layout_gravity="end"
 					android:layout_margin="@dimen/baseMargin"
-					android:text="Rubah pesanan"/>
+					android:text="Lihat pesanan"/>
 
 			</LinearLayout>
 

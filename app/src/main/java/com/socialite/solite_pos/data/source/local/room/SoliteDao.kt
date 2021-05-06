@@ -20,7 +20,7 @@ interface SoliteDao{
 
 	@Transaction
 	@Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
-	fun getOrdersByNo(orderNo: String): LiveData<OrderData>
+	fun getOrderByNo(orderNo: String): LiveData<OrderData>
 
 	@Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
 	fun getDetailOrdersLiveData(orderNo: String): LiveData<List<OrderDetail>>
@@ -51,7 +51,7 @@ interface SoliteDao{
 	fun getOrderMixProductVariant(orderVariantId: Long, variantOptionId: Long): OrderMixProductVariant
 
 	@Query("SELECT * FROM ${OrderProductVariant.DB_NAME} WHERE ${OrderDetail.ID} = :orderDetailId AND ${VariantOption.ID} = :variantOptionId")
-	fun getOrderVariant(orderDetailId: Long, variantOptionId: Long): OrderProductVariant
+	fun getVariantOrder(orderDetailId: Long, variantOptionId: Long): OrderProductVariant
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun insertOrder(order: Order): Long

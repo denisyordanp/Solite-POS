@@ -19,7 +19,7 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 		var mbtSocket: BluetoothSocket? = null
 	}
 
-	fun getDevice(callback: (Boolean) -> Unit){
+	fun getDevice(callback: (BluetoothSocket?) -> Unit){
 		if (setting.printerDevice.isNullOrEmpty()){
 			val intent = Intent(
 					activity.applicationContext,
@@ -32,7 +32,7 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 		}
 	}
 
-	private fun onDevice(device: BluetoothDevice, callback: (Boolean) -> Unit){
+	private fun onDevice(device: BluetoothDevice, callback: (BluetoothSocket?) -> Unit){
 		if (mBluetoothAdapter.isDiscovering) {
 			mBluetoothAdapter.cancelDiscovery()
 		}
@@ -45,7 +45,7 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 				mbtSocket = device.createRfcommSocketToServiceRecord(uuid)
 				mbtSocket?.connect()
 				SettingPref(activity.applicationContext).printerDevice = device.address
-				callback.invoke(true)
+				callback.invoke(mbtSocket)
 			} catch (ex: IOException) {
 				activity.runOnUiThread(socketErrorRunnable)
 				try {
@@ -54,7 +54,7 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 					e.printStackTrace()
 				}
 				mbtSocket = null
-				callback.invoke(false)
+				callback.invoke(null)
 			}
 		}.start()
 	}

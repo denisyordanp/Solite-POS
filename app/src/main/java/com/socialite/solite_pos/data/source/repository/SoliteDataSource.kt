@@ -18,12 +18,15 @@ import com.socialite.solite_pos.vo.Resource
 internal interface SoliteDataSource{
 
 	fun getOrderList(status: Int, date: String): LiveData<Resource<List<OrderData>>>
+	fun getLocalOrders(status: Int, date: String): LiveData<List<OrderData>>
 	fun getProductOrder(orderNo: String): LiveData<Resource<List<ProductOrderDetail>>>
 
-	fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit)
-	fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
-	fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit)
-	fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
+	fun insertPaymentOrderOld(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit)
+	fun newOrder(order: OrderWithProduct)
+	fun newOrderOld(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
+	fun updateOrder(order: Order)
+	fun updateOrderOld(order: Order, callback: (ApiResponse<Boolean>) -> Unit)
+	fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct)
 	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
 	val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>

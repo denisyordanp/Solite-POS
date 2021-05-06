@@ -11,7 +11,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.remote.response.helper.StatusResponse
 import com.socialite.solite_pos.databinding.ActivityOrderBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
@@ -21,7 +20,6 @@ import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
-import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -72,9 +70,9 @@ class OrderActivity : SocialiteActivity() {
 		_binding.btnNwBack.setOnClickListener { onBackPressed() }
 		_order.btnOlCreate.setOnClickListener {
 			if (order != null) {
-				editOrder(order!!)
+				showRepeatOrderMessage()
 			} else {
-				setDine()
+				showRepeatOrderMessage()
 			}
 		}
 	}
@@ -113,7 +111,7 @@ class OrderActivity : SocialiteActivity() {
                 customer
         ))
         setAdapter(order)
-        setContent(order)
+        setContent(order, false)
     }
 
 	private fun setAdapter(order: OrderWithProduct) {
@@ -124,16 +122,23 @@ class OrderActivity : SocialiteActivity() {
 
 	private fun setEditOrder(order: OrderWithProduct) {
 		setAdapter(order)
-		setContent(order)
+		setContent(order, true)
 	}
 
-	private fun setContent(order: OrderWithProduct){
+	private fun setContent(order: OrderWithProduct, isEditOrder: Boolean) {
 		_order.rvOrderList.adapter = adapter
 
 		val no = "No. ${order.order.order.orderNo}"
 		_order.tvOlNo.text = no
 		_order.tvOlDate.text = order.order.order.timeString
 		_order.tvOlName.text = order.order.customer.name
+
+		val txtButton = if (isEditOrder) {
+			"Rubah pesanan"
+		} else {
+			"Simpan Pesanan"
+		}
+		_order.btnOlCreate.text = txtButton
 
 		setPageAdapter()
 	}
@@ -168,45 +173,46 @@ class OrderActivity : SocialiteActivity() {
 		_binding.vpNewOrder.offscreenPageLimit = vpAdapter.itemCount
 	}
 
-	private fun setButton(state: Boolean){
+	private fun setButton(state: Boolean) {
 		_order.btnOlCreate.isEnabled = state
 	}
 
-	private fun setDine(){
+	private fun showRepeatOrderMessage() {
 		MessageBottom(supportFragmentManager)
-				.setMessage("Apakah makan ditempat atau dibungkus?")
-				.setPositiveListener("Makan ditempat"){ setResult(false) }
-				.setNegativeListener("Dibungkus"){ setResult(true) }
-				.show()
+			.setMessage("Bacakan ulang pesanan untuk menghindari kesalahan pesanan")
+			.setPositiveListener("Sudah") { setDine() }
+			.setNegativeListener("Bacakan ulang") { it?.dismiss()}
+			.show()
 	}
 
-	private fun setResult(isTakeAway: Boolean){
-		if (adapter.newOrder != null){
-			val intent = Intent()
-			val data = adapter.newOrder
-			data?.order?.order?.isTakeAway = isTakeAway
-			intent.putExtra(MainActivity.EXTRA_ORDER, data)
-			setResult(RESULT_OK, intent)
+	private fun setDine() {
+		MessageBottom(supportFragmentManager)
+			.setMessage("Apakah makan ditempat atau dibungkus?")
+			.setPositiveListener("Makan ditempat") { createNewOrder(false) }
+			.setNegativeListener("Dibungkus") { createNewOrder(true) }
+			.show()
+	}
+
+	private fun createNewOrder(isTakeAway: Boolean) {
+		val data = adapter.newOrder
+		if (data != null) {
+			data.order.order.isTakeAway = isTakeAway
+			if (order != null) {
+				editOrder(order!!, data)
+			} else {
+				newOrder(data)
+			}
 			finish()
 		}
 	}
 
-	private fun editOrder(order: OrderWithProduct) {
+	private fun newOrder(order: OrderWithProduct) {
+		Order.add(this)
+		orderViewModel.newOrder(order)
+	}
 
-		val new = adapter.newOrder
-
-		if (new != null) {
-			orderViewModel.replaceProductOrder(order, new) {
-				when(it.status) {
-					StatusResponse.SUCCESS -> {
-						finish()
-					}
-					StatusResponse.ERROR -> {}
-					else -> {}
-				}
-			}
-		}
-
+	private fun editOrder(old: OrderWithProduct, new: OrderWithProduct) {
+		orderViewModel.replaceProductOrder(old, new)
 	}
 
 }

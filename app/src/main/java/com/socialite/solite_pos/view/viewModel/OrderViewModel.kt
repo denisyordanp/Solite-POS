@@ -23,27 +23,31 @@ class OrderViewModel(private val repository: SoliteRepository) : ViewModel() {
 		return repository.getOrderList(status, date)
 	}
 
+	fun getLocalOrders(status: Int, date: String): LiveData<List<OrderData>> {
+		return repository.getLocalOrders(status, date)
+	}
+
 	fun getProductOrder(orderNo: String): LiveData<Resource<List<ProductOrderDetail>>>{
 		return repository.getProductOrder(orderNo)
 	}
 
-	fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit) {
-		return repository.insertPaymentOrder(payment, callback)
+	fun insertPaymentOrder(payment: OrderPayment): OrderPayment {
+		return repository.insertPaymentOrder(payment)
 	}
 
-	fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit){
-		repository.newOrder(order, callback)
+	fun newOrder(order: OrderWithProduct) {
+		repository.newOrder(order)
 	}
 
-	fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
-		repository.updateOrder(order, callback)
+	fun updateOrder(order: Order) {
+		repository.updateOrder(order)
 	}
 
-	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-		repository.cancelOrder(order, callback)
+	fun doneOrder(order: OrderWithProduct) {
+		repository.doneOrder(order)
 	}
 
-	fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-		repository.replaceProductOrder(old, new, callback)
+	fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct) {
+		repository.replaceProductOrder(old, new)
 	}
 }

@@ -1,78 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.core.widget.NestedScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
 	tools:context=".view.main.menu.bottom.PayFragment">
 
-	<ImageView
-		android:id="@+id/imageView"
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:src="@drawable/ic_see_bottom" />
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
-	<TextView
-		android:id="@+id/tv_pay_total"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/baseMargin"
-		android:layout_gravity="center"
-		android:textStyle="bold"
-		android:textSize="@dimen/MText"
-		android:text="Total : Rp. 30.000"/>
-
-	<Button
-		style="@style/ButtonStyle"
-		android:id="@+id/btn_pay_method"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/baseMargin"
-		android:text="Metode pembayaran" />
-
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/lay_edt_pay_cash"
-		android:visibility="gone"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-		app:boxBackgroundColor="@color/white"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/baseMargin"
-		android:layout_marginEnd="@dimen/baseMargin">
-
-		<com.google.android.material.textfield.TextInputEditText
-			android:id="@+id/edt_pay_cash"
+		<ImageView
+			android:id="@+id/imageView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:inputType="number"
-			android:hint="Masukan jumlah uang pembayaran"/>
+			android:src="@drawable/ic_see_bottom" />
 
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:orientation="horizontal">
+		<TextView
+			android:id="@+id/tv_pay_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/baseMargin"
+			android:layout_gravity="center"
+			android:textStyle="bold"
+			android:textSize="@dimen/MText"
+			android:text="Total : Rp. 30.000"/>
 
 		<Button
 			style="@style/ButtonStyle"
-			android:enabled="false"
-			android:id="@+id/btn_pay_pay"
-			android:layout_width="wrap_content"
+			android:id="@+id/btn_pay_method"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/SMargin"
-			android:text="Bayar" />
+			android:layout_margin="@dimen/baseMargin"
+			android:text="Metode pembayaran" />
 
-		<Button
-			style="@style/ButtonStyle"
-			android:id="@+id/btn_pay_cancel"
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/lay_edt_pay_cash"
+			android:visibility="gone"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+			app:boxBackgroundColor="@color/white"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/baseMargin"
+			android:layout_marginEnd="@dimen/baseMargin">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/edt_pay_cash"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="number"
+				android:hint="Masukan jumlah uang pembayaran"/>
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rv_pay_suggestions"
+			android:visibility="gone"
+			android:layout_margin="@dimen/baseMargin"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/SMargin"
-			android:text="Batal" />
+			android:layout_gravity="center_horizontal"
+			android:orientation="horizontal">
+
+			<Button
+				style="@style/ButtonStyle"
+				android:enabled="false"
+				android:id="@+id/btn_pay_pay"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/SMargin"
+				android:text="Bayar" />
+
+			<Button
+				style="@style/ButtonStyle"
+				android:id="@+id/btn_pay_cancel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/SMargin"
+				android:text="Batal" />
+
+		</LinearLayout>
 
 	</LinearLayout>
 
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

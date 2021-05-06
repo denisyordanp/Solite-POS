@@ -1,10 +1,8 @@
 package com.socialite.solite_pos.data.source.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
@@ -61,7 +59,7 @@ class SoliteRepository private constructor(
 			}
 
 			override fun saveCallResult(data: OrderResponse?) {
-				if (data != null){
+				if (data != null) {
 					localDataSource.soliteDao.insertCustomers(data.customer)
 					localDataSource.soliteDao.insertOrders(data.order)
 					localDataSource.soliteDao.insertPayments(data.payments)
@@ -71,15 +69,20 @@ class SoliteRepository private constructor(
 		}.asLiveData()
 	}
 
-    override fun getProductOrder(orderNo: String): LiveData<Resource<List<ProductOrderDetail>>> {
-        return object : NetworkBoundResource<List<ProductOrderDetail>, OrderProductResponse>(appExecutors){
-            override fun loadFromDB(): LiveData<List<ProductOrderDetail>> {
-                return localDataSource.getProductOrder(orderNo)
-            }
+	override fun getLocalOrders(status: Int, date: String): LiveData<List<OrderData>> {
+		return localDataSource.soliteDao.getOrdersByStatus(status, date)
+	}
 
-            override fun shouldFetch(data: List<ProductOrderDetail>): Boolean {
-                return data.isNullOrEmpty()
-            }
+	override fun getProductOrder(orderNo: String): LiveData<Resource<List<ProductOrderDetail>>> {
+		return object :
+			NetworkBoundResource<List<ProductOrderDetail>, OrderProductResponse>(appExecutors) {
+			override fun loadFromDB(): LiveData<List<ProductOrderDetail>> {
+				return localDataSource.getProductOrder(orderNo)
+			}
+
+			override fun shouldFetch(data: List<ProductOrderDetail>): Boolean {
+				return data.isNullOrEmpty()
+			}
 
             override fun createCall(): LiveData<ApiResponse<OrderProductResponse>> {
                 return remoteDataSource.getProductOrder()
@@ -105,12 +108,28 @@ class SoliteRepository private constructor(
 		localDataSource.soliteDao.insertVariantOptions(product.variantOptions)
 	}
 
-	override fun insertPaymentOrder(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit) {
+	fun insertPaymentOrder(payment: OrderPayment): OrderPayment {
+		val id = localDataSource.soliteDao.insertPaymentOrder(payment)
+		payment.id = id
+		return payment
+	}
+
+	private fun uploadPaymentOrder(payment: OrderPayment)
+			: BatchWithObject<OrderPayment> {
+		val doc = Firebase.firestore
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(OrderPayment.DB_NAME)
+			.document(payment.id.toString())
+		return BatchWithObject(payment, BatchWithData(doc, OrderPayment.toHashMap(payment)))
+	}
+
+	override fun insertPaymentOrderOld(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit) {
 		object : NetworkFunBound<Boolean, LiveData<OrderData>, LiveData<OrderData>>(callback) {
 			var id = 0L
 			override fun dbOperation(): LiveData<OrderData>{
 				this.id = localDataSource.soliteDao.insertPaymentOrder(payment)
-				return localDataSource.soliteDao.getOrdersByNo(payment.orderNO)
+				return localDataSource.soliteDao.getOrderByNo(payment.orderNO)
 			}
 
 			override fun createCall(savedData: LiveData<OrderData>, inCallback: (ApiResponse<Boolean>) -> Unit) {
@@ -131,23 +150,122 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun newOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+	override fun newOrder(order: OrderWithProduct) {
+		localDataSource.soliteDao.insertOrder(order.order.order)
+		insertOrderProduct(order)
+	}
+
+	private fun insertOrderProduct(order: OrderWithProduct) {
+		for (item in order.products) {
+			if (item.product != null) {
+
+				val detail = OrderDetail(order.order.order.orderNo, item.product!!.id, item.amount)
+				detail.id = localDataSource.soliteDao.insertDetailOrder(detail)
+
+				if (item.product!!.isMix) {
+					for (p in item.mixProducts) {
+
+						localDataSource.soliteDao.decreaseAndGetProduct(p.product.id, p.amount)
+
+						val variantMix = OrderProductVariantMix(detail.id, p.product.id, p.amount)
+						variantMix.id = localDataSource.soliteDao.insertVariantMixOrder(variantMix)
+
+						for (variant in p.variants) {
+							val mixVariant = OrderMixProductVariant(variantMix.id, variant.id)
+							mixVariant.id =
+								localDataSource.soliteDao.insertMixVariantOrder(mixVariant)
+						}
+					}
+				} else {
+
+					localDataSource.soliteDao.decreaseAndGetProduct(
+						item.product!!.id,
+						(item.amount * item.product!!.portion)
+					)
+
+					for (variant in item.variants) {
+						val orderVariant = OrderProductVariant(detail.id, variant.id)
+						localDataSource.soliteDao.insertVariantOrder(orderVariant)
+					}
+				}
+			}
+		}
+	}
+
+	fun doneOrder(order: OrderWithProduct) {
+		updateOrder(order.order.order)
+		uploadNewOrder(order) {}
+	}
+
+	private fun uploadNewOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
 
 		val batches: ArrayList<BatchWithData> = ArrayList()
 
-		batches.add(insertOrder(order.order.order).batch)
-        batches.addAll(insertOrderProduct(order))
+		batches.add(uploadOrder(order.order.order).batch)
+		batches.add(uploadPaymentOrder(order.order.orderPayment!!).batch)
+		batches.addAll(uploadOrderProduct(order))
 
 		remoteDataSource.batchUpdate(batches, callback)
 	}
 
-	private fun insertOrderProduct(order: OrderWithProduct): ArrayList<BatchWithData> {
+	private fun uploadOrderProduct(order: OrderWithProduct): ArrayList<BatchWithData> {
 		val batches: ArrayList<BatchWithData> = ArrayList()
-		for (item in order.products){
-			if (item.product != null){
+		for (item in order.products) {
+			if (item.product != null) {
+
+				val detail = localDataSource.soliteDao.getDetailOrders(order.order.order.orderNo, item.product!!.id)
+				val detailBatch = uploadDetailOrder(detail)
+				batches.add(detailBatch.batch)
+
+				if (item.product!!.isMix){
+					for (p in item.mixProducts){
+
+						val productBatch = uploadProduct(p.product)
+						batches.add(productBatch.batch)
+
+						val variantMix = localDataSource.soliteDao.getOrderProductVariantMix(detail.id, p.product.id)
+						val variantMixBatch = uploadVariantMixOrder(variantMix)
+						batches.add(variantMixBatch.batch)
+
+						for (variant in p.variants){
+							val mixVariant = localDataSource.soliteDao.getOrderMixProductVariant(variantMix.id, variant.id)
+							val mixVariantBatch = uploadMixVariantOrder(mixVariant)
+							batches.add(mixVariantBatch.batch)
+						}
+					}
+				}else{
+
+					val productBatch = uploadProduct(item.product!!)
+					batches.add(productBatch.batch)
+
+					for (variant in item.variants){
+						val variantOrder = localDataSource.soliteDao.getVariantOrder(detail.id, variant.id)
+						val variantOrderBatch = uploadVariantOrder(variantOrder)
+						batches.add(variantOrderBatch.batch)
+					}
+				}
+			}
+		}
+		return batches
+	}
+
+	override fun newOrderOld(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+
+		val batches: ArrayList<BatchWithData> = ArrayList()
+
+		batches.add(insertOrder(order.order.order).batch)
+		batches.addAll(insertOrderProductOld(order))
+
+		remoteDataSource.batchUpdate(batches, callback)
+	}
+
+	private fun insertOrderProductOld(order: OrderWithProduct): ArrayList<BatchWithData> {
+		val batches: ArrayList<BatchWithData> = ArrayList()
+		for (item in order.products) {
+			if (item.product != null) {
 
 				val detail = insertDetailOrder(
-						OrderDetail(order.order.order.orderNo, item.product!!.id, item.amount)
+					OrderDetail(order.order.order.orderNo, item.product!!.id, item.amount)
 				)
 				batches.add(detail.batch)
 				val idOrder = detail.data.id
@@ -188,6 +306,26 @@ class SoliteRepository private constructor(
 		return batches
 	}
 
+	private fun uploadOrder(order: Order)
+			: BatchWithObject<Order> {
+		val doc = Firebase.firestore
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(Order.DB_NAME)
+			.document(order.orderNo)
+		return BatchWithObject(order, BatchWithData(doc, Order.toHashMap(order)))
+	}
+
+	private fun uploadProduct(product: Product)
+			: BatchWithObject<Product> {
+		val doc = Firebase.firestore
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(Product.DB_NAME)
+			.document(product.id.toString())
+		return BatchWithObject(product, BatchWithData(doc, Product.toHashMap(product)))
+	}
+
 	private fun insertOrder(order: Order)
 	: BatchWithObject<Order> {
 		localDataSource.soliteDao.insertOrder(order)
@@ -197,6 +335,16 @@ class SoliteRepository private constructor(
 				.collection(Order.DB_NAME)
 				.document(order.orderNo)
 		return BatchWithObject(order, BatchWithData(doc, Order.toHashMap(order)))
+	}
+
+	private fun uploadDetailOrder(detail: OrderDetail)
+			: BatchWithObject<OrderDetail> {
+		val doc = Firebase.firestore
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(OrderDetail.DB_NAME)
+			.document(detail.id.toString())
+		return BatchWithObject(detail, BatchWithData(doc, OrderDetail.toHashMap(detail)))
 	}
 
 	private fun insertDetailOrder(detail: OrderDetail)
@@ -221,6 +369,16 @@ class SoliteRepository private constructor(
 		return BatchWithObject(product, BatchWithData(doc, Product.toHashMap(product)))
 	}
 
+	private fun uploadVariantMixOrder(variant: OrderProductVariantMix)
+			: BatchWithObject<OrderProductVariantMix> {
+		val doc = Firebase.firestore
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(OrderProductVariantMix.DB_NAME)
+			.document(variant.id.toString())
+		return BatchWithObject(variant, BatchWithData(doc, OrderProductVariantMix.toHashMap(variant)))
+	}
+
 	private fun insertVariantMixOrder(variant: OrderProductVariantMix)
 	: BatchWithObject<OrderProductVariantMix> {
 		variant.id = localDataSource.soliteDao.insertVariantMixOrder(variant)
@@ -243,18 +401,38 @@ class SoliteRepository private constructor(
 		return BatchWithObject(mixVariant, BatchWithData(doc, OrderMixProductVariant.toHashMap(mixVariant)))
 	}
 
+	private fun uploadMixVariantOrder(mixVariant: OrderMixProductVariant)
+			: BatchWithObject<OrderMixProductVariant> {
+		val doc = Firebase.firestore
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(OrderMixProductVariant.DB_NAME)
+			.document(mixVariant.id.toString())
+		return BatchWithObject(mixVariant, BatchWithData(doc, OrderMixProductVariant.toHashMap(mixVariant)))
+	}
+
 	private fun insertVariantOrder(variant: OrderProductVariant)
-	: BatchWithObject<OrderProductVariant> {
+			: BatchWithObject<OrderProductVariant> {
 		variant.id = localDataSource.soliteDao.insertVariantOrder(variant)
 		val doc = Firebase.firestore
-				.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(OrderProductVariant.DB_NAME)
-				.document(variant.id.toString())
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(OrderProductVariant.DB_NAME)
+			.document(variant.id.toString())
 		return BatchWithObject(variant, BatchWithData(doc, OrderProductVariant.toHashMap(variant)))
 	}
 
-	override fun updateOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
+	private fun uploadVariantOrder(variant: OrderProductVariant)
+			: BatchWithObject<OrderProductVariant> {
+		val doc = Firebase.firestore
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(OrderProductVariant.DB_NAME)
+			.document(variant.id.toString())
+		return BatchWithObject(variant, BatchWithData(doc, OrderProductVariant.toHashMap(variant)))
+	}
+
+	override fun updateOrderOld(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
 		object : NetworkFunBound<Boolean, Order, Boolean>(callback) {
 			override fun dbOperation(): Order {
 				order.isUploaded = false
@@ -278,131 +456,96 @@ class SoliteRepository private constructor(
 		}
 	}
 
-	override fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-		val batches: ArrayList<BatchWithData> = ArrayList()
-
-		val deleteBatch = deleteProductOrder(old) {
-			batches.addAll(insertOrderProduct(new))
-		}
-		batches.addAll(deleteBatch)
-
-//		remoteDataSource.batchUpdate(batches, callback)
-
-		Log.w("REPLACE_TESTING", "\nOLD : \n $old")
-		Log.w("REPLACE_TESTING", "\nNEW : \n $new")
+	override fun replaceProductOrder(
+		old: OrderWithProduct,
+		new: OrderWithProduct
+	) {
+		updateOrder(new.order.order)
+		deleteOrderProduct(old)
+		insertOrderProduct(new)
 	}
 
-	private fun deleteProductOrder(orderProduct: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit): ArrayList<BatchWithData> {
-		val delBatches: ArrayList<DocumentReference> = ArrayList()
-		val batches: ArrayList<BatchWithData> = ArrayList()
-		for (item in orderProduct.products){
-			if (item.product != null){
+	 override fun updateOrder(order: Order) {
+		localDataSource.soliteDao.updateOrder(order)
+	}
 
-				val detail = localDataSource.soliteDao.getDetailOrders(orderProduct.order.order.orderNo, item.product!!.id)
-				Log.w("REPLACE_TESTING", "\norder detail : \n $detail")
-				delBatches.add(deleteDetailOrder(detail))
+	private fun deleteOrderProduct(orderProduct: OrderWithProduct) {
+		for (item in orderProduct.products) {
+			if (item.product != null) {
 
-				if (item.product!!.isMix){
-					for (p in item.mixProducts){
+				val detail = localDataSource.soliteDao.getDetailOrders(
+					orderProduct.order.order.orderNo,
+					item.product!!.id
+				)
 
-//						batches.add(increaseStock(p.product.id, p.amount).batch)
+				if (item.product!!.isMix) {
+					for (p in item.mixProducts) {
 
-						val variantMixOrder = localDataSource.soliteDao.getOrderProductVariantMix(detail.id, p.product.id)
-						Log.w("REPLACE_TESTING", "\nvariant mix order : \n $variantMixOrder")
-//						delBatches.add(deleteOrderProductVariantMix(variantMixOrder))
+						increaseStock(p.product.id, p.amount)
 
-						for (variant in p.variants){
+						val variantMix = localDataSource.soliteDao.getOrderProductVariantMix(
+							detail.id,
+							p.product.id
+						)
 
-							val variantMix = localDataSource.soliteDao.getOrderMixProductVariant(variantMixOrder.id, variant.id)
-							Log.w("REPLACE_TESTING", "\nvariant mix : \n $variantMix")
-//							delBatches.add(deleteMixVariantOrder(variantMix))
-
+						for (variant in p.variants) {
+							val variantMixOrder =
+								localDataSource.soliteDao.getOrderMixProductVariant(
+									variantMix.id,
+									variant.id
+								)
+							localDataSource.soliteDao.deleteOrderMixProductVariant(variantMixOrder)
 						}
-					}
-				}else{
 
-//					batches.add(increaseStock(item.product!!.id, (item.amount * item.product!!.portion)).batch)
+						localDataSource.soliteDao.deleteOrderProductVariantMix(variantMix)
+					}
+				} else {
+
+					increaseStock(item.product!!.id, (item.amount * item.product!!.portion))
 
 					for (variant in item.variants) {
-
-						val variantOrder = localDataSource.soliteDao.getOrderVariant(detail.id, variant.id)
-						Log.w("REPLACE_TESTING", "\nvariant order : \n $variantOrder")
-//						delBatches.add(deleteVariantOrder(variantOrder))
-
+						val orderVariant =
+							localDataSource.soliteDao.getVariantOrder(detail.id, variant.id)
+						localDataSource.soliteDao.deleteOrderVariant(orderVariant)
 					}
 				}
+
+				localDataSource.soliteDao.deleteOrderDetail(detail)
 			}
 		}
-
-//		remoteDataSource.batchDelete(delBatches, callback)
-
-		return batches
-	}
-
-	private fun deleteDetailOrder(detail: OrderDetail): DocumentReference {
-		localDataSource.soliteDao.deleteOrderDetail(detail)
-		return Firebase.firestore
-				.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(OrderDetail.DB_NAME)
-				.document(detail.id.toString())
-	}
-
-	private fun deleteOrderProductVariantMix(orderVariant: OrderProductVariantMix): DocumentReference {
-		localDataSource.soliteDao.deleteOrderProductVariantMix(orderVariant)
-		return Firebase.firestore
-				.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(OrderProductVariantMix.DB_NAME)
-				.document(orderVariant.id.toString())
-	}
-
-	private fun deleteMixVariantOrder(mixVariant: OrderMixProductVariant)
-			: DocumentReference {
-		localDataSource.soliteDao.deleteOrderMixProductVariant(mixVariant)
-		return Firebase.firestore
-				.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(OrderMixProductVariant.DB_NAME)
-				.document(mixVariant.id.toString())
-	}
-
-	private fun deleteVariantOrder(orderVariant: OrderProductVariant)
-			: DocumentReference {
-		localDataSource.soliteDao.deleteOrderVariant(orderVariant)
-		return Firebase.firestore
-				.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(OrderProductVariant.DB_NAME)
-				.document(orderVariant.id.toString())
 	}
 
 	override fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
 		val batches: ArrayList<BatchWithData> = ArrayList()
-		batches.add(updateOrder(order.order.order).batch)
-        for (item in order.products){
-            if (item.product != null){
+		batches.add(updateOrderOld(order.order.order).batch)
+		for (item in order.products) {
+			if (item.product != null) {
 
-                if (item.product!!.isMix){
-                    for (p in item.mixProducts){
-                        batches.add(increaseStock(p.product.id, p.amount).batch)
-                    }
-                }else{
-                    batches.add(increaseStock(item.product!!.id, (item.amount * item.product!!.portion)).batch)
-                }
-            }
-        }
+				if (item.product!!.isMix) {
+					for (p in item.mixProducts) {
+						batches.add(increaseStock(p.product.id, p.amount).batch)
+					}
+				} else {
+					batches.add(
+						increaseStock(
+							item.product!!.id,
+							(item.amount * item.product!!.portion)
+						).batch
+					)
+				}
+			}
+		}
 		remoteDataSource.batchUpdate(batches, callback)
 	}
 
-	private fun updateOrder(order: Order)
+	private fun updateOrderOld(order: Order)
 			: BatchWithObject<Order> {
 		localDataSource.soliteDao.updateOrder(order)
 		val doc = Firebase.firestore
-				.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(Order.DB_NAME)
-				.document(order.orderNo)
+			.collection(AppDatabase.DB_NAME)
+			.document(AppDatabase.MAIN)
+			.collection(Order.DB_NAME)
+			.document(order.orderNo)
 		return BatchWithObject(order, BatchWithData(doc, Order.toHashMap(order)))
 	}
 

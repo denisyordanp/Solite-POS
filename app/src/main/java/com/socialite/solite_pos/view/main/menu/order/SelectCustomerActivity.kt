@@ -68,10 +68,10 @@ class SelectCustomerActivity : SocialiteActivity() {
 					array.add(user)
 				}
 			}
-			if (array.isEmpty()){
+			if (array.isEmpty() || isNotEquals(array, s)){
 				val c = Customer("Tambah pelanggan baru")
 				c.id = Customer.ID_ADD
-				array.add(c)
+				array.add(0, c)
 			}
 			adapter.setItems(array)
 		}else{
@@ -79,7 +79,18 @@ class SelectCustomerActivity : SocialiteActivity() {
 		}
 	}
 
-	private fun setResult(customer: Customer){
+	private fun isNotEquals(customers: ArrayList<Customer>, s: String) : Boolean {
+		for (customer in customers) {
+			val name = customer.name.toLowerCase(Locale.getDefault()).trim()
+			val str = s.toLowerCase(Locale.getDefault()).trim()
+			if (name == str) {
+				return false
+			}
+		}
+		return true
+	}
+
+	private fun setResult(customer: Customer) {
 		val data = Intent()
 		if (customer.id == Customer.ID_ADD){
 			val newCustomer = Customer(nameCustomer)
@@ -105,7 +116,7 @@ class SelectCustomerActivity : SocialiteActivity() {
 				val cap = s.substring(0, 1).toUpperCase(Locale.getDefault()) + s.substring(1)
 				builder.append(cap).append(" ")
 			}
-			return builder.toString()
+			return builder.toString().trim()
 		}
 
 	private fun getCustomer(){

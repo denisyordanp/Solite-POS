@@ -12,7 +12,6 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.view.main.menu.adapter.OrderListAdapter
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
-import com.socialite.solite_pos.vo.Status
 
 class NotPayFragment(private var queryDate: String) : Fragment() {
 
@@ -53,16 +52,8 @@ class NotPayFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun getData() {
-        viewModel.getOrderList(Order.NEED_PAY, queryDate).observe(activity!!) {
-            when (it.status) {
-                Status.LOADING -> {
-                }
-                Status.SUCCESS -> {
-                    adapter.items = ArrayList(it.data)
-                }
-                Status.ERROR -> {
-                }
-            }
+        viewModel.getLocalOrders(Order.NEED_PAY, queryDate).observe(activity!!) { orders ->
+            adapter.items = ArrayList(orders)
         }
     }
 }

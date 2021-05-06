@@ -1,10 +1,7 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
 import android.content.Context
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
+import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -189,12 +186,11 @@ data class Order(
 		}
 	}
 
-	fun finishToString(context: Context): String?{
+	fun finishToString(context: Context): String? {
 		return if (cookTime != null){
 			val df = SimpleDateFormat("HH:mm", Locale.getDefault())
 
 			val f = getFinishCook(context)
-			f.add(Calendar.MINUTE, SettingPref(context).cookTime)
 			df.format(f.time)
 		}else{
 			null

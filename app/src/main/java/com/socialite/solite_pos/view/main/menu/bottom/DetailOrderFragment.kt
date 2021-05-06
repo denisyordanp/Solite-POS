@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.main.menu.bottom
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +22,14 @@ import com.socialite.solite_pos.view.main.menu.order.OrderActivity
 import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentDetailOrderBinding
 	private lateinit var adapter: ItemOrderListAdapter
 	private lateinit var viewModel: MainViewModel
+	private lateinit var orderViewModel: OrderViewModel
 
 	private var mainActivity: MainActivity? = null
 
@@ -63,10 +66,15 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 			act = mainActivity!!
             viewModel = getMainViewModel(act)
+			orderViewModel = OrderViewModel.getOrderViewModel(act)
 
             _binding.btnDoCancel.setOnClickListener { cancelOrder() }
             _binding.btnDoPrint.setOnClickListener {
-                mainActivity?.printBill?.doPrint(order)
+				if (order != null) {
+					mainActivity?.printBill?.doPrint(order!!) {
+
+					}
+				}
             }
 			_binding.btnDoDone.setOnClickListener { doneOrder() }
 			_binding.btnDoEdit.setOnClickListener { editOrder(order!!) }
@@ -94,72 +102,80 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 	}
 
 	private fun setData() {
-		if (order != null){
-			when(order!!.order.order.status){
-				Order.ON_PROCESS -> {
-					_binding.contDoCancel.visibility = View.VISIBLE
-					_binding.contDoPay.visibility = View.VISIBLE
-					_binding.contDoDone.visibility = View.VISIBLE
-				}
+		if (order == null) return
 
-				Order.NEED_PAY -> {
-					_binding.contDoPay.visibility = View.VISIBLE
-				}
-
-				Order.DONE -> {
-					_binding.contDoPrint.visibility = View.VISIBLE
-				}
-
-				else -> {
-					_binding.linearLayout.visibility = View.GONE
-				}
+		when(order!!.order.order.status){
+			Order.ON_PROCESS -> {
+				_binding.contDoCancel.visibility = View.VISIBLE
+				_binding.contDoPay.visibility = View.VISIBLE
+				_binding.contDoDone.visibility = View.VISIBLE
 			}
 
-			val no = "No. ${order?.order?.order?.orderNo}"
-			_binding.tvDoDate.text = order?.order?.order?.timeString
-			_binding.tvDoNoOrder.text = no
-			_binding.tvDoName.text = order?.order?.customer?.name
-			adapter.order = order
+			Order.NEED_PAY -> {
+				_binding.contDoPay.visibility = View.VISIBLE
+			}
+
+			Order.DONE -> {
+				_binding.contDoPrint.visibility = View.VISIBLE
+			}
+
+			else -> {
+				_binding.linearLayout.visibility = View.GONE
+			}
 		}
+
+		val no = "No. ${order!!.order.order.orderNo}"
+		_binding.tvDoDate.text = order!!.order.order.timeString
+		_binding.tvDoNoOrder.text = no
+		_binding.tvDoName.text = order!!.order.customer.name
+		_binding.tvDoTakeAway.text = if (order!!.order.order.isTakeAway) {
+			"Dibungkus"
+		} else {
+			"Makan Ditempat"
+		}
+		adapter.order = order
 	}
 
 	private fun doneOrder(){
-		if (order != null){
-			MessageBottom(childFragmentManager)
-					.setMessage("Yakin pesanan telah sampai ke konsumen?")
-					.setPositiveListener("Ya, sudah"){
-						mainActivity?.setToNotPay(order)
-					}
-					.setNegativeListener("Belum"){ dialog?.dismiss() }
-					.show()
-		}
+		if (order == null) return
+		MessageBottom(childFragmentManager)
+			.setMessage("Yakin pesanan telah sampai ke konsumen?")
+			.setPositiveListener("Ya, sudah"){
+				updateOrder(order!!, Order.NEED_PAY)
+			}
+			.setNegativeListener("Belum"){ dialog?.dismiss() }
+			.show()
 	}
 
 	private fun cancelOrder(){
-		if (order != null){
-			val isCancelAble = order!!.order.order.isCancelable(activity!!)
+		if (order == null) return
+		val isCancelAble = order!!.order.order.isCancelable(activity!!)
 
-			val message: String
-			val negative: String
-			if (isCancelAble){
-				message = "Anda yakin membatalkan pesanan ini?"
-				negative = "Tidak"
-			}else{
-				message = "Maaf pesanan yang sudah selesai di masak tidak dapat dibatalkan"
-				negative = "Oke"
-			}
-
-			val bottom = MessageBottom(childFragmentManager)
-			bottom.setMessage(message)
-			bottom.setNegativeListener(negative){ it?.dismiss() }
-			if (isCancelAble){
-				bottom.setPositiveListener("Ya"){
-					mainActivity?.cancelOrder(order)
-					dialog?.dismiss()
-				}
-			}
-			bottom.show()
+		val message: String
+		val negative: String
+		if (isCancelAble){
+			message = "Anda yakin membatalkan pesanan ini?"
+			negative = "Tidak"
+		}else{
+			message = "Maaf pesanan yang sudah selesai di masak tidak dapat dibatalkan"
+			negative = "Oke"
 		}
+
+		val bottom = MessageBottom(childFragmentManager)
+		bottom.setMessage(message)
+		bottom.setNegativeListener(negative){ it?.dismiss() }
+		if (isCancelAble){
+			bottom.setPositiveListener("Ya") {
+				updateOrder(order!!, Order.CANCEL)
+				dialog?.dismiss()
+			}
+		}
+		bottom.show()
+	}
+
+	private fun updateOrder(order: OrderWithProduct, status: Int) {
+		order.order.order.status = status
+		orderViewModel.updateOrder(order.order.order)
 	}
 
 	private fun editOrder(order: OrderWithProduct) {
