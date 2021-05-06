@@ -12,57 +12,78 @@ import java.io.IOException
 import java.util.*
 
 class DeviceConnection(private val activity: SocialiteActivity) {
-	private var mBluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+
 	private var setting: SettingPref = SettingPref(activity)
 
-	companion object{
+	companion object {
 		var mbtSocket: BluetoothSocket? = null
+
+		fun setSocketFromDevice(device: BluetoothDevice) {
+			val uuid: UUID = device.uuids[0].uuid
+			try {
+				mbtSocket = device.createRfcommSocketToServiceRecord(uuid)
+			} catch (e: IOException) {
+				e.printStackTrace()
+			}
+		}
 	}
 
-	fun getDevice(callback: (BluetoothSocket?) -> Unit){
-		if (setting.printerDevice.isNullOrEmpty()){
-			val intent = Intent(
-					activity.applicationContext,
-					BluetoothDeviceListActivity::class.java
-			)
+	fun getDevice(callback: (BluetoothSocket?) -> Unit) {
+		val address = setting.printerDevice
+		if (mbtSocket != null) {
+			if (!mbtSocket!!.isConnected) {
+				mbtSocket!!.connect()
+			}
+			callback.invoke(mbtSocket)
+		} else if (!address.isNullOrEmpty()) {
+			val device = getDeviceFromAddress(address)
+			if (device != null) {
+				setSocketFromDevice(device)
+				if (mbtSocket != null) {
+					connectSocket(mbtSocket!!, callback)
+				} else {
+					callback.invoke(null)
+				}
+			} else {
+				callback.invoke(null)
+			}
+		} else {
+			val intent = Intent(activity, BluetoothDeviceListActivity::class.java)
 			activity.startActivityForResult(intent, PrintBill.REQUEST_CONNECT_BT)
-		}else{
-			val device = mBluetoothAdapter.getRemoteDevice(setting.printerDevice)
-			onDevice(device, callback)
 		}
 	}
 
-	private fun onDevice(device: BluetoothDevice, callback: (BluetoothSocket?) -> Unit){
-		if (mBluetoothAdapter.isDiscovering) {
-			mBluetoothAdapter.cancelDiscovery()
+	private fun getDeviceFromAddress(address: String): BluetoothDevice? {
+		val adapter = BluetoothAdapter.getDefaultAdapter()
+		return if (adapter != null) {
+			adapter.getRemoteDevice(address)
+		} else {
+			showToast("Bluetooth tidak aktif")
+			null
 		}
+	}
 
-		Toast.makeText(activity, "Printing", Toast.LENGTH_SHORT).show()
-
+	private fun connectSocket(socket: BluetoothSocket, callback: (BluetoothSocket?) -> Unit) {
 		Thread {
 			try {
-				val uuid: UUID = device.uuids[0].uuid
-				mbtSocket = device.createRfcommSocketToServiceRecord(uuid)
-				mbtSocket?.connect()
-				SettingPref(activity.applicationContext).printerDevice = device.address
+				socket.connect()
+				showToast("Printing")
 				callback.invoke(mbtSocket)
 			} catch (ex: IOException) {
-				activity.runOnUiThread(socketErrorRunnable)
+				ex.printStackTrace()
 				try {
-					mbtSocket?.close()
+					socket.close()
 				} catch (e: IOException) {
 					e.printStackTrace()
 				}
 				mbtSocket = null
+				showToast("Error print, mohon coba kembali")
 				callback.invoke(null)
 			}
 		}.start()
 	}
 
-	private val socketErrorRunnable = Runnable {
-		setting.printerDevice = ""
-		Toast.makeText(activity,
-				"Cannot establish connection", Toast.LENGTH_SHORT).show()
-		mBluetoothAdapter.startDiscovery()
+	private fun showToast(message: String) {
+		Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 	}
 }

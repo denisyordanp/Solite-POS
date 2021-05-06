@@ -7,18 +7,17 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.ActivityVariantOptionBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.master.variant.VariantOptionMasterAdapter
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class VariantOptionActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityVariantOptionBinding
 	private lateinit var adapter: VariantOptionMasterAdapter
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 	private var product: Product? = null
 	private var variant: Variant? = null
@@ -36,14 +35,9 @@ class VariantOptionActivity : SocialiteActivity() {
 		product = intent.getSerializableExtra(PRODUCT) as Product?
 		variant = intent.getSerializableExtra(VARIANT) as Variant?
 
-		viewModel = getMainViewModel(this)
+		viewModel = ProductViewModel.getMainViewModel(this)
 
-		adapter = VariantOptionMasterAdapter(
-				product,
-				viewModel,
-				supportFragmentManager,
-				this
-		)
+		adapter = VariantOptionMasterAdapter(product, this)
 		_binding.rvVoOptions.layoutManager = LinearLayoutManager(this)
 		_binding.rvVoOptions.adapter = adapter
 

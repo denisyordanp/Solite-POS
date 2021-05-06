@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.main.menu.adapter.master.product
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
@@ -13,18 +14,20 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.RvProductBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMixVariantAdapter(
 		private val variant: Variant?,
-	private val viewModel: MainViewModel,
 		private val activity: FragmentActivity
 	) : RecyclerView.Adapter<ProductMixVariantAdapter.ListViewHolder>() {
 
+	private var viewModel = ProductViewModel.getMainViewModel(activity)
+
 	var items: ArrayList<ProductWithCategory> = ArrayList()
+		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
-			if (field.isNotEmpty()){
+			if (field.isNotEmpty()) {
 				field.clear()
 			}
 			field.addAll(value)
@@ -38,7 +41,7 @@ class ProductMixVariantAdapter(
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		val p = items[position]
 
-		holder.setContent(position, p.product)
+		holder.setContent(p.product)
 		holder.binding.tvPmvName.text = p.product.name
 	}
 
@@ -50,7 +53,7 @@ class ProductMixVariantAdapter(
 
 		private var isChecked: Boolean = false
 
-		fun setContent(position: Int, product: Product?){
+		fun setContent(product: Product?){
 			if (product != null){
 				binding.contPmvCount.visibility = View.GONE
 				binding.cbPmvSelected.visibility = View.VISIBLE

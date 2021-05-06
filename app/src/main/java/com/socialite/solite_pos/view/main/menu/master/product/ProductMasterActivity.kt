@@ -4,12 +4,11 @@ import android.os.Bundle
 import com.google.android.material.tabs.TabLayoutMediator
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.ActivityProductMasterBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 
@@ -17,14 +16,14 @@ class ProductMasterActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityProductMasterBinding
 	private lateinit var adapter: ViewPagerAdapter
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		_binding = ActivityProductMasterBinding.inflate(layoutInflater)
 		setContentView(_binding.root)
 
-		viewModel = getMainViewModel(this)
+		viewModel = ProductViewModel.getMainViewModel(this)
 
 		adapter = ViewPagerAdapter(this)
 		_binding.vpProductMaster.adapter = adapter

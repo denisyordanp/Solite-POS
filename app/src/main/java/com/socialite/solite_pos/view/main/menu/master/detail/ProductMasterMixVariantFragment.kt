@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.FragmentMasterProductMixVariantBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.view.main.menu.adapter.master.product.ProductMixVariantAdapter
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMasterMixVariantFragment(
@@ -20,11 +19,11 @@ class ProductMasterMixVariantFragment(
 	private val category: Category?
 	) : Fragment() {
 
-	constructor(): this(null, null)
+	constructor() : this(null, null)
 
 	private lateinit var _binding: FragmentMasterProductMixVariantBinding
 	private lateinit var adapter: ProductMixVariantAdapter
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -36,9 +35,9 @@ class ProductMasterMixVariantFragment(
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+		if (activity != null) {
 
-			viewModel = getMainViewModel(activity!!)
+			viewModel = ProductViewModel.getMainViewModel(activity!!)
 			setAdapter()
 
 			_binding.rvProductMixVariant.layoutManager = GridLayoutManager(activity, 5)
@@ -46,7 +45,7 @@ class ProductMasterMixVariantFragment(
 	}
 
 	private fun setAdapter(){
-		adapter = ProductMixVariantAdapter(variant, viewModel, activity!!)
+		adapter = ProductMixVariantAdapter(variant, activity!!)
 		_binding.rvProductMixVariant.adapter = adapter
 
 		getProduct()

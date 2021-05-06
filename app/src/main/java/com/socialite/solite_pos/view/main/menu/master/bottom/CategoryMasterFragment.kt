@@ -9,26 +9,27 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.FragmentCategoryMasterBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 class CategoryMasterFragment(private val category: Category?) : BottomSheetDialogFragment() {
 
-	constructor(): this(null)
+	constructor() : this(null)
 
 	private lateinit var _binding: FragmentCategoryMasterBinding
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 	private val name: String
-	get() = _binding.edtCmName.text.toString().trim()
+		get() = _binding.edtCmName.text.toString().trim()
 	private val desc: String
-	get() = _binding.edtCmDesc.text.toString().trim()
+		get() = _binding.edtCmDesc.text.toString().trim()
 	private val isStock: Boolean
 		get() = _binding.cbCmStock.isChecked
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-							  savedInstanceState: Bundle?): View {
+	override fun onCreateView(
+		inflater: LayoutInflater, container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View {
 		_binding = FragmentCategoryMasterBinding.inflate(inflater, container, false)
 		return _binding.root
 	}
@@ -40,15 +41,15 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+		if (activity != null) {
 
-			viewModel = getMainViewModel(activity!!)
+			viewModel = ProductViewModel.getMainViewModel(activity!!)
 
-			if (category != null){
+			if (category != null) {
 				setData()
-			}else{
+			} else {
 				_binding.btnCmSave.setOnClickListener {
-					if (isCheck){
+					if (isCheck) {
 						saveData(getCategory(true))
 					}
 				}

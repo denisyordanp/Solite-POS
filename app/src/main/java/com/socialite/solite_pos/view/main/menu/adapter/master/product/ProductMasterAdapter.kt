@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.main.menu.adapter.master.product
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
@@ -8,17 +9,19 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.databinding.RvProductMasterBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMasterAdapter(
 		private val activity: FragmentActivity,
-		private val viewModel: MainViewModel
 		) : RecyclerView.Adapter<ProductMasterAdapter.ListViewHolder>() {
 
+	private var viewModel = ProductViewModel.getMainViewModel(activity)
+
 	var items: ArrayList<ProductWithCategory> = ArrayList()
+		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
-			if (field.isNotEmpty()){
+			if (field.isNotEmpty()) {
 				field.clear()
 			}
 			field.addAll(value)

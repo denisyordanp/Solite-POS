@@ -24,6 +24,10 @@ class ProductViewModel(private val repository: SoliteRepository) : ViewModel() {
 		}
 	}
 
+	fun getProducts(idCategory: Long): LiveData<Resource<List<ProductWithCategory>>>{
+		return repository.getProducts(idCategory)
+	}
+
 	fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>> {
 		return repository.getProductVariantOptions(idProduct)
 	}
@@ -52,6 +56,14 @@ class ProductViewModel(private val repository: SoliteRepository) : ViewModel() {
 		return repository.getVariantMixProduct(idVariant)
 	}
 
+	fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertVariantMix(data, callback)
+	}
+
+	fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.removeVariantMix(data, callback)
+	}
+
 	fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>> {
 		return repository.getProductWithCategories(category)
 	}
@@ -62,5 +74,40 @@ class ProductViewModel(private val repository: SoliteRepository) : ViewModel() {
 
 	fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit){
 		repository.updateProduct(data, callback)
+	}
+
+	fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>> {
+		return repository.getCategories(query)
+	}
+
+	fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertCategory(data, callback)
+	}
+
+	fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateCategory(data, callback)
+	}
+
+	val variants: LiveData<Resource<List<Variant>>>
+		get() = repository.variants
+
+	fun insertVariants(data: Variant, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertVariant(data, callback)
+	}
+
+	fun updateVariant(data: Variant, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateVariant(data, callback)
+	}
+
+	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>>{
+		return repository.getVariantOptions(query)
+	}
+
+	fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit){
+		repository.insertVariantOption(data, callback)
+	}
+
+	fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit){
+		repository.updateVariantOption(data, callback)
 	}
 }

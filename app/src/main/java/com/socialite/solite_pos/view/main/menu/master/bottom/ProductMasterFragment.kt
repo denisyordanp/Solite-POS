@@ -17,8 +17,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.FragmentProductMasterBinding
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ProductMasterFragment(private val product: ProductWithCategory?) : BottomSheetDialogFragment() {
@@ -26,7 +25,7 @@ class ProductMasterFragment(private val product: ProductWithCategory?) : BottomS
 	constructor(): this(null)
 
 	private lateinit var _binding: FragmentProductMasterBinding
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 	private var red: Int? = null
 	private var white: Int? = null
@@ -66,7 +65,7 @@ class ProductMasterFragment(private val product: ProductWithCategory?) : BottomS
 			red = ResourcesCompat.getColor(activity!!.resources, android.R.color.holo_red_light, null)
 			white = ResourcesCompat.getColor(activity!!.resources, R.color.white, null)
 
-			viewModel = getMainViewModel(activity!!)
+			viewModel = ProductViewModel.getMainViewModel(activity!!)
 			if (product != null){
 				setData()
 			}else{

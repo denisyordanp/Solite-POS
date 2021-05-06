@@ -7,7 +7,6 @@ import com.socialite.solite_pos.data.source.local.entity.helper.*
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.*
-import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.vo.Resource
 

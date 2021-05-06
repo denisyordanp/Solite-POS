@@ -17,7 +17,6 @@ import com.socialite.solite_pos.view.main.opening.OpeningActivity
 class SendNotification {
 	private lateinit var context: Context
 	private val uriTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-	private var builder: NotificationCompat.Builder? = null
 
 	companion object{
 
@@ -52,19 +51,23 @@ class SendNotification {
 		this.context = context
 
 		val pendingIntent = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-		builder = NotificationCompat.Builder(context, channelId)
-		builder!!.setSmallIcon(R.drawable.ic_warning)
-		builder!!.color = ContextCompat.getColor(context, android.R.color.transparent)
-		builder!!.priority = NotificationCompat.PRIORITY_HIGH
-		builder!!.setContentTitle(title)
-		builder!!.setContentIntent(pendingIntent)
-		builder!!.setContentText(message)
-		builder!!.setAutoCancel(true)
-		builder!!.setSound(uriTone)
+		val builder = createBuilder(channelId, title, message, pendingIntent)
 
 		createNotificationChannel(channelId, channelName)
-		NotificationManagerCompat.from(context).notify(notificationId, builder!!.build())
+		NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+	}
+
+	private fun createBuilder(channelId: String, title: String, message: String, pendingIntent: PendingIntent): NotificationCompat.Builder {
+		val builder = NotificationCompat.Builder(context, channelId)
+		builder.setSmallIcon(R.drawable.ic_warning)
+		builder.color = ContextCompat.getColor(context, android.R.color.transparent)
+		builder.priority = NotificationCompat.PRIORITY_HIGH
+		builder.setContentTitle(title)
+		builder.setContentIntent(pendingIntent)
+		builder.setContentText(message)
+		builder.setAutoCancel(true)
+		builder.setSound(uriTone)
+		return builder
 	}
 
 	private fun createNotificationChannel(channelId: String, channelName: String) {

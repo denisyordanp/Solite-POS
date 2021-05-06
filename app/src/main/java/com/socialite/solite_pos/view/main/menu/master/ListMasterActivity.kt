@@ -8,7 +8,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.ActivityListMasterBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.master.PaymentMasterAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.master.SupplierMasterAdapter
@@ -21,18 +20,20 @@ import com.socialite.solite_pos.view.main.menu.master.bottom.PaymentMasterFragme
 import com.socialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragment
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragment
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class ListMasterActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityListMasterBinding
-	private lateinit var viewModel: MainViewModel
+	private lateinit var productViewModel: ProductViewModel
+	private lateinit var mainViewModel: MainViewModel
 
 	private var product: Product? = null
 	private var type: Int = 0
 	private var code: Int = 0
 
-	companion object{
+	companion object {
 		const val TYPE = "type"
 
 		const val REQUEST_CODE = "rq_code"
@@ -50,7 +51,8 @@ class ListMasterActivity : SocialiteActivity() {
 		_binding = ActivityListMasterBinding.inflate(layoutInflater)
 		setContentView(_binding.root)
 
-		viewModel = getMainViewModel(this)
+		mainViewModel = MainViewModel.getMainViewModel(this)
+		productViewModel = ProductViewModel.getMainViewModel(this)
 		_binding.rvListMaster.layoutManager = LinearLayoutManager(this)
 
 		code = intent.getIntExtra(REQUEST_CODE, 0)
@@ -90,14 +92,16 @@ class ListMasterActivity : SocialiteActivity() {
 		}
 	}
 
-	private fun getSuppliers(callback: (ArrayList<Supplier>) -> Unit){
-		viewModel.suppliers.observe(this) {
-			when(it.status){
-				Status.LOADING-> {}
+	private fun getSuppliers(callback: (ArrayList<Supplier>) -> Unit) {
+		mainViewModel.suppliers.observe(this) {
+			when (it.status) {
+				Status.LOADING -> {
+				}
 				Status.SUCCESS -> {
 					callback.invoke(ArrayList(it.data))
 				}
-				Status.ERROR -> {}
+				Status.ERROR -> {
+				}
 			}
 		}
 	}
@@ -115,25 +119,26 @@ class ListMasterActivity : SocialiteActivity() {
 			_binding.rvListMaster.adapter = adapter
 
 			getCategories { adapter.items = it }
-		}else{
+		}else {
 			_binding.fabLmNewData.setOnClickListener {
 				CategoryMasterFragment(null).show(supportFragmentManager, "detail-category")
 			}
 
-			val adapter = CategoryMasterAdapter(viewModel, supportFragmentManager)
+			val adapter = CategoryMasterAdapter(this)
 			_binding.rvListMaster.adapter = adapter
 
 			getCategories { adapter.items = it }
 		}
 	}
 
-	private fun getCategories(callback: (ArrayList<Category>) -> Unit){
-		viewModel.getCategories(Category.getFilter(Category.ALL)).observe(this, {
-			when(it.status){
+	private fun getCategories(callback: (ArrayList<Category>) -> Unit) {
+		productViewModel.getCategories(Category.getFilter(Category.ALL)).observe(this, {
+			when (it.status) {
 				Status.SUCCESS -> {
 					callback.invoke(ArrayList(it.data))
 				}
-				else -> {}
+				else -> {
+				}
 			}
 		})
 	}
@@ -170,16 +175,17 @@ class ListMasterActivity : SocialiteActivity() {
 		}
 	}
 
-	private fun getVariants(isMix: Boolean?, callback: ((ArrayList<Variant>) -> Unit)){
-		viewModel.variants.observe(this){
-			when(it.status){
-				Status.LOADING -> {}
+	private fun getVariants(isMix: Boolean?, callback: ((ArrayList<Variant>) -> Unit)) {
+		productViewModel.variants.observe(this) {
+			when (it.status) {
+				Status.LOADING -> {
+				}
 				Status.SUCCESS -> {
-					if (!it.data.isNullOrEmpty()){
+					if (!it.data.isNullOrEmpty()) {
 						val variants: ArrayList<Variant> = ArrayList()
-						for (item in it.data){
-							if (isMix != null){
-								if (item.isMix == isMix){
+						for (item in it.data) {
+							if (isMix != null) {
+								if (item.isMix == isMix) {
 									variants.add(item)
 								}
 							}else{
@@ -194,23 +200,25 @@ class ListMasterActivity : SocialiteActivity() {
 		}
 	}
 
-	private fun setPayment(){
+	private fun setPayment() {
 		_binding.fabLmNewData.text = "Tambah Pembayaran"
 		_binding.tvLmTitle.text = "Pembayaran"
 		_binding.fabLmNewData.setOnClickListener {
 			PaymentMasterFragment(null).show(supportFragmentManager, "detail-variant")
 		}
 
-		val adapter = PaymentMasterAdapter(viewModel, supportFragmentManager)
+		val adapter = PaymentMasterAdapter(mainViewModel, supportFragmentManager)
 		_binding.rvListMaster.adapter = adapter
 
-		viewModel.payments.observe(this) {
-			when(it.status){
-				Status.LOADING -> {}
+		mainViewModel.payments.observe(this) {
+			when (it.status) {
+				Status.LOADING -> {
+				}
 				Status.SUCCESS -> {
 					adapter.items = ArrayList(it.data)
 				}
-				Status.ERROR -> {}
+				Status.ERROR -> {
+				}
 			}
 		}
 	}

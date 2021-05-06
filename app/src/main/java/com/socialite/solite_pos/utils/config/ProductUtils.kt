@@ -3,7 +3,7 @@ package com.socialite.solite_pos.utils.config
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import java.util.*
 
-class FindProductOrderIndex {
+class ProductUtils {
     companion object{
         fun find(array: ArrayList<ProductOrderDetail>, detail: ProductOrderDetail?): Int? {
             for ((i, v) in array.withIndex()) {

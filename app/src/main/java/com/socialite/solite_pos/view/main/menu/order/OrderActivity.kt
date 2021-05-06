@@ -20,10 +20,8 @@ import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class OrderActivity : SocialiteActivity() {
@@ -35,12 +33,11 @@ class OrderActivity : SocialiteActivity() {
 	private lateinit var vpAdapter: ViewPagerAdapter
 
 	private lateinit var orderViewModel: OrderViewModel
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 	private var order: OrderWithProduct? = null
 
 	companion object{
-		const val NEW_ORDER_RQ_CODE = 101
 		const val EDIT_ORDER = "edit_order"
 	}
 
@@ -51,8 +48,8 @@ class OrderActivity : SocialiteActivity() {
         _order.contItemAmount.root.visibility = View.GONE
         setContentView(_binding.root)
 
-        viewModel = getMainViewModel(this)
-		orderViewModel = getOrderViewModel(this)
+        viewModel = ProductViewModel.getMainViewModel(this)
+		orderViewModel = OrderViewModel.getOrderViewModel(this)
 
         vpAdapter = ViewPagerAdapter(this)
         _binding.vpNewOrder.adapter = vpAdapter
@@ -150,7 +147,7 @@ class OrderActivity : SocialiteActivity() {
 					if (!it.data.isNullOrEmpty()){
 						val fragments: ArrayList<FragmentWithTitle> = ArrayList()
 						for (ctg in it.data){
-							val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.ORDER, ctg, this) { p ->
+							val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.ORDER, ctg) { p ->
 								addItemOrder(p)
 							}
 							fragments.add(FragmentWithTitle(ctg.name, fragment))

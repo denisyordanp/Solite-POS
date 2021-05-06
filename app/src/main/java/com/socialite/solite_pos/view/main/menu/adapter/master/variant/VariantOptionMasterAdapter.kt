@@ -1,28 +1,29 @@
 package com.socialite.solite_pos.view.main.menu.adapter.master.variant
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.RvVariantOptionMasterBinding
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class VariantOptionMasterAdapter(
 	private val product: Product?,
-	private val viewModel: MainViewModel,
-	private val fragmentManager: FragmentManager,
-	private val activity: SocialiteActivity
+	private val activity: FragmentActivity
 ) : RecyclerView.Adapter<VariantOptionMasterAdapter.ListViewHolder>() {
 
+	private var viewModel = ProductViewModel.getMainViewModel(activity)
+
 	var items: ArrayList<VariantOption> = ArrayList()
+		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
-			if (field.isNotEmpty()){
+			if (field.isNotEmpty()) {
 				field.clear()
 			}
 			field.addAll(value)
@@ -55,7 +56,7 @@ class VariantOptionMasterAdapter(
 								Status.LOADING -> { }
 								Status.SUCCESS -> {
 									binding.swVoOptions.isChecked = it.data != null
-									binding.swVoOptions.setOnCheckedChangeListener{ v, _ ->
+									binding.swVoOptions.setOnCheckedChangeListener{ _, _ ->
 										if (it.data == null){
 											val variantProduct = VariantProduct(vo.idVariant, vo.id, product.id)
 											viewModel.insertVariantProduct(variantProduct) {}
@@ -76,7 +77,7 @@ class VariantOptionMasterAdapter(
 					}
 				}
 				itemView.setOnClickListener {
-					VariantOptionFragment(vo).show(fragmentManager, "detail-variant-option")
+					VariantOptionFragment(vo).show(activity.supportFragmentManager, "detail-variant-option")
 				}
 			}
 		}

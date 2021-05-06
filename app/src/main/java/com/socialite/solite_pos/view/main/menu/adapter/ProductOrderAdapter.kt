@@ -1,27 +1,29 @@
 package com.socialite.solite_pos.view.main.menu.adapter
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.databinding.RvProductBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.main.menu.order.SelectMixVariantOrderActivity
 
 class ProductOrderAdapter(
-		private val type: Int,
-		private val activity: SocialiteActivity,
-		private var callback: ((ProductOrderDetail) -> Unit)?
+	private val type: Int,
+	private val activity: FragmentActivity,
+	private var callback: ((ProductOrderDetail) -> Unit)?
 ) : RecyclerView.Adapter<ProductOrderAdapter.ListViewHolder>() {
 
 	var items: ArrayList<ProductWithCategory> = ArrayList()
+		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
-			if (field.isNotEmpty()){
+			if (field.isNotEmpty()) {
 				field.clear()
 			}
 			field.addAll(value)

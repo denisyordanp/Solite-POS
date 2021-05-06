@@ -12,7 +12,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.*
-import com.socialite.solite_pos.utils.config.FindProductOrderIndex
+import com.socialite.solite_pos.utils.config.ProductUtils
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
@@ -96,7 +96,7 @@ class ItemOrderListAdapter(
 	}
 
 	private fun add(detail: ProductOrderDetail){
-		val pos = FindProductOrderIndex.find(items, detail)
+		val pos = ProductUtils.find(items, detail)
 		if (pos != null){
 			if (detail.amount == 0){
 				delItem(pos)

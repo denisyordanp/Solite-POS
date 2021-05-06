@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.main.menu.adapter.master.variant
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,21 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.RvVariantMasterBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragment
 import com.socialite.solite_pos.view.main.menu.master.detail.VariantMasterMixOptionActivity
 import com.socialite.solite_pos.view.main.menu.master.detail.VariantOptionActivity
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class VariantMasterAdapter(
 		private val activity: SocialiteActivity
 ) : RecyclerView.Adapter<VariantMasterAdapter.ListViewHolder>() {
 
+	private var viewModel = ProductViewModel.getMainViewModel(activity)
+
 	var items: ArrayList<Variant> = ArrayList()
+		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
-			if (field.isNotEmpty()){
+			if (field.isNotEmpty()) {
 				field.clear()
 			}
 			field.addAll(value)
@@ -48,8 +51,6 @@ class VariantMasterAdapter(
 	}
 
 	inner class ListViewHolder(var binding: RvVariantMasterBinding) : RecyclerView.ViewHolder(binding.root){
-
-		val viewModel: MainViewModel = getMainViewModel(activity)
 
 		fun setData(v: Variant){
 			if(v.isMix){

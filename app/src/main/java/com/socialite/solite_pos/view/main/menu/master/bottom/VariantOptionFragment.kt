@@ -9,21 +9,20 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.FragmentVariantOptionBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.BottomSheet
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 class VariantOptionFragment(
 	private val idVariant: Long,
 	private val variant: VariantOption?
 	) : BottomSheetDialogFragment() {
 
-	constructor(variant: VariantOption): this(variant.idVariant, variant)
-	constructor(idVariant: Long?): this(idVariant ?: 0L, null)
-	constructor(): this(0, null)
+	constructor(variant: VariantOption) : this(variant.idVariant, variant)
+	constructor(idVariant: Long?) : this(idVariant ?: 0L, null)
+	constructor() : this(0, null)
 
 	private lateinit var _binding: FragmentVariantOptionBinding
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 
 	private val name: String
@@ -33,7 +32,8 @@ class VariantOptionFragment(
 	private val isCount: Boolean
 		get() = _binding.cbVoMany.isChecked
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	override fun onCreateView(
+		inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentVariantOptionBinding.inflate(inflater, container, false)
         return _binding.root
@@ -46,15 +46,15 @@ class VariantOptionFragment(
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+		if (activity != null) {
 
-			viewModel = getMainViewModel(activity!!)
+			viewModel = ProductViewModel.getMainViewModel(activity!!)
 
-			if (variant != null){
+			if (variant != null) {
 				setData()
-			}else{
+			} else {
 				_binding.btnVoSave.setOnClickListener {
-					if (isCheck){
+					if (isCheck) {
 						saveData(getOption(name, desc, isCount, false))
 					}
 				}

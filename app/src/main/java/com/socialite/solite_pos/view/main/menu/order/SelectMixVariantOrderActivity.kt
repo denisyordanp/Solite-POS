@@ -16,8 +16,7 @@ import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderMixListAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class SelectMixVariantOrderActivity : SocialiteActivity() {
@@ -27,7 +26,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
     private lateinit var _amount: ItemAmountLayoutBinding
     private lateinit var _order: OrderListBinding
     private lateinit var vpAdapter: ViewPagerAdapter
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: ProductViewModel
 
     private var productOrderDetail: ProductOrderDetail? = null
     private var product: Product? = null
@@ -46,7 +45,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
         _amount = _order.contItemAmount
         setContentView(_binding.root)
 
-        viewModel = getMainViewModel(this)
+        viewModel = ProductViewModel.getMainViewModel(this)
 
         setAdapter()
         checkIntent()
@@ -105,7 +104,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
                     if (!it.data.isNullOrEmpty()){
                         val fragments: ArrayList<FragmentWithTitle> = ArrayList()
                         for (ctg in it.data){
-                            val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.MIX, ctg, this) { p ->
+                            val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.MIX, ctg) { p ->
                                 adapter.addItem(p)
                             }
                             fragments.add(FragmentWithTitle(ctg.name, fragment))

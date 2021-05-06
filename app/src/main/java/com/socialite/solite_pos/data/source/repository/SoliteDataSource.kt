@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.*
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
@@ -21,13 +20,9 @@ internal interface SoliteDataSource{
 	fun getLocalOrders(status: Int, date: String): LiveData<List<OrderData>>
 	fun getProductOrder(orderNo: String): LiveData<Resource<List<ProductOrderDetail>>>
 
-	fun insertPaymentOrderOld(payment: OrderPayment, callback: (ApiResponse<LiveData<OrderData>>) -> Unit)
 	fun newOrder(order: OrderWithProduct)
-	fun newOrderOld(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 	fun updateOrder(order: Order)
-	fun updateOrderOld(order: Order, callback: (ApiResponse<Boolean>) -> Unit)
 	fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct)
-	fun cancelOrder(order: OrderWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
 	val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>
 	fun getPurchaseProducts(purchaseNo: String): LiveData<Resource<List<PurchaseProductWithProduct>>>

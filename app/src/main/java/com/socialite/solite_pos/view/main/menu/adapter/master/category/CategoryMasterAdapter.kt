@@ -1,22 +1,24 @@
 package com.socialite.solite_pos.view.main.menu.adapter.master.category
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.RvCategoryMasterBinding
 import com.socialite.solite_pos.view.main.menu.master.bottom.CategoryMasterFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
-class CategoryMasterAdapter(
-	private val viewModel: MainViewModel,
-	private val fragmentManager: FragmentManager
-	) : RecyclerView.Adapter<CategoryMasterAdapter.ListViewHolder>() {
+class CategoryMasterAdapter(private val activity: FragmentActivity) :
+	RecyclerView.Adapter<CategoryMasterAdapter.ListViewHolder>() {
+
+	private var viewModel: ProductViewModel = ProductViewModel.getMainViewModel(activity)
 
 	var items: ArrayList<Category> = ArrayList()
+		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
-			if (field.isNotEmpty()){
+			if (field.isNotEmpty()) {
 				field.clear()
 			}
 			field.addAll(value)
@@ -34,7 +36,7 @@ class CategoryMasterAdapter(
 		holder.binding.swCmStatus.isChecked = c.isActive
 
 		holder.itemView.setOnClickListener {
-			CategoryMasterFragment(c).show(fragmentManager, "detail-category")
+			CategoryMasterFragment(c).show(activity.supportFragmentManager, "detail-category")
 		}
 		holder.binding.swCmStatus.setOnCheckedChangeListener{ v, _ ->
 			run {

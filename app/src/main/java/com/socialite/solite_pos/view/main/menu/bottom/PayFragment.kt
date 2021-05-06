@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -196,16 +197,11 @@ class PayFragment(
 	}
 
 	private fun printBill(order: OrderWithProduct) {
-		val payment = order.order.payment
-		if (payment != null) if (payment.isCash) detailFragment?.showReturn(order)
-		setPay(order)
-	}
-
-	private fun setPay(order: OrderWithProduct) {
 		mainActivity?.printBill?.doPrint(order) {
 			if (it) {
 				updateOrder(order)
-				dialog?.dismiss()
+			} else {
+				Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT).show()
 			}
 		}
 	}
@@ -215,5 +211,12 @@ class PayFragment(
 		order.order.order.status = Order.DONE
 		order.order.orderPayment = orderPaymentWithId
 		viewModel.doneOrder(order)
+		setPay(order)
+	}
+
+	private fun setPay(order: OrderWithProduct) {
+		val payment = order.order.payment
+		if (payment != null) if (payment.isCash) detailFragment?.showReturn(order)
+		dialog?.dismiss()
 	}
 }

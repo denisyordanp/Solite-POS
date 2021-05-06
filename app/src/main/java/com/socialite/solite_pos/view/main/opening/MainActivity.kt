@@ -87,7 +87,7 @@ class MainActivity : SocialiteActivity() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		when (requestCode){
-			PrintBill.REQUEST_CONNECT_BT -> printBill.onSetSocket()
+			PrintBill.REQUEST_CONNECT_BT -> printBill.setData()
 			PurchaseActivity.NEW_PURCHASE -> {
 				if (data != null) {
 					val purchase: PurchaseWithProduct? = data.getSerializableExtra(EXTRA_PURCHASE) as PurchaseWithProduct?

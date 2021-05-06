@@ -26,14 +26,19 @@ class PrintBill(private var activity: SocialiteActivity) {
 	fun doPrint(order: OrderWithProduct, callback: (Boolean) -> Unit){
 		this.order = order
 		this.callback = callback
+
 		setData()
 	}
 
-	private fun setData(){
+	fun setData(){
 		val socket = DeviceConnection.mbtSocket
 		if (socket == null){
 			DeviceConnection(activity).getDevice{
-				if (it != null) setPaper(it)
+				if (it != null) {
+					setPaper(it)
+				} else {
+					callback?.invoke(false)
+				}
 			}
 		}else{
 			setPaper(socket)
@@ -285,14 +290,6 @@ class PrintBill(private var activity: SocialiteActivity) {
 				DeviceConnection.mbtSocket?.close()
 			}
 		} catch (e: IOException) {
-			e.printStackTrace()
-		}
-	}
-
-	fun onSetSocket(){
-		try {
-			setData()
-		} catch (e: Exception) {
 			e.printStackTrace()
 		}
 	}

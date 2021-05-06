@@ -25,9 +25,8 @@ class DoneCook(private var context: Context?) : BroadcastReceiver() {
 			val name = intent?.getStringExtra(EXTRA_NAME)
 			if (SocialiteActivity.isActive){
 				sendBroadcastAlert(name, context)
-			}else{
-				sendNotification(name)
 			}
+			sendNotification(name)
 		}
 	}
 
@@ -57,6 +56,7 @@ class DoneCook(private var context: Context?) : BroadcastReceiver() {
 			id,
 			Intent(context, DoneCook::class.java)
 				.putExtra(EXTRA_NAME, name),
-			0)
+			PendingIntent.FLAG_UPDATE_CURRENT
+		)
 	}
 }

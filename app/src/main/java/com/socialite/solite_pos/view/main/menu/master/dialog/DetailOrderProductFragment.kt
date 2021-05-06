@@ -20,8 +20,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import com.socialite.solite_pos.databinding.FragmentDetailOrderProductBinding
 import com.socialite.solite_pos.databinding.ItemAmountLayoutBinding
 import com.socialite.solite_pos.utils.config.CustomDialogFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class DetailOrderProductFragment(
@@ -31,8 +30,8 @@ class DetailOrderProductFragment(
 ) : CustomDialogFragment() {
 
     private lateinit var _binding: FragmentDetailOrderProductBinding
-    private lateinit var _amount: ItemAmountLayoutBinding
-    private lateinit var viewModel: MainViewModel
+	private lateinit var _amount: ItemAmountLayoutBinding
+	private lateinit var viewModel: ProductViewModel
 
     companion object {
         const val MIX: Int = 0
@@ -60,22 +59,22 @@ class DetailOrderProductFragment(
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+		if (activity != null) {
 
 			radioColor = ResourcesCompat.getColor(activity!!.resources, R.color.primary, null)
 			textError = ResourcesCompat.getColor(activity!!.resources, R.color.red, null)
 
-			viewModel = getMainViewModel(activity!!)
+			viewModel = ProductViewModel.getMainViewModel(activity!!)
 
 			setData()
 
-            _binding.btnCmCancel.setOnClickListener { dialog?.dismiss() }
-            _binding.btnCmSave.setOnClickListener {
-                if (type == PURCHASE) {
-                    if (validate()) {
-                        setResult()
-                    }
-                } else {
+			_binding.btnCmCancel.setOnClickListener { dialog?.dismiss() }
+			_binding.btnCmSave.setOnClickListener {
+				if (type == PURCHASE) {
+					if (validate()) {
+						setResult()
+					}
+				} else {
                     setResult()
                 }
             }

@@ -7,19 +7,21 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.*
+import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
+import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
+import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.databinding.ActivityPurchaseBinding
 import com.socialite.solite_pos.databinding.OrderListBinding
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemPurchaseListAdapter
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.main.menu.order.SelectProductOrderByCategoryFragment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import com.socialite.solite_pos.view.main.opening.MainActivity
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 
 class PurchaseActivity : SocialiteActivity() {
@@ -28,22 +30,22 @@ class PurchaseActivity : SocialiteActivity() {
 	private lateinit var adapter: ItemPurchaseListAdapter
 	private lateinit var vpAdapter: ViewPagerAdapter
 	private lateinit var _purchase: OrderListBinding
-	private lateinit var viewModel: MainViewModel
+	private lateinit var viewModel: ProductViewModel
 
 	private var purchase: Purchase? = null
 	private var supplier: Supplier? = null
 
-	companion object{
+	companion object {
 		const val NEW_PURCHASE = 99
 	}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
 		_binding = ActivityPurchaseBinding.inflate(layoutInflater)
 		_purchase = _binding.purchaseList
-        setContentView(_binding.root)
+		setContentView(_binding.root)
 
-		viewModel = getMainViewModel(this)
+		viewModel = ProductViewModel.getMainViewModel(this)
 
 		vpAdapter = ViewPagerAdapter(this)
 		_binding.vpPurchase.adapter = vpAdapter
@@ -86,8 +88,11 @@ class PurchaseActivity : SocialiteActivity() {
 				Status.SUCCESS -> {
 					if (!it.data.isNullOrEmpty()){
 						val fragments: ArrayList<FragmentWithTitle> = ArrayList()
-						for (ctg in it.data){
-							val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.PURCHASE, ctg, this) { p ->
+						for (ctg in it.data) {
+							val fragment = SelectProductOrderByCategoryFragment(
+								DetailOrderProductFragment.PURCHASE,
+								ctg
+							) { p ->
 								addItemToAdapter(p)
 							}
 							fragments.add(FragmentWithTitle(ctg.name, fragment))
