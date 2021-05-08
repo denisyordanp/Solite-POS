@@ -3,7 +3,6 @@ package com.socialite.solite_pos.view.main.menu.bottom
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,41 +12,29 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDetailOrderBinding
-import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
+import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.socialite.solite_pos.view.main.menu.order.OrderActivity
-import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentDetailOrderBinding
 	private lateinit var adapter: ItemOrderListAdapter
+	private lateinit var printBill: PrintBill
+
 	private lateinit var viewModel: MainViewModel
 	private lateinit var orderViewModel: OrderViewModel
 
-	private var mainActivity: MainActivity? = null
+	constructor() : this(null)
 
-	constructor(): this(null)
-
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		if (activity != null) {
-			try {
-				mainActivity = activity as MainActivity
-			} catch (e: ClassCastException) {
-				e.printStackTrace()
-			}
-		}
-	}
-
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-							  savedInstanceState: Bundle?): View {
+	override fun onCreateView(
+		inflater: LayoutInflater, container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View {
 		_binding = FragmentDetailOrderBinding.inflate(inflater, container, false)
 		return _binding.root
 	}
@@ -59,46 +46,34 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		if (activity != null) {
 
-		var act: SocialiteActivity = activity as SocialiteActivity
+			printBill = PrintBill(activity!!)
+			viewModel = MainViewModel.getMainViewModel(activity!!)
+			orderViewModel = OrderViewModel.getOrderViewModel(activity!!)
 
-		if (mainActivity != null) {
-
-			act = mainActivity!!
-            viewModel = getMainViewModel(act)
-			orderViewModel = OrderViewModel.getOrderViewModel(act)
-
-            _binding.btnDoCancel.setOnClickListener { cancelOrder() }
-            _binding.btnDoPrint.setOnClickListener {
+			_binding.btnDoCancel.setOnClickListener { cancelOrder() }
+			_binding.btnDoPrint.setOnClickListener {
 				if (order != null) {
-					mainActivity?.printBill?.doPrint(order!!) {
+					printBill.doPrint(order!!) {
 
 					}
 				}
-            }
+			}
 			_binding.btnDoDone.setOnClickListener { doneOrder() }
 			_binding.btnDoEdit.setOnClickListener { editOrder(order!!) }
 
+			adapter = ItemOrderListAdapter(activity!!, ItemOrderListAdapter.DETAIL)
+			_binding.rvDetailOrder.layoutManager = LinearLayoutManager(activity)
+			_binding.rvDetailOrder.adapter = adapter
+
+			setData()
+
+			_binding.btnDoPay.setOnClickListener {
+				PayFragment(order).show(childFragmentManager, "pay")
+			}
+
 		}
-
-		adapter = ItemOrderListAdapter(act, ItemOrderListAdapter.DETAIL)
-		_binding.rvDetailOrder.layoutManager = LinearLayoutManager(act)
-		_binding.rvDetailOrder.adapter = adapter
-
-		setData()
-
-		_binding.btnDoPay.setOnClickListener {
-			PayFragment(order, this).show(childFragmentManager, "pay")
-		}
-	}
-
-	fun showReturn(order: OrderWithProduct){
-		val inReturn = toRupiah(order.order.orderPayment?.inReturn(order.grandTotal))
-		MessageBottom(childFragmentManager)
-				.setMessage("Kembalian : $inReturn")
-				.setNegativeListener("Ok"){
-					it?.dismiss()
-				}.show()
 	}
 
 	private fun setData() {

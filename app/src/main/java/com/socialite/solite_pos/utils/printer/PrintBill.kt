@@ -1,48 +1,52 @@
 package com.socialite.solite_pos.utils.printer
 
 import android.bluetooth.BluetoothSocket
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
+import com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PrintBill(private var activity: SocialiteActivity) {
+class PrintBill(private var activity: FragmentActivity) {
 
 	private var outputStream: OutputStream? = null
 	private var callback: ((Boolean) -> Unit)? = null
 	private var order: OrderWithProduct? = null
 
-	companion object{
-		const val REQUEST_CONNECT_BT = 2
-	}
-
-	fun doPrint(order: OrderWithProduct, callback: (Boolean) -> Unit){
+	fun doPrint(order: OrderWithProduct, callback: (Boolean) -> Unit) {
 		this.order = order
 		this.callback = callback
 
 		setData()
 	}
 
-	fun setData(){
+	private fun setData() {
 		val socket = DeviceConnection.mbtSocket
-		if (socket == null){
-			DeviceConnection(activity).getDevice{
+		if (socket == null) {
+			DeviceConnection(activity).getDevice {
 				if (it != null) {
 					setPaper(it)
 				} else {
-					callback?.invoke(false)
+					toBluetoothDevice()
 				}
 			}
-		}else{
+		} else {
 			setPaper(socket)
 		}
+	}
+
+	private fun toBluetoothDevice() {
+		val intent = Intent(activity, BluetoothDeviceListActivity::class.java)
+		intent.putExtra(BluetoothDeviceListActivity.EXTRA_ORDER, order)
+		activity.startActivity(intent)
 	}
 
 	private fun setPaper(socket: BluetoothSocket){
@@ -286,8 +290,10 @@ class PrintBill(private var activity: SocialiteActivity) {
 	fun onDestroy(){
 		try {
 			if (DeviceConnection.mbtSocket != null) {
-				outputStream?.close()
-				DeviceConnection.mbtSocket?.close()
+				DeviceConnection.mbtSocket!!.close()
+			}
+			if (outputStream != null) {
+				outputStream!!.close()
 			}
 		} catch (e: IOException) {
 			e.printStackTrace()

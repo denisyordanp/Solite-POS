@@ -19,6 +19,7 @@ import com.socialite.solite_pos.view.main.opening.LoginActivity
 class SettingFragment : Fragment() {
 
     private lateinit var _binding: FragmentSettingBinding
+    private lateinit var setting : SettingPref
     private lateinit var userPref: UserPref
     private lateinit var auth: FirebaseAuth
 
@@ -38,26 +39,20 @@ class SettingFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null) {
 
+		    setting = SettingPref(activity!!)
             userPref = UserPref(activity!!)
             auth = Firebase.auth
 
             setCookTime()
 
-            _binding.btnStCookAdd.setOnClickListener {
-                SettingPref(activity!!).cookTime = SettingPref(activity!!).cookTime + 1
-                setCookTime()
-            }
-            _binding.btnStCookMin.setOnClickListener {
-                SettingPref(activity!!).cookTime = SettingPref(activity!!).cookTime - 1
-                setCookTime()
-            }
+            _binding.btnStCookAdd.setOnClickListener { addCookTime() }
+            _binding.btnStCookMin.setOnClickListener { minCookTIme() }
 
             _binding.btnStBluetooth.setOnClickListener {
                 startActivity(Intent(activity, BluetoothDeviceListActivity::class.java))
             }
-            _binding.btnMtLogout.setOnClickListener {
-                showLogoutMessage()
-            }
+            _binding.btnMtLogout.setOnClickListener { showLogoutMessage() }
+            _binding.btnStResetBluetooth.setOnClickListener { resetSavedPrinter() }
         }
     }
 
@@ -81,8 +76,18 @@ class SettingFragment : Fragment() {
         activity!!.finish()
     }
 
+    private fun addCookTime() {
+        setting.cookTime = setting.cookTime + 1
+        setCookTime()
+    }
+
+    private fun minCookTIme() {
+        setting.cookTime = setting.cookTime - 1
+        setCookTime()
+    }
+
     private fun setCookTime() {
-        val cook = SettingPref(activity!!).cookTime
+        val cook = setting.cookTime
         val minute = "${cook}m"
         _binding.tvStCookTime.text = minute
         if (cook <= MIN_COOK) {
@@ -91,4 +96,8 @@ class SettingFragment : Fragment() {
             _binding.btnStCookMin.visibility = View.VISIBLE
 		}
 	}
+
+    private fun resetSavedPrinter() {
+        setting.printerDevice = ""
+    }
 }

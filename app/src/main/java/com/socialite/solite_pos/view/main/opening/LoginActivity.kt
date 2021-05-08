@@ -33,13 +33,6 @@ class LoginActivity : AppCompatActivity() {
         setUpLogin()
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (auth.currentUser != null) {
-            toMain()
-        }
-    }
-
     private fun setUpLogin() {
         userViewModel = UserViewModel.getMainViewModel(this)
         loginButton = LoginButton(_binding.btnLogin)

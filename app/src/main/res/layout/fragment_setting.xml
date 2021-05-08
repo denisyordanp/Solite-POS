@@ -87,13 +87,12 @@
 		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/btn_st_bluetooth"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/SMargin">
 
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/SMargin"
-				android:layout_marginBottom="@dimen/SMargin"
 				android:padding="@dimen/baseMargin"
 				android:background="@color/white"
 				android:orientation="vertical">
@@ -106,6 +105,28 @@
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/btn_st_reset_bluetooth"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/SMargin">
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/baseMargin"
+				android:background="@color/white"
+				android:orientation="vertical">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Reset koneksi printer" />
+
+			</LinearLayout>
+
+		</com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_mt_logout"

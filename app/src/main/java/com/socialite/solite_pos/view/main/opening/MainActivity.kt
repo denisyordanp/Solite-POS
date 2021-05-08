@@ -1,8 +1,11 @@
 package com.socialite.solite_pos.view.main.opening
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
@@ -34,8 +37,6 @@ class MainActivity : SocialiteActivity() {
 	private lateinit var viewModel: MainViewModel
 	private lateinit var _menu: MainMenuBinding
 	private lateinit var userPref: UserPref
-
-	lateinit var printBill: PrintBill
 
 	private lateinit var showedDate: String
 	private var primaryColor: Int = 0
@@ -69,8 +70,6 @@ class MainActivity : SocialiteActivity() {
 		orderViewModel = getOrderViewModel(this)
 		viewModel = MainViewModel.getMainViewModel(this)
 
-		printBill = PrintBill(this)
-
 		primaryColor = ResourcesCompat.getColor(resources, R.color.primary, null)
 		white = ResourcesCompat.getColor(resources, R.color.white, null)
 
@@ -86,13 +85,14 @@ class MainActivity : SocialiteActivity() {
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		when (requestCode){
-			PrintBill.REQUEST_CONNECT_BT -> printBill.setData()
-			PurchaseActivity.NEW_PURCHASE -> {
-				if (data != null) {
-					val purchase: PurchaseWithProduct? = data.getSerializableExtra(EXTRA_PURCHASE) as PurchaseWithProduct?
-					if (purchase != null) {
-						addPurchase(purchase)
+		if (resultCode == Activity.RESULT_OK) {
+			when (requestCode){
+				PurchaseActivity.NEW_PURCHASE -> {
+					if (data != null) {
+						val purchase: PurchaseWithProduct? = data.getSerializableExtra(EXTRA_PURCHASE) as PurchaseWithProduct?
+						if (purchase != null) {
+							addPurchase(purchase)
+						}
 					}
 				}
 			}
@@ -116,11 +116,6 @@ class MainActivity : SocialiteActivity() {
 		notPayFragment.setDate(date)
 		cancelFragment.setDate(date)
 		doneFragment.setDate(date)
-	}
-
-	override fun onDestroy() {
-		super.onDestroy()
-		printBill.onDestroy()
 	}
 
 	private fun setFragments() {

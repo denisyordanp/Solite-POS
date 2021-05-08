@@ -5,13 +5,13 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Intent
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.utils.preference.SettingPref
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.util.*
 
-class DeviceConnection(private val activity: SocialiteActivity) {
+class DeviceConnection(private val activity: FragmentActivity) {
 
 	private var setting: SettingPref = SettingPref(activity)
 
@@ -30,12 +30,7 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 
 	fun getDevice(callback: (BluetoothSocket?) -> Unit) {
 		val address = setting.printerDevice
-		if (mbtSocket != null) {
-			if (!mbtSocket!!.isConnected) {
-				mbtSocket!!.connect()
-			}
-			callback.invoke(mbtSocket)
-		} else if (!address.isNullOrEmpty()) {
+		if (!address.isNullOrEmpty()) {
 			val device = getDeviceFromAddress(address)
 			if (device != null) {
 				setSocketFromDevice(device)
@@ -48,8 +43,7 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 				callback.invoke(null)
 			}
 		} else {
-			val intent = Intent(activity, BluetoothDeviceListActivity::class.java)
-			activity.startActivityForResult(intent, PrintBill.REQUEST_CONNECT_BT)
+			callback.invoke(null)
 		}
 	}
 
@@ -67,7 +61,10 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 		Thread {
 			try {
 				socket.connect()
-				showToast("Printing")
+				activity.runOnUiThread {
+					showToast("Printing")
+				}
+
 				callback.invoke(mbtSocket)
 			} catch (ex: IOException) {
 				ex.printStackTrace()
@@ -77,7 +74,9 @@ class DeviceConnection(private val activity: SocialiteActivity) {
 					e.printStackTrace()
 				}
 				mbtSocket = null
-				showToast("Error print, mohon coba kembali")
+				activity.runOnUiThread {
+					showToast("Error print, periksa perangkat perinter lalu coba kembali")
+				}
 				callback.invoke(null)
 			}
 		}.start()

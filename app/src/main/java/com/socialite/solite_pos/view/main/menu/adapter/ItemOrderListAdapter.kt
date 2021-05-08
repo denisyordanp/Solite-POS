@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
@@ -19,7 +20,7 @@ import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductF
 import com.socialite.solite_pos.view.main.menu.order.SelectMixVariantOrderActivity
 
 class ItemOrderListAdapter(
-        private val activity: SocialiteActivity,
+        private val activity: FragmentActivity,
         private val type: Int,
 ) : RecyclerView.Adapter<ItemOrderListAdapter.BaseViewHolder<ProductOrderDetail>>() {
 

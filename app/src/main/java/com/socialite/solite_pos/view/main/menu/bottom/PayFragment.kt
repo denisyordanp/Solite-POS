@@ -19,6 +19,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.FragmentPayBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
+import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.BottomSheet
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.main.menu.adapter.AmountSuggestionsAdapter
@@ -29,12 +30,13 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrder
 import kotlin.math.roundToInt
 
 class PayFragment(
-		private var order: OrderWithProduct?,
-		private val detailFragment: DetailOrderFragment?
+		private var order: OrderWithProduct?
 ) : BottomSheetDialogFragment() {
 
 	private lateinit var adapter: AmountSuggestionsAdapter
 	private lateinit var _binding: FragmentPayBinding
+	private lateinit var printBill: PrintBill
+
 	private lateinit var viewModel: OrderViewModel
 
 	private var mainActivity: MainActivity? = null
@@ -43,7 +45,7 @@ class PayFragment(
 	private val cashPay: String
 		get() = _binding.edtPayCash.text.toString()
 
-	constructor() : this(null, null)
+	constructor() : this(null)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -71,6 +73,7 @@ class PayFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null) {
 
+			printBill = PrintBill(activity!!)
 			viewModel = getOrderViewModel(activity!!)
 			setAdapter()
 
@@ -80,6 +83,7 @@ class PayFragment(
 			_binding.btnPayMethod.setOnClickListener { getPayment(activity!!) }
 			_binding.btnPayPay.setOnClickListener { payBill() }
 			_binding.btnPayCancel.setOnClickListener { dialog?.dismiss() }
+			_binding.btnPayOk.setOnClickListener { dialog?.dismiss() }
 		}
 	}
 
@@ -192,17 +196,7 @@ class PayFragment(
 			val paymentOrder = OrderPayment(this.order!!.order.order.orderNo, payment.id, pay)
 			order!!.order =
 				OrderData(order!!.order.order, order!!.order.customer, paymentOrder, payment)
-			printBill(order!!)
-		}
-	}
-
-	private fun printBill(order: OrderWithProduct) {
-		mainActivity?.printBill?.doPrint(order) {
-			if (it) {
-				updateOrder(order)
-			} else {
-				Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT).show()
-			}
+			updateOrder(order!!)
 		}
 	}
 
@@ -215,8 +209,32 @@ class PayFragment(
 	}
 
 	private fun setPay(order: OrderWithProduct) {
-		val payment = order.order.payment
-		if (payment != null) if (payment.isCash) detailFragment?.showReturn(order)
-		dialog?.dismiss()
+		setSuccessPayment(order)
+		printBill(order)
+	}
+
+	private fun setSuccessPayment(order: OrderWithProduct) {
+		setReturnPayment(order)
+		_binding.contPayMethod.visibility = View.GONE
+		_binding.contPaySuccess.visibility = View.VISIBLE
+	}
+
+	private fun setReturnPayment(order: OrderWithProduct) {
+		if (order.order.payment!!.isCash) {
+			val inReturn = toRupiah(order.order.orderPayment?.inReturn(order.grandTotal))
+			_binding.tvPayReturn.text = "Kembalian $inReturn"
+		} else {
+			_binding.tvPayReturn.visibility = View.GONE
+		}
+	}
+
+	private fun printBill(order: OrderWithProduct) {
+		printBill.doPrint(order) {
+			if (!it) {
+				Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT)
+					.show()
+			}
+			dialog?.dismiss()
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.main.menu.purchase
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -133,7 +134,7 @@ class PurchaseActivity : SocialiteActivity() {
 		if (adapter.newPurchase != null){
 			val intent = Intent()
 			intent.putExtra(MainActivity.EXTRA_PURCHASE, adapter.newPurchase)
-			setResult(RESULT_OK, intent)
+			setResult(Activity.RESULT_OK, intent)
 			finish()
 		}
 	}
