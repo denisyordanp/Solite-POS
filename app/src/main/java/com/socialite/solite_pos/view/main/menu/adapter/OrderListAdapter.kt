@@ -120,6 +120,7 @@ class OrderListAdapter(
 					binding.tvOrTime.setCompoundDrawablesWithIntrinsicBounds(warning, null,null,null)
 					binding.tvOrTime.setOnClickListener {
 						MessageBottom(activity.supportFragmentManager)
+							.setMessageImage(ResourcesCompat.getDrawable(activity.resources, R.drawable.ic_order_done, null))
 							.setMessage("Anda yakin akan set waktu masak sekarang?")
 							.setPositiveListener("Ya"){
 								updateTime(pos)

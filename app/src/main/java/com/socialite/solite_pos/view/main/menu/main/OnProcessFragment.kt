@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentOnProcessBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
@@ -52,9 +53,23 @@ class OnProcessFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun getData() {
-        viewModel.getLocalOrders(Order.ON_PROCESS, queryDate).observe(activity!!) { orders ->
-            adapter.items = ArrayList(orders)
-            adapter.cookCallback = { updateOrder(it) }
+        viewModel.getLocalOrders(Order.ON_PROCESS, queryDate).observe(activity!!) {
+            setOrders(ArrayList(it))
+        }
+    }
+
+    private fun setOrders(orders: ArrayList<OrderData>) {
+        showEmpty(orders.isNullOrEmpty())
+
+        adapter.items = orders
+        adapter.cookCallback = { updateOrder(it) }
+    }
+
+    private fun showEmpty(state: Boolean) {
+        if (state) {
+            _binding.tvOpEmpty.visibility = View.VISIBLE
+        } else {
+            _binding.tvOpEmpty.visibility = View.INVISIBLE
         }
     }
 

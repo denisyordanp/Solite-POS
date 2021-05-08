@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.RvProductBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
@@ -36,18 +37,19 @@ class ProductOrderAdapter(
 
 	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
 		val p = items[position]
-		val price = when (type) {
+		var price = 0L
+		when (type) {
 			DetailOrderProductFragment.ORDER -> {
-				p.product.sellPrice
+				price = p.product.sellPrice
+				holder.setStock(p.product, true)
 			}
 			DetailOrderProductFragment.PURCHASE -> {
-				p.product.buyPrice
+				price = p.product.buyPrice
 			}
 			DetailOrderProductFragment.MIX -> {
 				holder.binding.tvPmvPrice.visibility = View.GONE
-				0
+				holder.setStock(p.product, false)
 			}
-			else -> 0
 		}
 
 		holder.binding.tvPmvName.text = p.product.name
@@ -73,6 +75,19 @@ class ProductOrderAdapter(
 		fun setPrice(price: Long?){
 			if (price != null){
 				binding.tvPmvPrice.text = toRupiah(price)
+			}
+		}
+
+		fun setStock(product: Product, isOrder: Boolean) {
+
+			if (product.isMix) {
+				binding.tvPmvStock.visibility = View.GONE
+			} else {
+				binding.tvPmvStock.text = if (isOrder) {
+					"Sisa ${product.getStockPortion()} porsi"
+				} else {
+					"Sisa ${product.stock} pcs"
+				}
 			}
 		}
 	}

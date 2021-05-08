@@ -3,8 +3,10 @@ package com.socialite.solite_pos.view.main.menu.purchase
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
@@ -63,10 +65,11 @@ class PurchaseActivity : SocialiteActivity() {
 		_binding.btnPcBack.setOnClickListener { onBackPressed() }
 		_purchase.btnOlCreate.setOnClickListener {
 			MessageBottom(supportFragmentManager)
-					.setMessage("Apakah yakin dengan pembelian ini?")
-					.setPositiveListener("Ya"){ setResult()  }
-					.setNegativeListener("Batal"){ it?.dismiss() }
-					.show()
+				.setMessageImage(ResourcesCompat.getDrawable(resources, R.drawable.ic_ask_question, null))
+				.setMessage("Apakah yakin dengan pembelian ini?")
+				.setPositiveListener("Ya"){ setResult()  }
+				.setNegativeListener("Batal"){ it?.dismiss() }
+				.show()
 		}
     }
 

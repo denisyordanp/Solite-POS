@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDetailOrderBinding
@@ -92,6 +94,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 			Order.DONE -> {
 				_binding.contDoPrint.visibility = View.VISIBLE
+				_binding.btnDoEdit.visibility = View.GONE
 			}
 
 			else -> {
@@ -114,6 +117,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 	private fun doneOrder(){
 		if (order == null) return
 		MessageBottom(childFragmentManager)
+			.setMessageImage(ResourcesCompat.getDrawable(activity!!.resources, R.drawable.ic_ask_question, null))
 			.setMessage("Yakin pesanan telah sampai ke konsumen?")
 			.setPositiveListener("Ya, sudah"){
 				updateOrder(order!!, Order.NEED_PAY)
@@ -137,6 +141,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 		}
 
 		val bottom = MessageBottom(childFragmentManager)
+		bottom.setMessageImage(ResourcesCompat.getDrawable(activity!!.resources, R.drawable.ic_ask_question, null))
 		bottom.setMessage(message)
 		bottom.setNegativeListener(negative){ it?.dismiss() }
 		if (isCancelAble){

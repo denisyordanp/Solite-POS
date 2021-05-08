@@ -3,8 +3,10 @@ package com.socialite.solite_pos.view.main.menu.order
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
@@ -176,6 +178,7 @@ class OrderActivity : SocialiteActivity() {
 
 	private fun showRepeatOrderMessage() {
 		MessageBottom(supportFragmentManager)
+			.setMessageImage(ResourcesCompat.getDrawable(resources, R.drawable.ic_speak_to_customer, null))
 			.setMessage("Bacakan ulang pesanan untuk menghindari kesalahan pesanan")
 			.setPositiveListener("Sudah") { setDine() }
 			.setNegativeListener("Bacakan ulang") { it?.dismiss()}
@@ -184,6 +187,7 @@ class OrderActivity : SocialiteActivity() {
 
 	private fun setDine() {
 		MessageBottom(supportFragmentManager)
+			.setMessageImage(ResourcesCompat.getDrawable(resources, R.drawable.ic_dine_or_takeaway, null))
 			.setMessage("Apakah makan ditempat atau dibungkus?")
 			.setPositiveListener("Makan ditempat") { createNewOrder(false) }
 			.setNegativeListener("Dibungkus") { createNewOrder(true) }

@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -112,6 +113,7 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setLoadingButtonOff()
         auth.signOut()
         MessageBottom(supportFragmentManager)
+            .setMessageImage(ResourcesCompat.getDrawable(resources, R.drawable.ic_alert_message, null))
                 .setMessage(message)
                 .setPositiveListener(getString(android.R.string.ok), null)
                 .show()

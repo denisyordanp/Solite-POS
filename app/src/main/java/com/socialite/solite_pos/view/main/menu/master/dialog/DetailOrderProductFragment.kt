@@ -91,7 +91,7 @@ class DetailOrderProductFragment(
                 setVariants()
                 _binding.tvPlStock.visibility = View.VISIBLE
 
-                maxAmount = product.stock / 4
+                maxAmount = product.getStockPortion()
                 _binding.tvPlStock.text = "Sisa : $maxAmount Porsi"
 
             }

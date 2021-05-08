@@ -43,6 +43,7 @@ class ProductMixVariantAdapter(
 
 		holder.setContent(p.product)
 		holder.binding.tvPmvName.text = p.product.name
+		holder.binding.tvPmvStock.visibility = View.GONE
 	}
 
 	override fun getItemCount(): Int {

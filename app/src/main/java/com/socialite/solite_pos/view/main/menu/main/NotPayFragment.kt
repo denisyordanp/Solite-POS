@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentNotPayBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
@@ -53,7 +54,21 @@ class NotPayFragment(private var queryDate: String) : Fragment() {
 
     private fun getData() {
         viewModel.getLocalOrders(Order.NEED_PAY, queryDate).observe(activity!!) { orders ->
-            adapter.items = ArrayList(orders)
+            setOrders(ArrayList(orders))
+        }
+    }
+
+    private fun setOrders(orders: ArrayList<OrderData>) {
+        showEmpty(orders.isNullOrEmpty())
+
+        adapter.items = orders
+    }
+
+    private fun showEmpty(state: Boolean) {
+        if (state) {
+            _binding.tvNpEmpty.visibility = View.VISIBLE
+        } else {
+            _binding.tvNpEmpty.visibility = View.INVISIBLE
         }
     }
 }

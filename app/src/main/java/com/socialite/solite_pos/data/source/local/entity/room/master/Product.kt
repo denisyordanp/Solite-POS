@@ -113,4 +113,8 @@ data class Product(
 
 	constructor(id: Long, name: String, category: Long, image: String, desc: String, sellPrice: Long, buyPrice: Long, portion: Int, stock: Long, isMix: Boolean, isActive: Boolean): this(id, name, category, image, desc, sellPrice, buyPrice, portion, stock, isMix, isActive, false)
 	constructor(name: String, category: Long, image: String, desc: String, sellPrice: Long, buyPrice: Long, portion: Int, stock: Long, isMix: Boolean, isActive: Boolean): this(0, name, category, image, desc, sellPrice, buyPrice, portion, stock, isMix, isActive, false)
+
+	fun getStockPortion(): Long {
+		return stock / portion
+	}
 }

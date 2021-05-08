@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.databinding.FragmentSettingBinding
 import com.socialite.solite_pos.utils.preference.SettingPref
 import com.socialite.solite_pos.utils.preference.UserPref
@@ -58,12 +60,15 @@ class SettingFragment : Fragment() {
 
     private fun showLogoutMessage() {
         MessageBottom(activity!!.supportFragmentManager)
-                .setMessage("Anda akan keluar, lanjutkan?")
-                .setPositiveListener(activity!!.getString(android.R.string.ok)) {
-                    logout()
-                }
-                .setNegativeListener(activity!!.getString(android.R.string.cancel), null)
-                .show()
+            .setMessageImage(ResourcesCompat.getDrawable(activity!!.resources, R.drawable.ic_alert_message, null))
+            .setMessage("Anda akan keluar, lanjutkan?")
+            .setPositiveListener(activity!!.getString(android.R.string.ok)) {
+                logout()
+            }
+            .setNegativeListener(activity!!.getString(android.R.string.cancel)) {
+                it?.dismiss()
+            }
+            .show()
     }
 
     private fun logout() {

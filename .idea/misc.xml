@@ -3,14 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_ask_order.xml" value="0.3770833333333333" />
+        <entry key="app/src/main/res/drawable/ic_order_done.xml" value="0.3770833333333333" />
+        <entry key="app/src/main/res/drawable/ic_speak_to_customer.xml" value="0.3770833333333333" />
         <entry key="app/src/main/res/layout/activity_bluetooth_device_list.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_list_master.xml" value="0.26222826086956524" />
         <entry key="app/src/main/res/layout/activity_opening.xml" value="0.3609375" />
+        <entry key="app/src/main/res/layout/fragment_cancel.xml" value="0.3055555555555556" />
         <entry key="app/src/main/res/layout/fragment_detail_order.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_done.xml" value="0.3609375" />
+        <entry key="app/src/main/res/layout/fragment_message.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_not_pay.xml" value="0.2989583333333333" />
+        <entry key="app/src/main/res/layout/fragment_on_process.xml" value="0.2989583333333333" />
         <entry key="app/src/main/res/layout/fragment_pay.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.33" />
         <entry key="app/src/main/res/layout/order_list.xml" value="0.3292572463768116" />
         <entry key="app/src/main/res/layout/rv_item_order_list.xml" value="0.3292572463768116" />
+        <entry key="app/src/main/res/layout/rv_product.xml" value="0.33" />
         <entry key="app/src/main/res/layout/rv_recap.xml" value="0.3055555555555556" />
         <entry key="app/src/main/res/layout/rv_string_list.xml" value="0.3609375" />
         <entry key="app/src/main/res/layout/rv_sugestions.xml" value="0.2677083333333333" />

@@ -45,6 +45,15 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tv_pmv_name" />
 
+		<TextView
+			android:id="@+id/tv_pmv_stock"
+			style="@style/CenterText"
+			android:text="Sisa 30 Porsi"
+			android:textStyle="bold"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/tv_pmv_price" />
+
 		<com.google.android.material.checkbox.MaterialCheckBox
 			android:id="@+id/cb_pmv_selected"
 			android:visibility="gone"

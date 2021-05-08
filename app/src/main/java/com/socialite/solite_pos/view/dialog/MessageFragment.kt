@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.view.dialog
 
 import android.app.Dialog
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +14,9 @@ import com.socialite.solite_pos.utils.tools.BottomSheet
 class MessageFragment : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentMessageBinding
-	private var message: String? = ""
 
+	var message: String? = ""
+	var image: Drawable? = null
 	private var positiveTxt: String? = ""
 	private var negativeTxt: String? = ""
 
@@ -36,6 +38,10 @@ class MessageFragment : BottomSheetDialogFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 			_binding.tvMsMessage.text = message
+			if (image != null) {
+				_binding.ivMsImage.setImageDrawable(image)
+				_binding.ivMsImage.visibility = View.VISIBLE
+			}
 
 			setView()
 		}
@@ -57,10 +63,6 @@ class MessageFragment : BottomSheetDialogFragment() {
         }
     }
 
-    fun setMessage(message: String) {
-        this.message = message
-    }
-
     fun setOnPositiveButton(text: String, callback: (() -> Unit)?) {
         positiveTxt = text
         positiveCallback = callback
@@ -70,4 +72,6 @@ class MessageFragment : BottomSheetDialogFragment() {
         negativeTxt = text
         negativeCallback = callback
     }
+
+
 }

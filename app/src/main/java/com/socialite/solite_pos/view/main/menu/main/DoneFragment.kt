@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDoneBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
@@ -59,11 +60,26 @@ class DoneFragment(private var queryDate: String) : Fragment() {
                 Status.LOADING -> {
                 }
                 Status.SUCCESS -> {
-                    adapter.items = ArrayList(it.data)
+                    setOrders(ArrayList(it.data))
                 }
                 Status.ERROR -> {
+                    showEmpty(true)
                 }
             }
+        }
+    }
+
+    private fun setOrders(orders: ArrayList<OrderData>) {
+        showEmpty(orders.isNullOrEmpty())
+
+        adapter.items = orders
+    }
+
+    private fun showEmpty(state: Boolean) {
+        if (state) {
+            _binding.tvDnEmpty.visibility = View.VISIBLE
+        } else {
+            _binding.tvDnEmpty.visibility = View.INVISIBLE
         }
     }
 }

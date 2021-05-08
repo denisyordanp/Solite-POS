@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.utils.tools
 
 import android.app.Dialog
+import android.graphics.drawable.Drawable
 import androidx.fragment.app.FragmentManager
 import com.socialite.solite_pos.view.dialog.MessageFragment
 
@@ -12,7 +13,7 @@ class MessageBottom(private var fm: FragmentManager) {
     }
 
     fun setMessage(message: String): MessageBottom {
-        fragment.setMessage(message)
+        fragment.message = message
         return this
     }
 
@@ -23,6 +24,11 @@ class MessageBottom(private var fm: FragmentManager) {
 
     fun setNegativeListener(text: String, callback: ((Dialog?) -> Unit)?): MessageBottom {
         fragment.setOnNegativeButton(text, callback)
+        return this
+    }
+
+    fun setMessageImage(image: Drawable?): MessageBottom {
+        fragment.image = image
         return this
     }
 }

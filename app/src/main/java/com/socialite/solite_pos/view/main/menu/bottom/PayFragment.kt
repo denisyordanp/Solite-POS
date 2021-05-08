@@ -9,9 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
@@ -142,27 +144,20 @@ class PayFragment(
 
 	private fun payBill() {
 		if (payment != null && order != null) {
+			val message = MessageBottom(childFragmentManager)
+			message.setMessageImage(ResourcesCompat.getDrawable(activity!!.resources, R.drawable.ic_get_payment, null))
+			message.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
+			message.setNegativeListener("Batal") { it?.dismiss() }
+
 			if (payment!!.isCash) {
 				if (isCheck) {
-					MessageBottom(childFragmentManager)
-						.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
-						.setPositiveListener("Ya") {
-							pay(payment!!, cashPay.toLong())
-						}
-						.setNegativeListener("Batal") {
-							it?.dismiss()
-						}.show()
+					message.setPositiveListener("Ya") { pay(payment!!, cashPay.toLong()) }
 				}
 			} else {
-				MessageBottom(childFragmentManager)
-					.setMessage("Pastikan sudah terima pembayaran sebelum proses. Proses pembayaran?")
-					.setPositiveListener("Ya"){
-						pay(payment!!, order!!.grandTotal)
-					}
-					.setNegativeListener("Batal"){
-						it?.dismiss()
-					}.show()
+				message.setPositiveListener("Ya"){ pay(payment!!, order!!.grandTotal) }
 			}
+
+			message.show()
 		}
 	}
 

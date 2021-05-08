@@ -2,8 +2,10 @@ package com.socialite.solite_pos.view.main.menu.order
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -136,6 +138,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
             val check = checkStock()
             val bottom = MessageBottom(supportFragmentManager)
             bottom.setNegativeListener(getString(android.R.string.ok)) { it?.dismiss() }
+            bottom.setMessageImage(ResourcesCompat.getDrawable(resources, R.drawable.ic_alert_message, null))
             return when {
                 adapter.totalItem < product!!.portion -> {
                     bottom.setMessage("Jumlah varian kurang dari porsi")

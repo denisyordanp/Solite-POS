@@ -16,47 +16,56 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
-	<TextView
-		android:id="@+id/tv_ms_message"
+	<ImageView
+		android:id="@+id/iv_ms_image"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Set waktu mulai dari sekarang?"
-		android:textSize="@dimen/LText"
-		android:layout_marginTop="@dimen/MMargin"
+		android:layout_margin="@dimen/LLLMargin"
+		app:layout_constraintBottom_toTopOf="@+id/tv_ms_message"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+	<TextView
+		android:id="@+id/tv_ms_message"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/MMargin"
+		android:textSize="@dimen/LText"
+		app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+
 	<LinearLayout
+		android:id="@+id/linearLayout4"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/tv_ms_message">
+		app:layout_constraintStart_toStartOf="parent">
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btn_ms_positive"
 			style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="@color/blackGrey"
 			android:layout_margin="@dimen/MMargin"
-			app:backgroundTint="@color/white"
+			android:text="Atur sekarang"
+			android:textColor="@color/blackGrey"
 			android:visibility="gone"
-			android:text="Atur sekarang"/>
+			app:backgroundTint="@color/white" />
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btn_ms_negative"
 			style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-			app:backgroundTint="@color/white"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/MMargin"
+			android:text="Batal"
 			android:textColor="@color/blackGrey"
 			android:visibility="gone"
-			android:layout_margin="@dimen/MMargin"
-			android:text="Batal"/>
+			app:backgroundTint="@color/white" />
 
 	</LinearLayout>
 
