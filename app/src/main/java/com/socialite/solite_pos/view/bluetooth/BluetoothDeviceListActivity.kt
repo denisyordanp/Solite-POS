@@ -26,9 +26,12 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 
 	private var order: OrderWithProduct? = null
 
+	private var printType: Int = 0
+
 	companion object {
 		const val REQUEST_ENABLE_BT = 0
 		const val EXTRA_ORDER = "extra_order"
+		const val EXTRA_PRINT = "extra_print"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +52,7 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 		binding.btnBtBack.setOnClickListener { onBackPressed() }
 
 		order = intent.getSerializableExtra(EXTRA_ORDER) as OrderWithProduct?
+		printType = intent.getIntExtra(EXTRA_PRINT, 0)
 
 		checkBluetooth()
 	}
@@ -112,7 +116,7 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 			return
 		}
 		showLoading(true)
-		printBill.doPrint(order!!) {
+		printBill.doPrint(order!!, printType) {
 			if (it) {
 				finish()
 			} else {

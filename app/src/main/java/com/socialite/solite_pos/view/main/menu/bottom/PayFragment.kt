@@ -224,7 +224,7 @@ class PayFragment(
 	}
 
 	private fun printBill(order: OrderWithProduct) {
-		printBill.doPrint(order) {
+		printBill.doPrint(order, PrintBill.BILL) {
 			if (!it) {
 				Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT)
 					.show()

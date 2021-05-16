@@ -9,6 +9,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
+import com.socialite.solite_pos.utils.preference.SettingPref
 import com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.io.OutputStream
@@ -20,32 +21,36 @@ class PrintBill(private var activity: FragmentActivity) {
 	private var outputStream: OutputStream? = null
 	private var callback: ((Boolean) -> Unit)? = null
 	private var order: OrderWithProduct? = null
+	private var type: Int = 0
 
-	fun doPrint(order: OrderWithProduct, callback: (Boolean) -> Unit) {
+	companion object {
+		const val BILL = 11
+		const val ORDER = 22
+	}
+
+	fun doPrint(order: OrderWithProduct, type: Int, callback: (Boolean) -> Unit) {
 		this.order = order
 		this.callback = callback
+		this.type = type
 
 		setData()
 	}
 
 	private fun setData() {
-		val socket = DeviceConnection.mbtSocket
-		if (socket == null) {
-			DeviceConnection(activity).getDevice {
-				if (it != null) {
-					setPaper(it)
-				} else {
-					toBluetoothDevice()
-				}
+		DeviceConnection(activity).getDevice {
+			if (it != null) {
+				setPaper(it)
+			} else {
+				SettingPref(activity).printerDevice = ""
+				toBluetoothDevice()
 			}
-		} else {
-			setPaper(socket)
 		}
 	}
 
 	private fun toBluetoothDevice() {
 		val intent = Intent(activity, BluetoothDeviceListActivity::class.java)
 		intent.putExtra(BluetoothDeviceListActivity.EXTRA_ORDER, order)
+		intent.putExtra(BluetoothDeviceListActivity.EXTRA_PRINT, type)
 		activity.startActivity(intent)
 	}
 
@@ -62,12 +67,15 @@ class PrintBill(private var activity: FragmentActivity) {
 			setItems()
 
 //			print footer
-			setFooter()
+			if (type == BILL) {
+				setFooter()
+			}
 			//resetPrint(); //reset printer
 
-			outputStream?.flush()
+			outputStream!!.flush()
 			callback?.invoke(true)
 		} catch (e: IOException) {
+			Log.e("TESTINGDATA", "Print Bill ${e.message}")
 			e.printStackTrace()
 			callback?.invoke(false)
 		}
@@ -98,13 +106,21 @@ class PrintBill(private var activity: FragmentActivity) {
 						printNewLine()
 					}
 
-					printCustom(withSpace("  ${item.amount} x ${toRupiah(item.product!!.sellPrice)}", "= ${toRupiah(item.amount * item.product!!.sellPrice)}", 32), 0, 0)
+					printCustom(
+						withSpace(
+							"  ${item.amount} x ${toRupiah(item.product!!.sellPrice)}",
+							"= ${toRupiah(item.amount * item.product!!.sellPrice)}",
+							32
+						), 0, 0
+					)
 					printNewLine()
 				}
 			}
 			printCustom(PrinterUtils.LINES21, 0, 2)
 			printNewLine()
-			printTotal()
+			if (type == BILL) {
+				printTotal()
+			}
 		}
 	}
 
@@ -132,23 +148,26 @@ class PrintBill(private var activity: FragmentActivity) {
 //	set header
 
 	private fun setHeader() {
-		printLogo()
-		printCustom("Jl.Jend.Sudirman No.16G,Baros", 0, 1)
-		printNewLine()
-		printCustom("Cimahi Tengah", 0, 1)
-		printNewLine()
-		printCustom(PrinterUtils.LINES, 0, 0)
-		printNewLine()
-		printCustom("Tgl : ${getDateTime()}", 0, 0)
-		printNewLine()
-		printCustom("No  : ${order?.order?.order?.orderNo}", 0, 0)
-		printNewLine()
+		if (type == BILL) {
+			printLogo()
+			printCustom("Jl.Jend.Sudirman No.16G,Baros", 0, 1)
+			printNewLine()
+			printCustom("Cimahi Tengah", 0, 1)
+			printNewLine()
+			printCustom(PrinterUtils.LINES, 0, 0)
+			printNewLine()
+			printCustom("Tgl : ${getDateTime()}", 0, 0)
+			printNewLine()
+			printCustom("No  : ${order?.order?.order?.orderNo}", 0, 0)
+			printNewLine()
+		}
+
 		printCustom("Nama: ", 0, 0)
 		printCustom("${order?.order?.customer?.name}", 1, 0)
 		printNewLine()
-		val takeAway = if (order?.order?.order?.isTakeAway == true){
+		val takeAway = if (order?.order?.order?.isTakeAway == true) {
 			"Take Away"
-		}else{
+		} else {
 			"Dine In"
 		}
 		printCustom(takeAway, 1, 2)

@@ -3,11 +3,10 @@ package com.socialite.solite_pos.utils.printer
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.utils.preference.SettingPref
-import com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
 import java.io.IOException
 import java.util.*
 
@@ -73,6 +72,7 @@ class DeviceConnection(private val activity: FragmentActivity) {
 				} catch (e: IOException) {
 					e.printStackTrace()
 				}
+				Log.e("DeviceConnection", "getDevice connect ${ex.message}");
 				mbtSocket = null
 				activity.runOnUiThread {
 					showToast("Error print, periksa perangkat perinter lalu coba kembali")

@@ -831,7 +831,6 @@ class RemoteDataSource {
 					.get()
 					.addOnSuccessListener {
 						val data = User.toListClass(it)
-						Log.w("TESTINGDATA", " users : $data")
 						if (data.isNullOrEmpty())
 							result.value = ApiResponse.empty(null)
 						else

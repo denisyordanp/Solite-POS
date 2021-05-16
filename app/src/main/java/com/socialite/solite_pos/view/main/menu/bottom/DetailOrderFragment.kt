@@ -49,39 +49,52 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null) {
+			prepare()
+			setAdapter()
+			setData()
+			setListener()
+		}
+	}
 
-			printBill = PrintBill(activity!!)
-			viewModel = MainViewModel.getMainViewModel(activity!!)
-			orderViewModel = OrderViewModel.getOrderViewModel(activity!!)
+	private fun prepare() {
+		printBill = PrintBill(activity!!)
+		viewModel = MainViewModel.getMainViewModel(activity!!)
+		orderViewModel = OrderViewModel.getOrderViewModel(activity!!)
+	}
 
-			_binding.btnDoCancel.setOnClickListener { cancelOrder() }
-			_binding.btnDoPrint.setOnClickListener {
-				if (order != null) {
-					printBill.doPrint(order!!) {
+	private fun setAdapter() {
+		adapter = ItemOrderListAdapter(activity!!, ItemOrderListAdapter.DETAIL)
+		_binding.rvDetailOrder.layoutManager = LinearLayoutManager(activity)
+		_binding.rvDetailOrder.adapter = adapter
+	}
 
-					}
+	private fun setListener() {
+		_binding.btnDoCancel.setOnClickListener { cancelOrder() }
+		_binding.btnDoPrintBill.setOnClickListener {
+			if (order != null) {
+				printBill.doPrint(order!!, PrintBill.BILL) {
+
 				}
 			}
-			_binding.btnDoDone.setOnClickListener { doneOrder() }
-			_binding.btnDoEdit.setOnClickListener { editOrder(order!!) }
+		}
+		_binding.btnDoPrintOrder.setOnClickListener {
+			if (order != null) {
+				printBill.doPrint(order!!, PrintBill.ORDER) {
 
-			adapter = ItemOrderListAdapter(activity!!, ItemOrderListAdapter.DETAIL)
-			_binding.rvDetailOrder.layoutManager = LinearLayoutManager(activity)
-			_binding.rvDetailOrder.adapter = adapter
-
-			setData()
-
-			_binding.btnDoPay.setOnClickListener {
-				PayFragment(order).show(childFragmentManager, "pay")
+				}
 			}
-
+		}
+		_binding.btnDoDone.setOnClickListener { doneOrder() }
+		_binding.btnDoEdit.setOnClickListener { editOrder(order!!) }
+		_binding.btnDoPay.setOnClickListener {
+			PayFragment(order).show(childFragmentManager, "pay")
 		}
 	}
 
 	private fun setData() {
 		if (order == null) return
 
-		when(order!!.order.order.status){
+		when (order!!.order.order.status) {
 			Order.ON_PROCESS -> {
 				_binding.contDoCancel.visibility = View.VISIBLE
 				_binding.contDoPay.visibility = View.VISIBLE
@@ -93,7 +106,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 			}
 
 			Order.DONE -> {
-				_binding.contDoPrint.visibility = View.VISIBLE
+				_binding.contDoPrintBill.visibility = View.VISIBLE
 				_binding.btnDoEdit.visibility = View.GONE
 			}
 

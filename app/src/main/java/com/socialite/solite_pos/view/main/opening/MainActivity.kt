@@ -131,12 +131,16 @@ class MainActivity : SocialiteActivity() {
 		_menu.tvMenuDate.visibility = View.GONE
 		_menu.menuDate.visibility = View.GONE
 
-		if (User.isNotAdmin(userPref.userAuthority)) {
+		if (isNotAdmin()) {
 			_menu.menuPurchase.visibility = View.GONE
 			_menu.menuHistory.visibility = View.GONE
 			_menu.menuMaster.visibility = View.GONE
 			_menu.tvMenuData.visibility = View.GONE
 		}
+	}
+
+	private fun isNotAdmin(): Boolean {
+		return User.isNotAdmin(userPref.userAuthority)
 	}
 
 	private fun setMenu() {

@@ -47,7 +47,37 @@
 				app:layout_constraintTop_toTopOf="@+id/tv_do_detail_order">
 
 				<LinearLayout
-					android:id="@+id/cont_do_print"
+					android:id="@+id/cont_do_print_order"
+					android:layout_width="80dp"
+					android:layout_height="wrap_content"
+					android:layout_margin="@dimen/SMargin"
+					android:orientation="vertical">
+
+					<com.google.android.material.card.MaterialCardView
+						android:id="@+id/btn_do_print_order"
+						android:layout_width="match_parent"
+						android:layout_height="80dp"
+						app:cardBackgroundColor="@color/primary">
+
+						<ImageView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:layout_gravity="center"
+							android:padding="@dimen/MMargin"
+							android:src="@drawable/ic_print_order" />
+
+					</com.google.android.material.card.MaterialCardView>
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:gravity="center"
+						android:text="Print Antrian Pesanan" />
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:id="@+id/cont_do_print_bill"
 					android:layout_width="80dp"
 					android:layout_height="wrap_content"
 					android:layout_margin="@dimen/SMargin"
@@ -55,7 +85,7 @@
 					android:visibility="gone">
 
 					<com.google.android.material.card.MaterialCardView
-						android:id="@+id/btn_do_print"
+						android:id="@+id/btn_do_print_bill"
 						android:layout_width="match_parent"
 						android:layout_height="80dp"
 						app:cardBackgroundColor="@color/primary">
@@ -73,7 +103,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:gravity="center"
-						android:text="Print" />
+						android:text="Print Struk Pembayaran" />
 
 				</LinearLayout>
 

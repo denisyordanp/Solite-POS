@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.view.main.menu.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import com.socialite.solite_pos.databinding.*
 import com.socialite.solite_pos.utils.config.ProductUtils
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.main.menu.order.SelectMixVariantOrderActivity
 
@@ -213,6 +213,58 @@ class ItemOrderListAdapter(
 				binding.tvIoName.text = detail.product!!.name
 				binding.tvIoPrice.text = toRupiah(detail.product!!.sellPrice)
 				binding.tvIoTotal.text = toRupiah(total)
+
+				setMainVariants(detail.variants)
+				setMix(detail)
+			}
+		}
+
+		private fun setMainVariants(variants: ArrayList<VariantOption>) {
+			Log.w("TESTINGDATA", "variants $variants")
+			if (variants.isNotEmpty()) {
+				val variantText = StringBuilder()
+				for (variant in variants) {
+					if (variantText.isNotEmpty()) {
+						variantText.append(", ")
+					}
+					variantText.append(variant.name)
+				}
+				binding.tvIoVariant.visibility = View.VISIBLE
+				binding.tvIoVariant.text = variantText
+			}
+		}
+
+		private fun setMix(detail: ProductOrderDetail) {
+			if (detail.product != null) {
+				if (detail.product!!.isMix) {
+					binding.tvIoVariant.visibility = View.GONE
+					if (detail.mixProducts.isNotEmpty()) {
+						binding.contIoMixVariant.removeAllViews()
+						for (item in detail.mixProducts) {
+							val txt = "${item.product.name} x${item.amount}"
+							val tvProduct = TextView(binding.root.context)
+							tvProduct.text = txt
+							binding.contIoMixVariant.addView(tvProduct)
+
+							setMixVariants(item.variants)
+						}
+					}
+				}
+			}
+		}
+
+		private fun setMixVariants(variants: ArrayList<VariantOption>) {
+			if (variants.isNotEmpty()) {
+				val variantText = StringBuilder()
+				for (variant in variants) {
+					if (variantText.isNotEmpty()) {
+						variantText.append(", ")
+					}
+					variantText.append(variant.name)
+				}
+				val tvVariant = TextView(binding.root.context)
+				tvVariant.text = variantText
+				binding.contIoMixVariant.addView(tvVariant)
 			}
 		}
 	}
