@@ -143,9 +143,10 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 	}
 
 	override fun onDestroy() {
-		super.onDestroy()
-		stopDiscovering()
-	}
+        super.onDestroy()
+        stopDiscovering()
+        printBill.onDestroy()
+    }
 
 	private fun stopDiscovering() {
 		mBluetoothAdapter?.cancelDiscovery()

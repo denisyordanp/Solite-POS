@@ -10,21 +10,20 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.databinding.ActivityOpeningBinding
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import java.lang.IllegalArgumentException
 
 class OpeningActivity : SocialiteActivity() {
 
 	private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-		val _binding = ActivityOpeningBinding.inflate(layoutInflater)
-        setContentView(_binding.root)
+		super.onCreate(savedInstanceState)
+		val binding = ActivityOpeningBinding.inflate(layoutInflater)
+		setContentView(binding.root)
 
 		auth = Firebase.auth
 
 		try {
-			_binding.tvOpeningVersion.text.apply {
+			binding.tvOpeningVersion.text.apply {
 				packageManager.getPackageInfo(packageName, 0).versionName
 			}
 		} catch (e: IllegalArgumentException) {

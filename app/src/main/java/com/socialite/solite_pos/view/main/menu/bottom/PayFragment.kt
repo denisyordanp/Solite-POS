@@ -223,13 +223,18 @@ class PayFragment(
 		}
 	}
 
-	private fun printBill(order: OrderWithProduct) {
-		printBill.doPrint(order, PrintBill.BILL) {
-			if (!it) {
-				Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT)
-					.show()
-			}
-			dialog?.dismiss()
-		}
-	}
+    private fun printBill(order: OrderWithProduct) {
+        printBill.doPrint(order, PrintBill.BILL) {
+            if (!it) {
+                Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            dialog?.dismiss()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        printBill.onDestroy()
+    }
 }

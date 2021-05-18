@@ -2,7 +2,6 @@ package com.socialite.solite_pos.view.main.menu.history
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.databinding.ActivitySalesBinding

@@ -2,7 +2,6 @@
 
 package com.socialite.solite_pos.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse

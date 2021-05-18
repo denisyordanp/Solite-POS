@@ -1,11 +1,6 @@
 package com.socialite.solite_pos.data.source.local.entity.helper
 
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import java.io.Serializable
 
 data class OrderWithProduct(

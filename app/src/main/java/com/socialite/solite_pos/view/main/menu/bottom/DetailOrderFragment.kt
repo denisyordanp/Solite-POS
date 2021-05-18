@@ -167,14 +167,19 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 	}
 
 	private fun updateOrder(order: OrderWithProduct, status: Int) {
-		order.order.order.status = status
-		orderViewModel.updateOrder(order.order.order)
-	}
+        order.order.order.status = status
+        orderViewModel.updateOrder(order.order.order)
+    }
 
-	private fun editOrder(order: OrderWithProduct) {
-		val intent = Intent(requireContext(), OrderActivity::class.java)
-		intent.putExtra(OrderActivity.EDIT_ORDER, order)
-		startActivity(intent)
-		dialog?.dismiss()
-	}
+    private fun editOrder(order: OrderWithProduct) {
+        val intent = Intent(requireContext(), OrderActivity::class.java)
+        intent.putExtra(OrderActivity.EDIT_ORDER, order)
+        startActivity(intent)
+        dialog?.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        printBill.onDestroy()
+    }
 }

@@ -1,6 +1,5 @@
 package com.socialite.solite_pos.data.source.remote
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -202,20 +201,6 @@ class RemoteDataSource {
 					result.value = ApiResponse.error(null)
 				}
 		return result
-	}
-
-	fun setOrderPayment(order: OrderPayment, callback: (ApiResponse<Boolean>) -> Unit) {
-		db.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(OrderPayment.DB_NAME)
-				.document(order.id.toString())
-				.set(OrderPayment.toHashMap(order))
-				.addOnSuccessListener {
-					callback.invoke(ApiResponse.success(true))
-				}
-				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
-				}
 	}
 
 	val customers: LiveData<ApiResponse<List<Customer>>>

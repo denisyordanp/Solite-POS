@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
                 Status.SUCCESS -> {
                     if (it.data != null) {
                         userPref.userAuthority = it.data.authority
-                        startActivity(Intent(this, MainActivity::class.java))
+                        toMain()
                     } else {
                         showWrongInputMessage("Database Error")
                     }

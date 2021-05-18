@@ -1,9 +1,9 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.*
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 
 data class OrderProductResponse(
     var products: DataProductResponse,

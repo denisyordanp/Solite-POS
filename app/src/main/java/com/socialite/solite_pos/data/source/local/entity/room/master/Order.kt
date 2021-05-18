@@ -1,7 +1,10 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -151,7 +154,7 @@ data class Order(
 						document.data[COOK_TIME] as String?,
 						document.data[TAKE_AWAY] as Boolean,
 						(document.data[STATUS] as Long).toInt(),
-						document.data[UPLOAD] as Boolean
+					document.data[UPLOAD] as Boolean
 				)
 				array.add(order)
 			}
@@ -159,12 +162,24 @@ data class Order(
 		}
 	}
 
-	constructor(orderNo: String, customer: Long, orderTime: String): this(orderNo, customer, orderTime, null, false, ON_PROCESS, false)
+	constructor(orderNo: String, customer: Long, orderTime: String) : this(
+		orderNo,
+		customer,
+		orderTime,
+		null,
+		false,
+		ON_PROCESS,
+		false
+	)
 
-	fun isCancelable(context: Context): Boolean{
-		return if (cookTime != null){
+	fun getQueueNumber(): String {
+		return orderNo.substring(6, orderNo.length)
+	}
+
+	fun isCancelable(context: Context): Boolean {
+		return if (cookTime != null) {
 			currentTime.before(getFinishCook(context).time)
-		}else{
+		} else {
 			true
 		}
 	}

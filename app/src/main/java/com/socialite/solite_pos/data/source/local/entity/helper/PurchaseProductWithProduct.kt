@@ -4,7 +4,6 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import java.io.Serializable
 
 data class PurchaseProductWithProduct(

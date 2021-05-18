@@ -72,7 +72,7 @@ class DeviceConnection(private val activity: FragmentActivity) {
 				} catch (e: IOException) {
 					e.printStackTrace()
 				}
-				Log.e("DeviceConnection", "getDevice connect ${ex.message}");
+				Log.e("DeviceConnection", "getDevice connect ${ex.message}")
 				mbtSocket = null
 				activity.runOnUiThread {
 					showToast("Error print, periksa perangkat perinter lalu coba kembali")

@@ -3,21 +3,16 @@ package com.socialite.solite_pos.view.main.opening
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
 import com.socialite.solite_pos.databinding.ActivityMainBinding
 import com.socialite.solite_pos.databinding.MainMenuBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.preference.UserPref
-import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
@@ -54,7 +49,6 @@ class MainActivity : SocialiteActivity() {
 	private lateinit var doneFragment: DoneFragment
 
 	companion object {
-		const val EXTRA_ORDER = "extra_order"
 		const val EXTRA_PURCHASE = "extra_purchase"
 	}
 
