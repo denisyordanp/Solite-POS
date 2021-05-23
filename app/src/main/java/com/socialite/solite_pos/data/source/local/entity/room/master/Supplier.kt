@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -36,7 +36,7 @@ data class Supplier(
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable{
-	companion object: RemoteUtils<Supplier>{
+	companion object: RemoteClassUtils<Supplier> {
 		const val ID = "id_supplier"
 		const val ADDRESS = "address"
 		const val PHONE = "phone"

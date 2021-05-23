@@ -15,7 +15,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.databinding.FragmentProductMasterBinding
-import com.socialite.solite_pos.utils.tools.BottomSheet
+import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
@@ -55,7 +55,7 @@ class ProductMasterFragment(private val product: ProductWithCategory?) : BottomS
 
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-		return BottomSheet.setBottom(bottomSheetDialog)
+		return BottomSheetView.setBottom(bottomSheetDialog)
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

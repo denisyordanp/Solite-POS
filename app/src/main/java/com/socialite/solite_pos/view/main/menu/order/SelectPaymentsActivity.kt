@@ -7,14 +7,14 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.ActivityPaymentsBinding
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.PaymentsAdapter
+import com.socialite.solite_pos.adapters.recycleView.payment.PaymentsOrderAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class SelectPaymentsActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityPaymentsBinding
-	private lateinit var adapter: PaymentsAdapter
+	private lateinit var orderAdapter: PaymentsOrderAdapter
 	private lateinit var viewModel: MainViewModel
 
 	companion object{
@@ -29,9 +29,9 @@ class SelectPaymentsActivity : SocialiteActivity() {
 
 		viewModel = getMainViewModel(this)
 
-		adapter = PaymentsAdapter{ setResult(it) }
+		orderAdapter = PaymentsOrderAdapter{ setResult(it) }
 		_binding.rvCustomerName.layoutManager = LinearLayoutManager(this)
-		_binding.rvCustomerName.adapter = adapter
+		_binding.rvCustomerName.adapter = orderAdapter
 
 		getPayments()
 
@@ -47,7 +47,7 @@ class SelectPaymentsActivity : SocialiteActivity() {
 				Status.LOADING -> {}
 				Status.SUCCESS -> {
 					if (!it.data.isNullOrEmpty()){
-						adapter.items = ArrayList(it.data)
+						orderAdapter.items = ArrayList(it.data)
 					}
 				}
 				Status.ERROR -> {}

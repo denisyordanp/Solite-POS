@@ -5,7 +5,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -44,7 +44,7 @@ data class VariantMix(
 	@ColumnInfo(name = UPLOAD)
 	var isUploaded: Boolean
 ): Serializable{
-	companion object: RemoteUtils<VariantMix>{
+	companion object: RemoteClassUtils<VariantMix> {
 		const val ID = "id_variant_mix"
 
 		const val DB_NAME = "variant_mix"

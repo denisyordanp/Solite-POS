@@ -15,8 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.databinding.FragmentSelectSupplierBinding
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
-import com.socialite.solite_pos.utils.tools.BottomSheet
-import com.socialite.solite_pos.view.main.menu.adapter.SelectSupplierAdapter
+import com.socialite.solite_pos.utils.tools.BottomSheetView
+import com.socialite.solite_pos.adapters.recycleView.supplier.SelectSupplierAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 import java.util.*
@@ -39,7 +39,7 @@ class SelectSupplierFragment(private val callback: (Supplier?) -> Unit) : Bottom
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        return BottomSheet.setBottom(bottomSheetDialog)
+        return BottomSheetView.setBottom(bottomSheetDialog)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

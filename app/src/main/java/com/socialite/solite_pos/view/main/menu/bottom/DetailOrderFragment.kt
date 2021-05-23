@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.adapters.recycleView.order.ProductDetailOrderAdapter
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDetailOrderBinding
 import com.socialite.solite_pos.utils.printer.PrintBill
-import com.socialite.solite_pos.utils.tools.BottomSheet
+import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
 import com.socialite.solite_pos.view.main.menu.order.OrderActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -25,7 +25,7 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDialogFragment() {
 
 	private lateinit var _binding: FragmentDetailOrderBinding
-	private lateinit var adapter: ItemOrderListAdapter
+	private lateinit var productDetailOrderAdapter: ProductDetailOrderAdapter
 	private lateinit var printBill: PrintBill
 
 	private lateinit var viewModel: MainViewModel
@@ -43,7 +43,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-		return BottomSheet.setBottom(bottomSheetDialog)
+		return BottomSheetView.setBottom(bottomSheetDialog)
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,9 +63,9 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 	}
 
 	private fun setAdapter() {
-		adapter = ItemOrderListAdapter(activity!!, ItemOrderListAdapter.DETAIL)
+		productDetailOrderAdapter = ProductDetailOrderAdapter()
 		_binding.rvDetailOrder.layoutManager = LinearLayoutManager(activity)
-		_binding.rvDetailOrder.adapter = adapter
+		_binding.rvDetailOrder.adapter = productDetailOrderAdapter
 	}
 
 	private fun setListener() {
@@ -124,7 +124,7 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 		} else {
 			"Makan Ditempat"
 		}
-		adapter.order = order
+		productDetailOrderAdapter.order = order
 	}
 
 	private fun doneOrder(){

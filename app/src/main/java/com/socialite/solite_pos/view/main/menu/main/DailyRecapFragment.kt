@@ -15,7 +15,7 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFrom
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
-import com.socialite.solite_pos.view.main.menu.adapter.RecapAdapter
+import com.socialite.solite_pos.adapters.recycleView.recap.RecapAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.vo.Status

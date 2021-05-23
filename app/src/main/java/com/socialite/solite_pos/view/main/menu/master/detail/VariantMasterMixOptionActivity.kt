@@ -8,7 +8,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.ActivityMasterVariantMixOptionBinding
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 

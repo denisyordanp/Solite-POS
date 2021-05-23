@@ -5,7 +5,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -45,7 +45,7 @@ import java.util.*
 		@ColumnInfo(name = UPLOAD)
 		var isUpload: Boolean
 ): Serializable{
-	companion object: RemoteUtils<OrderPayment>{
+	companion object: RemoteClassUtils<OrderPayment> {
 		const val ID = "id_order_payment"
 		const val PAY = "pay"
 

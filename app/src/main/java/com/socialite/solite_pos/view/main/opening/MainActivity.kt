@@ -15,7 +15,7 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.preference.UserPref
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.main.*
 import com.socialite.solite_pos.view.main.menu.order.OrderActivity
 import com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity

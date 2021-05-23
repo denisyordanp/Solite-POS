@@ -4,7 +4,7 @@ import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 
 @Entity(
@@ -58,7 +58,7 @@ data class Product(
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable{
-	companion object: RemoteUtils<Product>{
+	companion object: RemoteClassUtils<Product> {
 		const val SELL_PRICE = "sell_price"
 		const val BUY_PRICE = "buy_price"
 		const val PORTION = "portion"

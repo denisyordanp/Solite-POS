@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -37,7 +37,7 @@ data class Variant(
 	@ColumnInfo(name = ID)
 	var id: Long = 0
 
-	companion object: RemoteUtils<Variant>{
+	companion object: RemoteClassUtils<Variant> {
 		const val ID = "id_variant"
 		const val NAME = "name"
 		const val TYPE = "type"

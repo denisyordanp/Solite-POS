@@ -10,7 +10,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentNotPayBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
-import com.socialite.solite_pos.view.main.menu.adapter.OrderListAdapter
+import com.socialite.solite_pos.adapters.recycleView.order.OrderListAdapter
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 
@@ -42,7 +42,7 @@ class NotPayFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun setUpAdapter() {
-        adapter = OrderListAdapter(activity!!, viewModel)
+        adapter = OrderListAdapter(activity!!)
         _binding.rvNp.layoutManager = GridLayoutManager(activity, 4)
         _binding.rvNp.adapter = adapter
     }
@@ -61,7 +61,7 @@ class NotPayFragment(private var queryDate: String) : Fragment() {
     private fun setOrders(orders: ArrayList<OrderData>) {
         showEmpty(orders.isNullOrEmpty())
 
-        adapter.items = orders
+        adapter.setOrders(orders)
     }
 
     private fun showEmpty(state: Boolean) {

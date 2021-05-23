@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import com.google.firebase.firestore.QuerySnapshot
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 
 @Entity(
@@ -27,7 +27,7 @@ data class User(
 		@ColumnInfo(name = AUTHORITY)
 		var authority: String,
 ) : Serializable {
-	companion object : RemoteUtils<User> {
+	companion object : RemoteClassUtils<User> {
 		const val ID = "id_user"
 		const val AUTHORITY = "authority"
 		const val NAME = "name"

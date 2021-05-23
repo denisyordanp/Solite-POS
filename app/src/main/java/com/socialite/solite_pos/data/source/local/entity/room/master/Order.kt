@@ -14,7 +14,7 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFor
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
 import com.socialite.solite_pos.utils.preference.OrderPref
 import com.socialite.solite_pos.utils.preference.SettingPref
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -56,7 +56,7 @@ data class Order(
 		var isUploaded: Boolean
 ): Serializable {
 
-	companion object: RemoteUtils<Order>{
+	companion object: RemoteClassUtils<Order> {
 
 		const val ORDER_DATE = "order_date"
 		const val COOK_TIME = "cook_time"

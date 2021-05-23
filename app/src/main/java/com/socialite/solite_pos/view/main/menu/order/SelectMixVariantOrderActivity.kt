@@ -15,8 +15,8 @@ import com.socialite.solite_pos.databinding.OrderListBinding
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderMixListAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.socialite.solite_pos.adapters.recycleView.order.ProductsOrderMixAdapter
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
@@ -24,7 +24,7 @@ import com.socialite.solite_pos.vo.Status
 class SelectMixVariantOrderActivity : SocialiteActivity() {
 
     private lateinit var _binding: ActivitySelectMixVariantOrderBinding
-    private lateinit var adapter: ItemOrderMixListAdapter
+    private lateinit var adapter: ProductsOrderMixAdapter
     private lateinit var _amount: ItemAmountLayoutBinding
     private lateinit var _order: OrderListBinding
     private lateinit var vpAdapter: ViewPagerAdapter
@@ -59,7 +59,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
     }
 
     private fun setAdapter() {
-        adapter = ItemOrderMixListAdapter()
+        adapter = ProductsOrderMixAdapter()
         _order.rvOrderList.layoutManager = LinearLayoutManager(this)
         _order.rvOrderList.adapter = adapter
         _amount.tvPlAmount.text = amount.toString()
@@ -78,7 +78,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
 
     private fun setItems(detail: ProductOrderDetail) {
         product = detail.product
-        adapter.setItems(detail.mixProducts)
+        adapter.setProductsOrder(detail.mixProducts)
         _amount.tvPlAmount.text = detail.amount.toString()
     }
 

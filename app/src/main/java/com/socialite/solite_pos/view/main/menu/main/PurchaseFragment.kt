@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.databinding.FragmentPurchaseBinding
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
-import com.socialite.solite_pos.view.main.menu.adapter.PurchaseAdapter
+import com.socialite.solite_pos.adapters.recycleView.purchase.PurchaseAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 

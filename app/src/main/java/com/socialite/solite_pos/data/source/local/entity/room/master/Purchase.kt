@@ -9,7 +9,7 @@ import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPL
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import com.socialite.solite_pos.utils.preference.PurchasePref
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,7 +35,7 @@ data class Purchase(
 		var isUploaded: Boolean
 ): Serializable {
 
-	companion object: RemoteUtils<Purchase> {
+	companion object: RemoteClassUtils<Purchase> {
 
         const val PURCHASE_DATE = "purchase_date"
         const val NO = "purchase_no"

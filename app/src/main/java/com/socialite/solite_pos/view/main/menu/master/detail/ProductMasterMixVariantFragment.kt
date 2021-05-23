@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.FragmentMasterProductMixVariantBinding
-import com.socialite.solite_pos.view.main.menu.adapter.master.product.ProductMixVariantAdapter
+import com.socialite.solite_pos.adapters.recycleView.product.ProductMixVariantAdapter
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 

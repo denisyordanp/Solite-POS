@@ -11,8 +11,8 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFrom
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.helper.DatePickerFragment
-import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.socialite.solite_pos.view.dialog.DatePickerFragment
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.main.*
 
 class SalesActivity : SocialiteActivity() {

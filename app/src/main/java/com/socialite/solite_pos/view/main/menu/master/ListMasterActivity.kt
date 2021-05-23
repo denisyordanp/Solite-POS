@@ -9,12 +9,12 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.ActivityListMasterBinding
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.master.PaymentMasterAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.master.SupplierMasterAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.master.category.CategoryMasterAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.master.category.CategoryProductMasterAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.master.variant.VariantMasterAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.master.variant.VariantProductMasterAdapter
+import com.socialite.solite_pos.adapters.recycleView.payment.PaymentMasterAdapter
+import com.socialite.solite_pos.adapters.recycleView.supplier.SupplierMasterAdapter
+import com.socialite.solite_pos.adapters.recycleView.category.CategoryMasterAdapter
+import com.socialite.solite_pos.adapters.recycleView.category.CategoryProductMasterAdapter
+import com.socialite.solite_pos.adapters.recycleView.variant.VariantMasterAdapter
+import com.socialite.solite_pos.adapters.recycleView.variant.VariantProductMasterAdapter
 import com.socialite.solite_pos.view.main.menu.master.bottom.CategoryMasterFragment
 import com.socialite.solite_pos.view.main.menu.master.bottom.PaymentMasterFragment
 import com.socialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragment
@@ -118,7 +118,7 @@ class ListMasterActivity : SocialiteActivity() {
 			}
 			_binding.rvListMaster.adapter = adapter
 
-			getCategories { adapter.items = it }
+			getCategories { adapter.setCategories(it) }
 		}else {
 			_binding.fabLmNewData.setOnClickListener {
 				CategoryMasterFragment(null).show(supportFragmentManager, "detail-category")
@@ -127,7 +127,7 @@ class ListMasterActivity : SocialiteActivity() {
 			val adapter = CategoryMasterAdapter(this)
 			_binding.rvListMaster.adapter = adapter
 
-			getCategories { adapter.items = it }
+			getCategories { adapter.setCategories(it) }
 		}
 	}
 

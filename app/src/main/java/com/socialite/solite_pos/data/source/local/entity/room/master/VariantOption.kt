@@ -4,7 +4,7 @@ import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -46,7 +46,7 @@ data class VariantOption(
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable{
-	companion object: RemoteUtils<VariantOption>{
+	companion object: RemoteClassUtils<VariantOption> {
 		const val ID = "id_variant_option"
 		const val STATUS = "status"
 		const val COUNT = "count"

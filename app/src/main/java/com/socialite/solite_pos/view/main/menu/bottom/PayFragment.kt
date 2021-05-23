@@ -22,9 +22,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.FragmentPayBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.printer.PrintBill
-import com.socialite.solite_pos.utils.tools.BottomSheet
+import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.view.main.menu.adapter.AmountSuggestionsAdapter
+import com.socialite.solite_pos.adapters.recycleView.order.AmountSuggestionsAdapter
 import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
 import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -68,7 +68,7 @@ class PayFragment(
 
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-		return BottomSheet.setBottom(bottomSheetDialog)
+		return BottomSheetView.setBottom(bottomSheetDialog)
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -121,7 +121,7 @@ class PayFragment(
 
 	private fun setSuggestions(total: Int) {
 		val suggestions = getSuggestions(total)
-		adapter.items = suggestions
+		adapter.setAmounts(suggestions)
 	}
 
 	private fun getSuggestions(total: Int): ArrayList<Int> {

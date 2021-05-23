@@ -3,7 +3,7 @@ package com.socialite.solite_pos.data.source.local.entity.room.master
 import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -49,7 +49,7 @@ data class PurchaseProduct(
 
 	constructor(purchaseNo: String, idProduct: Long, amount: Int): this(0, purchaseNo, idProduct, amount, false)
 
-	companion object: RemoteUtils<PurchaseProduct>{
+	companion object: RemoteClassUtils<PurchaseProduct> {
 		const val ID = "id_purchase_product"
 		const val AMOUNT = "amount"
 

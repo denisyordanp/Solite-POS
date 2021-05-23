@@ -4,7 +4,7 @@ import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -45,7 +45,7 @@ data class OrderProductVariantMix(
 		@ColumnInfo(name = UPLOAD)
 		var isUpload: Boolean
 ): Serializable{
-	companion object: RemoteUtils<OrderProductVariantMix>{
+	companion object: RemoteClassUtils<OrderProductVariantMix> {
 		const val ID = "id_order_product_variant_mix"
 		const val AMOUNT = "amount"
 

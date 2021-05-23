@@ -19,8 +19,8 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.ItemOrderListAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.socialite.solite_pos.adapters.recycleView.order.ProductOrderListAdapter
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -31,7 +31,7 @@ class OrderActivity : SocialiteActivity() {
 	private lateinit var _binding: ActivityOrderBinding
 	private lateinit var _order: OrderListBinding
 
-	private lateinit var adapter: ItemOrderListAdapter
+	private lateinit var adapter: ProductOrderListAdapter
 	private lateinit var vpAdapter: ViewPagerAdapter
 
 	private lateinit var orderViewModel: OrderViewModel
@@ -114,8 +114,8 @@ class OrderActivity : SocialiteActivity() {
     }
 
 	private fun setAdapter(order: OrderWithProduct) {
-		adapter = ItemOrderListAdapter(this, ItemOrderListAdapter.ORDER)
-		adapter.btnCallback = { setButton(it) }
+		adapter = ProductOrderListAdapter(this)
+		adapter.buttonEnableCallback = { setButton(it) }
 		adapter.order = order
 	}
 

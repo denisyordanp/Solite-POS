@@ -13,7 +13,7 @@ open class SocialiteActivity : AppCompatActivity() {
 
 	private var messageReceiver = object : BroadcastReceiver(){
 		override fun onReceive(context: Context?, intent: Intent?) {
-			ShowMessage(supportFragmentManager)
+			ShowDialogMessage(supportFragmentManager)
 				.setName(intent?.getStringExtra(NAME))
 				.show()
 		}

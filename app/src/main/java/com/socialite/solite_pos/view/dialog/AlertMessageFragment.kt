@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.socialite.solite_pos.databinding.FragmentAlertMessageBinding
-import com.socialite.solite_pos.utils.config.CustomDialogFragment
+import com.socialite.solite_pos.utils.tools.helper.CustomDialogFragment
 
 class AlertMessageFragment : CustomDialogFragment() {
 
@@ -21,8 +21,12 @@ class AlertMessageFragment : CustomDialogFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
-			_binding.tvAmName.text = name
-			_binding.btnAmOk.setOnClickListener { dialog?.dismiss() }
+			setFragmentView()
 		}
+	}
+
+	private fun setFragmentView() {
+		_binding.tvAmName.text = name
+		_binding.btnAmOk.setOnClickListener { dialog?.dismiss() }
 	}
 }

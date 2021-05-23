@@ -7,7 +7,7 @@ import com.socialite.solite_pos.databinding.ActivityDetailOutcomeBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
-import com.socialite.solite_pos.view.main.menu.adapter.OutcomeAdapter
+import com.socialite.solite_pos.adapters.recycleView.outcome.OutcomeAdapter
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
