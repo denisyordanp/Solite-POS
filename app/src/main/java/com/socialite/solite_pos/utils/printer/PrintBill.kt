@@ -60,15 +60,11 @@ class PrintBill(private var activity: FragmentActivity) {
 		try {
 			outputStream = socket.outputStream
 
-//			print header
-			setHeader()
-
-//			print items
-			setItems()
-
-//			print footer
-			setFooter()
-			//resetPrint(); //reset printer
+			if (type == BILL) {
+				printBill()
+			} else {
+				printQueue()
+			}
 
 			outputStream!!.flush()
 			callback?.invoke(true)
@@ -79,11 +75,61 @@ class PrintBill(private var activity: FragmentActivity) {
 		}
 	}
 
-	private fun setItems() {
+	private fun printQueue() {
+		setHeaderQueue()
+		setItemsQueue()
+		printNewLine(4)
+	}
+
+	private fun printBill() {
+		setHeaderBill()
+		setItemsBill()
+		setFooter()
+		//resetPrint();
+	}
+
+	private fun setHeaderBill() {
+		printLogo()
+		printCustom("Jl.Jend.Sudirman No.16G,Baros", 0, 1)
+		printNewLine(1)
+		printCustom("Cimahi Tengah", 0, 1)
+		printNewLine(1)
+		printCustom(PrinterUtils.LINES, 0, 0)
+		printNewLine(1)
+		printCustom("Tgl : ${getDateTime()}", 0, 0)
+		printNewLine(1)
+		printCustom("No  : ${order?.order?.order?.orderNo}", 0, 0)
+		printNewLine(1)
+		setBasicHeader()
+	}
+
+	private fun setHeaderQueue() {
+		printNewLine(2)
+		printCustom("${order?.order?.order?.getQueueNumber()}", 3, 1)
+		printNewLine(1)
+		setBasicHeader()
+	}
+
+	private fun setBasicHeader() {
+		printCustom("Nama: ", 0, 0)
+		printCustom("${order?.order?.customer?.name}", 1, 0)
+		printNewLine(1)
+		val takeAway = if (order?.order?.order?.isTakeAway == true) {
+			"Take Away"
+		} else {
+			"Dine In"
+		}
+		printCustom(takeAway, 1, 2)
+		printNewLine(1)
+		printCustom(PrinterUtils.LINES, 0, 0)
+		printNewLine(1)
+	}
+
+	private fun setItemsBill() {
 		if (!order?.products.isNullOrEmpty()){
 			for ((i, item) in order?.products!!.withIndex()){
 				if (item.product != null){
-					printCustom("${i+1}.${item.product!!.name}", 0, 0)
+					printCustom("${i+1}. ${item.product!!.name}", 0, 0)
 
 					if (item.product!!.isMix){
 						if (!item.mixProducts.isNullOrEmpty()) {
@@ -116,13 +162,10 @@ class PrintBill(private var activity: FragmentActivity) {
 			}
 			printCustom(PrinterUtils.LINES21, 0, 2)
 			printNewLine(1)
-			if (type == BILL) {
-				printTotal()
-			}
+			printTotal()
 		}
 	}
 
-//	print total
 	private fun printTotal() {
 		if (order?.order?.payment != null) {
 			printCustom(withSpace("Total   : Rp.", thousand(order?.grandTotal), 21), 1, 2)
@@ -155,53 +198,47 @@ class PrintBill(private var activity: FragmentActivity) {
 		}
 	}
 
-//	set header
+	private fun setItemsQueue() {
+		if (!order?.products.isNullOrEmpty()){
+			for ((i, item) in order?.products!!.withIndex()){
+				if (item.product != null){
+					printCustom("${i+1}. ${item.product!!.name} x${item.amount}", 0, 0)
 
-	private fun setHeader() {
-		if (type == BILL) {
-			printLogo()
-			printCustom("Jl.Jend.Sudirman No.16G,Baros", 0, 1)
-			printNewLine(1)
-			printCustom("Cimahi Tengah", 0, 1)
-			printNewLine(1)
-			printCustom(PrinterUtils.LINES, 0, 0)
-			printNewLine(1)
-			printCustom("Tgl : ${getDateTime()}", 0, 0)
-			printNewLine(1)
-			printCustom("No  : ${order?.order?.order?.orderNo}", 0, 0)
-			printNewLine(1)
-		} else {
-			printNewLine(2)
-			printCustom("${order?.order?.order?.getQueueNumber()}", 3, 1)
+					if (item.product!!.isMix){
+						if (!item.mixProducts.isNullOrEmpty()) {
+							printNewLine(1)
+							for (mix in item.mixProducts) {
+								printCustom("  - ${mix.product.name}", 0, 0)
+								for (variant in mix.variants) {
+									printCustom(" ${variant.name}", 1, 0)
+								}
+								printCustom(" x${mix.amount}", 0, 0)
+								printNewLine(1)
+							}
+						}
+					}else {
+						for (variant in item.variants) {
+							printCustom(" ${variant.name}", 1, 0)
+						}
+						printNewLine(1)
+					}
+					printNewLine(1)
+				}
+			}
 			printNewLine(1)
 		}
-
-		printCustom("Nama: ", 0, 0)
-		printCustom("${order?.order?.customer?.name}", 1, 0)
-		printNewLine(1)
-		val takeAway = if (order?.order?.order?.isTakeAway == true) {
-			"Take Away"
-		} else {
-			"Dine In"
-		}
-		printCustom(takeAway, 1, 2)
-		printNewLine(1)
-		printCustom(PrinterUtils.LINES, 0, 0)
-		printNewLine(1)
 	}
 
 //	set footer
 
 	private fun setFooter() {
-		if (type == BILL) {
-			printCustom("Terima kasih atas kunjungannya", 1, 1)
-			printNewLine(2)
-			printCustom("Kritik Saran mohon sampaikan ke", 1, 1)
-			printNewLine(1)
-			printCustom("FB / IG : jajanansosialita", 1, 1)
-			printNewLine(1)
-			printCustom("WA : 0821-1711-6825", 1, 1)
-		}
+		printCustom("Terima kasih atas kunjungannya", 1, 1)
+		printNewLine(2)
+		printCustom("Kritik Saran mohon sampaikan ke", 1, 1)
+		printNewLine(1)
+		printCustom("FB / IG : jajanansosialita", 1, 1)
+		printNewLine(1)
+		printCustom("WA : 0821-1711-6825", 1, 1)
 		printNewLine(5)
 	}
 
