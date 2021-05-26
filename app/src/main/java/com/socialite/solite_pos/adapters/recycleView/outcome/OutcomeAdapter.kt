@@ -2,7 +2,8 @@ package com.socialite.solite_pos.adapters.recycleView.outcome
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.databinding.RvOutcomeBinding
@@ -10,68 +11,89 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFrom
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
+import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
 
-class OutcomeAdapter(private val fragmentManager: FragmentManager) : RecyclerView.Adapter<OutcomeAdapter.ListViewHolder>() {
+class OutcomeAdapter(private val activity: FragmentActivity) :
+    RecyclerView.Adapter<OutcomeAdapter.ListViewHolder>() {
 
-	var items: ArrayList<Outcome> = ArrayList()
-		set(value) {
-			if (field.isNotEmpty()){
-				field.clear()
-			}
-			field.addAll(value)
-			notifyDataSetChanged()
-		}
+    private var outcomes: ArrayList<Outcome> = ArrayList()
+    fun setOutcomes(outcomes: List<Outcome>) {
+        val outcomeDiffUtil = RecycleViewDiffUtils(this.outcomes, outcomes)
+        val diffUtilResult = DiffUtil.calculateDiff(outcomeDiffUtil)
+        this.outcomes = ArrayList(outcomes)
+        diffUtilResult.dispatchUpdatesTo(this)
+    }
 
-	fun addItem(outcome: Outcome){
-		items.add(outcome)
-		notifyItemInserted(0)
-	}
+    fun addItem(outcome: Outcome) {
+        outcomes.add(outcome)
+        notifyItemInserted(0)
+    }
 
-	fun editItem(outcome: Outcome){
-		for ((i, item) in items.withIndex()){
-			if (item.id == outcome.id){
-				items[i] = outcome
-				notifyItemChanged(i)
-			}
-		}
-	}
+    fun editItem(outcome: Outcome) {
+        for ((i, item) in outcomes.withIndex()) {
+            if (item.id == outcome.id) {
+                outcomes[i] = outcome
+                notifyItemChanged(i)
+            }
+        }
+    }
 
-	private val grandTotal: Long
-	get() {
-		var total = 0L
-		for (item in items){
-			total += item.total
-		}
-		return total
-	}
+    private val grandTotal: Long
+        get() {
+            var total = 0L
+            for (item in outcomes) {
+                total += item.total
+            }
+            return total
+        }
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-		return ListViewHolder(RvOutcomeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-	}
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = RvOutcomeBinding.inflate(inflater, parent, false)
+        return ListViewHolder(binding)
+    }
 
-	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-		if (position == 0) {
-            holder.binding.tvRvOcName.text = "Total pengeluaran : "
-            holder.binding.tvRvOcDesc.text = convertDateFromDb(currentDateTime, dateWithDayFormat)
-            holder.binding.tvRvOcTotal.text = toRupiah(grandTotal)
-        }else{
-			val o = items[position-1]
-			val name = "${o.amount}x ${o.name}"
+    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+        holder.setDataToView(outcomes[position])
+    }
 
-			holder.binding.tvRvOcName.text = name
-			holder.binding.tvRvOcDesc.text = o.desc
-			holder.binding.tvRvOcTotal.text = toRupiah(o.total)
+    override fun getItemCount(): Int {
+        return outcomes.size + 1
+    }
 
-			holder.itemView.setOnClickListener {
-				DetailOutcomeFragment(o).show(fragmentManager, "detail-outcome")
-			}
-		}
-	}
+    inner class ListViewHolder(var binding: RvOutcomeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun setDataToView(outcome: Outcome) {
+            if (adapterPosition == 0) {
+                setTitleView()
+            } else {
+                setTextView(outcome)
+                setClickListener(outcome)
+            }
+        }
 
-	override fun getItemCount(): Int {
-		return items.size+1
-	}
+        private fun setClickListener(outcome: Outcome) {
+            binding.root.setOnClickListener {
+                DetailOutcomeFragment(outcome).show(
+                    activity.supportFragmentManager,
+                    "detail-outcome"
+                )
+            }
+        }
 
-	class ListViewHolder(var binding: RvOutcomeBinding) : RecyclerView.ViewHolder(binding.root)
+        private fun setTextView(outcome: Outcome) {
+            val name = "${outcome.amount}x ${outcome.name}"
+
+            binding.tvRvOcName.text = name
+            binding.tvRvOcDesc.text = outcome.desc
+            binding.tvRvOcTotal.text = toRupiah(outcome.total)
+        }
+
+        private fun setTitleView() {
+            binding.tvRvOcName.text = "Total pengeluaran : "
+            binding.tvRvOcDesc.text = convertDateFromDb(currentDateTime, dateWithDayFormat)
+            binding.tvRvOcTotal.text = toRupiah(grandTotal)
+        }
+    }
 }

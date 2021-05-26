@@ -43,8 +43,10 @@ class ListProductMasterFragment(private var category: Category) : Fragment() {
 			when(it.status){
 				Status.LOADING -> { }
 				Status.SUCCESS -> {
-					if (!it.data.isNullOrEmpty()){
-						adapter.items = ArrayList(it.data)
+					it.data.apply {
+						if (this != null) {
+							adapter.setProducts(this)
+						}
 					}
 				}
 				Status.ERROR -> { }

@@ -3,6 +3,7 @@ package com.socialite.solite_pos.adapters.recycleView.purchase
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
@@ -10,69 +11,81 @@ import com.socialite.solite_pos.databinding.RvPurchaseBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFormat
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
+import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 
 class PurchaseAdapter(
-		private val viewModel: MainViewModel,
-		private val activity: FragmentActivity
-		) : RecyclerView.Adapter<PurchaseAdapter.ListViewHolder>() {
+    private val activity: FragmentActivity
+) : RecyclerView.Adapter<PurchaseAdapter.ListViewHolder>() {
 
-	var items: ArrayList<PurchaseWithSupplier> = ArrayList()
-		set(value) {
-			if (field.isNotEmpty()){
-				field.clear()
-			}
-			field.addAll(value)
-			notifyDataSetChanged()
-		}
+    private val viewModel = MainViewModel.getMainViewModel(activity)
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-		return ListViewHolder(RvPurchaseBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-	}
-
-	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val p = items[position]
-
-        holder.binding.tvRvPcDate.text = convertDateFromDb(p.purchase.purchaseTime, dateWithTimeFormat)
-        holder.binding.tvRvPcSupplier.text = p.supplier.name
-
-        holder.getPurchaseProducts(p.purchase.purchaseNo)
+    private var purchases: ArrayList<PurchaseWithSupplier> = ArrayList()
+    fun setPurchases(purchases: List<PurchaseWithSupplier>) {
+        val purchaseDiffUtil = RecycleViewDiffUtils(this.purchases, purchases)
+        val diffUtilResult = DiffUtil.calculateDiff(purchaseDiffUtil)
+        this.purchases = ArrayList(purchases)
+        diffUtilResult.dispatchUpdatesTo(this)
     }
 
-	override fun getItemCount(): Int {
-		return items.size
-	}
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = RvPurchaseBinding.inflate(inflater, parent, false)
+        return ListViewHolder(binding)
+    }
 
-	inner class ListViewHolder(var binding: RvPurchaseBinding) : RecyclerView.ViewHolder(binding.root){
-		fun getPurchaseProducts(purchaseNo: String){
-			viewModel.getPurchaseProducts(purchaseNo).observe(activity){
-				when(it.status){
-					Status.LOADING -> {}
-					Status.SUCCESS -> {
-						if (it.data.isNullOrEmpty()) return@observe
-						setPurchaseProducts(it.data)
-					}
-					Status.ERROR -> {}
-				}
-			}
-		}
+    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+        holder.setDataToView(purchases[position])
+    }
 
-		private fun setPurchaseProducts(products: List<PurchaseProductWithProduct>){
-			binding.tvRvPcTotal.text = toRupiah(getTotalPurchases(products))
-			binding.root.setOnClickListener {
+    override fun getItemCount(): Int {
+        return purchases.size
+    }
 
-			}
-		}
+    inner class ListViewHolder(var binding: RvPurchaseBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun setDataToView(purchase: PurchaseWithSupplier) {
+            setTextView(purchase)
+            getPurchaseProducts(purchase.purchase.purchaseNo)
+        }
 
-		private fun getTotalPurchases(products: List<PurchaseProductWithProduct>): Long{
-			var total = 0L
-			for (item in products){
-				if (item.purchaseProduct != null && item.product != null){
-					total += item.purchaseProduct!!.amount * item.product!!.buyPrice
-				}
-			}
-			return total
-		}
-	}
+        private fun setTextView(purchase: PurchaseWithSupplier) {
+            binding.tvRvPcDate.text =
+                convertDateFromDb(purchase.purchase.purchaseTime, dateWithTimeFormat)
+            binding.tvRvPcSupplier.text = purchase.supplier.name
+        }
+
+        fun getPurchaseProducts(purchaseNo: String) {
+            viewModel.getPurchaseProducts(purchaseNo).observe(activity) {
+                when (it.status) {
+                    Status.LOADING -> {
+                    }
+                    Status.SUCCESS -> {
+                        if (it.data.isNullOrEmpty()) return@observe
+                        setPurchaseProducts(it.data)
+                    }
+                    Status.ERROR -> {
+                    }
+                }
+            }
+        }
+
+        private fun setPurchaseProducts(products: List<PurchaseProductWithProduct>) {
+            binding.tvRvPcTotal.text = toRupiah(getTotalPurchases(products))
+            binding.root.setOnClickListener {
+
+            }
+        }
+
+        private fun getTotalPurchases(products: List<PurchaseProductWithProduct>): Long {
+            var total = 0L
+            for (item in products) {
+                if (item.purchaseProduct != null && item.product != null) {
+                    total += item.purchaseProduct!!.amount * item.product!!.buyPrice
+                }
+            }
+            return total
+        }
+    }
 }

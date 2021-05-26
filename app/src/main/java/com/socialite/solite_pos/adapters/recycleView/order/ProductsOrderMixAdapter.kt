@@ -12,22 +12,34 @@ import com.socialite.solite_pos.databinding.RvTotalItemOrderMixListBinding
 import com.socialite.solite_pos.utils.config.ProductUtils
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 
-class ProductsOrderMixAdapter : RecyclerView.Adapter<ProductsOrderMixAdapter.BaseViewHolder<ProductOrderDetail>>() {
+class ProductsOrderMixAdapter :
+    RecyclerView.Adapter<ProductsOrderMixAdapter.BaseViewHolder<ProductOrderDetail>>() {
 
     var btnCallback: ((Boolean) -> Unit)? = null
 
     private var productsOrder: ArrayList<ProductOrderDetail> = ArrayList()
 
     fun setProductsOrder(productsOrder: List<ProductMixOrderDetail>) {
-        val newProductsDetail: ArrayList<ProductOrderDetail> = ArrayList()
-        newProductsDetail.add(ProductOrderDetail.grand)
-        for (item in productsOrder) {
-            newProductsDetail.add(ProductOrderDetail.createProduct(item.product, item.variants, item.amount))
-        }
+        val newProductsDetail = generateProductsOrder(productsOrder)
         val productsOrderDiffUtil = RecycleViewDiffUtils(this.productsOrder, newProductsDetail)
         val diffUtilResult = DiffUtil.calculateDiff(productsOrderDiffUtil)
         this.productsOrder = newProductsDetail
         diffUtilResult.dispatchUpdatesTo(this)
+    }
+
+    private fun generateProductsOrder(productsOrder: List<ProductMixOrderDetail>): ArrayList<ProductOrderDetail> {
+        val newProductsDetail: ArrayList<ProductOrderDetail> = ArrayList()
+        newProductsDetail.add(ProductOrderDetail.grand)
+        for (item in productsOrder) {
+            newProductsDetail.add(
+                ProductOrderDetail.createProduct(
+                    item.product,
+                    item.variants,
+                    item.amount
+                )
+            )
+        }
+        return newProductsDetail
     }
 
     val sortedItems: ArrayList<ProductMixOrderDetail>
@@ -41,7 +53,7 @@ class ProductsOrderMixAdapter : RecyclerView.Adapter<ProductsOrderMixAdapter.Bas
             return items
         }
 
-	val totalItem: Int
+    val totalItem: Int
         get() {
             var total = 0
             for (item in productsOrder) {
@@ -74,8 +86,8 @@ class ProductsOrderMixAdapter : RecyclerView.Adapter<ProductsOrderMixAdapter.Bas
                 notifyItemChanged(pos)
                 btnCallback?.invoke(true)
             }
-		}else{
-			if (detail.amount != 0){
+        } else {
+            if (detail.amount != 0) {
                 productsOrder.add(0, detail)
                 notifyItemInserted(0)
                 btnCallback?.invoke(true)
@@ -97,90 +109,98 @@ class ProductsOrderMixAdapter : RecyclerView.Adapter<ProductsOrderMixAdapter.Bas
         }
     }
 
-    companion object{
-		private const val VALUE_COLUMN = 1
-		private const val TOTAL_COLUMN = 2
-	}
+    companion object {
+        private const val VALUE_COLUMN = 1
+        private const val TOTAL_COLUMN = 2
+    }
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ProductOrderDetail> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseViewHolder<ProductOrderDetail> {
         val inflater = LayoutInflater.from(parent.context)
-		return when (viewType){
-			VALUE_COLUMN -> ValueOrderColumnViewHolder(
+        return when (viewType) {
+            VALUE_COLUMN -> ValueOrderColumnViewHolder(
                 RvItemOrderMixListBinding.inflate(
                     inflater,
                     parent,
-                    false)
+                    false
+                )
             )
-			TOTAL_COLUMN -> TotalOrderColumnViewHolder(
+            TOTAL_COLUMN -> TotalOrderColumnViewHolder(
                 RvTotalItemOrderMixListBinding.inflate(
                     inflater,
                     parent,
-                    false)
+                    false
+                )
             )
-			else -> throw IllegalArgumentException("Invalid viewType")
-		}
-	}
+            else -> throw IllegalArgumentException("Invalid viewType")
+        }
+    }
 
-	override fun onBindViewHolder(holder: BaseViewHolder<ProductOrderDetail>, position: Int) {
-		holder.bind(productsOrder[position])
-	}
+    override fun onBindViewHolder(holder: BaseViewHolder<ProductOrderDetail>, position: Int) {
+        holder.bind(productsOrder[position])
+    }
 
-	override fun getItemViewType(position: Int): Int {
-		val item = productsOrder[position]
-		return when(item.type){
-			null -> VALUE_COLUMN
-			else -> TOTAL_COLUMN
-		}
-	}
+    override fun getItemViewType(position: Int): Int {
+        val item = productsOrder[position]
+        return when (item.type) {
+            null -> VALUE_COLUMN
+            else -> TOTAL_COLUMN
+        }
+    }
 
-	override fun getItemCount(): Int {
-		return productsOrder.size
-	}
+    override fun getItemCount(): Int {
+        return productsOrder.size
+    }
 
-	private fun setData(){
-		productsOrder.add(ProductOrderDetail.grand)
-	}
+    private fun setData() {
+        productsOrder.add(ProductOrderDetail.grand)
+    }
 
-	inner class ValueOrderColumnViewHolder(private val binding: RvItemOrderMixListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
-		override fun bind(detail: ProductOrderDetail) {
+    inner class ValueOrderColumnViewHolder(private val binding: RvItemOrderMixListBinding) :
+        BaseViewHolder<ProductOrderDetail>(binding.root) {
+        override fun bind(detail: ProductOrderDetail) {
 
-			val no = "$adapterPosition."
-			val amount = "${detail.amount}x"
-			val variants = StringBuilder()
-			for (variant in detail.variants){
-				if (variants.isNotEmpty()){
-					variants.append(", ")
-				}
-				variants.append(variant.name)
-			}
+            val no = "$adapterPosition."
+            val amount = "${detail.amount}x"
+            val variants = StringBuilder()
+            for (variant in detail.variants) {
+                if (variants.isNotEmpty()) {
+                    variants.append(", ")
+                }
+                variants.append(variant.name)
+            }
 
-			binding.tvIoNo.text = no
-			binding.tvIoAmount.text = amount
-			binding.tvIoName.text = detail.product?.name
-			binding.tvIoVariant.text = variants
+            binding.tvIoNo.text = no
+            binding.tvIoAmount.text = amount
+            binding.tvIoName.text = detail.product?.name
+            binding.tvIoVariant.text = variants
 
-			binding.btnOlDelete.setOnClickListener {
-				if (productsOrder.size == 2){
-					productsOrder.clear()
-					notifyDataSetChanged()
-				}else{
-					productsOrder.remove(detail)
-					notifyItemRemoved(adapterPosition)
-					notifyItemChanged(productsOrder.size-1)
-				}
-				btnCallback?.invoke(true)
-			}
-		}
-	}
+            binding.btnOlDelete.setOnClickListener {
+                if (productsOrder.size == 2) {
+                    productsOrder.clear()
+                    notifyDataSetChanged()
+                } else {
+                    productsOrder.remove(detail)
+                    notifyItemRemoved(adapterPosition)
+                    notifyItemChanged(productsOrder.size - 1)
+                }
+                btnCallback?.invoke(true)
+            }
+        }
+    }
 
-	inner class TotalOrderColumnViewHolder(private val binding: RvTotalItemOrderMixListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
-		override fun bind(detail: ProductOrderDetail) {
-			binding.tvIoName.text = "Total : "
-			binding.tvIoTotal.text = totalItem.toString()
-		}
-	}
+    inner class TotalOrderColumnViewHolder(private val binding: RvTotalItemOrderMixListBinding) :
+        BaseViewHolder<ProductOrderDetail>(binding.root) {
+        override fun bind(detail: ProductOrderDetail) {
+            binding.tvIoName.text = "Total : "
+            binding.tvIoTotal.text = totalItem.toString()
+        }
+    }
 
-	abstract class BaseViewHolder<ProductOrderDetail>(itemView: View) : RecyclerView.ViewHolder(itemView){
-		abstract fun bind(detail: ProductOrderDetail)
-	}
+    abstract class BaseViewHolder<ProductOrderDetail>(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(detail: ProductOrderDetail)
+    }
 }

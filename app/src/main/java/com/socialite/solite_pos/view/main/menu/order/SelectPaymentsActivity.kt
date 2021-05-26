@@ -14,7 +14,7 @@ import com.socialite.solite_pos.vo.Status
 class SelectPaymentsActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityPaymentsBinding
-	private lateinit var orderAdapter: PaymentsOrderAdapter
+	private lateinit var paymentAdapter: PaymentsOrderAdapter
 	private lateinit var viewModel: MainViewModel
 
 	companion object{
@@ -29,9 +29,9 @@ class SelectPaymentsActivity : SocialiteActivity() {
 
 		viewModel = getMainViewModel(this)
 
-		orderAdapter = PaymentsOrderAdapter{ setResult(it) }
+		paymentAdapter = PaymentsOrderAdapter{ setResult(it) }
 		_binding.rvCustomerName.layoutManager = LinearLayoutManager(this)
-		_binding.rvCustomerName.adapter = orderAdapter
+		_binding.rvCustomerName.adapter = paymentAdapter
 
 		getPayments()
 
@@ -46,8 +46,10 @@ class SelectPaymentsActivity : SocialiteActivity() {
 			when(it.status){
 				Status.LOADING -> {}
 				Status.SUCCESS -> {
-					if (!it.data.isNullOrEmpty()){
-						orderAdapter.items = ArrayList(it.data)
+					it.data.apply {
+						if (this != null) {
+							paymentAdapter.setPayments(this)
+						}
 					}
 				}
 				Status.ERROR -> {}

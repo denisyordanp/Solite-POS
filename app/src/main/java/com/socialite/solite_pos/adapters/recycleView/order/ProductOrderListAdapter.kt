@@ -29,7 +29,6 @@ class ProductOrderListAdapter(
 	var buttonEnableCallback: ((Boolean) -> Unit)? = null
 
 	private var productsOrder: ArrayList<ProductOrderDetail> = ArrayList()
-
 	private fun setProductsOrder(productsOrder: List<ProductOrderDetail>) {
 		val productsOrderDiffUtil = RecycleViewDiffUtils(this.productsOrder, productsOrder)
 		val diffUtilResult = DiffUtil.calculateDiff(productsOrderDiffUtil)
@@ -94,6 +93,21 @@ class ProductOrderListAdapter(
 			}
 		} else {
 			add(detail)
+		}
+	}
+
+	private fun configureList() {
+		when (order?.order?.order?.status) {
+			Order.ON_PROCESS, Order.NEED_PAY -> {
+				productsOrder.add(ProductOrderDetail.grand)
+			}
+			Order.DONE -> {
+				productsOrder.add(ProductOrderDetail.grand)
+				productsOrder.add(ProductOrderDetail.payment)
+				if (order?.order?.payment!!.isCash) {
+					productsOrder.add(ProductOrderDetail.payReturn)
+				}
+			}
 		}
 	}
 
@@ -186,21 +200,6 @@ class ProductOrderListAdapter(
 
 	override fun getItemCount(): Int {
 		return productsOrder.size
-	}
-
-	private fun configureList() {
-		when (order?.order?.order?.status) {
-			Order.ON_PROCESS, Order.NEED_PAY -> {
-				productsOrder.add(ProductOrderDetail.grand)
-			}
-			Order.DONE -> {
-				productsOrder.add(ProductOrderDetail.grand)
-				productsOrder.add(ProductOrderDetail.payment)
-				if (order?.order?.payment!!.isCash) {
-					productsOrder.add(ProductOrderDetail.payReturn)
-				}
-			}
-		}
 	}
 
 	inner class FirstColumnViewHolder(binding: RvFirstColumnItemOrderListBinding) :

@@ -26,7 +26,7 @@ class DetailOutcomeActivity : AppCompatActivity() {
 
         viewModel = getMainViewModel(this)
 
-        adapter = OutcomeAdapter(supportFragmentManager)
+        adapter = OutcomeAdapter(this)
         _binding.rvOutcome.layoutManager = LinearLayoutManager(this)
         _binding.rvOutcome.adapter = adapter
 
@@ -46,7 +46,9 @@ class DetailOutcomeActivity : AppCompatActivity() {
                 Status.LOADING -> {
                 }
                 Status.SUCCESS -> {
-                    adapter.items = ArrayList(it.data)
+                    if (it.data != null) {
+                        adapter.setOutcomes(it.data)
+                    }
                 }
                 Status.ERROR -> {
                 }

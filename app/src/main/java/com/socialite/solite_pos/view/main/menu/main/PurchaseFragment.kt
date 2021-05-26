@@ -28,9 +28,9 @@ class PurchaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null){
 
-            viewModel = getMainViewModel(activity!!)
+            viewModel = getMainViewModel(requireActivity())
 
-            adapter = PurchaseAdapter(viewModel, activity!!)
+            adapter = PurchaseAdapter(requireActivity())
             _binding.rvPurchase.layoutManager = LinearLayoutManager(activity)
             _binding.rvPurchase.adapter = adapter
         }
@@ -46,7 +46,11 @@ class PurchaseFragment : Fragment() {
             when(it.status){
                 Status.LOADING -> {}
                 Status.SUCCESS -> {
-                    adapter.items = ArrayList(it.data)
+                    it.data.apply {
+                        if (this != null) {
+                            adapter.setPurchases(this)
+                        }
+                    }
                 }
                 Status.ERROR -> {}
             }

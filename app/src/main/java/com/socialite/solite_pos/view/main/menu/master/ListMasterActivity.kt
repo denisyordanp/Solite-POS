@@ -207,7 +207,7 @@ class ListMasterActivity : SocialiteActivity() {
 			PaymentMasterFragment(null).show(supportFragmentManager, "detail-variant")
 		}
 
-		val adapter = PaymentMasterAdapter(mainViewModel, supportFragmentManager)
+		val adapter = PaymentMasterAdapter(this)
 		_binding.rvListMaster.adapter = adapter
 
 		mainViewModel.payments.observe(this) {
@@ -215,7 +215,11 @@ class ListMasterActivity : SocialiteActivity() {
 				Status.LOADING -> {
 				}
 				Status.SUCCESS -> {
-					adapter.items = ArrayList(it.data)
+					it.data.apply {
+						if (this != null) {
+							adapter.setPayments(this)
+						}
+					}
 				}
 				Status.ERROR -> {
 				}

@@ -2,41 +2,55 @@ package com.socialite.solite_pos.adapters.recycleView.payment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.RvPaymentsListBinding
+import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 
-class PaymentsOrderAdapter(private val callback: (Payment) -> Unit) : RecyclerView.Adapter<PaymentsOrderAdapter.ListViewHolder>() {
+class PaymentsOrderAdapter(private val callback: (Payment) -> Unit) :
+    RecyclerView.Adapter<PaymentsOrderAdapter.ListViewHolder>() {
 
-	var items: ArrayList<Payment> = ArrayList()
-		set(value) {
-			if (field.isNotEmpty()){
-				field.clear()
-			}
-			field.addAll(value)
-			notifyDataSetChanged()
-		}
+    private var payments: ArrayList<Payment> = ArrayList()
+    fun setPayments(payments: List<Payment>) {
+        val paymentDiffUtil = RecycleViewDiffUtils(this.payments, payments)
+        val diffUtilResult = DiffUtil.calculateDiff(paymentDiffUtil)
+        this.payments = ArrayList(payments)
+        diffUtilResult.dispatchUpdatesTo(this)
+    }
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-		return ListViewHolder(RvPaymentsListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-	}
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = RvPaymentsListBinding.inflate(inflater, parent, false)
+        return ListViewHolder(binding)
+    }
 
-	override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-		val p = items[position]
+    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+        holder.setDataToView(payments[position])
+    }
 
-		val tax = "Pajak +${p.tax}%"
-		holder.binding.tvRvPmsName.text = p.name
-		holder.binding.tvRvPmsDesc.text = p.desc
-		holder.binding.tvRvPmsTax.text = tax
+    override fun getItemCount(): Int {
+        return payments.size
+    }
 
-		holder.itemView.setOnClickListener {
-			callback.invoke(p)
-		}
-	}
+    inner class ListViewHolder(var binding: RvPaymentsListBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun setDataToView(payment: Payment) {
+            setTextView(payment)
+            setClickListener(payment)
+        }
 
-	override fun getItemCount(): Int {
-		return items.size
-	}
+        private fun setTextView(payment: Payment) {
+            val tax = "Pajak +${payment.tax}%"
+            binding.tvRvPmsName.text = payment.name
+            binding.tvRvPmsDesc.text = payment.desc
+            binding.tvRvPmsTax.text = tax
+        }
 
-	class ListViewHolder(var binding: RvPaymentsListBinding) : RecyclerView.ViewHolder(binding.root)
+        private fun setClickListener(payment: Payment) {
+            binding.root.setOnClickListener {
+                callback.invoke(payment)
+            }
+        }
+    }
 }
