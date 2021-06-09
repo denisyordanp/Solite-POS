@@ -1,11 +1,7 @@
 # Solite-POS
 Android kotlin POS System project for my own business at Jajanan Sosialita store
 
-<a href="https://play.google.com/store/apps/details?id=com.socialite.solite_pos">Google play</a>
-
-Instagram : https://www.instagram.com/jajanansosialita/
-
-Facebook : https://www.facebook.com/jajanansosialita
+<a href="https://play.google.com/store/apps/details?id=com.socialite.solite_pos">Google play</a> | <a href="https://www.instagram.com/jajanansosialita/">Instagram</a> | <a href="https://www.facebook.com/jajanansosialita">Facebook</a>
 
 ## Technical Library
 - Firebase Firestore
