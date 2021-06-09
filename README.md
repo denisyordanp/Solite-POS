@@ -1,7 +1,7 @@
 # Solite-POS
 Android kotlin POS System project for my own business at Jajanan Sosialita store
 
-Google play : https://play.google.com/store/apps/details?id=com.socialite.solite_pos
+<a href="https://play.google.com/store/apps/details?id=com.socialite.solite_pos">Google play</a>
 
 Instagram : https://www.instagram.com/jajanansosialita/
 
