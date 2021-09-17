@@ -221,11 +221,13 @@ class ProductOrderListAdapter(
 			val no = "$adapterPosition."
 			val amount = "${detail.amount}x"
 
-			binding.tvIoNo.text = no
-			binding.tvIoAmount.text = amount
-			binding.tvIoName.text = detail.product?.name
-			binding.tvIoPrice.text = toRupiah(detail.product?.sellPrice)
-			binding.tvIoTotal.text = toRupiah(getTotal(detail))
+			with(binding) {
+				tvIoNo.text = no
+				tvIoAmount.text = amount
+				tvIoName.text = detail.product?.name
+				tvIoPrice.text = toRupiah(detail.product?.sellPrice)
+				tvIoTotal.text = toRupiah(getTotal(detail))
+			}
 		}
 
 		private fun setMainVariants(variants: ArrayList<VariantOption>) {
@@ -237,8 +239,10 @@ class ProductOrderListAdapter(
 					}
 					variantText.append(variant.name)
 				}
-				binding.tvIoVariant.visibility = View.VISIBLE
-				binding.tvIoVariant.text = variantText
+				with(binding) {
+					tvIoVariant.visibility = View.VISIBLE
+					tvIoVariant.text = variantText
+				}
 			}
 		}
 
@@ -327,8 +331,10 @@ class ProductOrderListAdapter(
 
 	inner class TotalOrderColumnViewHolder(private val binding: RvTotalItemOrderListBinding) : BaseViewHolder<ProductOrderDetail>(binding.root) {
 		override fun bind(detail: ProductOrderDetail) {
-			binding.tvIoName.text = "Total : "
-			binding.tvIoTotal.text = toRupiah(grandTotal)
+			with(binding) {
+				tvIoName.text = "Total : "
+				tvIoTotal.text = toRupiah(grandTotal)
+			}
 		}
 	}
 

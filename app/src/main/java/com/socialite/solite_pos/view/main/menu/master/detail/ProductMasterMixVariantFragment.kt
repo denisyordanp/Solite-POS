@@ -57,7 +57,7 @@ class ProductMasterMixVariantFragment(
 				when(it.status){
 					Status.LOADING -> { }
 					Status.SUCCESS -> {
-						adapter.items = ArrayList(it.data)
+						adapter.setProducts(ArrayList(it.data))
 					}
 					Status.ERROR -> {
 						Toast.makeText(activity!!, "Error", Toast.LENGTH_SHORT).show()

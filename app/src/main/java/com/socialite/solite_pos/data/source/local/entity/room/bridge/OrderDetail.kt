@@ -78,6 +78,9 @@ data class OrderDetail(
 		}
 	}
 
+	@Ignore
 	constructor(orderNo: String, idProduct: Long, amount: Int): this(0, orderNo, idProduct, amount, false)
+
+	@Ignore
 	constructor(): this(0,"", 0, 0, false)
 }

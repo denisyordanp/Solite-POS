@@ -103,6 +103,9 @@ data class VariantOption(
 		}
 	}
 
+	@Ignore
 	constructor(id: Long, idVariant: Long, name: String, desc: String, isCount: Boolean, isActive: Boolean): this(id, idVariant, name, desc, isCount, isActive, false)
+
+	@Ignore
 	constructor(idVariant: Long, name: String, desc: String, isCount: Boolean, isActive: Boolean): this(0, idVariant, name, desc, isCount, isActive, false)
 }

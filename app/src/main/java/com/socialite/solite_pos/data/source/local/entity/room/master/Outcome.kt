@@ -1,9 +1,6 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
@@ -79,7 +76,10 @@ data class Outcome(
 		}
 	}
 
+	@Ignore
 	constructor(id: Long, name: String, desc: String, price: Long, amount: Int, date: String): this(id, name, desc, price, amount, date, false)
+
+	@Ignore
 	constructor(name: String, desc: String, price: Long, amount: Int, date: String): this(0, name, desc, price, amount, date, false)
 
 	val total: Long

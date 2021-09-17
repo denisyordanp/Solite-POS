@@ -88,6 +88,9 @@ data class VariantProduct(
 		}
 	}
 
+	@Ignore
 	constructor(id: Long, idVariant: Long, idVariantOption: Long, idProduct: Long): this(id, idVariant, idVariantOption, idProduct, false)
+
+	@Ignore
 	constructor(idVariant: Long, idVariantOption: Long, idProduct: Long): this(0, idVariant, idVariantOption, idProduct, false)
 }

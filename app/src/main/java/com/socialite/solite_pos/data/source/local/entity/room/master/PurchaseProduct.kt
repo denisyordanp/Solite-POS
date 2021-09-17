@@ -47,6 +47,7 @@ data class PurchaseProduct(
 		var isUploaded: Boolean
 ): Serializable {
 
+	@Ignore
 	constructor(purchaseNo: String, idProduct: Long, amount: Int): this(0, purchaseNo, idProduct, amount, false)
 
 	companion object: RemoteClassUtils<PurchaseProduct> {

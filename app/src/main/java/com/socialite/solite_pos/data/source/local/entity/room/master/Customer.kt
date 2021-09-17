@@ -1,9 +1,6 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
@@ -57,5 +54,6 @@ data class Customer(
 
 	}
 
+	@Ignore
 	constructor(name: String): this(0, name, false)
 }

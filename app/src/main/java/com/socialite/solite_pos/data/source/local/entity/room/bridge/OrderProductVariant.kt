@@ -71,5 +71,6 @@ data class OrderProductVariant(
 		}
 	}
 
+	@Ignore
 	constructor(idOrderDetail: Long, idVariantOption: Long): this(0, idOrderDetail, idVariantOption, false)
 }

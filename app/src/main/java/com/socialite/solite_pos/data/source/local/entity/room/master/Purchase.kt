@@ -3,6 +3,7 @@ package com.socialite.solite_pos.data.source.local.entity.room.master
 import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -118,6 +119,7 @@ data class Purchase(
         }
     }
 
+	@Ignore
     constructor(context: Context, idSupplier: Long) : this(purchaseNo(context), idSupplier, currentDateTime, false)
 
 }

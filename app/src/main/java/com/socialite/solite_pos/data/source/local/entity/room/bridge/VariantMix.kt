@@ -73,6 +73,9 @@ data class VariantMix(
 		}
 	}
 
+	@Ignore
 	constructor(id: Long, idVariant: Long, idProduct: Long): this(id, idVariant, idProduct, false)
+
+	@Ignore
 	constructor(idVariant: Long, idProduct: Long): this(0, idVariant, idProduct, false)
 }

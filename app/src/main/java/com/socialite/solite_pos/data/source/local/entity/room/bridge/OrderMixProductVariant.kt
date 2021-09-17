@@ -71,5 +71,6 @@ data class OrderMixProductVariant(
 		}
 	}
 
+	@Ignore
 	constructor(idOrderProductMixVariant: Long, idVariantOption: Long): this(0, idOrderProductMixVariant, idVariantOption, false)
 }

@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.local.entity.helper
 
 import androidx.room.Embedded
+import androidx.room.Ignore
 import androidx.room.Relation
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
@@ -16,7 +17,10 @@ data class PurchaseProductWithProduct(
         var type: Int?
 ): Serializable{
 
+    @Ignore
     constructor(purchaseProduct: PurchaseProduct?, product: Product?): this(purchaseProduct, product, null)
+
+    @Ignore
     constructor(type: Int?): this(null, null, type)
     companion object{
 

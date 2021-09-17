@@ -77,6 +77,7 @@ import java.util.*
 		}
 	}
 
+	@Ignore
 	constructor(orderNo: String, idPayment: Long, pay: Long): this(0, orderNo, idPayment, pay, false)
 
 	fun inReturn(total: Long): Long{

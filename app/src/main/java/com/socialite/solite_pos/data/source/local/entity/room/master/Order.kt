@@ -1,10 +1,7 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
 import android.content.Context
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
+import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -162,6 +159,7 @@ data class Order(
 		}
 	}
 
+	@Ignore
 	constructor(orderNo: String, customer: Long, orderTime: String) : this(
 		orderNo,
 		customer,
