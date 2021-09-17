@@ -19,8 +19,8 @@ import com.socialite.solite_pos.databinding.OrderListBinding
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.ItemPurchaseListAdapter
-import com.socialite.solite_pos.view.main.menu.adapter.ViewPagerAdapter
+import com.socialite.solite_pos.adapters.recycleView.purchase.PurchaseListAdapter
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.main.menu.order.SelectProductOrderByCategoryFragment
 import com.socialite.solite_pos.view.main.opening.MainActivity
@@ -30,7 +30,7 @@ import com.socialite.solite_pos.vo.Status
 class PurchaseActivity : SocialiteActivity() {
 
 	private lateinit var _binding: ActivityPurchaseBinding
-	private lateinit var adapter: ItemPurchaseListAdapter
+	private lateinit var adapter: PurchaseListAdapter
 	private lateinit var vpAdapter: ViewPagerAdapter
 	private lateinit var _purchase: OrderListBinding
 	private lateinit var viewModel: ProductViewModel
@@ -53,7 +53,7 @@ class PurchaseActivity : SocialiteActivity() {
 		vpAdapter = ViewPagerAdapter(this)
 		_binding.vpPurchase.adapter = vpAdapter
 
-		adapter = ItemPurchaseListAdapter(ItemPurchaseListAdapter.PURCHASE)
+		adapter = PurchaseListAdapter()
 		adapter.btnCallback = {
 			_purchase.btnOlCreate.isEnabled = it
 		}

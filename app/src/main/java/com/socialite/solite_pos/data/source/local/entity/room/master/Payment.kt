@@ -1,12 +1,9 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -40,7 +37,7 @@ data class Payment(
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable{
-	companion object: RemoteUtils<Payment>{
+	companion object: RemoteClassUtils<Payment> {
 		const val ID = "id_payment"
 		const val STATUS = "status"
 		const val NAME = "name"
@@ -79,6 +76,9 @@ data class Payment(
 		}
 	}
 
+	@Ignore
 	constructor(id: Long, name: String, desc: String, tax: Float, isCash: Boolean, isActive: Boolean): this(id, name, desc, tax, isCash, isActive, false)
+
+	@Ignore
 	constructor(name: String, desc: String, tax: Float, isCash: Boolean, isActive: Boolean): this(0, name, desc, tax, isCash, isActive, false)
 }

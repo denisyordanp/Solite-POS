@@ -5,7 +5,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -46,7 +46,7 @@ data class OrderDetail(
 		@ColumnInfo(name = UPLOAD)
 		var isUpload: Boolean
 ): Serializable{
-	companion object: RemoteUtils<OrderDetail>{
+	companion object: RemoteClassUtils<OrderDetail> {
 		const val ID = "id_order_detail"
 		const val AMOUNT = "amount"
 
@@ -78,6 +78,9 @@ data class OrderDetail(
 		}
 	}
 
+	@Ignore
 	constructor(orderNo: String, idProduct: Long, amount: Int): this(0, orderNo, idProduct, amount, false)
+
+	@Ignore
 	constructor(): this(0,"", 0, 0, false)
 }

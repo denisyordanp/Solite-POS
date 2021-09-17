@@ -37,7 +37,7 @@ class PrintBill(private var activity: FragmentActivity) {
 	}
 
 	private fun setData() {
-		DeviceConnection(activity).getDevice {
+		PrinterConnection(activity).getDevice {
 			if (it != null) {
 				setPaper(it)
 			} else {
@@ -358,8 +358,8 @@ class PrintBill(private var activity: FragmentActivity) {
 
 	fun onDestroy(){
 		try {
-			if (DeviceConnection.mbtSocket != null) {
-				DeviceConnection.mbtSocket!!.close()
+			if (PrinterConnection.mbtSocket != null) {
+				PrinterConnection.mbtSocket!!.close()
 			}
 			if (outputStream != null) {
 				outputStream!!.close()

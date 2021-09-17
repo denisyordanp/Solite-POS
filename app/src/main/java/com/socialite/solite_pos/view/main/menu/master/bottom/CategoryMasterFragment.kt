@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.FragmentCategoryMasterBinding
-import com.socialite.solite_pos.utils.tools.BottomSheet
+import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 class CategoryMasterFragment(private val category: Category?) : BottomSheetDialogFragment() {
@@ -36,7 +36,7 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-		return BottomSheet.setBottom(bottomSheetDialog)
+		return BottomSheetView.setBottom(bottomSheetDialog)
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

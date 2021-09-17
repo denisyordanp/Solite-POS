@@ -19,7 +19,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.databinding.FragmentDetailOrderProductBinding
 import com.socialite.solite_pos.databinding.ItemAmountLayoutBinding
-import com.socialite.solite_pos.utils.config.CustomDialogFragment
+import com.socialite.solite_pos.utils.tools.helper.CustomDialogFragment
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
 

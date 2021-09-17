@@ -63,7 +63,7 @@
             android:name=".view.main.opening.MainActivity"
             android:screenOrientation="landscape" />
 
-        <receiver android:name=".utils.tools.DoneCook" />
+        <receiver android:name=".utils.tools.DoneCookService" />
     </application>
 
 </manifest>

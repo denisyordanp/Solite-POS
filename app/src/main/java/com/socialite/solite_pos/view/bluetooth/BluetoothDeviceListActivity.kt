@@ -12,7 +12,7 @@ import com.socialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
 import com.socialite.solite_pos.utils.preference.SettingPref
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.bluetooth.adapter.DeviceAdapter
+import com.socialite.solite_pos.adapters.recycleView.bluetooth.BluetoothDeviceAdapter
 
 
 class BluetoothDeviceListActivity : SocialiteActivity() {
@@ -20,7 +20,7 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 	private var mBluetoothAdapter: BluetoothAdapter? = null
 
 	private lateinit var binding: ActivityBluetoothDeviceListBinding
-	private lateinit var adapter: DeviceAdapter
+	private lateinit var adapterBluetooth: BluetoothDeviceAdapter
 	private lateinit var setting: SettingPref
 	private lateinit var printBill: PrintBill
 
@@ -44,10 +44,10 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 		printBill = PrintBill(this)
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 		setting = SettingPref(this)
-		adapter = DeviceAdapter(setting.printerDevice) { onChooseDevice(it) }
+		adapterBluetooth = BluetoothDeviceAdapter(setting.printerDevice) { onChooseDevice(it) }
 
 		binding.rvBtDvList.layoutManager = LinearLayoutManager(this)
-		binding.rvBtDvList.adapter = adapter
+		binding.rvBtDvList.adapter = adapterBluetooth
 
 		binding.btnBtBack.setOnClickListener { onBackPressed() }
 
@@ -83,7 +83,7 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 	private fun getBoundDevice(bluetoothAdapter: BluetoothAdapter) {
 		val boundedDevice = bluetoothAdapter.bondedDevices
 		if (!boundedDevice.isNullOrEmpty()) {
-			adapter.setItems(ArrayList(boundedDevice))
+			adapterBluetooth.setDevices(ArrayList(boundedDevice))
 		}
 	}
 

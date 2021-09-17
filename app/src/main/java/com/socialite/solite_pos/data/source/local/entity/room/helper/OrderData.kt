@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.local.entity.room.helper
 
 import androidx.room.Embedded
+import androidx.room.Ignore
 import androidx.room.Junction
 import androidx.room.Relation
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
@@ -30,5 +31,6 @@ data class OrderData(
 				)
 		) val payment: Payment?
 ): Serializable {
+	@Ignore
 	constructor(order: Order, customer: Customer): this(order, customer, null, null)
 }

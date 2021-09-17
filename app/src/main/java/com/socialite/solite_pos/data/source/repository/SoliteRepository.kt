@@ -6,7 +6,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
-import com.socialite.solite_pos.data.NetworkFunBound
+import com.socialite.solite_pos.data.NetworkInsertUpdateResource
 import com.socialite.solite_pos.data.source.local.entity.helper.*
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.*
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
@@ -546,7 +546,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, VariantProduct, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, VariantProduct, Long>(callback) {
 			override fun dbOperation(): VariantProduct{
 				val id = localDataSource.soliteDao.insertVariantProduct(data)
 				data.id = id
@@ -570,7 +570,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, VariantProduct, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, VariantProduct, Boolean>(callback) {
 			override fun dbOperation(): VariantProduct{
 				localDataSource.soliteDao.removeVariantProduct(data.idVariantOption, data.idProduct)
 				return data
@@ -631,7 +631,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, VariantMix, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, VariantMix, Long>(callback) {
 			override fun dbOperation(): VariantMix{
 				val id = localDataSource.soliteDao.insertVariantMix(data)
 				data.id = id
@@ -655,7 +655,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, VariantMix, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, VariantMix, Boolean>(callback) {
 			override fun dbOperation(): VariantMix{
 				localDataSource.soliteDao.removeVariantMix(data.id)
 				return data
@@ -697,7 +697,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, Product, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Product, Long>(callback) {
 			override fun dbOperation(): Product{
 				val id = localDataSource.soliteDao.insertProduct(data)
 				data.id = id
@@ -721,7 +721,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit){
-		object : NetworkFunBound<Boolean, Product, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Product, Boolean>(callback) {
 			override fun dbOperation(): Product{
 				data.isUploaded = false
 				localDataSource.soliteDao.insertProduct(data)
@@ -766,7 +766,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, Category, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Category, Long>(callback) {
 			override fun dbOperation(): Category{
 				val id = localDataSource.soliteDao.insertCategory(data)
 				data.id = id
@@ -790,7 +790,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, Category, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Category, Boolean>(callback) {
 			override fun dbOperation(): Category{
 				data.isUploaded = false
 				localDataSource.soliteDao.insertCategory(data)
@@ -836,7 +836,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertVariant(data: Variant, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, Variant, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Variant, Long>(callback) {
 			override fun dbOperation(): Variant{
 				val id = localDataSource.soliteDao.insertVariant(data)
 				data.id = id
@@ -860,7 +860,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updateVariant(data: Variant, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, Variant, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Variant, Boolean>(callback) {
 			override fun dbOperation(): Variant{
 				data.isUploaded = true
 				localDataSource.soliteDao.insertVariant(data)
@@ -905,7 +905,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, VariantOption, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, VariantOption, Long>(callback) {
 			override fun dbOperation(): VariantOption{
 				val id = localDataSource.soliteDao.insertVariantOption(data)
 				data.id = id
@@ -929,7 +929,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, VariantOption, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, VariantOption, Boolean>(callback) {
 			override fun dbOperation(): VariantOption{
 				data.isUploaded = false
 				localDataSource.soliteDao.insertVariantOption(data)
@@ -974,7 +974,7 @@ class SoliteRepository private constructor(
 		}
 
 	override fun insertCustomer(data: Customer, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, Customer, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Customer, Long>(callback) {
 			override fun dbOperation(): Customer{
 				val id = localDataSource.soliteDao.insertCustomer(data)
 				data.id = id
@@ -998,7 +998,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updateCustomer(data: Customer, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, Customer, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Customer, Boolean>(callback) {
 			override fun dbOperation(): Customer{
 				data.isUploaded = false
 				localDataSource.soliteDao.updateCustomer(data)
@@ -1043,7 +1043,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertSupplier(data: Supplier, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, Supplier, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Supplier, Long>(callback) {
 			override fun dbOperation(): Supplier{
 				val id = localDataSource.soliteDao.insertSupplier(data)
 				data.id = id
@@ -1067,7 +1067,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updateSupplier(data: Supplier, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, Supplier, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Supplier, Boolean>(callback) {
 			override fun dbOperation(): Supplier{
 				data.isUploaded = false
 				localDataSource.soliteDao.updateSupplier(data)
@@ -1113,7 +1113,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertPayment(data: Payment, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, Payment, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Payment, Long>(callback) {
 			override fun dbOperation(): Payment{
 				val id = localDataSource.soliteDao.insertPayment(data)
 				data.id = id
@@ -1137,7 +1137,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updatePayment(data: Payment, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, Payment, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Payment, Boolean>(callback) {
 			override fun dbOperation(): Payment{
 				data.isUploaded = false
 				localDataSource.soliteDao.updatePayment(data)
@@ -1182,7 +1182,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit) {
-		object : NetworkFunBound<Boolean, Outcome, Long>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Outcome, Long>(callback) {
 			override fun dbOperation(): Outcome{
 				val id = localDataSource.soliteDao.insertOutcome(data)
 				data.id = id
@@ -1206,7 +1206,7 @@ class SoliteRepository private constructor(
 	}
 
 	override fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit) {
-		object : NetworkFunBound<Boolean, Outcome, Boolean>(callback) {
+		object : NetworkInsertUpdateResource<Boolean, Outcome, Boolean>(callback) {
 			override fun dbOperation(): Outcome{
 				data.isUploaded = false
 				localDataSource.soliteDao.updateOutcome(data)

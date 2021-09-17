@@ -10,7 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.databinding.FragmentDetailOutcomeBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
-import com.socialite.solite_pos.utils.tools.BottomSheet
+import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
@@ -49,7 +49,7 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        return BottomSheet.setBottom(bottomSheetDialog)
+        return BottomSheetView.setBottom(bottomSheetDialog)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

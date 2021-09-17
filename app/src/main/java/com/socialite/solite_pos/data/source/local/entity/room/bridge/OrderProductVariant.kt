@@ -4,7 +4,7 @@ import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
 
@@ -42,7 +42,7 @@ data class OrderProductVariant(
 		@ColumnInfo(name = UPLOAD)
 		var isUpload: Boolean
 ): Serializable{
-	companion object: RemoteUtils<OrderProductVariant>{
+	companion object: RemoteClassUtils<OrderProductVariant> {
 		const val ID = "id_order_product_variant"
 
 		const val DB_NAME = "order_product_variant"
@@ -71,5 +71,6 @@ data class OrderProductVariant(
 		}
 	}
 
+	@Ignore
 	constructor(idOrderDetail: Long, idVariantOption: Long): this(0, idOrderDetail, idVariantOption, false)
 }

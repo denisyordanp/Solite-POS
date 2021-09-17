@@ -15,7 +15,7 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFrom
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
-import com.socialite.solite_pos.view.main.menu.adapter.RecapAdapter
+import com.socialite.solite_pos.adapters.recycleView.recap.RecapAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.vo.Status
@@ -85,7 +85,7 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
                     if (!orders.data.isNullOrEmpty()) {
                         getProductOrder(orders.data)
                     } else {
-                        incomeRecapAdapter.items = ArrayList()
+                        incomeRecapAdapter.setRecaps(emptyList())
                     }
                 }
                 Status.ERROR -> {}
@@ -112,7 +112,7 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
                                             orderWithProduct.order.payment?.isCash
                                     ))
                         }
-                        incomeRecapAdapter.items = incomes
+                        incomeRecapAdapter.setRecaps(incomes)
                         setData()
                     }
                     Status.ERROR -> {
@@ -134,7 +134,7 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
                             outcomes.add(RecapData("${item.amount}x", item.name, item.total, null))
                         }
                     }
-                    outcomeRecapAdapter.items = outcomes
+                    outcomeRecapAdapter.setRecaps(outcomes)
                     setData()
                 }
                 Status.ERROR -> {}

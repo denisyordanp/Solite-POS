@@ -10,13 +10,18 @@
         <entry key="app/src/main/res/layout/activity_list_master.xml" value="0.26222826086956524" />
         <entry key="app/src/main/res/layout/activity_opening.xml" value="0.3609375" />
         <entry key="app/src/main/res/layout/fragment_cancel.xml" value="0.3055555555555556" />
+        <entry key="app/src/main/res/layout/fragment_category_master.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/layout/fragment_detail_order.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_done.xml" value="0.3609375" />
         <entry key="app/src/main/res/layout/fragment_message.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_not_pay.xml" value="0.2989583333333333" />
         <entry key="app/src/main/res/layout/fragment_on_process.xml" value="0.2989583333333333" />
         <entry key="app/src/main/res/layout/fragment_pay.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_payment_master.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_supplier_master.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/fragment_variant_master.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/fragment_variant_option.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/layout/order_list.xml" value="0.3292572463768116" />
         <entry key="app/src/main/res/layout/rv_item_order_list.xml" value="0.3292572463768116" />
         <entry key="app/src/main/res/layout/rv_product.xml" value="0.33" />
@@ -27,7 +32,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

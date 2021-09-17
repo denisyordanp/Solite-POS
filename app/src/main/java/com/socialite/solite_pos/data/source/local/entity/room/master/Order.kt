@@ -1,10 +1,7 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
 import android.content.Context
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
+import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -14,7 +11,7 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFor
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
 import com.socialite.solite_pos.utils.preference.OrderPref
 import com.socialite.solite_pos.utils.preference.SettingPref
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -56,7 +53,7 @@ data class Order(
 		var isUploaded: Boolean
 ): Serializable {
 
-	companion object: RemoteUtils<Order>{
+	companion object: RemoteClassUtils<Order> {
 
 		const val ORDER_DATE = "order_date"
 		const val COOK_TIME = "cook_time"
@@ -162,6 +159,7 @@ data class Order(
 		}
 	}
 
+	@Ignore
 	constructor(orderNo: String, customer: Long, orderTime: String) : this(
 		orderNo,
 		customer,

@@ -11,7 +11,7 @@ import com.socialite.solite_pos.data.source.remote.response.helper.StatusRespons
 import com.socialite.solite_pos.databinding.ActivityCustomerNameBinding
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.main.menu.adapter.CustomerAdapter
+import com.socialite.solite_pos.adapters.recycleView.customer.CustomerAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.vo.Status
 import java.util.*
@@ -73,9 +73,9 @@ class SelectCustomerActivity : SocialiteActivity() {
 				c.id = Customer.ID_ADD
 				array.add(0, c)
 			}
-			adapter.setItems(array)
+			adapter.setCustomers(array)
 		}else{
-			adapter.setItems(customers)
+			adapter.setCustomers(customers)
 		}
 	}
 

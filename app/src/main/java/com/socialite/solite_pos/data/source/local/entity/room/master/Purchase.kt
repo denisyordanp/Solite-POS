@@ -3,13 +3,14 @@ package com.socialite.solite_pos.data.source.local.entity.room.master
 import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import com.socialite.solite_pos.utils.preference.PurchasePref
-import com.socialite.solite_pos.utils.tools.RemoteUtils
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,7 +36,7 @@ data class Purchase(
 		var isUploaded: Boolean
 ): Serializable {
 
-	companion object: RemoteUtils<Purchase> {
+	companion object: RemoteClassUtils<Purchase> {
 
         const val PURCHASE_DATE = "purchase_date"
         const val NO = "purchase_no"
@@ -118,6 +119,7 @@ data class Purchase(
         }
     }
 
+	@Ignore
     constructor(context: Context, idSupplier: Long) : this(purchaseNo(context), idSupplier, currentDateTime, false)
 
 }
