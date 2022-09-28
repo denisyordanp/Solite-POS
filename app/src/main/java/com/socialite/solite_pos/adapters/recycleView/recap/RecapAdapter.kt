@@ -42,25 +42,31 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = RvRecapBinding.inflate(inflater, parent, false)
-        return ListViewHolder(binding)
+        return ListViewHolder(binding, viewType == TITLE_ADAPTER_VIEW)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.setDataToView(recaps[position])
+        holder.setDataToView(if (position == recaps.size) null else recaps[position])
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == recaps.size) TITLE_ADAPTER_VIEW else ITEM_ADAPTER_VIEW
     }
 
     override fun getItemCount(): Int {
         return recaps.size + 1
     }
 
-    inner class ListViewHolder(var binding: RvRecapBinding) :
+    inner class ListViewHolder(var binding: RvRecapBinding, private val isTitle: Boolean) :
         RecyclerView.ViewHolder(binding.root) {
-        fun setDataToView(recap: RecapData) {
-            if (adapterPosition == recaps.size) {
+        fun setDataToView(recap: RecapData?) {
+            if (isTitle) {
                 setTitleView()
             } else {
-                setTitleLine()
-                setTextView(recap)
+                recap?.let {
+                    setTitleLine()
+                    setTextView(it)
+                }
             }
         }
 
@@ -81,5 +87,10 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
             binding.tvRvRcDesc.text = recap.desc
             binding.tvRvRcTotal.text = toRupiah(recap.total)
         }
+    }
+
+    companion object {
+        const val TITLE_ADAPTER_VIEW = 0
+        const val ITEM_ADAPTER_VIEW = 1
     }
 }

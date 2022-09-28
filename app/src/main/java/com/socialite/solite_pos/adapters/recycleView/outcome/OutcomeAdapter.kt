@@ -51,25 +51,31 @@ class OutcomeAdapter(private val activity: FragmentActivity) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = RvOutcomeBinding.inflate(inflater, parent, false)
-        return ListViewHolder(binding)
+        return ListViewHolder(binding, viewType == TITLE_ADAPTER_VIEW)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.setDataToView(outcomes[position])
+        holder.setDataToView(if (position == 0) null else outcomes[position - 1])
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) TITLE_ADAPTER_VIEW else ITEM_ADAPTER_VIEW
     }
 
     override fun getItemCount(): Int {
         return outcomes.size + 1
     }
 
-    inner class ListViewHolder(var binding: RvOutcomeBinding) :
+    inner class ListViewHolder(var binding: RvOutcomeBinding, private val isTitle: Boolean) :
         RecyclerView.ViewHolder(binding.root) {
-        fun setDataToView(outcome: Outcome) {
-            if (adapterPosition == 0) {
+        fun setDataToView(outcome: Outcome?) {
+            if (isTitle) {
                 setTitleView()
             } else {
-                setTextView(outcome)
-                setClickListener(outcome)
+                outcome?.let {
+                    setTextView(it)
+                    setClickListener(it)
+                }
             }
         }
 
@@ -95,5 +101,10 @@ class OutcomeAdapter(private val activity: FragmentActivity) :
             binding.tvRvOcDesc.text = convertDateFromDb(currentDateTime, dateWithDayFormat)
             binding.tvRvOcTotal.text = toRupiah(grandTotal)
         }
+    }
+
+    companion object {
+        const val TITLE_ADAPTER_VIEW = 0
+        const val ITEM_ADAPTER_VIEW = 1
     }
 }
