@@ -16,6 +16,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
+import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -25,7 +26,8 @@ import kotlinx.coroutines.launch
 class ProductViewModel(
     private val repository: SoliteRepository,
     private val variantsRepository: VariantsRepository,
-    private val variantOptionsRepository: VariantOptionsRepository
+    private val variantOptionsRepository: VariantOptionsRepository,
+    private val categoriesRepository: CategoriesRepository,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<ProductViewModel>() {
@@ -92,16 +94,18 @@ class ProductViewModel(
         repository.updateProduct(data, callback)
     }
 
-    fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>> {
-        return repository.getCategories(query)
+    fun getCategories(query: SimpleSQLiteQuery) = categoriesRepository.getCategories(query)
+
+    fun insertCategory(data: Category) {
+        viewModelScope.launch {
+            categoriesRepository.insertCategory(data)
+        }
     }
 
-    fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit) {
-        repository.insertCategory(data, callback)
-    }
-
-    fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit) {
-        repository.updateCategory(data, callback)
+    fun updateCategory(data: Category) {
+        viewModelScope.launch {
+            categoriesRepository.updateCategory(data)
+        }
     }
 
     val variants = variantsRepository.getVariants()

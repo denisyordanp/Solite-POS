@@ -63,6 +63,7 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 		if (category != null){
 			_binding.edtCmName.setText(category.name)
 			_binding.edtCmDesc.setText(category.desc)
+			_binding.cbCmStock.isChecked = category.isStock
 			_binding.btnCmSave.setOnClickListener {
 				if (isCheck){
 					updateData(getCategory(false))
@@ -89,12 +90,12 @@ class CategoryMasterFragment(private val category: Category?) : BottomSheetDialo
 	}
 
 	private fun saveData(category: Category){
-		viewModel.insertCategory(category) {}
+		viewModel.insertCategory(category)
 		dialog?.dismiss()
 	}
 
 	private fun updateData(category: Category){
-		viewModel.updateCategory(category) {}
+		viewModel.updateCategory(category)
 		dialog?.dismiss()
 	}
 

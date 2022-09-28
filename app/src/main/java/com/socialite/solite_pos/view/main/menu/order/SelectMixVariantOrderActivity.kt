@@ -3,9 +3,12 @@ package com.socialite.solite_pos.view.main.menu.order
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.adapters.recycleView.order.ProductsOrderMixAdapter
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -15,11 +18,10 @@ import com.socialite.solite_pos.databinding.OrderListBinding
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.adapters.recycleView.order.ProductsOrderMixAdapter
-import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class SelectMixVariantOrderActivity : SocialiteActivity() {
 
@@ -34,7 +36,7 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
     private var product: Product? = null
     private var amount: Int = 1
 
-    companion object{
+    companion object {
         const val PRODUCT_ORDER_DETAIL = "product_order_detail"
         const val PRODUCT = "product"
         const val RC_MIX = 12
@@ -67,7 +69,8 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
     }
 
     private fun checkIntent() {
-        productOrderDetail = intent.getSerializableExtra(PRODUCT_ORDER_DETAIL) as ProductOrderDetail?
+        productOrderDetail =
+            intent.getSerializableExtra(PRODUCT_ORDER_DETAIL) as ProductOrderDetail?
         if (productOrderDetail != null) {
             setItems(productOrderDetail!!)
             return
@@ -99,14 +102,18 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
         }
     }
 
-    private fun setPageAdapter(){
-        viewModel.getCategories(Category.getFilter(Category.ACTIVE, true)).observe(this, {
-            when(it.status){
-                Status.SUCCESS -> {
-                    if (!it.data.isNullOrEmpty()){
+    private fun setPageAdapter() {
+        lifecycleScope.launch {
+            val query = Category.getFilter(Category.ACTIVE, true)
+            viewModel.getCategories(query)
+                .collect {
+                    if (it.isNotEmpty()) {
                         val fragments: ArrayList<FragmentWithTitle> = ArrayList()
-                        for (ctg in it.data){
-                            val fragment = SelectProductOrderByCategoryFragment(DetailOrderProductFragment.MIX, ctg) { p ->
+                        for (ctg in it) {
+                            val fragment = SelectProductOrderByCategoryFragment(
+                                DetailOrderProductFragment.MIX,
+                                ctg
+                            ) { p ->
                                 adapter.addItem(p)
                             }
                             fragments.add(FragmentWithTitle(ctg.name, fragment))
@@ -115,12 +122,10 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
                         setPager(fragments)
                     }
                 }
-                else -> {}
-            }
-        })
+        }
     }
 
-    private fun setPager(fragments: ArrayList<FragmentWithTitle>){
+    private fun setPager(fragments: ArrayList<FragmentWithTitle>) {
         TabLayoutMediator(_binding.tabMixOrder, _binding.vpMixOrder) { tab, position ->
             tab.text = fragments[position].title
             _binding.vpMixOrder.setCurrentItem(tab.position, true)
@@ -129,32 +134,41 @@ class SelectMixVariantOrderActivity : SocialiteActivity() {
         _binding.vpMixOrder.offscreenPageLimit = vpAdapter.itemCount
     }
 
-    private fun setButton(state: Boolean){
+    private fun setButton(state: Boolean) {
         _order.btnOlCreate.isEnabled = state
     }
 
     private fun validate(): Boolean {
-        if (product != null){
+        if (product != null) {
             val check = checkStock()
             val bottom = MessageBottom(supportFragmentManager)
             bottom.setNegativeListener(getString(android.R.string.ok)) { it?.dismiss() }
-            bottom.setMessageImage(ResourcesCompat.getDrawable(resources, R.drawable.ic_alert_message, null))
+            bottom.setMessageImage(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_alert_message,
+                    null
+                )
+            )
             return when {
                 adapter.totalItem < product!!.portion -> {
                     bottom.setMessage("Jumlah varian kurang dari porsi")
                     bottom.show()
                     false
                 }
+
                 adapter.totalItem > product!!.portion -> {
                     bottom.setMessage("Jumlah varian lebih dari porsi")
                     bottom.show()
                     false
                 }
+
                 check != null -> {
                     bottom.setMessage("Stok untuk produk ${check["name"]} hanya sisa ${check["stock"]}.")
                     bottom.show()
                     false
                 }
+
                 else -> {
                     true
                 }

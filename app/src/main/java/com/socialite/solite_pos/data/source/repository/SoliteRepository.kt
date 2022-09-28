@@ -1,7 +1,6 @@
 package com.socialite.solite_pos.data.source.repository
 
 import androidx.lifecycle.LiveData
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
@@ -22,7 +21,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -371,23 +369,6 @@ class SoliteRepository private constructor(
 
     override fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit) {
         localDataSource.soliteDao.insertProduct(data)
-    }
-
-    override fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>> {
-        return object : NetworkBoundResource<List<Category>, List<Category>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<Category>> {
-                return localDataSource.soliteDao.getCategories(query)
-            }
-
-        }.asLiveData()
-    }
-
-    override fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit) {
-        localDataSource.soliteDao.insertCategory(data)
-    }
-
-    override fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit) {
-        localDataSource.soliteDao.insertCategory(data)
     }
 
     override fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>> {

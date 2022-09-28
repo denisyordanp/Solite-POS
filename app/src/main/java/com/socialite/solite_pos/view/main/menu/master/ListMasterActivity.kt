@@ -21,7 +21,6 @@ import com.socialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragm
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragment
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -125,16 +124,13 @@ class ListMasterActivity : SocialiteActivity() {
     }
 
     private fun getCategories(callback: (ArrayList<Category>) -> Unit) {
-        productViewModel.getCategories(Category.getFilter(Category.ALL)).observe(this, {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    callback.invoke(ArrayList(it.data))
+        lifecycleScope.launch {
+            val query = Category.getFilter(Category.ALL)
+            productViewModel.getCategories(query)
+                .collect {
+                    callback.invoke(ArrayList(it))
                 }
-
-                else -> {
-                }
-            }
-        })
+        }
     }
 
     private fun setCategoryResult(category: Category) {

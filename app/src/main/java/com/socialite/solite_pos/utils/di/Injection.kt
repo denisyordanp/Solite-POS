@@ -3,12 +3,14 @@ package com.socialite.solite_pos.utils.di
 import android.content.Context
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
 import com.socialite.solite_pos.data.source.local.room.LocalDataSource
+import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import com.socialite.solite_pos.data.source.repository.impl.CategoriesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
@@ -48,6 +50,11 @@ object Injection {
     fun provideVariantOptionsRepository(context: Context): VariantOptionsRepository {
         val database = getInstance(context)
         return VariantOptionsRepositoryImpl.getInstance(database.variantOptionsDao())
+    }
+
+    fun provideCategoriesRepository(context: Context): CategoriesRepository {
+        val database = getInstance(context)
+        return CategoriesRepositoryImpl.getInstance(database.categoriesDao())
     }
 
 }

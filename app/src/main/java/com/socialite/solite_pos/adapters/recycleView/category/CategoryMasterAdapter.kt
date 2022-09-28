@@ -70,7 +70,7 @@ class CategoryMasterAdapter(private val activity: FragmentActivity) :
 			binding.swCmStatus.setOnCheckedChangeListener { v, _ ->
 				run {
 					category.isActive = v.isChecked
-					viewModel.updateCategory(category) {}
+					viewModel.updateCategory(category)
 				}
 			}
 		}
