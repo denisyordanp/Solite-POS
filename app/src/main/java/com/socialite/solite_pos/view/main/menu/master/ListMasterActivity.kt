@@ -170,15 +170,12 @@ class ListMasterActivity : SocialiteActivity() {
     }
 
     private fun getVariants(isMix: Boolean?, callback: ((ArrayList<Variant>) -> Unit)) {
-        productViewModel.variants.observe(this) {
-            when (it.status) {
-                Status.LOADING -> {
-                }
-
-                Status.SUCCESS -> {
-                    if (!it.data.isNullOrEmpty()) {
+        lifecycleScope.launch {
+            productViewModel.variants
+                .collect {
+                    if (it.isNotEmpty()) {
                         val variants: ArrayList<Variant> = ArrayList()
-                        for (item in it.data) {
+                        for (item in it) {
                             if (isMix != null) {
                                 if (item.isMix == isMix) {
                                     variants.add(item)
@@ -190,9 +187,6 @@ class ListMasterActivity : SocialiteActivity() {
                         callback.invoke(variants)
                     }
                 }
-
-                Status.ERROR -> {}
-            }
         }
     }
 

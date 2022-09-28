@@ -50,10 +50,6 @@ internal interface SoliteDataSource{
 	fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit)
 	fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit)
 
-	val variants: LiveData<Resource<List<Variant>>>
-	fun insertVariant(data: Variant, callback: (ApiResponse<Long>) -> Unit)
-	fun updateVariant(data: Variant, callback: (ApiResponse<Boolean>) -> Unit)
-
 	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>>
 	fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit)
 	fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit)

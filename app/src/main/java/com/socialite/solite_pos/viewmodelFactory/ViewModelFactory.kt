@@ -7,10 +7,12 @@ import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideCustomersRepository
 import com.socialite.solite_pos.utils.di.Injection.providePaymentsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSupplierRepository
+import com.socialite.solite_pos.utils.di.Injection.provideVariantsRepository
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -20,7 +22,8 @@ class ViewModelFactory private constructor(
     private val repository: SoliteRepository,
     private val paymentsRepository: PaymentsRepository,
     private val supplierRepository: SuppliersRepository,
-    private val customersRepository: CustomersRepository
+    private val customersRepository: CustomersRepository,
+    private val variantsRepository: VariantsRepository
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -34,7 +37,8 @@ class ViewModelFactory private constructor(
                             provideSoliteRepository(context),
                             providePaymentsRepository(context),
                             provideSupplierRepository(context),
-                            provideCustomersRepository(context)
+                            provideCustomersRepository(context),
+                            provideVariantsRepository(context)
                         )
                     }
                 }
@@ -64,7 +68,7 @@ class ViewModelFactory private constructor(
             }
 
             modelClass.isAssignableFrom(ProductViewModel::class.java) -> {
-                ProductViewModel(repository) as T
+                ProductViewModel(repository, variantsRepository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

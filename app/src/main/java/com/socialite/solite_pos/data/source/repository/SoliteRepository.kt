@@ -30,7 +30,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.LocalDataSource
@@ -391,24 +390,6 @@ class SoliteRepository private constructor(
 
     override fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit) {
         localDataSource.soliteDao.insertCategory(data)
-    }
-
-    override val variants: LiveData<Resource<List<Variant>>>
-        get() {
-            return object : NetworkBoundResource<List<Variant>, List<Variant>>(appExecutors) {
-                override fun loadFromDB(): LiveData<List<Variant>> {
-                    return localDataSource.soliteDao.getVariants()
-                }
-
-            }.asLiveData()
-        }
-
-    override fun insertVariant(data: Variant, callback: (ApiResponse<Long>) -> Unit) {
-        localDataSource.soliteDao.insertVariant(data)
-    }
-
-    override fun updateVariant(data: Variant, callback: (ApiResponse<Boolean>) -> Unit) {
-        localDataSource.soliteDao.insertVariant(data)
     }
 
     override fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>> {

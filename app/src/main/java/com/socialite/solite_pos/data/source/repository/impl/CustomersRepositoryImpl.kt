@@ -28,7 +28,7 @@ class CustomersRepositoryImpl(
 
     override fun getCustomers() = dao.getCustomers()
 
-    override fun insertCustomer(data: Customer) {
+    override suspend fun insertCustomer(data: Customer) {
         dao.insertCustomer(data)
     }
 }

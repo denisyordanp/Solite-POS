@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface CustomersRepository {
 
     fun getCustomers(): Flow<List<Customer>>
-    fun insertCustomer(data: Customer)
+    suspend fun insertCustomer(data: Customer)
 }

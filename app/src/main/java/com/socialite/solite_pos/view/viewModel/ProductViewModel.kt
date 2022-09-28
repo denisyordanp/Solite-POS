@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.viewModel
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
@@ -16,9 +17,14 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.vo.Resource
+import kotlinx.coroutines.launch
 
-class ProductViewModel(private val repository: SoliteRepository) : ViewModel() {
+class ProductViewModel(
+	private val repository: SoliteRepository,
+	private val variantsRepository: VariantsRepository
+	) : ViewModel() {
 
 	companion object : ViewModelFromFactory<ProductViewModel>(){
 		fun getMainViewModel(activity: FragmentActivity): ProductViewModel {
@@ -90,15 +96,18 @@ class ProductViewModel(private val repository: SoliteRepository) : ViewModel() {
 		repository.updateCategory(data, callback)
 	}
 
-	val variants: LiveData<Resource<List<Variant>>>
-		get() = repository.variants
+	val variants = variantsRepository.getVariants()
 
-	fun insertVariants(data: Variant, callback: (ApiResponse<Long>) -> Unit){
-		repository.insertVariant(data, callback)
+	fun insertVariants(data: Variant){
+		viewModelScope.launch {
+			variantsRepository.insertVariant(data)
+		}
 	}
 
-	fun updateVariant(data: Variant, callback: (ApiResponse<Boolean>) -> Unit){
-		repository.updateVariant(data, callback)
+	fun updateVariant(data: Variant){
+		viewModelScope.launch {
+			variantsRepository.updateVariant(data)
+		}
 	}
 
 	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>>{

@@ -7,9 +7,11 @@ import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.VariantsRepositoryImpl
 import com.socialite.solite_pos.utils.database.AppExecutors
 
 object Injection {
@@ -34,6 +36,11 @@ object Injection {
     fun provideCustomersRepository(context: Context): CustomersRepository {
         val database = getInstance(context)
         return CustomersRepositoryImpl.getInstance(database.customersDao())
+    }
+
+    fun provideVariantsRepository(context: Context): VariantsRepository {
+        val database = getInstance(context)
+        return VariantsRepositoryImpl.getInstance(database.variantsDao())
     }
 
 }

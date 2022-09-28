@@ -81,7 +81,7 @@ class VariantMasterFragment(private val variant: Variant?) : BottomSheetDialogFr
 		if (variant != null){
 			_binding.edtVmName.setText(variant.name)
 			_binding.cbVmMix.isChecked = variant.isMix
-//			_binding.cbVmMust.isChecked = variant.isMust
+			_binding.cbVmMust.isChecked = variant.isMust ?: false
 			when (variant.type) {
 				Variant.ONE_OPTION -> _binding.rbVmOne.isChecked = true
 				Variant.MULTIPLE_OPTION -> _binding.rbVmMultiple.isChecked = true
@@ -96,12 +96,12 @@ class VariantMasterFragment(private val variant: Variant?) : BottomSheetDialogFr
 	}
 
 	private fun saveData(variant: Variant){
-		viewModel.insertVariants(variant) {}
+		viewModel.insertVariants(variant)
 		dialog?.dismiss()
 	}
 
 	private fun updateData(variant: Variant){
-		viewModel.updateVariant(variant) {}
+		viewModel.updateVariant(variant)
 		dialog?.dismiss()
 	}
 
