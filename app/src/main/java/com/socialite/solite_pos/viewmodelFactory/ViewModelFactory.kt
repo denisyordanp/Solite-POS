@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
+import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
@@ -15,6 +16,7 @@ import com.socialite.solite_pos.utils.di.Injection.provideCategoriesRepository
 import com.socialite.solite_pos.utils.di.Injection.provideCustomersRepository
 import com.socialite.solite_pos.utils.di.Injection.provideOutcomesRepository
 import com.socialite.solite_pos.utils.di.Injection.providePaymentsRepository
+import com.socialite.solite_pos.utils.di.Injection.provideProductsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSupplierRepository
 import com.socialite.solite_pos.utils.di.Injection.provideVariantOptionsRepository
@@ -33,6 +35,7 @@ class ViewModelFactory private constructor(
     private val variantOptionsRepository: VariantOptionsRepository,
     private val categoriesRepository: CategoriesRepository,
     private val outcomesRepository: OutcomesRepository,
+    private val productsRepository: ProductsRepository,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -51,6 +54,7 @@ class ViewModelFactory private constructor(
                             provideVariantOptionsRepository(context),
                             provideCategoriesRepository(context),
                             provideOutcomesRepository(context),
+                            provideProductsRepository(context),
                         )
                     }
                 }
@@ -85,7 +89,8 @@ class ViewModelFactory private constructor(
                     repository,
                     variantsRepository,
                     variantOptionsRepository,
-                    categoriesRepository
+                    categoriesRepository,
+                    productsRepository
                 ) as T
             }
 

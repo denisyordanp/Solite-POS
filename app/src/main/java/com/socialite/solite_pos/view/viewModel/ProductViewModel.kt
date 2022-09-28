@@ -9,7 +9,6 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -17,6 +16,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
+import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -28,6 +28,7 @@ class ProductViewModel(
     private val variantsRepository: VariantsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val categoriesRepository: CategoriesRepository,
+    private val productsRepository: ProductsRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<ProductViewModel>() {
@@ -36,9 +37,7 @@ class ProductViewModel(
         }
     }
 
-    fun getProducts(idCategory: Long): LiveData<Resource<List<ProductWithCategory>>> {
-        return repository.getProducts(idCategory)
-    }
+    fun getProducts(idCategory: Long) = productsRepository.getProductWithCategories(idCategory)
 
     fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>> {
         return repository.getProductVariantOptions(idProduct)
@@ -82,16 +81,19 @@ class ProductViewModel(
         repository.removeVariantMix(data, callback)
     }
 
-    fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>> {
-        return repository.getProductWithCategories(category)
+    fun getProductWithCategories(category: Long) =
+        productsRepository.getProductWithCategories(category)
+
+    fun insertProduct(data: Product) {
+        viewModelScope.launch {
+            productsRepository.insertProduct(data)
+        }
     }
 
-    fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit) {
-        repository.insertProduct(data, callback)
-    }
-
-    fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit) {
-        repository.updateProduct(data, callback)
+    fun updateProduct(data: Product) {
+        viewModelScope.launch {
+            productsRepository.updateProduct(data)
+        }
     }
 
     fun getCategories(query: SimpleSQLiteQuery) = categoriesRepository.getCategories(query)

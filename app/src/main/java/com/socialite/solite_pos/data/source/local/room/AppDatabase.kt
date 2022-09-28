@@ -42,6 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun variantOptionsDao(): VariantOptionsDao
     abstract fun categoriesDao(): CategoriesDao
     abstract fun outcomesDao(): OutcomesDao
+    abstract fun productsDao(): ProductsDao
 
     companion object {
 

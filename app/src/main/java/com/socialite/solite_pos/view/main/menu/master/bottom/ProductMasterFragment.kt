@@ -199,12 +199,12 @@ class ProductMasterFragment(private val product: ProductWithCategory?) : BottomS
 	}
 
 	private fun updateData(data: Product){
-		viewModel.updateProduct(data) {}
+		viewModel.updateProduct(data)
 		dialog?.dismiss()
 	}
 
 	private fun saveData(data: Product){
-		viewModel.insertProduct(data) {}
+		viewModel.insertProduct(data)
 		dialog?.dismiss()
 	}
 

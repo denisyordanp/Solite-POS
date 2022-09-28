@@ -166,19 +166,6 @@ interface SoliteDao {
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
     fun getProduct(idProduct: Long): Product
 
-    @Transaction
-    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :category")
-    fun getProductWithCategories(category: Long): LiveData<List<ProductWithCategory>>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertProducts(data: List<Product>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertProduct(data: Product): Long
-
-    @Update
-    fun updateProduct(data: Product)
-
     @Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
     fun increaseProductStock(idProduct: Long, amount: Int)
 

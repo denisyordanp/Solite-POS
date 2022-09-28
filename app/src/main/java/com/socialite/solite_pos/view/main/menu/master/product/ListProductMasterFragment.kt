@@ -5,52 +5,51 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.socialite.solite_pos.adapters.recycleView.product.ProductMasterAdapter
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.databinding.FragmentListProductMasterBinding
-import com.socialite.solite_pos.adapters.recycleView.product.ProductMasterAdapter
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class ListProductMasterFragment(private var category: Category) : Fragment() {
 
-	private lateinit var _binding: FragmentListProductMasterBinding
-	private lateinit var adapter: ProductMasterAdapter
-	private lateinit var viewModel: ProductViewModel
+    private lateinit var _binding: FragmentListProductMasterBinding
+    private lateinit var adapter: ProductMasterAdapter
+    private lateinit var viewModel: ProductViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-		_binding = FragmentListProductMasterBinding.inflate(inflater, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentListProductMasterBinding.inflate(inflater, container, false)
         return _binding.root
     }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		if (activity != null){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (activity != null) {
 
-			viewModel = ProductViewModel.getMainViewModel(activity!!)
+            viewModel = ProductViewModel.getMainViewModel(activity!!)
 
-			adapter = ProductMasterAdapter(activity!!)
-			_binding.rvProductMaster.layoutManager = LinearLayoutManager(activity)
-			_binding.rvProductMaster.adapter = adapter
+            adapter = ProductMasterAdapter(activity!!)
+            _binding.rvProductMaster.layoutManager = LinearLayoutManager(activity)
+            _binding.rvProductMaster.adapter = adapter
 
-			setData()
-		}
-	}
+            setData()
+        }
+    }
 
-	private fun setData(){
-		viewModel.getProducts(category.id).observe(activity!!, {
-			when(it.status){
-				Status.LOADING -> { }
-				Status.SUCCESS -> {
-					it.data.apply {
-						if (this != null) {
-							adapter.setProducts(this)
-						}
-					}
-				}
-				Status.ERROR -> { }
-			}
-		})
-	}
+    private fun setData() {
+        lifecycleScope.launch {
+            viewModel.getProductWithCategories(category.id)
+                .collect {
+                    if (it.isNotEmpty()) {
+                        adapter.setProducts(it)
+                    }
+                }
+        }
+    }
 }

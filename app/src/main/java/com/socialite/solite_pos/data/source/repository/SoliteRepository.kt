@@ -6,7 +6,6 @@ import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.helper.Products
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
@@ -18,7 +17,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProduc
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
@@ -30,7 +28,6 @@ import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.LocalDataSource
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithData
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithObject
-import com.socialite.solite_pos.data.source.remote.response.entity.DataProductResponse
 import com.socialite.solite_pos.data.source.remote.response.entity.OrderProductResponse
 import com.socialite.solite_pos.data.source.remote.response.entity.OrderResponse
 import com.socialite.solite_pos.data.source.remote.response.entity.PurchaseProductResponse
@@ -270,23 +267,6 @@ class SoliteRepository private constructor(
         return BatchWithObject(product, BatchWithData(doc, Product.toHashMap(product)))
     }
 
-    override fun getProductList(idCategory: Long): LiveData<Resource<List<Products>>> {
-        return object : NetworkBoundResource<List<Products>, DataProductResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<Products>> {
-                return localDataSource.getProducts(idCategory)
-            }
-        }.asLiveData()
-    }
-
-    override fun getProducts(idCategory: Long): LiveData<Resource<List<ProductWithCategory>>> {
-        return object :
-            NetworkBoundResource<List<ProductWithCategory>, DataProductResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<ProductWithCategory>> {
-                return localDataSource.soliteDao.getProducts(idCategory)
-            }
-        }.asLiveData()
-    }
-
     override fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>> {
         return object :
             NetworkBoundResource<List<VariantWithOptions>?, List<VariantProduct>>(appExecutors) {
@@ -351,23 +331,6 @@ class SoliteRepository private constructor(
 
     override fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit) {
         localDataSource.soliteDao.removeVariantMix(data.id)
-    }
-
-    override fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>> {
-        return object :
-            NetworkBoundResource<List<ProductWithCategory>, List<Product>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<ProductWithCategory>> {
-                return localDataSource.soliteDao.getProductWithCategories(category)
-            }
-        }.asLiveData()
-    }
-
-    override fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit) {
-        localDataSource.soliteDao.insertProduct(data)
-    }
-
-    override fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit) {
-        localDataSource.soliteDao.insertProduct(data)
     }
 
     override fun getUsers(userId: String): LiveData<Resource<User?>> {
