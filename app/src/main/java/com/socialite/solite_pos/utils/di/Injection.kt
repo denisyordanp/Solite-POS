@@ -5,6 +5,7 @@ import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.get
 import com.socialite.solite_pos.data.source.local.room.LocalDataSource
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
+import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
@@ -12,6 +13,7 @@ import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.data.source.repository.impl.CategoriesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.OutcomesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
@@ -57,4 +59,8 @@ object Injection {
         return CategoriesRepositoryImpl.getInstance(database.categoriesDao())
     }
 
+    fun provideOutcomesRepository(context: Context): OutcomesRepository {
+        val database = getInstance(context)
+        return OutcomesRepositoryImpl.getInstance(database.outcomesDao())
+    }
 }

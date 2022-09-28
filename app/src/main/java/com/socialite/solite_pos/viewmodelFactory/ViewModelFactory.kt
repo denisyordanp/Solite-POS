@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
+import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
@@ -12,6 +13,7 @@ import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideCategoriesRepository
 import com.socialite.solite_pos.utils.di.Injection.provideCustomersRepository
+import com.socialite.solite_pos.utils.di.Injection.provideOutcomesRepository
 import com.socialite.solite_pos.utils.di.Injection.providePaymentsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSupplierRepository
@@ -30,6 +32,7 @@ class ViewModelFactory private constructor(
     private val variantsRepository: VariantsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val categoriesRepository: CategoriesRepository,
+    private val outcomesRepository: OutcomesRepository,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -47,6 +50,7 @@ class ViewModelFactory private constructor(
                             provideVariantsRepository(context),
                             provideVariantOptionsRepository(context),
                             provideCategoriesRepository(context),
+                            provideOutcomesRepository(context),
                         )
                     }
                 }
@@ -63,7 +67,8 @@ class ViewModelFactory private constructor(
                     repository,
                     paymentsRepository,
                     supplierRepository,
-                    customersRepository
+                    customersRepository,
+                    outcomesRepository
                 ) as T
             }
 

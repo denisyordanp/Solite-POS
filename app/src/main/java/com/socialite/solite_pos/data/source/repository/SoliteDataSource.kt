@@ -14,7 +14,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
@@ -55,10 +54,6 @@ internal interface SoliteDataSource {
     fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>>
     fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit)
     fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit)
-
-    fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>>
-    fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit)
-    fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit)
 
     fun getUsers(userId: String): LiveData<Resource<User?>>
 }

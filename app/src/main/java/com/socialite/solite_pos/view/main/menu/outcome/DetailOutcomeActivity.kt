@@ -2,6 +2,7 @@ package com.socialite.solite_pos.view.main.menu.outcome
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.databinding.ActivityDetailOutcomeBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
@@ -11,7 +12,8 @@ import com.socialite.solite_pos.adapters.recycleView.outcome.OutcomeAdapter
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class DetailOutcomeActivity : AppCompatActivity() {
 
@@ -41,18 +43,13 @@ class DetailOutcomeActivity : AppCompatActivity() {
     private fun setData() {
         _binding.tvOcDate.text = convertDateFromDb(currentDateTime, dateWithDayFormat)
 
-        viewModel.getOutcome(currentDateTime).observe(this) {
-            when (it.status) {
-                Status.LOADING -> {
-                }
-                Status.SUCCESS -> {
-                    if (it.data != null) {
-                        adapter.setOutcomes(it.data)
+        lifecycleScope.launch {
+            viewModel.getOutcome(currentDateTime)
+                .collect {
+                    if (it.isNotEmpty()) {
+                        adapter.setOutcomes(it)
                     }
                 }
-                Status.ERROR -> {
-                }
-            }
         }
     }
 }

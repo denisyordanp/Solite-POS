@@ -13,6 +13,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
+import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
@@ -23,7 +24,8 @@ class MainViewModel(
     private val repository: SoliteRepository,
     private val paymentRepository: PaymentsRepository,
     private val supplierRepository: SuppliersRepository,
-    private val customersRepository: CustomersRepository
+    private val customersRepository: CustomersRepository,
+    private val outcomesRepository: OutcomesRepository,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -79,15 +81,17 @@ class MainViewModel(
         }
     }
 
-    fun getOutcome(date: String): LiveData<Resource<List<Outcome>>> {
-        return repository.getOutcomes(date)
+    fun getOutcome(date: String) = outcomesRepository.getOutcomes(date)
+
+    fun insertOutcome(data: Outcome) {
+        viewModelScope.launch {
+            outcomesRepository.insertOutcome(data)
+        }
     }
 
-    fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit) {
-        repository.insertOutcome(data, callback)
-    }
-
-    fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit) {
-        repository.updateOutcome(data, callback)
+    fun updateOutcome(data: Outcome) {
+        viewModelScope.launch {
+            outcomesRepository.updateOutcome(data)
+        }
     }
 }

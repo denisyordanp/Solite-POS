@@ -123,13 +123,13 @@ class DetailOutcomeFragment(private val outcome: Outcome?) : BottomSheetDialogFr
         }
 
     private fun saveData(outcome: Outcome){
-        viewModel.insertOutcome(outcome) {}
+        viewModel.insertOutcome(outcome)
         detailActivity?.adapter?.addItem(outcome)
         dialog?.dismiss()
     }
 
     private fun updateData(outcome: Outcome){
-        viewModel.updateOutcome(outcome) {}
+        viewModel.updateOutcome(outcome)
         detailActivity?.adapter?.editItem(outcome)
         dialog?.dismiss()
     }

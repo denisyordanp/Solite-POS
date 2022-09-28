@@ -22,7 +22,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
@@ -369,22 +368,6 @@ class SoliteRepository private constructor(
 
     override fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit) {
         localDataSource.soliteDao.insertProduct(data)
-    }
-
-    override fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>> {
-        return object : NetworkBoundResource<List<Outcome>, List<Outcome>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<Outcome>> {
-                return localDataSource.soliteDao.getOutcome(date)
-            }
-        }.asLiveData()
-    }
-
-    override fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit) {
-        localDataSource.soliteDao.insertOutcome(data)
-    }
-
-    override fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit) {
-        localDataSource.soliteDao.updateOutcome(data)
     }
 
     override fun getUsers(userId: String): LiveData<Resource<User?>> {
