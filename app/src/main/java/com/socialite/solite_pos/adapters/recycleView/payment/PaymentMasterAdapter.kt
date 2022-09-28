@@ -51,7 +51,7 @@ class PaymentMasterAdapter(
             binding.swCmStatus.setOnCheckedChangeListener { v, _ ->
                 run {
                     payment.isActive = v.isChecked
-                    viewModel.updatePayment(payment) {}
+                    viewModel.updatePayment(payment)
                 }
             }
         }

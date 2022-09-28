@@ -301,20 +301,6 @@ interface SoliteDao{
 	@Update
 	fun updateSupplier(data: Supplier)
 
-//	PAYMENTS
-
-	@Query("SELECT * FROM ${Payment.DB_NAME}")
-	fun getPayments(): LiveData<List<Payment>>
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertPayments(data: List<Payment>)
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertPayment(data: Payment): Long
-
-	@Update
-	fun updatePayment(data: Payment)
-
 //	OUTCOME
 
 	@Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) = date(:date)")

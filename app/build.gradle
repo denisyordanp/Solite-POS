@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.socialite.solite_pos"
@@ -39,14 +39,19 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 	implementation 'androidx.recyclerview:recyclerview:1.1.0'
 	implementation 'androidx.cardview:cardview:1.0.0'
 	implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
 	implementation 'androidx.room:room-runtime:2.2.6'
+	implementation 'androidx.room:room-ktx:2.4.3'
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
     kapt "org.xerial:sqlite-jdbc:$sqliteJdbc"
     kapt 'androidx.room:room-compiler:2.2.6'
@@ -63,9 +68,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
-
-
-    annotationProcessor 'androidx.room:room-compiler:2.2.6'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

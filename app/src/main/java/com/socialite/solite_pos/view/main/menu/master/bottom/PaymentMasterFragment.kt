@@ -95,12 +95,12 @@ class PaymentMasterFragment(private val payment: Payment?) : BottomSheetDialogFr
 	}
 
 	private fun saveData(data: Payment){
-		viewModel.insertPayment(data) {}
+		viewModel.insertPayment(data)
 		dialog?.dismiss()
 	}
 
 	private fun updateData(data: Payment){
-		viewModel.updatePayment(data) {}
+		viewModel.updatePayment(data)
 		dialog?.dismiss()
 	}
 

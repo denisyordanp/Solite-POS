@@ -2,14 +2,16 @@ package com.socialite.solite_pos.view.main.menu.order
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.socialite.solite_pos.adapters.recycleView.payment.PaymentsOrderAdapter
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.databinding.ActivityPaymentsBinding
-import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.adapters.recycleView.payment.PaymentsOrderAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.vo.Status
+import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class SelectPaymentsActivity : SocialiteActivity() {
 
@@ -42,18 +44,11 @@ class SelectPaymentsActivity : SocialiteActivity() {
 	}
 
 	private fun getPayments(){
-		viewModel.payments.observe(this) {
-			when(it.status){
-				Status.LOADING -> {}
-				Status.SUCCESS -> {
-					it.data.apply {
-						if (this != null) {
-							paymentAdapter.setPayments(this)
-						}
-					}
+		lifecycleScope.launch {
+			viewModel.payments
+				.collect {
+					paymentAdapter.setPayments(it)
 				}
-				Status.ERROR -> {}
-			}
 		}
 	}
 

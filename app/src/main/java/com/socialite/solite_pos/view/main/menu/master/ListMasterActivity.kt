@@ -2,6 +2,7 @@ package com.socialite.solite_pos.view.main.menu.master
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -22,6 +23,8 @@ import com.socialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class ListMasterActivity : SocialiteActivity() {
 
@@ -210,19 +213,9 @@ class ListMasterActivity : SocialiteActivity() {
 		val adapter = PaymentMasterAdapter(this)
 		_binding.rvListMaster.adapter = adapter
 
-		mainViewModel.payments.observe(this) {
-			when (it.status) {
-				Status.LOADING -> {
-				}
-				Status.SUCCESS -> {
-					it.data.apply {
-						if (this != null) {
-							adapter.setPayments(this)
-						}
-					}
-				}
-				Status.ERROR -> {
-				}
+		lifecycleScope.launch {
+			mainViewModel.payments.collect {
+				adapter.setPayments(it)
 			}
 		}
 	}

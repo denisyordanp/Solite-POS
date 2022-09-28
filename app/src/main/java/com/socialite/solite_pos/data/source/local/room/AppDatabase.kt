@@ -36,6 +36,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.*
 abstract class AppDatabase : RoomDatabase() {
     abstract fun soliteDao(): SoliteDao
 
+    abstract fun paymentsDao(): PaymentsDao
+
     companion object {
 
         const val DB_NAME = "solite_db"
