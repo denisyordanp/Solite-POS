@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.utils.di.Injection.providePaymentsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
+import com.socialite.solite_pos.utils.di.Injection.provideSupplierRepository
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -14,19 +16,21 @@ import com.socialite.solite_pos.view.viewModel.UserViewModel
 
 class ViewModelFactory private constructor(
     private val repository: SoliteRepository,
-    private val paymentsRepository: PaymentsRepository
+    private val paymentsRepository: PaymentsRepository,
+    private val supplierRepository: SuppliersRepository
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
         private var INSTANCE: ViewModelFactory? = null
 
-        fun getInstance(context: Context?): ViewModelFactory {
+        fun getInstance(context: Context): ViewModelFactory {
             if (INSTANCE == null) {
                 synchronized(ViewModelFactory::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = ViewModelFactory(
-                            provideSoliteRepository(context!!),
-							providePaymentsRepository(context)
+                            provideSoliteRepository(context),
+							providePaymentsRepository(context),
+                            provideSupplierRepository(context)
                         )
                     }
                 }
@@ -39,7 +43,7 @@ class ViewModelFactory private constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
-                MainViewModel(repository, paymentsRepository) as T
+                MainViewModel(repository, paymentsRepository, supplierRepository) as T
             }
 
             modelClass.isAssignableFrom(OrderViewModel::class.java) -> {

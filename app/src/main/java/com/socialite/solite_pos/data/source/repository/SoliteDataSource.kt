@@ -62,10 +62,6 @@ internal interface SoliteDataSource{
 	fun insertCustomer(data: Customer, callback: (ApiResponse<Long>) -> Unit)
 	fun updateCustomer(data: Customer, callback: (ApiResponse<Boolean>) -> Unit)
 
-	val suppliers: LiveData<Resource<List<Supplier>>>
-    fun insertSupplier(data: Supplier, callback: (ApiResponse<Long>) -> Unit)
-    fun updateSupplier(data: Supplier, callback: (ApiResponse<Boolean>) -> Unit)
-
     fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>>
     fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit)
     fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit)

@@ -37,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun soliteDao(): SoliteDao
 
     abstract fun paymentsDao(): PaymentsDao
+    abstract fun suppliersDao(): SuppliersDao
 
     companion object {
 
