@@ -24,7 +24,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -430,23 +429,6 @@ class SoliteRepository private constructor(
         callback: (ApiResponse<Boolean>) -> Unit
     ) {
         localDataSource.soliteDao.insertVariantOption(data)
-    }
-
-    override val customers: LiveData<Resource<List<Customer>>>
-        get() {
-            return object : NetworkBoundResource<List<Customer>, List<Customer>>(appExecutors) {
-                override fun loadFromDB(): LiveData<List<Customer>> {
-                    return localDataSource.soliteDao.getCustomers()
-                }
-            }.asLiveData()
-        }
-
-    override fun insertCustomer(data: Customer, callback: (ApiResponse<Long>) -> Unit) {
-        localDataSource.soliteDao.insertCustomer(data)
-    }
-
-    override fun updateCustomer(data: Customer, callback: (ApiResponse<Boolean>) -> Unit) {
-        localDataSource.soliteDao.updateCustomer(data)
     }
 
     override fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>> {

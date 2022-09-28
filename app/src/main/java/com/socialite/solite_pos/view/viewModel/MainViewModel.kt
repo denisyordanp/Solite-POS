@@ -12,6 +12,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
+import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
@@ -21,7 +22,8 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     private val repository: SoliteRepository,
     private val paymentRepository: PaymentsRepository,
-    private val supplierRepository: SuppliersRepository
+    private val supplierRepository: SuppliersRepository,
+    private val customersRepository: CustomersRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -41,11 +43,12 @@ class MainViewModel(
         repository.newPurchase(data, callback)
     }
 
-    val customers: LiveData<Resource<List<Customer>>>
-        get() = repository.customers
+    val customers = customersRepository.getCustomers()
 
-    fun insertCustomers(data: Customer, callback: (ApiResponse<Long>) -> Unit) {
-        return repository.insertCustomer(data, callback)
+    fun insertCustomers(data: Customer) {
+        viewModelScope.launch {
+            customersRepository.insertCustomer(data)
+        }
     }
 
     val suppliers = supplierRepository.getSuppliers()

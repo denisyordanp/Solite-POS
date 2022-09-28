@@ -270,37 +270,6 @@ interface SoliteDao{
 	@Update
 	fun updateVariantOption(data: VariantOption)
 
-//	CUSTOMERS
-
-	@Query("SELECT * FROM ${Customer.DB_NAME}")
-	fun getCustomers(): LiveData<List<Customer>>
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertCustomers(data: List<Customer>)
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertCustomer(data: Customer): Long
-
-	@Update
-	fun updateCustomer(data: Customer)
-
-	//	SUPPLIER
-
-	@Query("SELECT * FROM ${Supplier.DB_NAME}")
-	fun getSuppliers(): LiveData<List<Supplier>>
-
-	@Query("SELECT * FROM ${Supplier.DB_NAME} WHERE ${Supplier.ID} = :idSupplier")
-	fun getSupplierById(idSupplier: Long): LiveData<Supplier>
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertSuppliers(data: List<Supplier>)
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertSupplier(data: Supplier): Long
-
-	@Update
-	fun updateSupplier(data: Supplier)
-
 //	OUTCOME
 
 	@Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) = date(:date)")

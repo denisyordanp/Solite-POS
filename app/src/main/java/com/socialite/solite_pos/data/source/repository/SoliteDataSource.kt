@@ -58,10 +58,6 @@ internal interface SoliteDataSource{
 	fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit)
 	fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit)
 
-	val customers: LiveData<Resource<List<Customer>>>
-	fun insertCustomer(data: Customer, callback: (ApiResponse<Long>) -> Unit)
-	fun updateCustomer(data: Customer, callback: (ApiResponse<Boolean>) -> Unit)
-
     fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>>
     fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit)
     fun updateOutcome(data: Outcome, callback: (ApiResponse<Boolean>) -> Unit)

@@ -35,9 +35,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.*
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun soliteDao(): SoliteDao
-
     abstract fun paymentsDao(): PaymentsDao
     abstract fun suppliersDao(): SuppliersDao
+    abstract fun customersDao(): CustomersDao
 
     companion object {
 

@@ -3,9 +3,11 @@ package com.socialite.solite_pos.viewmodelFactory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
+import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.utils.di.Injection.provideCustomersRepository
 import com.socialite.solite_pos.utils.di.Injection.providePaymentsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSupplierRepository
@@ -17,7 +19,8 @@ import com.socialite.solite_pos.view.viewModel.UserViewModel
 class ViewModelFactory private constructor(
     private val repository: SoliteRepository,
     private val paymentsRepository: PaymentsRepository,
-    private val supplierRepository: SuppliersRepository
+    private val supplierRepository: SuppliersRepository,
+    private val customersRepository: CustomersRepository
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -29,8 +32,9 @@ class ViewModelFactory private constructor(
                     if (INSTANCE == null) {
                         INSTANCE = ViewModelFactory(
                             provideSoliteRepository(context),
-							providePaymentsRepository(context),
-                            provideSupplierRepository(context)
+                            providePaymentsRepository(context),
+                            provideSupplierRepository(context),
+                            provideCustomersRepository(context)
                         )
                     }
                 }
@@ -43,7 +47,12 @@ class ViewModelFactory private constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
-                MainViewModel(repository, paymentsRepository, supplierRepository) as T
+                MainViewModel(
+                    repository,
+                    paymentsRepository,
+                    supplierRepository,
+                    customersRepository
+                ) as T
             }
 
             modelClass.isAssignableFrom(OrderViewModel::class.java) -> {
