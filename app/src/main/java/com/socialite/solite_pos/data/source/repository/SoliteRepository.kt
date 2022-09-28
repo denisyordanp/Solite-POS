@@ -2,7 +2,6 @@ package com.socialite.solite_pos.data.source.repository
 
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
@@ -30,7 +29,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
 import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.LocalDataSource
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithData
@@ -390,26 +388,6 @@ class SoliteRepository private constructor(
 
     override fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit) {
         localDataSource.soliteDao.insertCategory(data)
-    }
-
-    override fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>> {
-        return object :
-            NetworkBoundResource<List<VariantOption>, List<VariantOption>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<VariantOption>> {
-                return localDataSource.soliteDao.getVariantOptions(query)
-            }
-        }.asLiveData()
-    }
-
-    override fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit) {
-        localDataSource.soliteDao.insertVariantOption(data)
-    }
-
-    override fun updateVariantOption(
-        data: VariantOption,
-        callback: (ApiResponse<Boolean>) -> Unit
-    ) {
-        localDataSource.soliteDao.insertVariantOption(data)
     }
 
     override fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>> {

@@ -7,11 +7,13 @@ import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideCustomersRepository
 import com.socialite.solite_pos.utils.di.Injection.providePaymentsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
 import com.socialite.solite_pos.utils.di.Injection.provideSupplierRepository
+import com.socialite.solite_pos.utils.di.Injection.provideVariantOptionsRepository
 import com.socialite.solite_pos.utils.di.Injection.provideVariantsRepository
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -23,7 +25,8 @@ class ViewModelFactory private constructor(
     private val paymentsRepository: PaymentsRepository,
     private val supplierRepository: SuppliersRepository,
     private val customersRepository: CustomersRepository,
-    private val variantsRepository: VariantsRepository
+    private val variantsRepository: VariantsRepository,
+    private val variantOptionsRepository: VariantOptionsRepository,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -38,7 +41,8 @@ class ViewModelFactory private constructor(
                             providePaymentsRepository(context),
                             provideSupplierRepository(context),
                             provideCustomersRepository(context),
-                            provideVariantsRepository(context)
+                            provideVariantsRepository(context),
+                            provideVariantOptionsRepository(context),
                         )
                     }
                 }
@@ -68,7 +72,7 @@ class ViewModelFactory private constructor(
             }
 
             modelClass.isAssignableFrom(ProductViewModel::class.java) -> {
-                ProductViewModel(repository, variantsRepository) as T
+                ProductViewModel(repository, variantsRepository, variantOptionsRepository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

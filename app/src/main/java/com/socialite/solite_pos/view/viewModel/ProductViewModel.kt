@@ -17,108 +17,119 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.vo.Resource
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
-	private val repository: SoliteRepository,
-	private val variantsRepository: VariantsRepository
-	) : ViewModel() {
+    private val repository: SoliteRepository,
+    private val variantsRepository: VariantsRepository,
+    private val variantOptionsRepository: VariantOptionsRepository
+) : ViewModel() {
 
-	companion object : ViewModelFromFactory<ProductViewModel>(){
-		fun getMainViewModel(activity: FragmentActivity): ProductViewModel {
-			return buildViewModel(activity, ProductViewModel::class.java)
-		}
-	}
+    companion object : ViewModelFromFactory<ProductViewModel>() {
+        fun getMainViewModel(activity: FragmentActivity): ProductViewModel {
+            return buildViewModel(activity, ProductViewModel::class.java)
+        }
+    }
 
-	fun getProducts(idCategory: Long): LiveData<Resource<List<ProductWithCategory>>>{
-		return repository.getProducts(idCategory)
-	}
+    fun getProducts(idCategory: Long): LiveData<Resource<List<ProductWithCategory>>> {
+        return repository.getProducts(idCategory)
+    }
 
-	fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>> {
-		return repository.getProductVariantOptions(idProduct)
-	}
+    fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>> {
+        return repository.getProductVariantOptions(idProduct)
+    }
 
-	fun getVariantProduct(idProduct: Long, idVariantOption: Long): LiveData<Resource<VariantProduct?>> {
-		return repository.getVariantProduct(idProduct, idVariantOption)
-	}
+    fun getVariantProduct(
+        idProduct: Long,
+        idVariantOption: Long
+    ): LiveData<Resource<VariantProduct?>> {
+        return repository.getVariantProduct(idProduct, idVariantOption)
+    }
 
-	fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>> {
-		return repository.getVariantProductById(idProduct)
-	}
+    fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>> {
+        return repository.getVariantProductById(idProduct)
+    }
 
-	fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit) {
-		repository.insertVariantProduct(data, callback)
-	}
+    fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit) {
+        repository.insertVariantProduct(data, callback)
+    }
 
-	fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-		repository.removeVariantProduct(data, callback)
-	}
+    fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit) {
+        repository.removeVariantProduct(data, callback)
+    }
 
-	fun getVariantMixProductById(idVariant: Long, idProduct: Long): LiveData<Resource<VariantMix?>> {
-		return repository.getVariantMixProductById(idVariant, idProduct)
-	}
+    fun getVariantMixProductById(
+        idVariant: Long,
+        idProduct: Long
+    ): LiveData<Resource<VariantMix?>> {
+        return repository.getVariantMixProductById(idVariant, idProduct)
+    }
 
-	fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>{
-		return repository.getVariantMixProduct(idVariant)
-	}
+    fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>> {
+        return repository.getVariantMixProduct(idVariant)
+    }
 
-	fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit){
-		repository.insertVariantMix(data, callback)
-	}
+    fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit) {
+        repository.insertVariantMix(data, callback)
+    }
 
-	fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit){
-		repository.removeVariantMix(data, callback)
-	}
+    fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit) {
+        repository.removeVariantMix(data, callback)
+    }
 
-	fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>> {
-		return repository.getProductWithCategories(category)
-	}
+    fun getProductWithCategories(category: Long): LiveData<Resource<List<ProductWithCategory>>> {
+        return repository.getProductWithCategories(category)
+    }
 
-	fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit){
-		repository.insertProduct(data, callback)
-	}
+    fun insertProduct(data: Product, callback: (ApiResponse<Long>) -> Unit) {
+        repository.insertProduct(data, callback)
+    }
 
-	fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit){
-		repository.updateProduct(data, callback)
-	}
+    fun updateProduct(data: Product, callback: (ApiResponse<Boolean>) -> Unit) {
+        repository.updateProduct(data, callback)
+    }
 
-	fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>> {
-		return repository.getCategories(query)
-	}
+    fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>> {
+        return repository.getCategories(query)
+    }
 
-	fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit){
-		repository.insertCategory(data, callback)
-	}
+    fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit) {
+        repository.insertCategory(data, callback)
+    }
 
-	fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit){
-		repository.updateCategory(data, callback)
-	}
+    fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit) {
+        repository.updateCategory(data, callback)
+    }
 
-	val variants = variantsRepository.getVariants()
+    val variants = variantsRepository.getVariants()
 
-	fun insertVariants(data: Variant){
-		viewModelScope.launch {
-			variantsRepository.insertVariant(data)
-		}
-	}
+    fun insertVariants(data: Variant) {
+        viewModelScope.launch {
+            variantsRepository.insertVariant(data)
+        }
+    }
 
-	fun updateVariant(data: Variant){
-		viewModelScope.launch {
-			variantsRepository.updateVariant(data)
-		}
-	}
+    fun updateVariant(data: Variant) {
+        viewModelScope.launch {
+            variantsRepository.updateVariant(data)
+        }
+    }
 
-	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>>{
-		return repository.getVariantOptions(query)
-	}
+    fun getVariantOptions(query: SupportSQLiteQuery) =
+        variantOptionsRepository.getVariantOptions(query)
 
-	fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit){
-		repository.insertVariantOption(data, callback)
-	}
+    fun insertVariantOption(data: VariantOption) {
+        viewModelScope.launch {
+            variantOptionsRepository.insertVariantOption(data)
+        }
+    }
 
-	fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit){
-		repository.updateVariantOption(data, callback)
-	}
+    fun updateVariantOption(data: VariantOption) {
+        viewModelScope.launch {
+            variantOptionsRepository.updateVariantOption(data)
+        }
+    }
 }

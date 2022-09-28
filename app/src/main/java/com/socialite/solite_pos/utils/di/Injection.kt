@@ -7,10 +7,12 @@ import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantsRepositoryImpl
 import com.socialite.solite_pos.utils.database.AppExecutors
 
@@ -41,6 +43,11 @@ object Injection {
     fun provideVariantsRepository(context: Context): VariantsRepository {
         val database = getInstance(context)
         return VariantsRepositoryImpl.getInstance(database.variantsDao())
+    }
+
+    fun provideVariantOptionsRepository(context: Context): VariantOptionsRepository {
+        val database = getInstance(context)
+        return VariantOptionsRepositoryImpl.getInstance(database.variantOptionsDao())
     }
 
 }

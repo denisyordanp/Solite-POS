@@ -239,37 +239,6 @@ interface SoliteDao{
 	@Update
 	fun updateCategory(data: Category)
 
-//	VARIANT
-
-	@Query("SELECT * FROM ${Variant.DB_NAME}")
-	fun getVariants(): LiveData<List<Variant>>
-
-	@Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
-	fun getVariantById(idVariant: Long): Variant
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertVariants(data: List<Variant>)
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertVariant(data: Variant): Long
-
-	@Update
-	fun updateVariant(data: Variant)
-
-//	VARIANT OPTIONS
-
-	@RawQuery(observedEntities = [VariantOption::class])
-	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<List<VariantOption>>
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertVariantOptions(data: List<VariantOption>)
-
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun insertVariantOption(data: VariantOption): Long
-
-	@Update
-	fun updateVariantOption(data: VariantOption)
-
 //	OUTCOME
 
 	@Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) = date(:date)")

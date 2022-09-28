@@ -2,15 +2,23 @@ package com.socialite.solite_pos.data.source.repository
 
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.solite_pos.data.source.local.entity.helper.*
+import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.source.local.entity.helper.Products
+import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
+import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
+import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.master.*
+import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
+import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.master.User
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.vo.Resource
 
@@ -49,10 +57,6 @@ internal interface SoliteDataSource{
 	fun getCategories(query: SimpleSQLiteQuery): LiveData<Resource<List<Category>>>
 	fun insertCategory(data: Category, callback: (ApiResponse<Long>) -> Unit)
 	fun updateCategory(data: Category, callback: (ApiResponse<Boolean>) -> Unit)
-
-	fun getVariantOptions(query: SupportSQLiteQuery): LiveData<Resource<List<VariantOption>>>
-	fun insertVariantOption(data: VariantOption, callback: (ApiResponse<Long>) -> Unit)
-	fun updateVariantOption(data: VariantOption, callback: (ApiResponse<Boolean>) -> Unit)
 
     fun getOutcomes(date: String): LiveData<Resource<List<Outcome>>>
     fun insertOutcome(data: Outcome, callback: (ApiResponse<Long>) -> Unit)
