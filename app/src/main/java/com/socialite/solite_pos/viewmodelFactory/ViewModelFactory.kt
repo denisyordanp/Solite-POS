@@ -3,6 +3,7 @@ package com.socialite.solite_pos.viewmodelFactory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
+import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
@@ -14,17 +15,18 @@ import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
-import com.socialite.solite_pos.utils.di.Injection.provideCategoriesRepository
-import com.socialite.solite_pos.utils.di.Injection.provideCustomersRepository
-import com.socialite.solite_pos.utils.di.Injection.provideOutcomesRepository
-import com.socialite.solite_pos.utils.di.Injection.providePaymentsRepository
-import com.socialite.solite_pos.utils.di.Injection.provideProductVariantsRepository
-import com.socialite.solite_pos.utils.di.Injection.provideProductsRepository
-import com.socialite.solite_pos.utils.di.Injection.providePurchasesRepository
-import com.socialite.solite_pos.utils.di.Injection.provideSoliteRepository
-import com.socialite.solite_pos.utils.di.Injection.provideSupplierRepository
-import com.socialite.solite_pos.utils.di.Injection.provideVariantOptionsRepository
-import com.socialite.solite_pos.utils.di.Injection.provideVariantsRepository
+import com.socialite.solite_pos.utils.di.DomainInjection.provideGetProductVariantOptions
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideCategoriesRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideCustomersRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideOutcomesRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.providePaymentsRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideProductVariantsRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideProductsRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.providePurchasesRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideSoliteRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideSupplierRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideVariantOptionsRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideVariantsRepository
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -42,6 +44,7 @@ class ViewModelFactory private constructor(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val purchasesRepository: PurchasesRepository,
+    private val getProductVariantOptions: GetProductVariantOptions,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -63,6 +66,7 @@ class ViewModelFactory private constructor(
                             provideProductsRepository(context),
                             provideProductVariantsRepository(context),
                             providePurchasesRepository(context),
+                            provideGetProductVariantOptions(context)
                         )
                     }
                 }
@@ -99,7 +103,8 @@ class ViewModelFactory private constructor(
                     variantOptionsRepository,
                     categoriesRepository,
                     productsRepository,
-                    productVariantsRepository
+                    productVariantsRepository,
+                    getProductVariantOptions
                 ) as T
             }
 

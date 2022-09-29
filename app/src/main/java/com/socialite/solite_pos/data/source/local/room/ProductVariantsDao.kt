@@ -4,13 +4,20 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
+import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductVariantsDao {
+
+    @Transaction
+    @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct ORDER BY ${Variant.ID}")
+    fun getVariantProducts(idProduct: Long): Flow<List<VariantProductWithOption>?>
 
     @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct AND ${VariantOption.ID} = :idVariantOption")
     fun getVariantProduct(idProduct: Long, idVariantOption: Long): Flow<VariantProduct?>

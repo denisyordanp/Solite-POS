@@ -16,7 +16,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProduc
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DataProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailProductMixWithVariantOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantMixOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
@@ -186,34 +185,12 @@ interface SoliteDao {
 
 //	VARIANT PRODUCT
 
-    @Transaction
-    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :idCategory")
-    fun getDataProduct(idCategory: Long): LiveData<List<DataProduct>>
-
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :idCategory")
     fun getProducts(idCategory: Long): LiveData<List<ProductWithCategory>>
-
-    @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct AND ${VariantOption.ID} = :idVariantOption")
-    fun getVariantProduct(idProduct: Long, idVariantOption: Long): LiveData<VariantProduct?>
 
     @Transaction
     @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct ORDER BY ${Variant.ID}")
     fun getVariantProducts(idProduct: Long): LiveData<List<VariantProductWithOption>?>
-
-    @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
-    fun getVariantProductById(idProduct: Long): LiveData<VariantProduct?>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantProducts(data: List<VariantProduct>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantProduct(data: VariantProduct): Long
-
-    @Update
-    fun updateVariantProduct(data: VariantProduct)
-
-    @Query("DELETE FROM ${VariantProduct.DB_NAME} WHERE ${VariantOption.ID} = :idVariant AND ${Product.ID} = :idProduct")
-    fun removeVariantProduct(idVariant: Long, idProduct: Long)
 
 //	VARIANT MIX
 

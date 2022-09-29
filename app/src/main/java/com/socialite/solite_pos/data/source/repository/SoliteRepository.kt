@@ -6,14 +6,12 @@ import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
@@ -195,15 +193,6 @@ class SoliteRepository private constructor(
             .collection(Product.DB_NAME)
             .document(product.id.toString())
         return BatchWithObject(product, BatchWithData(doc, Product.toHashMap(product)))
-    }
-
-    override fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>> {
-        return object :
-            NetworkBoundResource<List<VariantWithOptions>?, List<VariantProduct>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<VariantWithOptions>?> {
-                return localDataSource.getProductVariantOptions(idProduct)
-            }
-        }.asLiveData()
     }
 
     override fun getVariantMixProductById(

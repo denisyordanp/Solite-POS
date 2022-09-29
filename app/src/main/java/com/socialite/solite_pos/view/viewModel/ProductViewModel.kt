@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
+import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
@@ -31,6 +31,7 @@ class ProductViewModel(
     private val categoriesRepository: CategoriesRepository,
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
+    private val getProductVariantOptions: GetProductVariantOptions,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<ProductViewModel>() {
@@ -41,9 +42,7 @@ class ProductViewModel(
 
     fun getProducts(idCategory: Long) = productsRepository.getProductWithCategories(idCategory)
 
-    fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>> {
-        return repository.getProductVariantOptions(idProduct)
-    }
+    fun getProductVariantOptions(idProduct: Long) = getProductVariantOptions.invoke(idProduct)
 
     fun getVariantProduct(
         idProduct: Long,

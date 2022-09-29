@@ -3,7 +3,6 @@ package com.socialite.solite_pos.data.source.repository
 import androidx.lifecycle.LiveData
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
@@ -21,8 +20,6 @@ internal interface SoliteDataSource {
     fun newOrder(order: OrderWithProduct)
     fun updateOrder(order: Order)
     fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct)
-
-    fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>>
 
     fun getVariantMixProductById(idVariant: Long, idProduct: Long): LiveData<Resource<VariantMix?>>
     fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>

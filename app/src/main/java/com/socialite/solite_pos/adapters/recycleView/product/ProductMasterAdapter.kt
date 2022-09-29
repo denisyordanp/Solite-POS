@@ -3,6 +3,7 @@ package com.socialite.solite_pos.adapters.recycleView.product
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
@@ -12,7 +13,8 @@ import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class ProductMasterAdapter(
     private val activity: FragmentActivity,
@@ -68,25 +70,17 @@ class ProductMasterAdapter(
         }
 
         private fun setVariants(idProduct: Long) {
-            viewModel.getProductVariantOptions(idProduct).observe(activity) {
-                var selected = ""
-                when (it.status) {
-                    Status.LOADING -> {
-                        selected = "... Varian terpilih"
-                    }
-                    Status.SUCCESS -> {
-                        if (it.data != null) {
+            activity.lifecycleScope.launch {
+                viewModel.getProductVariantOptions(idProduct)
+                    .collect {
+                        if (it != null) {
                             var count = 0
-                            for (item in it.data) {
+                            for (item in it) {
                                 count += item.options.size
                             }
-                            selected = "$count Varian terpilih"
+                            binding.tvRvPmVariant.text = "Terdapat $count Varian"
                         }
                     }
-                    Status.ERROR -> {
-                    }
-                }
-                binding.tvRvPmVariant.text = selected
             }
         }
     }
