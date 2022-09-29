@@ -153,7 +153,7 @@ class MainActivity : SocialiteActivity() {
 
 	private fun addPurchase(purchase: PurchaseWithProduct){
 		Purchase.add(this)
-		viewModel.newPurchase(purchase) {}
+		viewModel.newPurchase(purchase)
 	}
 
 	private fun setPager() {

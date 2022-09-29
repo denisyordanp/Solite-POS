@@ -3,6 +3,7 @@ package com.socialite.solite_pos.adapters.recycleView.purchase
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
@@ -13,7 +14,8 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFor
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class PurchaseAdapter(
     private val activity: FragmentActivity
@@ -56,18 +58,14 @@ class PurchaseAdapter(
             binding.tvRvPcSupplier.text = purchase.supplier.name
         }
 
-        fun getPurchaseProducts(purchaseNo: String) {
-            viewModel.getPurchaseProducts(purchaseNo).observe(activity) {
-                when (it.status) {
-                    Status.LOADING -> {
+        private fun getPurchaseProducts(purchaseNo: String) {
+            activity.lifecycleScope.launch {
+                viewModel.getPurchaseProducts(purchaseNo)
+                    .collect {
+                        if (it.isNotEmpty()) {
+                            setPurchaseProducts(it)
+                        }
                     }
-                    Status.SUCCESS -> {
-                        if (it.data.isNullOrEmpty()) return@observe
-                        setPurchaseProducts(it.data)
-                    }
-                    Status.ERROR -> {
-                    }
-                }
             }
         }
 

@@ -1,31 +1,26 @@
 package com.socialite.solite_pos.view.viewModel
 
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
-import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
-import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
-import com.socialite.solite_pos.vo.Resource
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val repository: SoliteRepository,
     private val paymentRepository: PaymentsRepository,
     private val supplierRepository: SuppliersRepository,
     private val customersRepository: CustomersRepository,
     private val outcomesRepository: OutcomesRepository,
+    private val purchasesRepository: PurchasesRepository,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -34,15 +29,15 @@ class MainViewModel(
         }
     }
 
-    val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>
-        get() = repository.purchases
+    val purchases = purchasesRepository.getPurchases()
 
-    fun getPurchaseProducts(purchaseNo: String): LiveData<Resource<List<PurchaseProductWithProduct>>> {
-        return repository.getPurchaseProducts(purchaseNo)
-    }
+    fun getPurchaseProducts(purchaseNo: String) =
+        purchasesRepository.getPurchaseProducts(purchaseNo)
 
-    fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-        repository.newPurchase(data, callback)
+    fun newPurchase(data: PurchaseWithProduct) {
+        viewModelScope.launch {
+            purchasesRepository.newPurchase(data)
+        }
     }
 
     val customers = customersRepository.getCustomers()

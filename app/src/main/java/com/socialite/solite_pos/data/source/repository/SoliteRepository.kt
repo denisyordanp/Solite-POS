@@ -6,8 +6,6 @@ import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
-import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
@@ -17,12 +15,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProduc
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
-import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.LocalDataSource
@@ -30,8 +25,6 @@ import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithData
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithObject
 import com.socialite.solite_pos.data.source.remote.response.entity.OrderProductResponse
 import com.socialite.solite_pos.data.source.remote.response.entity.OrderResponse
-import com.socialite.solite_pos.data.source.remote.response.entity.PurchaseProductResponse
-import com.socialite.solite_pos.data.source.remote.response.entity.PurchaseResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.utils.database.AppExecutors
 import com.socialite.solite_pos.vo.Resource
@@ -191,69 +184,6 @@ class SoliteRepository private constructor(
                 localDataSource.soliteDao.deleteOrderDetail(detail)
             }
         }
-    }
-
-    override val purchases: LiveData<Resource<List<PurchaseWithSupplier>>>
-        get() {
-            return object :
-                NetworkBoundResource<List<PurchaseWithSupplier>, PurchaseResponse>(appExecutors) {
-                override fun loadFromDB(): LiveData<List<PurchaseWithSupplier>> {
-                    return localDataSource.soliteDao.getPurchases()
-                }
-            }.asLiveData()
-        }
-
-    override fun getPurchaseProducts(purchaseNo: String): LiveData<Resource<List<PurchaseProductWithProduct>>> {
-        return object :
-            NetworkBoundResource<List<PurchaseProductWithProduct>, PurchaseProductResponse>(
-                appExecutors
-            ) {
-            override fun loadFromDB(): LiveData<List<PurchaseProductWithProduct>> {
-                return localDataSource.soliteDao.getPurchasesProduct(purchaseNo)
-            }
-        }.asLiveData()
-    }
-
-    override fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-        val batches: ArrayList<BatchWithData> = ArrayList()
-        batches.add(insertPurchase(data.purchase).batch)
-
-        for (item in data.purchaseProduct) {
-            batches.add(insertPurchaseProduct(item).batch)
-        }
-
-        for (product in data.products) {
-            if (product.purchaseProduct != null) {
-                batches.add(
-                    increaseStock(
-                        product.purchaseProduct!!.idProduct,
-                        product.purchaseProduct!!.amount
-                    ).batch
-                )
-            }
-        }
-    }
-
-    private fun insertPurchase(purchase: Purchase)
-            : BatchWithObject<Purchase> {
-        localDataSource.soliteDao.insertPurchase(purchase)
-        val doc = Firebase.firestore
-            .collection(AppDatabase.DB_NAME)
-            .document(AppDatabase.MAIN)
-            .collection(Purchase.DB_NAME)
-            .document(purchase.purchaseNo)
-        return BatchWithObject(purchase, BatchWithData(doc, Purchase.toHashMap(purchase)))
-    }
-
-    private fun insertPurchaseProduct(product: PurchaseProduct)
-            : BatchWithObject<PurchaseProduct> {
-        localDataSource.soliteDao.insertPurchaseProduct(product)
-        val doc = Firebase.firestore
-            .collection(AppDatabase.DB_NAME)
-            .document(AppDatabase.MAIN)
-            .collection(PurchaseProduct.DB_NAME)
-            .document(product.id.toString())
-        return BatchWithObject(product, BatchWithData(doc, PurchaseProduct.toHashMap(product)))
     }
 
     private fun increaseStock(idProduct: Long, amount: Int)
