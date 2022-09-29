@@ -1,6 +1,5 @@
 package com.socialite.solite_pos.data.source.local.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -13,38 +12,31 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixPro
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailProductMixWithVariantOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantMixOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.master.User
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface SoliteDao {
-
-//	ORDER
-
+interface OrdersDao {
     @Transaction
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.STATUS} = :status AND date(${Order.ORDER_DATE}) = date(:date)")
-    fun getOrdersByStatus(status: Int, date: String): LiveData<List<OrderData>>
+    fun getOrdersByStatus(status: Int, date: String): Flow<List<OrderData>>
 
     @Transaction
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
-    fun getOrderByNo(orderNo: String): LiveData<OrderData>
+    fun getOrderByNo(orderNo: String): Flow<OrderData>
 
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
-    fun getDetailOrdersLiveData(orderNo: String): LiveData<List<OrderDetail>>
+    fun getDetailOrdersLiveData(orderNo: String): Flow<List<OrderDetail>>
 
     @Transaction
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
-    fun getOrderPayment(orderNo: String): LiveData<OrderData?>
+    fun getOrderPayment(orderNo: String): Flow<OrderData?>
 
     @Transaction
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
@@ -126,60 +118,4 @@ interface SoliteDao {
 
     @Delete
     fun deleteOrderVariant(orderVariant: OrderProductVariant)
-
-//	PRODUCT
-
-    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
-    fun getProduct(idProduct: Long): Product
-
-    @Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
-    fun increaseProductStock(idProduct: Long, amount: Int)
-
-    @Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) - :amount) WHERE ${Product.ID} = :idProduct")
-    fun decreaseProductStock(idProduct: Long, amount: Int)
-
-    @Transaction
-    fun decreaseAndGetProduct(idProduct: Long, amount: Int): Product {
-        decreaseProductStock(idProduct, amount)
-        return getProduct(idProduct)
-    }
-
-    @Transaction
-    fun increaseAndGetProduct(idProduct: Long, amount: Int): Product {
-        increaseProductStock(idProduct, amount)
-        return getProduct(idProduct)
-    }
-
-//	VARIANT MIX
-
-    @Transaction
-    @Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
-    fun getVariantMixProduct(idVariant: Long): LiveData<VariantWithVariantMix>
-
-    @Transaction
-    @Query("SELECT * FROM ${VariantMix.DB_NAME} WHERE ${Variant.ID} = :idVariant AND ${Product.ID} = :idProduct")
-    fun getVariantMixProductById(idVariant: Long, idProduct: Long): LiveData<VariantMix?>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantMixes(data: List<VariantMix>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantMix(data: VariantMix): Long
-
-    @Update
-    fun updateVariantMix(data: VariantMix)
-
-    @Query("DELETE FROM ${VariantMix.DB_NAME} WHERE ${VariantMix.ID} = :idVariantMix")
-    fun removeVariantMix(idVariantMix: Long)
-
-//	CATEGORY
-
-    @Query("SELECT * FROM ${Category.DB_NAME} WHERE ${Category.ID} = :idCategory")
-    fun getCategoryById(idCategory: Long): Category
-
-    @Query("SELECT * FROM ${User.DB_NAME} WHERE ${User.ID} = :userId")
-    fun getUser(userId: String): LiveData<User?>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertUsers(data: List<User>)
 }

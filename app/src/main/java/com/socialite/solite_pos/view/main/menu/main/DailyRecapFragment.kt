@@ -7,19 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.adapters.recycleView.recap.RecapAdapter
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDailyRecapBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
-import com.socialite.solite_pos.adapters.recycleView.recap.RecapAdapter
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import com.socialite.solite_pos.vo.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -34,8 +30,8 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
     constructor() : this(currentDate)
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentDailyRecapBinding.inflate(inflater, container, false)
         return _binding.root
@@ -80,52 +76,20 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun getIncome() {
-        orderViewModel.getOrderList(Order.DONE, queryDate).observe(activity!!) { orders ->
-            when (orders.status) {
-                Status.LOADING -> {
-                }
-                Status.SUCCESS -> {
-                    if (!orders.data.isNullOrEmpty()) {
-                        getProductOrder(orders.data)
+        lifecycleScope.launch {
+            orderViewModel.getIncomes(queryDate)
+                .collect {
+                    if (it.isNotEmpty()) {
+                        incomeRecapAdapter.setRecaps(it)
+                        setData()
                     } else {
                         incomeRecapAdapter.setRecaps(emptyList())
                     }
                 }
-                Status.ERROR -> {}
-            }
         }
     }
 
-    private fun getProductOrder(ordersData: List<OrderData>) {
-        val incomes: ArrayList<RecapData> = ArrayList()
-        for (item in ordersData) {
-            val orderWithProduct = OrderWithProduct(item)
-            orderViewModel.getProductOrder(item.order.orderNo).observe(activity!!) { products ->
-                when (products.status) {
-                    Status.LOADING -> {
-                    }
-                    Status.SUCCESS -> {
-                        if (!products.data.isNullOrEmpty()) {
-                            orderWithProduct.products = products.data
-                            incomes.add(
-                                    RecapData(
-                                            orderWithProduct.order.order.orderNo,
-                                            orderWithProduct.order.payment?.name,
-                                            orderWithProduct.grandTotal,
-                                            orderWithProduct.order.payment?.isCash
-                                    ))
-                        }
-                        incomeRecapAdapter.setRecaps(incomes)
-                        setData()
-                    }
-                    Status.ERROR -> {
-                    }
-                }
-            }
-        }
-    }
-
-    private fun getOutCome(){
+    private fun getOutCome() {
         lifecycleScope.launch {
             viewModel.getOutcome(queryDate)
                 .collect {
@@ -139,7 +103,7 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
         }
     }
 
-    private fun setData(){
+    private fun setData() {
         val incomeCash = incomeRecapAdapter.getIncome(true)
         val outcome = outcomeRecapAdapter.grandTotal
         val incomeNonCash = incomeRecapAdapter.getIncome(false)

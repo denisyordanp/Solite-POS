@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -29,6 +30,7 @@ import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
 import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class PayFragment(
@@ -196,11 +198,13 @@ class PayFragment(
 	}
 
 	private fun updateOrder(order: OrderWithProduct) {
-		val orderPaymentWithId = viewModel.insertPaymentOrder(order.order.orderPayment!!)
-		order.order.order.status = Order.DONE
-		order.order.orderPayment = orderPaymentWithId
-		viewModel.doneOrder(order)
-		setPay(order)
+		lifecycleScope.launch {
+			val orderPaymentWithId = viewModel.insertPaymentOrder(order.order.orderPayment!!)
+			order.order.order.status = Order.DONE
+			order.order.orderPayment = orderPaymentWithId
+			viewModel.doneOrder(order)
+			setPay(order)
+		}
 	}
 
 	private fun setPay(order: OrderWithProduct) {

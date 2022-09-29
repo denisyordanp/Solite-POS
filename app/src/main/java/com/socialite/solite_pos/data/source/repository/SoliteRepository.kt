@@ -5,14 +5,11 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.data.NetworkBoundResource
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -21,8 +18,6 @@ import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.LocalDataSource
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithData
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithObject
-import com.socialite.solite_pos.data.source.remote.response.entity.OrderProductResponse
-import com.socialite.solite_pos.data.source.remote.response.entity.OrderResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.utils.database.AppExecutors
 import com.socialite.solite_pos.vo.Resource
@@ -50,38 +45,6 @@ class SoliteRepository private constructor(
             }
             return INSTANCE!!
         }
-    }
-
-    override fun getOrderList(status: Int, date: String): LiveData<Resource<List<OrderData>>> {
-        return object : NetworkBoundResource<List<OrderData>, OrderResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<OrderData>> {
-                return localDataSource.soliteDao.getOrdersByStatus(status, date)
-            }
-        }.asLiveData()
-    }
-
-    override fun getLocalOrders(status: Int, date: String): LiveData<List<OrderData>> {
-        return localDataSource.soliteDao.getOrdersByStatus(status, date)
-    }
-
-    override fun getProductOrder(orderNo: String): LiveData<Resource<List<ProductOrderDetail>>> {
-        return object :
-            NetworkBoundResource<List<ProductOrderDetail>, OrderProductResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<ProductOrderDetail>> {
-                return localDataSource.getProductOrder(orderNo)
-            }
-        }.asLiveData()
-    }
-
-    fun insertPaymentOrder(payment: OrderPayment): OrderPayment {
-        val id = localDataSource.soliteDao.insertPaymentOrder(payment)
-        payment.id = id
-        return payment
-    }
-
-    override fun newOrder(order: OrderWithProduct) {
-        localDataSource.soliteDao.insertOrder(order.order.order)
-        insertOrderProduct(order)
     }
 
     private fun insertOrderProduct(order: OrderWithProduct) {

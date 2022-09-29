@@ -96,7 +96,7 @@ class PurchaseActivity : SocialiteActivity() {
 
     private fun setPageAdapter() {
         lifecycleScope.launch {
-            val query = Category.getFilter(Category.ACTIVE, true)
+            val query = Category.getFilter(Category.ACTIVE)
             viewModel.getCategories(query)
                 .collect {
                     if (it.isNotEmpty()) {

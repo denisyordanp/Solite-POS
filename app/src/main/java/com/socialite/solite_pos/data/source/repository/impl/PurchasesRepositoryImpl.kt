@@ -1,11 +1,13 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
+import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.local.room.PurchasesDao
 import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 
 class PurchasesRepositoryImpl(
-    private val dao: PurchasesDao
+    private val dao: PurchasesDao,
+    private val productsDao: ProductsDao
 ) : PurchasesRepository {
 
     companion object {
@@ -13,12 +15,13 @@ class PurchasesRepositoryImpl(
         private var INSTANCE: PurchasesRepositoryImpl? = null
 
         fun getInstance(
-            dao: PurchasesDao
+            dao: PurchasesDao,
+            productsDao: ProductsDao
         ): PurchasesRepositoryImpl {
             if (INSTANCE == null) {
                 synchronized(PurchasesRepositoryImpl::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = PurchasesRepositoryImpl(dao = dao)
+                        INSTANCE = PurchasesRepositoryImpl(dao, productsDao)
                     }
                 }
             }
@@ -34,5 +37,10 @@ class PurchasesRepositoryImpl(
     override suspend fun newPurchase(data: PurchaseWithProduct) {
         dao.insertPurchase(data.purchase)
         dao.insertPurchaseProducts(data.purchaseProduct)
+        data.products.forEach {
+            it.purchaseProduct?.let { purchase ->
+                productsDao.increaseProductStock(purchase.idProduct, purchase.amount)
+            }
+        }
     }
 }

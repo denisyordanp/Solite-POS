@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.R
@@ -21,7 +22,8 @@ import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOrderFragment
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class OrderListAdapter(
 	private var activity: FragmentActivity
@@ -85,18 +87,14 @@ class OrderListAdapter(
 
 		private fun getItem(order: OrderData) {
 			val orderWithProduct = OrderWithProduct(order)
-			orderViewModel.getProductOrder(order.order.orderNo).observe(activity) {
-				when (it.status) {
-					Status.LOADING -> {
-					}
-					Status.SUCCESS -> {
-						if (!it.data.isNullOrEmpty()) {
-							orderWithProduct.products = it.data
+			activity.lifecycleScope.launch {
+				orderViewModel.getProductOrder(order.order.orderNo)
+					.collect {
+						if (it.isNotEmpty()) {
+							orderWithProduct.products = it
 						}
 						setItems(orderWithProduct)
 					}
-					Status.ERROR -> { }
-				}
 			}
 		}
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
@@ -13,6 +14,8 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.adapters.recycleView.order.OrderListAdapter
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class NotPayFragment(private var queryDate: String) : Fragment() {
 
@@ -53,13 +56,16 @@ class NotPayFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun getData() {
-        viewModel.getLocalOrders(Order.NEED_PAY, queryDate).observe(activity!!) { orders ->
-            setOrders(ArrayList(orders))
+        lifecycleScope.launch {
+            viewModel.getOrderList(Order.NEED_PAY, queryDate)
+                .collect {
+                    setOrders(ArrayList(it))
+                }
         }
     }
 
     private fun setOrders(orders: ArrayList<OrderData>) {
-        showEmpty(orders.isNullOrEmpty())
+        showEmpty(orders.isEmpty())
 
         adapter.setOrders(orders)
     }

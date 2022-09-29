@@ -5,15 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.socialite.solite_pos.adapters.recycleView.order.OrderListAdapter
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.databinding.FragmentDoneBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
-import com.socialite.solite_pos.adapters.recycleView.order.OrderListAdapter
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class DoneFragment(private var queryDate: String) : Fragment() {
 
@@ -24,8 +26,8 @@ class DoneFragment(private var queryDate: String) : Fragment() {
     constructor() : this(currentDate)
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentDoneBinding.inflate(inflater, container, false)
         return _binding.root
@@ -55,22 +57,16 @@ class DoneFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun getData() {
-        viewModel.getOrderList(Order.DONE, queryDate).observe(activity!!) {
-            when (it.status) {
-                Status.LOADING -> {
+        lifecycleScope.launch {
+            viewModel.getOrderList(Order.DONE, queryDate)
+                .collect {
+                    setOrders(ArrayList(it))
                 }
-                Status.SUCCESS -> {
-                    setOrders(ArrayList(it.data))
-                }
-                Status.ERROR -> {
-                    showEmpty(true)
-                }
-            }
         }
     }
 
     private fun setOrders(orders: ArrayList<OrderData>) {
-        showEmpty(orders.isNullOrEmpty())
+        showEmpty(orders.isEmpty())
 
         adapter.setOrders(orders)
     }
