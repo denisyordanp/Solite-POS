@@ -16,6 +16,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
+import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
@@ -28,7 +29,8 @@ class ProductViewModel(
     private val variantsRepository: VariantsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val categoriesRepository: CategoriesRepository,
-    private val productsRepository: ProductsRepository
+    private val productsRepository: ProductsRepository,
+    private val productVariantsRepository: ProductVariantsRepository,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<ProductViewModel>() {
@@ -46,20 +48,20 @@ class ProductViewModel(
     fun getVariantProduct(
         idProduct: Long,
         idVariantOption: Long
-    ): LiveData<Resource<VariantProduct?>> {
-        return repository.getVariantProduct(idProduct, idVariantOption)
+    ) = productVariantsRepository.getVariantProduct(idProduct, idVariantOption)
+
+    fun getVariantProductById(idProduct: Long) = productVariantsRepository.getVariantProductById(idProduct)
+
+    fun insertVariantProduct(data: VariantProduct) {
+        viewModelScope.launch {
+            productVariantsRepository.insertVariantProduct(data)
+        }
     }
 
-    fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>> {
-        return repository.getVariantProductById(idProduct)
-    }
-
-    fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit) {
-        repository.insertVariantProduct(data, callback)
-    }
-
-    fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit) {
-        repository.removeVariantProduct(data, callback)
+    fun removeVariantProduct(data: VariantProduct) {
+        viewModelScope.launch {
+            productVariantsRepository.removeVariantProduct(data)
+        }
     }
 
     fun getVariantMixProductById(

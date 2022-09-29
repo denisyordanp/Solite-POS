@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -11,7 +12,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import com.socialite.solite_pos.databinding.RvVariantOptionMasterBinding
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantOptionFragment
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class VariantOptionMasterAdapter(
     private val product: Product?,
@@ -57,26 +59,21 @@ class VariantOptionMasterAdapter(
 
         fun checkOption(vo: VariantOption) {
             if (product != null) {
-                viewModel.getVariantProduct(product.id, vo.id)
-                    .observe(activity) {
-                        when (it.status) {
-                            Status.LOADING -> {}
-                            Status.SUCCESS -> {
-                                binding.swVoOptions.isChecked = it.data != null
-                                binding.swVoOptions.setOnCheckedChangeListener { _, _ ->
-                                    if (it.data == null) {
-                                        val variantProduct =
-                                            VariantProduct(vo.idVariant, vo.id, product.id)
-                                        viewModel.insertVariantProduct(variantProduct) {}
-                                    } else {
-                                        viewModel.removeVariantProduct(it.data) {}
-                                    }
+                activity.lifecycleScope.launch {
+                    viewModel.getVariantProduct(product.id, vo.id)
+                        .collect {
+                            binding.swVoOptions.isChecked = it != null
+                            binding.swVoOptions.setOnCheckedChangeListener { _, _ ->
+                                if (it == null) {
+                                    val variantProduct =
+                                        VariantProduct(vo.idVariant, vo.id, product.id)
+                                    viewModel.insertVariantProduct(variantProduct)
+                                } else {
+                                    viewModel.removeVariantProduct(it)
                                 }
                             }
-
-                            Status.ERROR -> {}
                         }
-                    }
+                }
             } else {
                 binding.swVoOptions.isChecked = vo.isActive
                 binding.swVoOptions.setOnCheckedChangeListener { v, _ ->

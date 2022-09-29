@@ -276,36 +276,6 @@ class SoliteRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getVariantProduct(
-        idProduct: Long,
-        idVariantOption: Long
-    ): LiveData<Resource<VariantProduct?>> {
-        return object : NetworkBoundResource<VariantProduct?, List<VariantProduct>>(appExecutors) {
-            override fun loadFromDB(): LiveData<VariantProduct?> {
-                return localDataSource.soliteDao.getVariantProduct(idProduct, idVariantOption)
-            }
-        }.asLiveData()
-    }
-
-    override fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>> {
-        return object : NetworkBoundResource<VariantProduct?, List<VariantProduct>>(appExecutors) {
-            override fun loadFromDB(): LiveData<VariantProduct?> {
-                return localDataSource.soliteDao.getVariantProductById(idProduct)
-            }
-        }.asLiveData()
-    }
-
-    override fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit) {
-        localDataSource.soliteDao.insertVariantProduct(data)
-    }
-
-    override fun removeVariantProduct(
-        data: VariantProduct,
-        callback: (ApiResponse<Boolean>) -> Unit
-    ) {
-        localDataSource.soliteDao.removeVariantProduct(data.idVariantOption, data.idProduct)
-    }
-
     override fun getVariantMixProductById(
         idVariant: Long,
         idProduct: Long

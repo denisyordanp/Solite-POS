@@ -7,7 +7,6 @@ import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductW
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
@@ -31,14 +30,6 @@ internal interface SoliteDataSource {
     fun newPurchase(data: PurchaseWithProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
     fun getProductVariantOptions(idProduct: Long): LiveData<Resource<List<VariantWithOptions>?>>
-    fun getVariantProduct(
-        idProduct: Long,
-        idVariantOption: Long
-    ): LiveData<Resource<VariantProduct?>>
-
-    fun getVariantProductById(idProduct: Long): LiveData<Resource<VariantProduct?>>
-    fun insertVariantProduct(data: VariantProduct, callback: (ApiResponse<Long>) -> Unit)
-    fun removeVariantProduct(data: VariantProduct, callback: (ApiResponse<Boolean>) -> Unit)
 
     fun getVariantMixProductById(idVariant: Long, idProduct: Long): LiveData<Resource<VariantMix?>>
     fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>>

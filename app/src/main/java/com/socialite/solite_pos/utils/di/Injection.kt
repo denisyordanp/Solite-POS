@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
+import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
@@ -16,6 +17,7 @@ import com.socialite.solite_pos.data.source.repository.impl.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OutcomesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.ProductVariantsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.ProductsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
@@ -69,5 +71,10 @@ object Injection {
     fun provideProductsRepository(context: Context): ProductsRepository {
         val database = getInstance(context)
         return ProductsRepositoryImpl.getInstance(database.productsDao())
+    }
+
+    fun provideProductVariantsRepository(context: Context): ProductVariantsRepository {
+        val database = getInstance(context)
+        return ProductVariantsRepositoryImpl.getInstance(database.productVariantsDao())
     }
 }

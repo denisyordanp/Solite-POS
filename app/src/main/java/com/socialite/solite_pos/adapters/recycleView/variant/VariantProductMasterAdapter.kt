@@ -16,7 +16,6 @@ import com.socialite.solite_pos.databinding.RvVariantProductMasterBinding
 import com.socialite.solite_pos.view.main.menu.master.detail.VariantMasterMixOptionActivity
 import com.socialite.solite_pos.view.main.menu.master.detail.VariantOptionActivity
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -67,28 +66,24 @@ class VariantProductMasterAdapter(
                 binding.btnVmOptions.visibility = View.INVISIBLE
                 binding.tvRvVrOption.visibility = View.INVISIBLE
 
-                viewModel.getVariantProductById(product.id).observe(activity) {
-                    when (it.status) {
-                        Status.LOADING -> {}
-                        Status.SUCCESS -> {
-                            binding.cbVmMix.isChecked = it.data != null
+                activity.lifecycleScope.launch {
+                    viewModel.getVariantProductById(product.id)
+                        .collect {
+                            binding.cbVmMix.isChecked = it != null
                             binding.cbVmMix.setOnCheckedChangeListener { _, _ ->
-                                if (it.data == null) {
+                                if (it == null) {
                                     viewModel.insertVariantProduct(
                                         VariantProduct(
                                             v.id,
                                             1,
                                             product.id
                                         )
-                                    ) {}
+                                    )
                                 } else {
-                                    viewModel.removeVariantProduct(it.data) {}
+                                    viewModel.removeVariantProduct(it)
                                 }
                             }
                         }
-
-                        Status.ERROR -> {}
-                    }
                 }
             } else {
                 activity.lifecycleScope.launch {
