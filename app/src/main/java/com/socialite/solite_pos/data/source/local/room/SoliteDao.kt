@@ -10,16 +10,10 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailProductMixWithVariantOption
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantMixOption
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
@@ -30,33 +24,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 interface SoliteDao {
 
 //	ORDER
-
-    @Transaction
-    @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.STATUS} = :status AND date(${Order.ORDER_DATE}) = date(:date)")
-    fun getOrdersByStatus(status: Int, date: String): LiveData<List<OrderData>>
-
-    @Transaction
-    @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
-    fun getOrderByNo(orderNo: String): LiveData<OrderData>
-
-    @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
-    fun getDetailOrdersLiveData(orderNo: String): LiveData<List<OrderDetail>>
-
-    @Transaction
-    @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
-    fun getOrderPayment(orderNo: String): LiveData<OrderData?>
-
-    @Transaction
-    @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
-    fun getOrderVariants(idDetail: Long): DetailWithVariantOption
-
-    @Transaction
-    @Query("SELECT * FROM ${OrderProductVariantMix.DB_NAME} WHERE ${OrderProductVariantMix.ID} = :idMix")
-    fun getOrderMixVariantsOption(idMix: Long): DetailProductMixWithVariantOption
-
-    @Transaction
-    @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
-    fun getOrderVariantsMix(idDetail: Long): DetailWithVariantMixOption
 
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo AND ${Product.ID} = :productId")
     fun getDetailOrders(orderNo: String, productId: Long): OrderDetail
@@ -74,43 +41,16 @@ interface SoliteDao {
     fun getVariantOrder(orderDetailId: Long, variantOptionId: Long): OrderProductVariant
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertOrder(order: Order): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertOrders(order: List<Order>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDetailOrder(detail: OrderDetail): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertDetailOrders(detail: List<OrderDetail>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertVariantOrder(variants: OrderProductVariant): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantOrders(variants: List<OrderProductVariant>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMixVariantOrder(variants: OrderMixProductVariant): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertMixVariantOrders(variants: List<OrderMixProductVariant>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertVariantMixOrder(variants: OrderProductVariantMix): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantMixOrders(variants: List<OrderProductVariantMix>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertPaymentOrders(payment: List<OrderPayment>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertPaymentOrder(payment: OrderPayment): Long
-
-    @Update
-    fun updatePaymentOrder(order: OrderPayment)
 
     @Update
     fun updateOrder(order: Order)
@@ -161,25 +101,11 @@ interface SoliteDao {
     fun getVariantMixProductById(idVariant: Long, idProduct: Long): LiveData<VariantMix?>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantMixes(data: List<VariantMix>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertVariantMix(data: VariantMix): Long
-
-    @Update
-    fun updateVariantMix(data: VariantMix)
 
     @Query("DELETE FROM ${VariantMix.DB_NAME} WHERE ${VariantMix.ID} = :idVariantMix")
     fun removeVariantMix(idVariantMix: Long)
 
-//	CATEGORY
-
-    @Query("SELECT * FROM ${Category.DB_NAME} WHERE ${Category.ID} = :idCategory")
-    fun getCategoryById(idCategory: Long): Category
-
     @Query("SELECT * FROM ${User.DB_NAME} WHERE ${User.ID} = :userId")
     fun getUser(userId: String): LiveData<User?>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertUsers(data: List<User>)
 }

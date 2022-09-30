@@ -2,7 +2,6 @@ package com.socialite.solite_pos.utils.di
 
 import android.content.Context
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
-import com.socialite.solite_pos.data.source.local.room.LocalDataSource
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -33,8 +32,7 @@ object RepositoryInjection {
     fun provideSoliteRepository(context: Context): SoliteRepository {
         val database = getInstance(context)
         val appExecutors = AppExecutors(context)
-        val localDataSource = LocalDataSource.getInstance(database.soliteDao())
-        return SoliteRepository.getInstance(appExecutors, localDataSource)
+        return SoliteRepository.getInstance(appExecutors, database.soliteDao())
     }
 
     fun providePaymentsRepository(context: Context): PaymentsRepository {
