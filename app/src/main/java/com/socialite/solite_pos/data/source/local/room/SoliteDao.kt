@@ -12,12 +12,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 
 @Dao
@@ -89,22 +86,6 @@ interface SoliteDao {
         increaseProductStock(idProduct, amount)
         return getProduct(idProduct)
     }
-
-//	VARIANT MIX
-
-    @Transaction
-    @Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :idVariant")
-    fun getVariantMixProduct(idVariant: Long): LiveData<VariantWithVariantMix>
-
-    @Transaction
-    @Query("SELECT * FROM ${VariantMix.DB_NAME} WHERE ${Variant.ID} = :idVariant AND ${Product.ID} = :idProduct")
-    fun getVariantMixProductById(idVariant: Long, idProduct: Long): LiveData<VariantMix?>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertVariantMix(data: VariantMix): Long
-
-    @Query("DELETE FROM ${VariantMix.DB_NAME} WHERE ${VariantMix.ID} = :idVariantMix")
-    fun removeVariantMix(idVariantMix: Long)
 
     @Query("SELECT * FROM ${User.DB_NAME} WHERE ${User.ID} = :userId")
     fun getUser(userId: String): LiveData<User?>

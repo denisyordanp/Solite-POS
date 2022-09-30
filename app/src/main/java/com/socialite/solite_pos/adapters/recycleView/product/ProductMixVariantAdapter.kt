@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.solite_pos.R
@@ -16,7 +17,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.RvProductBinding
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class ProductMixVariantAdapter(
     private val variant: Variant?,
@@ -71,16 +73,14 @@ class ProductMixVariantAdapter(
         }
 
         private fun setVariant(product: Product) {
-            if (variant != null) {
-                viewModel.getVariantMixProductById(variant.id, product.id).observe(activity) {
-                    when (it.status) {
-                        Status.LOADING -> {
-                        }
-                        Status.SUCCESS -> {
-                            if (it.data != null) {
+            variant?.let {
+                activity.lifecycleScope.launch {
+                    viewModel.getVariantMixProductById(variant.id, product.id)
+                        .collect {
+                            if (it != null) {
                                 isSelected(true)
                                 binding.root.setOnClickListener { _ ->
-                                    delMix(it.data)
+                                    delMix(it)
                                 }
                             } else {
                                 isSelected(false)
@@ -89,19 +89,16 @@ class ProductMixVariantAdapter(
                                 }
                             }
                         }
-                        Status.ERROR -> {
-                        }
-                    }
                 }
             }
         }
 
         private fun addMix(product: Product) {
-            viewModel.insertVariantMix(VariantMix(variant!!.id, product.id)) {}
+            viewModel.insertVariantMix(VariantMix(variant!!.id, product.id))
         }
 
         private fun delMix(mix: VariantMix) {
-            viewModel.removeVariantMix(mix) {}
+            viewModel.removeVariantMix(mix)
         }
 
         private fun isSelected(state: Boolean) {

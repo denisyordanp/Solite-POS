@@ -9,8 +9,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
@@ -18,7 +16,6 @@ import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.SoliteDao
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithData
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithObject
-import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.utils.database.AppExecutors
 import com.socialite.solite_pos.vo.Resource
 
@@ -155,33 +152,6 @@ class SoliteRepository private constructor(
             .collection(Product.DB_NAME)
             .document(product.id.toString())
         return BatchWithObject(product, BatchWithData(doc, Product.toHashMap(product)))
-    }
-
-    override fun getVariantMixProductById(
-        idVariant: Long,
-        idProduct: Long
-    ): LiveData<Resource<VariantMix?>> {
-        return object : NetworkBoundResource<VariantMix?, List<VariantMix>>(appExecutors) {
-            override fun loadFromDB(): LiveData<VariantMix?> {
-                return soliteDao.getVariantMixProductById(idVariant, idProduct)
-            }
-        }.asLiveData()
-    }
-
-    override fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>> {
-        return object : NetworkBoundResource<VariantWithVariantMix, List<Product>>(appExecutors) {
-            override fun loadFromDB(): LiveData<VariantWithVariantMix> {
-                return soliteDao.getVariantMixProduct(idVariant)
-            }
-        }.asLiveData()
-    }
-
-    override fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit) {
-        soliteDao.insertVariantMix(data)
-    }
-
-    override fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit) {
-        soliteDao.removeVariantMix(data.id)
     }
 
     override fun getUsers(userId: String): LiveData<Resource<User?>> {

@@ -1,7 +1,6 @@
 package com.socialite.solite_pos.view.viewModel
 
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -9,29 +8,26 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
-import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
-import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
-import com.socialite.solite_pos.vo.Resource
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
-    private val repository: SoliteRepository,
     private val variantsRepository: VariantsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val categoriesRepository: CategoriesRepository,
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val getProductVariantOptions: GetProductVariantOptions,
+    private val variantMixesRepository: VariantMixesRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<ProductViewModel>() {
@@ -49,7 +45,8 @@ class ProductViewModel(
         idVariantOption: Long
     ) = productVariantsRepository.getVariantProduct(idProduct, idVariantOption)
 
-    fun getVariantProductById(idProduct: Long) = productVariantsRepository.getVariantProductById(idProduct)
+    fun getVariantProductById(idProduct: Long) =
+        productVariantsRepository.getVariantProductById(idProduct)
 
     fun insertVariantProduct(data: VariantProduct) {
         viewModelScope.launch {
@@ -66,20 +63,21 @@ class ProductViewModel(
     fun getVariantMixProductById(
         idVariant: Long,
         idProduct: Long
-    ): LiveData<Resource<VariantMix?>> {
-        return repository.getVariantMixProductById(idVariant, idProduct)
+    ) = variantMixesRepository.getVariantMixProductById(idVariant, idProduct)
+
+    fun getVariantMixProduct(idVariant: Long) =
+        variantMixesRepository.getVariantMixProduct(idVariant)
+
+    fun insertVariantMix(data: VariantMix) {
+        viewModelScope.launch {
+            variantMixesRepository.insertVariantMix(data)
+        }
     }
 
-    fun getVariantMixProduct(idVariant: Long): LiveData<Resource<VariantWithVariantMix>> {
-        return repository.getVariantMixProduct(idVariant)
-    }
-
-    fun insertVariantMix(data: VariantMix, callback: (ApiResponse<Long>) -> Unit) {
-        repository.insertVariantMix(data, callback)
-    }
-
-    fun removeVariantMix(data: VariantMix, callback: (ApiResponse<Boolean>) -> Unit) {
-        repository.removeVariantMix(data, callback)
+    fun removeVariantMix(data: VariantMix) {
+        viewModelScope.launch {
+            variantMixesRepository.removeVariantMix(data)
+        }
     }
 
     fun getProductWithCategories(category: Long) =

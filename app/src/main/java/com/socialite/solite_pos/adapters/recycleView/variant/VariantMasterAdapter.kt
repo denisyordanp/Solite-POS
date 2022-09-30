@@ -14,7 +14,6 @@ import com.socialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragme
 import com.socialite.solite_pos.view.main.menu.master.detail.VariantMasterMixOptionActivity
 import com.socialite.solite_pos.view.main.menu.master.detail.VariantOptionActivity
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.vo.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -64,16 +63,12 @@ class VariantMasterAdapter(
 
         fun setData(v: Variant) {
             if (v.isMix) {
-                viewModel.getVariantMixProduct(v.id).observe(activity, {
-                    var count = "Mengambil data ..."
-                    when (it.status) {
-                        Status.SUCCESS ->
-                            count = "Terdapat ${it.data?.products?.size} pilihan"
-
-                        else -> {}
-                    }
-                    binding.tvRvVrOption.text = count
-                })
+                activity.lifecycleScope.launch {
+                    viewModel.getVariantMixProduct(v.id)
+                        .collect {
+                            binding.tvRvVrOption.text = "Terdapat ${it?.products?.size} pilihan"
+                        }
+                }
             } else {
                 activity.lifecycleScope.launch {
                     val query = VariantOption.getFilter(v.id, VariantOption.ALL)

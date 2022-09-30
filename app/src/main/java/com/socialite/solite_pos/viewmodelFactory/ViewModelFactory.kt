@@ -17,6 +17,7 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetIncomesRecapData
@@ -33,6 +34,7 @@ import com.socialite.solite_pos.utils.di.RepositoryInjection.provideProductsRepo
 import com.socialite.solite_pos.utils.di.RepositoryInjection.providePurchasesRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideSoliteRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideSupplierRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideVariantMixesRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideVariantsRepository
 import com.socialite.solite_pos.view.viewModel.MainViewModel
@@ -57,6 +59,7 @@ class ViewModelFactory private constructor(
     private val newOrder: NewOrder,
     private val getProductOrder: GetProductOrder,
     private val getIncomesRecapData: GetIncomesRecapData,
+    private val variantMixesRepository: VariantMixesRepository,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -83,6 +86,7 @@ class ViewModelFactory private constructor(
                             provideNewOrder(context),
                             provideGetProductOrder(context),
                             provideGetIncomesRecapData(context),
+                            provideVariantMixesRepository(context),
                         )
                     }
                 }
@@ -120,13 +124,13 @@ class ViewModelFactory private constructor(
 
             modelClass.isAssignableFrom(ProductViewModel::class.java) -> {
                 ProductViewModel(
-                    repository,
                     variantsRepository,
                     variantOptionsRepository,
                     categoriesRepository,
                     productsRepository,
                     productVariantsRepository,
-                    getProductVariantOptions
+                    getProductVariantOptions,
+                    variantMixesRepository
                 ) as T
             }
 
