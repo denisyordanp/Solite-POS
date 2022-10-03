@@ -11,57 +11,30 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
-        <activity
-            android:name=".view.main.menu.history.SalesActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.opening.LoginActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.outcome.DetailOutcomeActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.order.SelectMixVariantOrderActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.purchase.PurchaseActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.master.detail.VariantOptionActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.order.SelectPaymentsActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.master.product.ProductMasterActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.master.ListMasterActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.order.SelectCustomerActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.main.menu.order.OrderActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".view.bluetooth.BluetoothDeviceListActivity"
-            android:screenOrientation="landscape" />
+        <activity android:name=".view.main.opening.OrderCustomerActivity"/>
+        <activity android:name=".view.main.menu.history.SalesActivity" />
+        <activity android:name=".view.main.opening.LoginActivity" />
+        <activity android:name=".view.main.menu.outcome.DetailOutcomeActivity" />
+        <activity android:name=".view.main.menu.order.SelectMixVariantOrderActivity" />
+        <activity android:name=".view.main.menu.purchase.PurchaseActivity" />
+        <activity android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity" />
+        <activity android:name=".view.main.menu.master.detail.VariantOptionActivity" />
+        <activity android:name=".view.main.menu.order.SelectPaymentsActivity" />
+        <activity android:name=".view.main.menu.master.product.ProductMasterActivity" />
+        <activity android:name=".view.main.menu.master.ListMasterActivity" />
+        <activity android:name=".view.main.menu.order.SelectCustomerActivity" />
+        <activity android:name=".view.main.menu.order.OrderActivity" />
+        <activity android:name=".view.bluetooth.BluetoothDeviceListActivity" />
         <activity
             android:name=".view.main.opening.OpeningActivity"
-            android:screenOrientation="landscape">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.main.opening.MainActivity"
-            android:screenOrientation="landscape" />
+        <activity android:name=".view.main.opening.MainActivity" />
 
         <receiver android:name=".utils.tools.DoneCookService" />
     </application>

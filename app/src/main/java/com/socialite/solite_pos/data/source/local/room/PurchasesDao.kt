@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PurchasesDao {
 
+    @Transaction
     @Query("SELECT * FROM ${Purchase.DB_NAME}")
     fun getPurchases(): Flow<List<PurchaseWithSupplier>>
 
@@ -23,6 +25,7 @@ interface PurchasesDao {
     @Update
     fun updatePurchase(data: Purchase)
 
+    @Transaction
     @Query("SELECT * FROM ${PurchaseProduct.DB_NAME} WHERE ${Purchase.NO} = :purchaseNo")
     fun getPurchasesProduct(purchaseNo: String): Flow<List<PurchaseProductWithProduct>>
 

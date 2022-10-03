@@ -14,10 +14,10 @@ data class PurchaseProductWithProduct(
         @Relation(parentColumn = Product.ID, entityColumn = Product.ID)
         var product: Product?,
 
+        @Ignore
         var type: Int?
 ): Serializable{
 
-    @Ignore
     constructor(purchaseProduct: PurchaseProduct?, product: Product?): this(purchaseProduct, product, null)
 
     @Ignore
