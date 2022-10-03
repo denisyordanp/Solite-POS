@@ -19,8 +19,8 @@
 			android:layout_weight="1"
 			layout="@layout/main_menu" />
 
-		<androidx.viewpager2.widget.ViewPager2
-			android:id="@+id/vp_main"
+		<FrameLayout
+			android:id="@+id/fragment_container"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:orientation="vertical"
@@ -34,7 +34,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		app:icon="@drawable/ic_add"
-		android:text="Pesanan baru"
+		android:text="@string/new_order"
 		android:textColor="@color/blackGrey"
 		android:layout_gravity="bottom|end"
 		android:layout_margin="@dimen/floatMargin"

@@ -40,15 +40,15 @@ interface OrdersDao {
 
     @Transaction
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
-    fun getOrderVariants(idDetail: Long): DetailWithVariantOption
+    suspend fun getOrderVariants(idDetail: Long): DetailWithVariantOption
 
     @Transaction
     @Query("SELECT * FROM ${OrderProductVariantMix.DB_NAME} WHERE ${OrderProductVariantMix.ID} = :idMix")
-    fun getOrderMixVariantsOption(idMix: Long): DetailProductMixWithVariantOption
+    suspend fun getOrderMixVariantsOption(idMix: Long): DetailProductMixWithVariantOption
 
     @Transaction
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
-    fun getOrderVariantsMix(idDetail: Long): DetailWithVariantMixOption
+    suspend fun getOrderVariantsMix(idDetail: Long): DetailWithVariantMixOption
 
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo AND ${Product.ID} = :productId")
     fun getDetailOrders(orderNo: String, productId: Long): OrderDetail

@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductsDao {
 
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
-    fun getProduct(idProduct: Long): Product
+    suspend fun getProduct(idProduct: Long): Product
 
     @Transaction
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :category")

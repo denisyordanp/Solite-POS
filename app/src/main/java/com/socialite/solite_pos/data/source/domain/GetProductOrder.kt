@@ -4,5 +4,5 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import kotlinx.coroutines.flow.Flow
 
 interface GetProductOrder {
-    operator fun invoke(orderNo: String): Flow<List<ProductOrderDetail>>
+    suspend operator fun invoke(orderNo: String): Flow<List<ProductOrderDetail>>
 }

@@ -30,7 +30,7 @@ class OrderViewModel(
 
     fun getOrderList(status: Int, date: String) = orderRepository.getOrderList(status, date)
 
-    fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
+    suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
     suspend fun getIncomes(date: String) = getIncomesRecapData(DONE, date)
 
