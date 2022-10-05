@@ -2,11 +2,12 @@ package com.socialite.solite_pos.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.Card
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -26,20 +27,23 @@ fun ProductCustomerItem(
     titleText: String,
     subTitleText: String,
     priceText: Long,
-    imageUrl: String?
+    imageUrl: String?,
+    onItemClicked: () -> Unit
 ) {
-    Card(
+    Box(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(vertical = 4.dp)
             .fillMaxWidth()
             .wrapContentHeight()
+            .clickable { onItemClicked() }
             .background(
                 color = Color.White
-            ),
-        elevation = 4.dp,
+            )
     ) {
         ConstraintLayout(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         ) {
             val (image, title, subTitle, price, button) = createRefs()
             val imageSource = if (imageUrl.isNullOrEmpty()) {

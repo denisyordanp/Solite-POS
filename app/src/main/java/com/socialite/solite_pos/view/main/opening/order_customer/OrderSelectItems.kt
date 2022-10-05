@@ -1,10 +1,8 @@
-package com.socialite.solite_pos.view.main.opening
+package com.socialite.solite_pos.view.main.opening.order_customer
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,52 +14,68 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BucketModalSheetContent
 import com.socialite.solite_pos.compose.ProductCustomerItem
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
-import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
+import kotlinx.coroutines.launch
 
-class OrderCustomerActivity : AppCompatActivity() {
+@Composable
+@ExperimentalMaterialApi
+fun OrderSelectItems(
+    viewModel: ProductViewModel,
+    onItemClicked: () -> Unit
+) {
 
-    private lateinit var viewModel: ProductViewModel
+    val state = viewModel.getProducts(1).collectAsState(initial = null)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val scope = rememberCoroutineScope()
 
-        viewModel = ProductViewModel.getMainViewModel(this)
-        setContent {
-            SolitePOSTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-
-                    val state = viewModel.getProducts(1).collectAsState(initial = null)
-
-                    OrderList(products = state.value)
+    BucketModalSheetContent(
+        sheetState = modalState
+    ) {
+        OrderList(
+            products = state.value,
+            onBucketClicked = {
+                scope.launch {
+                    modalState.show()
                 }
-            }
-        }
+            },
+            onItemClicked = onItemClicked
+        )
     }
 }
 
 @Composable
-private fun OrderList(products: List<ProductWithCategory>?) {
+private fun OrderList(
+    products: List<ProductWithCategory>?,
+    onBucketClicked: () -> Unit,
+    onItemClicked: () -> Unit
+) {
     products?.let {
-        ConstraintLayout {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colors.background)
+        ) {
             val (content, cart, menu) = createRefs()
             LazyColumn(
                 modifier = Modifier
@@ -75,7 +89,8 @@ private fun OrderList(products: List<ProductWithCategory>?) {
                         titleText = product.product.name,
                         subTitleText = product.product.desc,
                         priceText = product.product.sellPrice,
-                        imageUrl = product.product.image
+                        imageUrl = product.product.image,
+                        onItemClicked = onItemClicked
                     )
                 }
             }
@@ -96,10 +111,12 @@ private fun OrderList(products: List<ProductWithCategory>?) {
                         elevation = 4.dp,
                         shape = RoundedCornerShape(25.dp)
                     )
+                    .clickable { onBucketClicked() }
                     .background(
                         color = MaterialTheme.colors.primary,
                         shape = RoundedCornerShape(25.dp)
-                    ).padding(vertical = 8.dp, horizontal = 16.dp)
+                    )
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
                 val (desc, price) = createRefs()
                 Column(
@@ -108,27 +125,31 @@ private fun OrderList(products: List<ProductWithCategory>?) {
                             linkTo(top = parent.top, bottom = parent.bottom)
                             linkTo(start = parent.start, end = price.start, endMargin = 16.dp)
                             width = Dimension.fillToConstraints
-                        }.fillMaxWidth()
+                        }
+                        .fillMaxWidth()
                 ) {
                     Text(
                         text = "3 Item",
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.onPrimary
                     )
                     Text(
                         text = "Chocho banana, kopi sweet, madu TJ, roti baka",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.overline
+                        style = MaterialTheme.typography.overline,
+                        color = MaterialTheme.colors.onPrimary
                     )
                 }
                 Text(
                     modifier = Modifier
                         .constrainAs(price) {
-                                            linkTo(top = parent.top, bottom = parent.bottom)
+                            linkTo(top = parent.top, bottom = parent.bottom)
                             end.linkTo(parent.end)
                         },
                     text = "IDR 35K",
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
             Button(
@@ -144,7 +165,11 @@ private fun OrderList(products: List<ProductWithCategory>?) {
                 ),
                 onClick = { }
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
+                Image(
+                    painter = painterResource(id = R.drawable.ic_menus),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary),
+                    contentDescription = null
+                )
             }
         }
     }
