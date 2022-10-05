@@ -2,7 +2,11 @@
     <string name="app_name" translatable="false">Solite-POS</string>
     <string name="solite_logo_image" translatable="false">Solite Logo</string>
     <string name="new_order">Pesanan baru</string>
+    <string name="order_now">Pesanan sekarang</string>
     <string name="outcomes">Pengeluaran</string>
     <string name="new_purchase">Pembelian baru</string>
+    <string name="orders">Pesanan</string>
+    <string name="store">Kedai</string>
+    <string name="setting">Pengaturan</string>
 
 </resources>

@@ -16,12 +16,17 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
@@ -31,7 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.compose.BucketModalSheetContent
+import com.socialite.solite_pos.compose.BucketView
+import com.socialite.solite_pos.compose.GeneralMenus
 import com.socialite.solite_pos.compose.ProductCustomerItem
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -43,32 +49,57 @@ fun OrderSelectItems(
     viewModel: ProductViewModel,
     onItemClicked: () -> Unit
 ) {
-
     val state = viewModel.getProducts(1).collectAsState(initial = null)
 
+    var modalContent by remember {
+        mutableStateOf(ModalContent.BUCKET_VIEW)
+    }
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
-    BucketModalSheetContent(
-        sheetState = modalState
-    ) {
-        OrderList(
-            products = state.value,
-            onBucketClicked = {
-                scope.launch {
-                    modalState.show()
+    ModalBottomSheetLayout(
+        sheetState = modalState,
+        sheetShape = RoundedCornerShape(
+            topStart = 8.dp,
+            topEnd = 8.dp
+        ),
+        sheetContent = {
+            when (modalContent) {
+                ModalContent.BUCKET_VIEW -> BucketView()
+                ModalContent.GENERAL_MENUS -> GeneralMenus {}
+            }
+        },
+        content = {
+            OrderList(
+                products = state.value,
+                onBucketClicked = {
+                    modalContent = ModalContent.BUCKET_VIEW
+                    scope.launch {
+                        modalState.show()
+                    }
+                },
+                onItemClicked = onItemClicked,
+                onMenusClicked = {
+                    modalContent = ModalContent.GENERAL_MENUS
+                    scope.launch {
+                        modalState.show()
+                    }
                 }
-            },
-            onItemClicked = onItemClicked
-        )
-    }
+            )
+        }
+    )
+}
+
+private enum class ModalContent {
+    BUCKET_VIEW, GENERAL_MENUS
 }
 
 @Composable
 private fun OrderList(
     products: List<ProductWithCategory>?,
     onBucketClicked: () -> Unit,
-    onItemClicked: () -> Unit
+    onItemClicked: () -> Unit,
+    onMenusClicked: () -> Unit,
 ) {
     products?.let {
         ConstraintLayout(
@@ -163,7 +194,7 @@ private fun OrderList(
                 elevation = ButtonDefaults.elevation(
                     defaultElevation = 4.dp
                 ),
-                onClick = { }
+                onClick = { onMenusClicked() }
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_menus),
