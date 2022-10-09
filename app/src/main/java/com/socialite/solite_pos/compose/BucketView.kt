@@ -2,8 +2,6 @@ package com.socialite.solite_pos.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -32,6 +30,7 @@ import com.socialite.solite_pos.R
 fun BucketView(
     customerName: String = "Denis Yordan",
     orderDate: String = "04 Oktober 2022, 15:30",
+    onClickOrder: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -50,24 +49,16 @@ fun BucketView(
         BucketItem()
         TotalBucket()
         Spacer(modifier = Modifier.height(24.dp))
-        Box(
+        PrimaryButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { }
                 .background(
                     color = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(8.dp)
-                )
-                .padding(16.dp),
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                text = stringResource(id = R.string.order_now),
-                style = MaterialTheme.typography.button,
-                color = MaterialTheme.colors.onPrimary
-            )
-        }
+                ),
+            buttonText = stringResource(id = R.string.order_now),
+            onClick = onClickOrder
+        )
     }
 }
 

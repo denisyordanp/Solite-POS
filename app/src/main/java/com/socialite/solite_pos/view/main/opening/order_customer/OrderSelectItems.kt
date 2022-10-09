@@ -47,7 +47,8 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 fun OrderSelectItems(
     viewModel: ProductViewModel,
-    onItemClicked: () -> Unit
+    onItemClicked: () -> Unit,
+    onClickOrder: () -> Unit
 ) {
     val state = viewModel.getProducts(1).collectAsState(initial = null)
 
@@ -65,7 +66,9 @@ fun OrderSelectItems(
         ),
         sheetContent = {
             when (modalContent) {
-                ModalContent.BUCKET_VIEW -> BucketView()
+                ModalContent.BUCKET_VIEW -> BucketView(
+                    onClickOrder = onClickOrder
+                )
                 ModalContent.GENERAL_MENUS -> GeneralMenus {}
             }
         },

@@ -13,11 +13,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 class OrderCustomerActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ProductViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
@@ -25,6 +27,7 @@ class OrderCustomerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         viewModel = ProductViewModel.getMainViewModel(this)
+        mainViewModel = MainViewModel.getMainViewModel(this)
 
         setContent {
             SolitePOSTheme {
@@ -42,9 +45,15 @@ class OrderCustomerActivity : AppCompatActivity() {
                         composable(
                             OrderCustomerDestinations.SELECT_ITEMS
                         ) {
-                            OrderSelectItems(viewModel = viewModel) {
-                                navController.navigate(OrderCustomerDestinations.SELECT_VARIANTS)
-                            }
+                            OrderSelectItems(
+                                viewModel = viewModel,
+                                onItemClicked = {
+                                    navController.navigate(OrderCustomerDestinations.SELECT_VARIANTS)
+                                },
+                                onClickOrder = {
+                                    navController.navigate(OrderCustomerDestinations.SELECT_CUSTOMERS)
+                                }
+                            )
                         }
                         composable(
                             OrderCustomerDestinations.SELECT_VARIANTS
@@ -52,6 +61,17 @@ class OrderCustomerActivity : AppCompatActivity() {
                             OrderSelectVariants {
                                 navController.popBackStack()
                             }
+                        }
+                        composable(
+                            OrderCustomerDestinations.SELECT_CUSTOMERS
+                        ) {
+                            OrderCustomerName(
+                                viewModel = mainViewModel,
+                                onBackClicked = {
+                                    navController.popBackStack()
+                                },
+                                onCLickName = {}
+                            )
                         }
                     }
                 }

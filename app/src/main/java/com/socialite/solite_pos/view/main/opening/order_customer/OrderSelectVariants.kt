@@ -3,7 +3,6 @@ package com.socialite.solite_pos.view.main.opening.order_customer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.PrimaryButton
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
 
 @Composable
@@ -70,14 +69,15 @@ private fun ProductTitle(
     ) {
         Icon(
             modifier = Modifier
+                .align(Alignment.CenterVertically)
                 .clickable { onBackClicked() }
-                .padding(16.dp)
-                .size(16.dp),
+                .padding(start = 8.dp)
+                .padding(8.dp),
             painter = painterResource(id = R.drawable.ic_back),
             contentDescription = null,
-            tint = MaterialTheme.colors.onPrimary
+            tint = Color.Black
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
@@ -214,7 +214,7 @@ private fun AddToCartBottom() {
                 contentDescription = null,
             )
         }
-        Box(
+        PrimaryButton(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .constrainAs(addCartBtn) {
@@ -226,21 +226,10 @@ private fun AddToCartBottom() {
                     )
                     width = Dimension.fillToConstraints
                 }
-                .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colors.primary,
-                    shape = RoundedCornerShape(8.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(16.dp),
-                text = "Tambahkan - Rp. 30.000",
-                style = MaterialTheme.typography.button,
-                color = MaterialTheme.colors.onPrimary
-            )
-        }
+                .fillMaxWidth(),
+            buttonText = "Tambahkan - Rp. 30.000",
+            onClick = {}
+        )
     }
 }
 

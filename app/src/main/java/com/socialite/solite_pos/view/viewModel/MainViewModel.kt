@@ -13,6 +13,7 @@ import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -41,6 +42,21 @@ class MainViewModel(
     }
 
     val customers = customersRepository.getCustomers()
+
+    fun filterCustomer(keyword: String) = when {
+        keyword.isNotEmpty() -> {
+            customers
+                .map {
+                    it.filter { customer ->
+                        customer.name.lowercase().contains(keyword.lowercase())
+                    }
+                }
+                .map {
+                    return@map it.ifEmpty { null }
+                }
+        }
+        else -> customers
+    }
 
     fun insertCustomers(data: Customer) {
         viewModelScope.launch {

@@ -32,7 +32,7 @@ fun ProductCustomerItem(
 ) {
     Box(
         modifier = Modifier
-            .padding(vertical = 4.dp)
+            .padding(bottom = 4.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable { onItemClicked() }

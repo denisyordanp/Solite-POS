@@ -8,5 +8,8 @@
     <string name="orders">Pesanan</string>
     <string name="store">Kedai</string>
     <string name="setting">Pengaturan</string>
+    <string name="customer_name">Nama customer</string>
+    <string name="dine_in">Makan di tempat</string>
+    <string name="take_away">Di bungkus</string>
 
 </resources>

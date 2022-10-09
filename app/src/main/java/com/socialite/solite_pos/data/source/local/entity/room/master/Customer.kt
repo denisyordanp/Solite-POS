@@ -52,6 +52,7 @@ data class Customer(
 			)
 		}
 
+		fun add(name: String) = Customer(ID_ADD, name, isUploaded = false)
 	}
 
 	@Ignore
