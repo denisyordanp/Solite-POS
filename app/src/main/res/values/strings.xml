@@ -11,5 +11,16 @@
     <string name="customer_name">Nama customer</string>
     <string name="dine_in">Makan di tempat</string>
     <string name="take_away">Di bungkus</string>
+    <string name="product">Produk</string>
+    <string name="category">Kategori</string>
+    <string name="variant">Varian</string>
+    <string name="payment">Pembayaran</string>
+    <string name="supplier">Supplier</string>
+    <string name="daily_recap">Rekap Harian</string>
+    <string name="purchase">Pembelian</string>
+    <string name="history">Riwayat</string>
+    <string name="masters">Data Master</string>
+    <string name="not_pay_yet">Belum Bayar</string>
+    <string name="title_activity_orders">OrdersActivity</string>
 
 </resources>

@@ -1,19 +1,14 @@
 package com.socialite.solite_pos.view.main.opening.order_customer
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
@@ -29,17 +24,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BucketView
-import com.socialite.solite_pos.compose.GeneralMenus
-import com.socialite.solite_pos.compose.ProductCustomerItem
+import com.socialite.solite_pos.compose.GeneralMenuButtonView
+import com.socialite.solite_pos.compose.GeneralMenusView
+import com.socialite.solite_pos.compose.ProductCustomerItemView
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
+import com.socialite.solite_pos.view.main.opening.ui.ModalContent
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
@@ -48,7 +43,8 @@ import kotlinx.coroutines.launch
 fun OrderSelectItems(
     viewModel: ProductViewModel,
     onItemClicked: () -> Unit,
-    onClickOrder: () -> Unit
+    onClickOrder: () -> Unit,
+    onGeneralMenuClicked: (menu: GeneralMenus) -> Unit
 ) {
     val state = viewModel.getProducts(1).collectAsState(initial = null)
 
@@ -69,7 +65,22 @@ fun OrderSelectItems(
                 ModalContent.BUCKET_VIEW -> BucketView(
                     onClickOrder = onClickOrder
                 )
-                ModalContent.GENERAL_MENUS -> GeneralMenus {}
+
+                ModalContent.GENERAL_MENUS -> GeneralMenusView(
+                    onClicked = {
+                        if (it == GeneralMenus.NEW_ORDER) {
+                            scope.launch {
+                                modalState.hide()
+                            }
+                        } else {
+                            onGeneralMenuClicked(it)
+                        }
+                    }
+                )
+
+                else -> {
+                    // Do nothing
+                }
             }
         },
         content = {
@@ -91,10 +102,6 @@ fun OrderSelectItems(
             )
         }
     )
-}
-
-private enum class ModalContent {
-    BUCKET_VIEW, GENERAL_MENUS
 }
 
 @Composable
@@ -119,7 +126,7 @@ private fun OrderList(
                     }
             ) {
                 items(it) { product ->
-                    ProductCustomerItem(
+                    ProductCustomerItemView(
                         titleText = product.product.name,
                         subTitleText = product.product.desc,
                         priceText = product.product.sellPrice,
@@ -186,25 +193,14 @@ private fun OrderList(
                     color = MaterialTheme.colors.onPrimary
                 )
             }
-            Button(
+            GeneralMenuButtonView(
                 modifier = Modifier
-                    .size(50.dp)
                     .constrainAs(menu) {
                         end.linkTo(parent.end, margin = 24.dp)
                         bottom.linkTo(parent.bottom, margin = 24.dp)
                     },
-                shape = CircleShape,
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 4.dp
-                ),
-                onClick = { onMenusClicked() }
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_menus),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary),
-                    contentDescription = null
-                )
-            }
+                onMenuClicked = onMenusClicked
+            )
         }
     }
 }

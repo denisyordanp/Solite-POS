@@ -29,7 +29,7 @@ import com.socialite.solite_pos.view.main.menu.main.SettingFragment
 import com.socialite.solite_pos.view.main.menu.order.OrderActivity
 import com.socialite.solite_pos.view.main.menu.outcome.DetailOutcomeActivity
 import com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity
-import com.socialite.solite_pos.view.utils.MainMenus
+import com.socialite.solite_pos.view.main.opening.ui.MainMenus
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel

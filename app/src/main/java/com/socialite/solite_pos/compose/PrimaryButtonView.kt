@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PrimaryButton(
+fun PrimaryButtonView(
     modifier: Modifier,
     buttonText: String,
     onClick: () -> Unit

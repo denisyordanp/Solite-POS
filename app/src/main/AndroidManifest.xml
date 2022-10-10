@@ -11,7 +11,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
-        <activity android:name=".view.main.opening.order_customer.OrderCustomerActivity"/>
+        <activity android:name=".view.main.opening.orders.OrdersActivity"/>
+        <activity android:name=".view.main.opening.store.StoreActivity" />
+        <activity android:name=".view.main.opening.order_customer.OrderCustomerActivity" />
         <activity android:name=".view.main.menu.history.SalesActivity" />
         <activity android:name=".view.main.opening.LoginActivity" />
         <activity android:name=".view.main.menu.outcome.DetailOutcomeActivity" />

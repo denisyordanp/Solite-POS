@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.main.opening.order_customer
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.socialite.solite_pos.view.main.opening.store.StoreActivity
+import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -52,6 +55,18 @@ class OrderCustomerActivity : AppCompatActivity() {
                                 },
                                 onClickOrder = {
                                     navController.navigate(OrderCustomerDestinations.SELECT_CUSTOMERS)
+                                },
+                                onGeneralMenuClicked = {
+                                    when (it) {
+                                        GeneralMenus.NEW_ORDER -> {
+
+                                        }
+                                        GeneralMenus.ORDERS -> {}
+                                        GeneralMenus.STORE -> {
+                                            goToStoreActivity()
+                                        }
+                                        GeneralMenus.SETTING -> {}
+                                    }
                                 }
                             )
                         }
@@ -77,5 +92,13 @@ class OrderCustomerActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @ExperimentalMaterialApi
+    private fun goToStoreActivity() {
+        val intent = Intent(this, StoreActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 }

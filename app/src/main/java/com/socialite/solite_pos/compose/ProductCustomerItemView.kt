@@ -23,7 +23,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.utils.config.toIDR
 
 @Composable
-fun ProductCustomerItem(
+fun ProductCustomerItemView(
     titleText: String,
     subTitleText: String,
     priceText: Long,

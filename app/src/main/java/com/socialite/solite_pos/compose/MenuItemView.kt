@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,46 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.socialite.solite_pos.R
 
 @Composable
-fun GeneralMenus(
-    onClicked: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
-        MenuItem(
-            title = R.string.new_order,
-            icon = R.drawable.ic_masters,
-            onClicked = onClicked
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MenuItem(
-            title = R.string.orders,
-            icon = R.drawable.ic_cook,
-            onClicked = onClicked
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MenuItem(
-            title = R.string.store,
-            icon = R.drawable.ic_store,
-            onClicked = onClicked
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MenuItem(
-            title = R.string.setting,
-            icon = R.drawable.ic_settings,
-            onClicked = onClicked
-        )
-    }
-}
-
-@Composable
-private fun MenuItem(
+fun MenuItemView(
     @StringRes title: Int,
-    @DrawableRes icon: Int,
+    @DrawableRes icon: Int? = null,
     onClicked: () -> Unit
 ) {
     Box(
@@ -78,8 +42,10 @@ private fun MenuItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painter = painterResource(id = icon), contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
+            icon?.let {
+                Image(painter = painterResource(id = icon), contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+            }
             Text(
                 text = stringResource(title),
                 style = MaterialTheme.typography.button,
@@ -87,4 +53,5 @@ private fun MenuItem(
             )
         }
     }
+    Spacer(modifier = Modifier.height(8.dp))
 }

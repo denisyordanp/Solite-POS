@@ -34,7 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.compose.PrimaryButton
+import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 
@@ -231,13 +231,13 @@ private fun SelectDineType() {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            PrimaryButton(
+            PrimaryButtonView(
                 modifier = Modifier.weight(1f),
                 buttonText = stringResource(R.string.dine_in),
                 onClick = {}
             )
             Spacer(modifier = Modifier.width(16.dp))
-            PrimaryButton(
+            PrimaryButtonView(
                 modifier = Modifier.weight(1f),
                 buttonText = stringResource(R.string.take_away),
                 onClick = {}

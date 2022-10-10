@@ -49,7 +49,7 @@ fun BucketView(
         BucketItem()
         TotalBucket()
         Spacer(modifier = Modifier.height(24.dp))
-        PrimaryButton(
+        PrimaryButtonView(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(

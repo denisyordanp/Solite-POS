@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.compose.PrimaryButton
+import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
 
 @Composable
@@ -214,7 +214,7 @@ private fun AddToCartBottom() {
                 contentDescription = null,
             )
         }
-        PrimaryButton(
+        PrimaryButtonView(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .constrainAs(addCartBtn) {
