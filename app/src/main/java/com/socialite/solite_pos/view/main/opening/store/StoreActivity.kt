@@ -13,6 +13,7 @@ import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActivity
 import com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity
 import com.socialite.solite_pos.view.main.opening.order_customer.OrderCustomerActivity
+import com.socialite.solite_pos.view.main.opening.orders.OrdersActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.MasterMenus
 import com.socialite.solite_pos.view.main.opening.ui.StoreMenus
@@ -35,11 +36,8 @@ class StoreActivity : AppCompatActivity() {
                         MainStoreMenu(
                             onGeneralMenuClicked = {
                                 when (it) {
-                                    GeneralMenus.NEW_ORDER -> {
-                                        goToOrderCustomerActivity()
-                                    }
-
-                                    GeneralMenus.ORDERS -> TODO()
+                                    GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
+                                    GeneralMenus.ORDERS -> goToOrdersActivity()
                                     GeneralMenus.SETTING -> TODO()
                                     else -> {
                                         // Do nothing
@@ -75,6 +73,14 @@ class StoreActivity : AppCompatActivity() {
     @ExperimentalMaterialApi
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+    }
+
+    @ExperimentalMaterialApi
+    private fun goToOrdersActivity() {
+        val intent = Intent(this, OrdersActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)

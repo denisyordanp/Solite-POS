@@ -21,6 +21,7 @@
     <string name="history">Riwayat</string>
     <string name="masters">Data Master</string>
     <string name="not_pay_yet">Belum Bayar</string>
-    <string name="title_activity_orders">OrdersActivity</string>
+    <string name="done">Selesai</string>
+    <string name="canceled">Dibatalkan</string>
 
 </resources>

@@ -8,6 +8,15 @@ enum class MainMenus {
     ORDER, NOT_PAY, DONE, CANCELED, DAILY_RECAP, PURCHASE, HISTORY, MASTER, SETTING;
 }
 
+enum class OrderMenus(
+    @StringRes val title: Int
+) {
+    CURRENT_ORDER(R.string.orders),
+    NOT_PAY_YET(R.string.not_pay_yet),
+    DONE(R.string.done),
+    CANCELED(R.string.canceled),
+}
+
 enum class GeneralMenus(
     @StringRes val title: Int,
     @DrawableRes val icon: Int,
