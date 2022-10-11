@@ -24,6 +24,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -33,6 +35,7 @@ import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.ProductCustomerItemView
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.ModalContent
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -46,7 +49,7 @@ fun OrderSelectItems(
     onClickOrder: () -> Unit,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit
 ) {
-    val state = viewModel.getProducts(1).collectAsState(initial = null)
+    val state = viewModel.getAllProducts().collectAsState(initial = null)
 
     var modalContent by remember {
         mutableStateOf(ModalContent.BUCKET_VIEW)
@@ -84,7 +87,7 @@ fun OrderSelectItems(
             }
         },
         content = {
-            OrderList(
+            ProductOrderList(
                 products = state.value,
                 onBucketClicked = {
                     modalContent = ModalContent.BUCKET_VIEW
@@ -105,8 +108,8 @@ fun OrderSelectItems(
 }
 
 @Composable
-private fun OrderList(
-    products: List<ProductWithCategory>?,
+private fun ProductOrderList(
+    products: Map<Category, List<ProductWithCategory>>?,
     onBucketClicked: () -> Unit,
     onItemClicked: () -> Unit,
     onMenusClicked: () -> Unit,
@@ -125,14 +128,31 @@ private fun OrderList(
                         linkTo(bottom = parent.bottom, top = parent.top, bias = 0f)
                     }
             ) {
-                items(it) { product ->
-                    ProductCustomerItemView(
-                        titleText = product.product.name,
-                        subTitleText = product.product.desc,
-                        priceText = product.product.sellPrice,
-                        imageUrl = product.product.image,
-                        onItemClicked = onItemClicked
-                    )
+
+                it.forEach { categoryWithProduct ->
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 4.dp)
+                                .fillMaxWidth()
+                                .background(color = Color.White)
+                                .padding(8.dp),
+                            text = categoryWithProduct.key.name,
+                            style = MaterialTheme.typography.body2.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    }
+
+                    items(categoryWithProduct.value) { product ->
+                        ProductCustomerItemView(
+                            titleText = product.product.name,
+                            subTitleText = product.product.desc,
+                            priceText = product.product.sellPrice,
+                            imageUrl = product.product.image,
+                            onItemClicked = onItemClicked
+                        )
+                    }
                 }
             }
             ConstraintLayout(

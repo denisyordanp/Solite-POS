@@ -27,6 +27,7 @@ class ProductsRepositoryImpl(
     }
 
     override fun getProductWithCategories(category: Long) = dao.getProductWithCategories(category)
+    override fun getAllProductWithCategories() = dao.getAllProductWithCategories()
 
     override suspend fun insertProduct(data: Product) {
         dao.insertProduct(data)

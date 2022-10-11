@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductsRepository {
 
     fun getProductWithCategories(category: Long): Flow<List<ProductWithCategory>>
+    fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
     suspend fun insertProduct(data: Product)
     suspend fun updateProduct(data: Product)
 }

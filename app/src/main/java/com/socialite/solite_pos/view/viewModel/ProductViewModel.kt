@@ -18,6 +18,7 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
@@ -37,6 +38,9 @@ class ProductViewModel(
     }
 
     fun getProducts(idCategory: Long) = productsRepository.getProductWithCategories(idCategory)
+    fun getAllProducts() = productsRepository
+        .getAllProductWithCategories()
+        .map { it.groupBy {product -> product.category } }
 
     fun getProductVariantOptions(idProduct: Long) = getProductVariantOptions.invoke(idProduct)
 
