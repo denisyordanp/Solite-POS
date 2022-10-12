@@ -36,6 +36,7 @@ import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.ProductCustomerItemView
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.ModalContent
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -45,7 +46,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 fun OrderSelectItems(
     viewModel: ProductViewModel,
-    onItemClicked: () -> Unit,
+    onItemClicked: (product: Product) -> Unit,
     onClickOrder: () -> Unit,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit
 ) {
@@ -111,7 +112,7 @@ fun OrderSelectItems(
 private fun ProductOrderList(
     products: Map<Category, List<ProductWithCategory>>?,
     onBucketClicked: () -> Unit,
-    onItemClicked: () -> Unit,
+    onItemClicked: (product: Product) -> Unit,
     onMenusClicked: () -> Unit,
 ) {
     products?.let {
@@ -150,7 +151,9 @@ private fun ProductOrderList(
                             subTitleText = product.product.desc,
                             priceText = product.product.sellPrice,
                             imageUrl = product.product.image,
-                            onItemClicked = onItemClicked
+                            onItemClicked = {
+                                onItemClicked(product.product)
+                            }
                         )
                     }
                 }

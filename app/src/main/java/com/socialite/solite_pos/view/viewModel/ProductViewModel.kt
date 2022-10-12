@@ -38,6 +38,8 @@ class ProductViewModel(
     }
 
     fun getProducts(idCategory: Long) = productsRepository.getProductWithCategories(idCategory)
+
+    suspend fun getProduct(idProduct: Long) = productsRepository.getProduct(idProduct)
     fun getAllProducts() = productsRepository
         .getAllProductWithCategories()
         .map { it.groupBy {product -> product.category } }

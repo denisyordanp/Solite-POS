@@ -10,9 +10,11 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.socialite.solite_pos.view.main.opening.orders.OrdersActivity
 import com.socialite.solite_pos.view.main.opening.store.StoreActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
@@ -24,6 +26,10 @@ class OrderCustomerActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ProductViewModel
     private lateinit var mainViewModel: MainViewModel
+
+    companion object {
+        private const val PRODUCT_ID = "product_id"
+    }
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
@@ -52,7 +58,7 @@ class OrderCustomerActivity : AppCompatActivity() {
                             OrderSelectItems(
                                 viewModel = viewModel,
                                 onItemClicked = {
-                                    navController.navigate(OrderCustomerDestinations.SELECT_VARIANTS)
+                                    navController.navigate("${OrderCustomerDestinations.SELECT_VARIANTS}/${it.id}")
                                 },
                                 onClickOrder = {
                                     navController.navigate(OrderCustomerDestinations.SELECT_CUSTOMERS)
@@ -69,11 +75,22 @@ class OrderCustomerActivity : AppCompatActivity() {
                                 }
                             )
                         }
+
+                        val productIdArgument = navArgument(name = PRODUCT_ID) {
+                            type = NavType.LongType
+                        }
                         composable(
-                            OrderCustomerDestinations.SELECT_VARIANTS
+                            route = "${OrderCustomerDestinations.SELECT_VARIANTS}/{$PRODUCT_ID}",
+                            arguments = listOf(productIdArgument)
                         ) {
-                            OrderSelectVariants {
-                                navController.popBackStack()
+                            it.arguments?.getLong(PRODUCT_ID)?.let {id ->
+                                OrderSelectVariants(
+                                    productId = id,
+                                    viewModel = viewModel,
+                                    onBackClicked = {
+                                        navController.popBackStack()
+                                    }
+                                )
                             }
                         }
                         composable(

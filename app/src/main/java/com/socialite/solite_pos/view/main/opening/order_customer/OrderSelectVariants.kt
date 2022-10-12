@@ -12,53 +12,84 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
+import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
+import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 @Composable
 fun OrderSelectVariants(
+    viewModel: ProductViewModel,
+    productId: Long,
     onBackClicked: () -> Unit
 ) {
+
+    val variants = viewModel.getProductVariantOptions(productId).collectAsState(initial = null)
+    var product by remember {
+        mutableStateOf<Product?>(null)
+    }
+    LaunchedEffect(key1 = Unit) {
+        product = viewModel.getProduct(productId)
+    }
+
     Scaffold(
         topBar = {
-            ProductTitle(onBackClicked = onBackClicked)
+            ProductTitle(
+                product,
+                onBackClicked = onBackClicked
+            )
         },
         bottomBar = {
             AddToCartBottom()
         },
         backgroundColor = MaterialTheme.colors.background
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            VariantItem()
-            VariantItem()
+            variants.value?.let {
+                items(it) {variant ->
+                    VariantItem(variant)
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun ProductTitle(
+    product: Product?,
     onBackClicked: () -> Unit
 ) {
     Row(
@@ -81,7 +112,7 @@ private fun ProductTitle(
         Text(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            text = "Dimsum Pedas sangat - Rp. 10.000",
+            text = "${product?.name} - Rp. ${product?.sellPrice?.thousand()}",
             style = MaterialTheme.typography.body1,
             color = MaterialTheme.colors.onPrimary,
             overflow = TextOverflow.Ellipsis,
@@ -91,7 +122,9 @@ private fun ProductTitle(
 }
 
 @Composable
-private fun VariantItem() {
+private fun VariantItem(
+    variantWithOption: VariantWithOptions
+) {
     Spacer(modifier = Modifier.height(4.dp))
     Column(
         modifier = Modifier
@@ -99,22 +132,34 @@ private fun VariantItem() {
             .background(color = Color.White)
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
-        VariantTitle()
-        VariantOption()
-        VariantOption()
-        VariantOption()
+        VariantTitle(
+            titleText = variantWithOption.variant?.name ?: "",
+            isMust = variantWithOption.variant?.isMust ?: false
+        )
+        variantWithOption.options.forEach {option ->
+            VariantOption(option)
+        }
     }
 }
 
 @Composable
-private fun VariantTitle() {
+private fun VariantTitle(
+    titleText: String,
+    isMust: Boolean
+) {
     Text(
-        text = "Pilihan Level pedas",
+        text = titleText,
         style = MaterialTheme.typography.body1
     )
     Spacer(modifier = Modifier.height(4.dp))
+
+    val descText = if (isMust) {
+        stringResource(R.string.must_choice)
+    } else {
+        stringResource(R.string.optional_choice)
+    }
     Text(
-        text = "Pilihan tidak wajib",
+        text = descText,
         style = MaterialTheme.typography.overline
     )
     Spacer(modifier = Modifier.height(8.dp))
@@ -128,7 +173,14 @@ private fun VariantTitle() {
 }
 
 @Composable
-private fun VariantOption() {
+private fun VariantOption(
+    option: VariantOption
+) {
+
+    var isChecked by remember {
+        mutableStateOf(false)
+    }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,7 +194,7 @@ private fun VariantOption() {
                     width = Dimension.fillToConstraints
                 }
                 .fillMaxWidth(),
-            text = "Bubble hitam",
+            text = option.name,
             style = MaterialTheme.typography.body2
         )
         Text(
@@ -151,7 +203,7 @@ private fun VariantOption() {
                     end.linkTo(checkBox.start)
                     linkTo(top = parent.top, bottom = parent.bottom)
                 },
-            text = "+Rp. 3000",
+            text = "+Rp. 0",
             style = MaterialTheme.typography.body2.copy(
                 fontWeight = FontWeight.Bold
             )
@@ -162,8 +214,13 @@ private fun VariantOption() {
                     end.linkTo(parent.end)
                     linkTo(top = parent.top, bottom = parent.bottom)
                 },
-            checked = false,
-            onCheckedChange = {}
+            checked = isChecked,
+            onCheckedChange = {
+                isChecked = it
+            },
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colors.primary
+            )
         )
     }
 }
@@ -230,15 +287,5 @@ private fun AddToCartBottom() {
             buttonText = "Tambahkan - Rp. 30.000",
             onClick = {}
         )
-    }
-}
-
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-private fun Preview() {
-    SolitePOSTheme {
-        OrderSelectVariants() {
-
-        }
     }
 }
