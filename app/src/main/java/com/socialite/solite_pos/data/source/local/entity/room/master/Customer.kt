@@ -57,4 +57,6 @@ data class Customer(
 
 	@Ignore
 	constructor(name: String): this(0, name, false)
+
+	fun isAdd() = id == ID_ADD
 }

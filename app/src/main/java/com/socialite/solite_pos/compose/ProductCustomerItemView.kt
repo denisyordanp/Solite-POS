@@ -2,7 +2,6 @@ package com.socialite.solite_pos.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,14 +27,13 @@ fun ProductCustomerItemView(
     subTitleText: String,
     priceText: Long,
     imageUrl: String?,
-    onItemClicked: () -> Unit
+    onAddItemClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .padding(bottom = 4.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable { onItemClicked() }
             .background(
                 color = Color.White
             )
@@ -104,7 +102,7 @@ fun ProductCustomerItemView(
                         end.linkTo(parent.end)
                         linkTo(top = parent.top, bottom = parent.bottom)
                     },
-                onClick = { }
+                onClick = onAddItemClick
             ) {
                 Image(
                     modifier = Modifier.size(25.dp),

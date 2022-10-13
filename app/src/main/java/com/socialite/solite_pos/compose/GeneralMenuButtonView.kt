@@ -24,7 +24,6 @@ fun GeneralMenuButtonView(
     Box(
         modifier = modifier
             .size(50.dp)
-            .clickable { onMenuClicked() }
             .shadow(
                 elevation = 4.dp,
                 shape = CircleShape
@@ -32,7 +31,7 @@ fun GeneralMenuButtonView(
             .background(
                 color = MaterialTheme.colors.primary,
                 shape = CircleShape
-            ),
+            ).clickable { onMenuClicked() },
         contentAlignment = Alignment.Center
     ) {
         Image(

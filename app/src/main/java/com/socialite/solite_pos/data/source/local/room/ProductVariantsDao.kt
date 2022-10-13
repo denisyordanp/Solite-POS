@@ -23,6 +23,9 @@ interface ProductVariantsDao {
     fun getVariantProduct(idProduct: Long, idVariantOption: Long): Flow<VariantProduct?>
 
     @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
+    fun getProductVariants(idProduct: Long): List<VariantProduct>?
+
+    @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
     fun getVariantProductById(idProduct: Long): Flow<VariantProduct?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

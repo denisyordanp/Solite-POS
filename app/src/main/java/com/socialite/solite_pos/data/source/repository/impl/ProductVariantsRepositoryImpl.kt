@@ -30,6 +30,9 @@ class ProductVariantsRepositoryImpl(
     override fun getVariantProduct(idProduct: Long, idVariantOption: Long) =
         dao.getVariantProduct(idProduct, idVariantOption)
 
+    override suspend fun isProductHasVariants(idProduct: Long) =
+        !dao.getProductVariants(idProduct).isNullOrEmpty()
+
     override fun getVariantProductById(idProduct: Long): Flow<VariantProduct?> =
         dao.getVariantProductById(idProduct)
 

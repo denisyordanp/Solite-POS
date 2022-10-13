@@ -9,6 +9,7 @@ interface ProductVariantsRepository {
         idProduct: Long,
         idVariantOption: Long
     ): Flow<VariantProduct?>
+    suspend fun isProductHasVariants(idProduct: Long): Boolean
     fun getVariantProductById(idProduct: Long): Flow<VariantProduct?>
     suspend fun insertVariantProduct(data: VariantProduct)
     suspend fun removeVariantProduct(data: VariantProduct)

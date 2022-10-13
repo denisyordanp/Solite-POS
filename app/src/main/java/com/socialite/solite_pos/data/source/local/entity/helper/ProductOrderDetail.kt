@@ -5,39 +5,70 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import java.io.Serializable
 
 data class ProductOrderDetail(
-		var product: Product?,
-		var variants: ArrayList<VariantOption>,
-		var mixProducts: ArrayList<ProductMixOrderDetail>,
-		var amount: Int,
-		var type: Int?
-): Serializable{
-	constructor(product: Product?, variants: ArrayList<VariantOption>, mixVariants: ArrayList<ProductMixOrderDetail>, amount: Int): this(product, variants, mixVariants, amount, null)
-	constructor(type: Int): this(null, ArrayList(), ArrayList(), 0, type)
+    var product: Product?,
+    var variants: ArrayList<VariantOption>,
+    var mixProducts: ArrayList<ProductMixOrderDetail>,
+    var amount: Int,
+    var type: Int?
+) : Serializable {
+    constructor(
+        product: Product?,
+        variants: ArrayList<VariantOption>,
+        mixVariants: ArrayList<ProductMixOrderDetail>,
+        amount: Int
+    ) : this(product, variants, mixVariants, amount, null)
 
-	companion object{
-		const val GRAND_TOTAL = 1
-		const val PAYMENT = 2
-		const val RETURN = 3
-		const val TITLE = 4
+    constructor(type: Int) : this(null, ArrayList(), ArrayList(), 0, type)
 
-		fun createProduct(product: Product?, variants: ArrayList<VariantOption>, amount: Int): ProductOrderDetail{
-			return ProductOrderDetail(product, variants, ArrayList(), amount)
-		}
+    fun getBucketDesc(): String {
+        return if (variants.isEmpty()) {
+            product?.desc ?: ""
+        } else {
+            variants.joinToString {
+                it.name
+            }
+        }
+    }
 
-		fun createMix(product: Product?, mixes: ArrayList<ProductMixOrderDetail>, amount: Int): ProductOrderDetail{
-			return ProductOrderDetail(product, ArrayList(), mixes, amount)
-		}
+    companion object {
+        const val GRAND_TOTAL = 1
+        const val PAYMENT = 2
+        const val RETURN = 3
+        const val TITLE = 4
 
-		val grand: ProductOrderDetail
-		get() = ProductOrderDetail(GRAND_TOTAL)
+        fun createProduct(
+            product: Product?,
+            variants: ArrayList<VariantOption>,
+            amount: Int
+        ): ProductOrderDetail {
+            return ProductOrderDetail(product, variants, ArrayList(), amount)
+        }
 
-		val payment: ProductOrderDetail
-			get() = ProductOrderDetail(PAYMENT)
+        fun createMix(
+            product: Product?,
+            mixes: ArrayList<ProductMixOrderDetail>,
+            amount: Int
+        ): ProductOrderDetail {
+            return ProductOrderDetail(product, ArrayList(), mixes, amount)
+        }
 
-		val payReturn: ProductOrderDetail
-			get() = ProductOrderDetail(RETURN)
+        fun productNoVariant(product: Product) = ProductOrderDetail(
+			product = product,
+			variants = arrayListOf(),
+			mixVariants = arrayListOf(),
+			amount = 1,
+        )
 
-		val title: ProductOrderDetail
-			get() = ProductOrderDetail(TITLE)
-	}
+        val grand: ProductOrderDetail
+            get() = ProductOrderDetail(GRAND_TOTAL)
+
+        val payment: ProductOrderDetail
+            get() = ProductOrderDetail(PAYMENT)
+
+        val payReturn: ProductOrderDetail
+            get() = ProductOrderDetail(RETURN)
+
+        val title: ProductOrderDetail
+            get() = ProductOrderDetail(TITLE)
+    }
 }

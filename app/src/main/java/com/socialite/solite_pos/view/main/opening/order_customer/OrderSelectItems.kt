@@ -34,23 +34,27 @@ import com.socialite.solite_pos.compose.BucketView
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.ProductCustomerItemView
+import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.utils.config.toIDR
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.ModalContent
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 fun OrderSelectItems(
-    viewModel: ProductViewModel,
-    onItemClicked: (product: Product) -> Unit,
+    productViewModel: ProductViewModel,
+    orderViewModel: OrderViewModel,
+    onAddItemClicked: (product: Product) -> Unit,
     onClickOrder: () -> Unit,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit
 ) {
-    val state = viewModel.getAllProducts().collectAsState(initial = null)
+    val state = productViewModel.getAllProducts().collectAsState(initial = null)
 
     var modalContent by remember {
         mutableStateOf(ModalContent.BUCKET_VIEW)
@@ -67,7 +71,8 @@ fun OrderSelectItems(
         sheetContent = {
             when (modalContent) {
                 ModalContent.BUCKET_VIEW -> BucketView(
-                    onClickOrder = onClickOrder
+                    onClickOrder = onClickOrder,
+                    orderViewModel = orderViewModel
                 )
 
                 ModalContent.GENERAL_MENUS -> GeneralMenusView(
@@ -89,6 +94,7 @@ fun OrderSelectItems(
         },
         content = {
             ProductOrderList(
+                orderViewModel = orderViewModel,
                 products = state.value,
                 onBucketClicked = {
                     modalContent = ModalContent.BUCKET_VIEW
@@ -96,7 +102,7 @@ fun OrderSelectItems(
                         modalState.show()
                     }
                 },
-                onItemClicked = onItemClicked,
+                onAddItemClicked = onAddItemClicked,
                 onMenusClicked = {
                     modalContent = ModalContent.GENERAL_MENUS
                     scope.launch {
@@ -110,9 +116,10 @@ fun OrderSelectItems(
 
 @Composable
 private fun ProductOrderList(
+    orderViewModel: OrderViewModel,
     products: Map<Category, List<ProductWithCategory>>?,
     onBucketClicked: () -> Unit,
-    onItemClicked: (product: Product) -> Unit,
+    onAddItemClicked: (product: Product) -> Unit,
     onMenusClicked: () -> Unit,
 ) {
     products?.let {
@@ -151,70 +158,75 @@ private fun ProductOrderList(
                             subTitleText = product.product.desc,
                             priceText = product.product.sellPrice,
                             imageUrl = product.product.image,
-                            onItemClicked = {
-                                onItemClicked(product.product)
+                            onAddItemClick = {
+                                onAddItemClicked(product.product)
                             }
                         )
                     }
                 }
             }
-            ConstraintLayout(
-                modifier = Modifier
-                    .constrainAs(cart) {
-                        linkTo(
-                            start = parent.start,
-                            end = menu.start,
-                            endMargin = 16.dp,
-                            startMargin = 24.dp
-                        )
-                        bottom.linkTo(parent.bottom, margin = 24.dp)
-                        width = Dimension.fillToConstraints
-                    }
-                    .fillMaxWidth()
-                    .shadow(
-                        elevation = 4.dp,
-                        shape = RoundedCornerShape(25.dp)
-                    )
-                    .clickable { onBucketClicked() }
-                    .background(
-                        color = MaterialTheme.colors.primary,
-                        shape = RoundedCornerShape(25.dp)
-                    )
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
-            ) {
-                val (desc, price) = createRefs()
-                Column(
+
+            val currentBucket = orderViewModel.currentBucket.collectAsState()
+
+            if (currentBucket.value != BucketOrder.idle()) {
+                ConstraintLayout(
                     modifier = Modifier
-                        .constrainAs(desc) {
-                            linkTo(top = parent.top, bottom = parent.bottom)
-                            linkTo(start = parent.start, end = price.start, endMargin = 16.dp)
+                        .constrainAs(cart) {
+                            linkTo(
+                                start = parent.start,
+                                end = menu.start,
+                                endMargin = 16.dp,
+                                startMargin = 24.dp
+                            )
+                            bottom.linkTo(parent.bottom, margin = 24.dp)
                             width = Dimension.fillToConstraints
                         }
                         .fillMaxWidth()
+                        .shadow(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .clickable { onBucketClicked() }
+                        .background(
+                            color = MaterialTheme.colors.primary,
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .padding(vertical = 8.dp, horizontal = 16.dp)
                 ) {
+                    val (desc, price) = createRefs()
+                    Column(
+                        modifier = Modifier
+                            .constrainAs(desc) {
+                                linkTo(top = parent.top, bottom = parent.bottom)
+                                linkTo(start = parent.start, end = price.start, endMargin = 16.dp)
+                                width = Dimension.fillToConstraints
+                            }
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "${currentBucket.value.totalItems()} barang",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                        Text(
+                            text = currentBucket.value.productAsString(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.overline,
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                    }
                     Text(
-                        text = "3 Item",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                    Text(
-                        text = "Chocho banana, kopi sweet, madu TJ, roti baka",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.overline,
+                        modifier = Modifier
+                            .constrainAs(price) {
+                                linkTo(top = parent.top, bottom = parent.bottom)
+                                end.linkTo(parent.end)
+                            },
+                        text = currentBucket.value.getTotal().toIDR(),
+                        style = MaterialTheme.typography.h6,
                         color = MaterialTheme.colors.onPrimary
                     )
                 }
-                Text(
-                    modifier = Modifier
-                        .constrainAs(price) {
-                            linkTo(top = parent.top, bottom = parent.bottom)
-                            end.linkTo(parent.end)
-                        },
-                    text = "IDR 35K",
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.onPrimary
-                )
             }
             GeneralMenuButtonView(
                 modifier = Modifier

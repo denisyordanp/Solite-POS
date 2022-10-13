@@ -70,7 +70,10 @@ fun OrderCustomerName(
                 .padding(padding),
             viewModel = viewModel,
             keyword = searchName,
-            onCLickName = onCLickName
+            onCLickName = {
+                searchName = it.name
+                onCLickName(it)
+            }
         )
     }
 }
@@ -161,11 +164,11 @@ private fun CustomerNames(
                     onCLickName = onCLickName
                 )
             }
-        } else {
+        } else if (keyword.isNotEmpty()){
             item {
                 CustomerItem(
                     keyword = keyword,
-                    onCLickName = {}
+                    onCLickName = onCLickName
                 )
             }
         }

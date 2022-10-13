@@ -44,6 +44,9 @@ class ProductViewModel(
         .getAllProductWithCategories()
         .map { it.groupBy {product -> product.category } }
 
+    suspend fun isProductHasVariant(idProduct: Long) = productVariantsRepository
+        .isProductHasVariants(idProduct)
+
     fun getProductVariantOptions(idProduct: Long) = getProductVariantOptions.invoke(idProduct)
 
     fun getVariantProduct(

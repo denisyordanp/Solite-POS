@@ -6,12 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetIncomesRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.NewOrder
+import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order.Companion.DONE
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class OrderViewModel(
@@ -27,6 +31,9 @@ class OrderViewModel(
             return buildViewModel(activity, OrderViewModel::class.java)
         }
     }
+
+    private val _currentBucket = MutableStateFlow(BucketOrder.idle())
+    val currentBucket = _currentBucket.asStateFlow()
 
     fun getOrderList(status: Int, date: String) = orderRepository.getOrderList(status, date)
 
@@ -55,5 +62,32 @@ class OrderViewModel(
 
     fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct) {
         repository.replaceProductOrder(old, new)
+    }
+
+    fun addProductToBucket(detail: ProductOrderDetail) {
+        viewModelScope.launch {
+            val currentProducts = _currentBucket.value.products?.toMutableList()
+            val newBucket = if(_currentBucket.value.isIdle()) {
+                BucketOrder(
+                    // TODO: Convert current time
+                    time = "",
+                    products = listOf(detail)
+                )
+            } else {
+                val existingDetail = currentProducts?.find { it.product?.id == detail.product?.id }
+                if (existingDetail != null) {
+                    currentProducts.remove(existingDetail)
+                    currentProducts.add(existingDetail.copy(
+                        amount = existingDetail.amount+1
+                    ))
+                }
+
+                _currentBucket.value.copy(
+                    products = currentProducts!!.apply { add(detail) }
+                )
+            }
+
+            _currentBucket.value = newBucket
+        }
     }
 }

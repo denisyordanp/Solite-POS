@@ -3,18 +3,20 @@ package com.socialite.solite_pos.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,50 +27,69 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 @Composable
 fun BucketView(
+    orderViewModel: OrderViewModel,
     customerName: String = "Denis Yordan",
-    orderDate: String = "04 Oktober 2022, 15:30",
     onClickOrder: () -> Unit
 ) {
-    Column(
+
+    val currentBucket = orderViewModel.currentBucket.collectAsState()
+
+    LazyColumn(
         modifier = Modifier
             .padding(16.dp)
     ) {
-        Text(
-            text = customerName,
-            style = MaterialTheme.typography.h6
-        )
-        Text(
-            text = orderDate,
-            style = MaterialTheme.typography.overline
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        BucketItem()
-        BucketItem()
-        TotalBucket()
-        Spacer(modifier = Modifier.height(24.dp))
-        PrimaryButtonView(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colors.primary,
-                    shape = RoundedCornerShape(8.dp)
-                ),
-            buttonText = stringResource(id = R.string.order_now),
-            onClick = onClickOrder
-        )
+        item {
+            Text(
+                text = customerName,
+                style = MaterialTheme.typography.h6
+            )
+            Text(
+                text = currentBucket.value.time ?: "",
+                style = MaterialTheme.typography.overline
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        currentBucket.value.products?.let {
+            items(it) {detail ->
+                BucketItem(detail)
+            }
+        }
+
+        item {
+            TotalBucket(
+                total = currentBucket.value.getTotal().thousand()
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            PrimaryButtonView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colors.primary,
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+                buttonText = stringResource(id = R.string.order_now),
+                onClick = onClickOrder
+            )
+        }
     }
 }
 
 @Composable
-private fun BucketItem() {
+private fun BucketItem(
+    detail: ProductOrderDetail
+) {
     val textStyle = MaterialTheme.typography.caption
     Column {
         Row {
             Text(
-                text = "1x",
+                text = "${detail.amount}x",
                 style = textStyle
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -85,7 +106,7 @@ private fun BucketItem() {
                             width = Dimension.fillToConstraints
                         }
                         .fillMaxWidth(),
-                    text = "Dimsum yang sangat pedas dan gurih asin manis juga",
+                    text = detail.product?.name ?: "",
                     style = textStyle.copy(
                         fontWeight = FontWeight.Bold
                     ),
@@ -100,7 +121,7 @@ private fun BucketItem() {
                             width = Dimension.fillToConstraints
                         }
                         .fillMaxWidth(),
-                    text = "Level pedas 1, Kukus, Mayonaise, Manis, Asam, Pahit",
+                    text = detail.getBucketDesc(),
                     style = MaterialTheme.typography.overline
                 )
                 Text(
@@ -109,7 +130,7 @@ private fun BucketItem() {
                             end.linkTo(delete.start)
                             linkTo(top = parent.top, bottom = parent.bottom)
                         },
-                    text = "Rp. 5000",
+                    text = "Rp. ${detail.product?.sellPrice?.thousand() ?: 0}",
                     style = MaterialTheme.typography.body2
                 )
                 TextButton(
@@ -142,24 +163,31 @@ private fun BucketItem() {
 }
 
 @Composable
-private fun ColumnScope.TotalBucket() {
-    Row(
+private fun TotalBucket(
+    total: String
+) {
+    Column(
         modifier = Modifier
-            .align(Alignment.End)
+            .fillMaxWidth()
     ) {
-        Text(
+        Row(
             modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(end = 16.dp),
-            text = "Total :",
-            style = MaterialTheme.typography.body2
-        )
-        Text(
-            text = "Rp.10.000",
-            style = MaterialTheme.typography.body1.copy(
-                fontWeight = FontWeight.Bold
+                .align(Alignment.End)
+        ) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 16.dp),
+                text = "Total :",
+                style = MaterialTheme.typography.body2
             )
-        )
-        Spacer(modifier = Modifier.width(60.dp))
+            Text(
+                text = "Rp. $total",
+                style = MaterialTheme.typography.body1.copy(
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Spacer(modifier = Modifier.width(60.dp))
+        }
     }
 }

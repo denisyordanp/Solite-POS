@@ -10,22 +10,27 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.view.main.opening.orders.OrdersActivity
 import com.socialite.solite_pos.view.main.opening.store.StoreActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
+import kotlinx.coroutines.launch
 
 class OrderCustomerActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ProductViewModel
+    private lateinit var productViewModel: ProductViewModel
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var orderViewModel: OrderViewModel
 
     companion object {
         private const val PRODUCT_ID = "product_id"
@@ -36,8 +41,9 @@ class OrderCustomerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ProductViewModel.getMainViewModel(this)
+        productViewModel = ProductViewModel.getMainViewModel(this)
         mainViewModel = MainViewModel.getMainViewModel(this)
+        orderViewModel = OrderViewModel.getOrderViewModel(this)
 
         setContent {
             SolitePOSTheme {
@@ -56,9 +62,18 @@ class OrderCustomerActivity : AppCompatActivity() {
                             OrderCustomerDestinations.SELECT_ITEMS
                         ) {
                             OrderSelectItems(
-                                viewModel = viewModel,
-                                onItemClicked = {
-                                    navController.navigate("${OrderCustomerDestinations.SELECT_VARIANTS}/${it.id}")
+                                productViewModel = productViewModel,
+                                orderViewModel = orderViewModel,
+                                onAddItemClicked = {
+                                    lifecycleScope.launch {
+                                        if (productViewModel.isProductHasVariant(it.id)) {
+                                            navController.navigate("${OrderCustomerDestinations.SELECT_VARIANTS}/${it.id}")
+                                        } else {
+                                            orderViewModel.addProductToBucket(
+                                                ProductOrderDetail.productNoVariant(it)
+                                            )
+                                        }
+                                    }
                                 },
                                 onClickOrder = {
                                     navController.navigate(OrderCustomerDestinations.SELECT_CUSTOMERS)
@@ -86,7 +101,7 @@ class OrderCustomerActivity : AppCompatActivity() {
                             it.arguments?.getLong(PRODUCT_ID)?.let {id ->
                                 OrderSelectVariants(
                                     productId = id,
-                                    viewModel = viewModel,
+                                    viewModel = productViewModel,
                                     onBackClicked = {
                                         navController.popBackStack()
                                     }
@@ -101,7 +116,11 @@ class OrderCustomerActivity : AppCompatActivity() {
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
-                                onCLickName = {}
+                                onCLickName = {
+                                    if (it.isAdd()) {
+                                        mainViewModel.insertCustomers(it)
+                                    }
+                                }
                             )
                         }
                     }
