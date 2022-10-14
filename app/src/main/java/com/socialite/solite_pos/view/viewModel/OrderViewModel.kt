@@ -17,6 +17,7 @@ import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class OrderViewModel(
     private val repository: SoliteRepository,
@@ -69,8 +70,7 @@ class OrderViewModel(
             val currentProducts = _currentBucket.value.products?.toMutableList()
             val newBucket = if(_currentBucket.value.isIdle()) {
                 BucketOrder(
-                    // TODO: Convert current time
-                    time = "",
+                    time = Calendar.getInstance().timeInMillis,
                     products = listOf(detail)
                 )
             } else {

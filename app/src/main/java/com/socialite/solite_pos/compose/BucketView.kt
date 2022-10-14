@@ -28,35 +28,40 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.config.timeMilliSecondToDateFormat
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 @Composable
 fun BucketView(
     orderViewModel: OrderViewModel,
-    customerName: String = "Denis Yordan",
     onClickOrder: () -> Unit,
     onClearBucket: () -> Unit
 ) {
 
     val currentBucket = orderViewModel.currentBucket.collectAsState()
 
-    if (currentBucket.value.isIdle()) {
-        onClearBucket()
-    }
-
     LazyColumn(
         modifier = Modifier
             .padding(16.dp)
     ) {
         item {
+            val time = currentBucket.value.time?.timeMilliSecondToDateFormat(DateUtils.DATE_WITH_DAY_AND_TIME_FORMAT)?.run {
+                Pair(
+                    first = this.substring(0..19),
+                    second = this.substring(21 until this.length),
+                )
+            }
             Text(
-                text = customerName,
-                style = MaterialTheme.typography.h6
+                text = time?.first ?: "",
+                style = MaterialTheme.typography.body1.copy(
+                    fontWeight = FontWeight.Bold
+                )
             )
             Text(
-                text = currentBucket.value.time ?: "",
-                style = MaterialTheme.typography.overline
+                text = time?.second ?: "",
+                style = MaterialTheme.typography.body2
             )
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -64,6 +69,9 @@ fun BucketView(
         currentBucket.value.products?.let {
             items(it) { detail ->
                 BucketItem(detail) {
+                    if (it.size == 1) {
+                        onClearBucket()
+                    }
                     orderViewModel.removeProductFromBucket(detail)
                 }
             }

@@ -3,13 +3,14 @@ package com.socialite.solite_pos.view.main.opening.order_customer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -25,11 +26,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BucketView
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
@@ -144,28 +147,9 @@ private fun ProductOrderList(
 
                 it.forEach { categoryWithProduct ->
                     item {
-                        Text(
-                            modifier = Modifier
-                                .padding(bottom = 4.dp)
-                                .fillMaxWidth()
-                                .background(color = Color.White)
-                                .padding(8.dp),
-                            text = categoryWithProduct.key.name,
-                            style = MaterialTheme.typography.body2.copy(
-                                fontWeight = FontWeight.Bold
-                            )
-                        )
-                    }
-
-                    items(categoryWithProduct.value) { product ->
-                        ProductCustomerItemView(
-                            titleText = product.product.name,
-                            subTitleText = product.product.desc,
-                            priceText = product.product.sellPrice,
-                            imageUrl = product.product.image,
-                            onAddItemClick = {
-                                onAddItemClicked(product.product)
-                            }
+                        CategoryWithProducts(
+                            categoryWithProduct = categoryWithProduct,
+                            onAddItemClick = onAddItemClicked
                         )
                     }
                 }
@@ -241,6 +225,57 @@ private fun ProductOrderList(
                     },
                 onMenuClicked = onMenusClicked
             )
+        }
+    }
+}
+
+@Composable
+private fun CategoryWithProducts(
+    categoryWithProduct: Map.Entry<Category, List<ProductWithCategory>>,
+    onAddItemClick: (product: Product) -> Unit
+) {
+
+    var isExpand by remember {
+        mutableStateOf(false)
+    }
+
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp)
+                .clickable {
+                    isExpand = !isExpand
+                }
+                .background(color = Color.White)
+                .padding(10.dp)
+        ) {
+            Text(
+                modifier = Modifier
+                    .weight(1f),
+                text = categoryWithProduct.key.name,
+                style = MaterialTheme.typography.body2.copy(
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Icon(
+                painter = painterResource(
+                    id = if (isExpand) R.drawable.ic_expand_less_24 else R.drawable.ic_expand_more_24
+                ), contentDescription = null
+            )
+        }
+        if (isExpand) {
+            categoryWithProduct.value.forEach { product ->
+                ProductCustomerItemView(
+                    titleText = product.product.name,
+                    subTitleText = product.product.desc,
+                    priceText = product.product.sellPrice,
+                    imageUrl = product.product.image,
+                    onAddItemClick = {
+                        onAddItemClick(product.product)
+                    }
+                )
+            }
         }
     }
 }

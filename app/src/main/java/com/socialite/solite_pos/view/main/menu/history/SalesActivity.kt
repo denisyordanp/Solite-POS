@@ -61,7 +61,7 @@ class SalesActivity : SocialiteActivity() {
     }
 
     private fun setDate() {
-        _menu.menuDate.text = convertDateFromDate(historyDate, DateUtils.dateWithDayFormat)
+        _menu.menuDate.text = convertDateFromDate(historyDate, DateUtils.DATE_WITH_DAY_FORMAT)
     }
 
     private fun disabledMenu() {

@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.source.local.entity.helper
 
 data class BucketOrder(
-    val time: String?,
+    val time: Long?,
     val products: List<ProductOrderDetail>?
 ) {
 

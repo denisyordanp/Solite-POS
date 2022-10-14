@@ -12,11 +12,10 @@ import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.databinding.FragmentDailyRecapBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_DAY_FORMAT
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class DailyRecapFragment(private var queryDate: String) : Fragment() {
@@ -67,7 +66,7 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
     }
 
     private fun setTitle(date: String) {
-        _binding.tvRcDate.text = convertDateFromDate(date, dateWithDayFormat)
+        _binding.tvRcDate.text = convertDateFromDate(date, DATE_WITH_DAY_FORMAT)
     }
 
     private fun getRecap() {

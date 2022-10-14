@@ -9,7 +9,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.databinding.RvOutcomeBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_DAY_FORMAT
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
@@ -98,7 +98,7 @@ class OutcomeAdapter(private val activity: FragmentActivity) :
 
         private fun setTitleView() {
             binding.tvRvOcName.text = "Total pengeluaran : "
-            binding.tvRvOcDesc.text = convertDateFromDb(currentDateTime, dateWithDayFormat)
+            binding.tvRvOcDesc.text = convertDateFromDb(currentDateTime, DATE_WITH_DAY_FORMAT)
             binding.tvRvOcTotal.text = toRupiah(grandTotal)
         }
     }

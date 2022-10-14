@@ -7,12 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.databinding.ActivityDetailOutcomeBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithDayFormat
+import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_DAY_FORMAT
 import com.socialite.solite_pos.adapters.recycleView.outcome.OutcomeAdapter
 import com.socialite.solite_pos.view.main.menu.bottom.DetailOutcomeFragment
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class DetailOutcomeActivity : AppCompatActivity() {
@@ -41,7 +40,7 @@ class DetailOutcomeActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        _binding.tvOcDate.text = convertDateFromDb(currentDateTime, dateWithDayFormat)
+        _binding.tvOcDate.text = convertDateFromDb(currentDateTime, DATE_WITH_DAY_FORMAT)
 
         lifecycleScope.launch {
             viewModel.getOutcome(currentDateTime)

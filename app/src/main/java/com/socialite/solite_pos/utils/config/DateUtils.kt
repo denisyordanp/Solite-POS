@@ -8,7 +8,8 @@ class DateUtils {
         private const val dbDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
         private const val dbDateFormat = "yyyy-MM-dd"
         const val dateWithTimeFormat = "dd MMMM yyyy HH:mm"
-        const val dateWithDayFormat = "EEE, dd MMMM yyyy"
+        const val DATE_WITH_DAY_FORMAT = "EEE, dd MMMM yyyy"
+        const val DATE_WITH_DAY_AND_TIME_FORMAT = "EEE, dd MMMM yyyy HH:mm"
 
         private val dbDateTimeSimpleFormat = SimpleDateFormat(dbDateTimeFormat, locale)
         private val dbDateSimpleFormat = SimpleDateFormat(dbDateFormat, locale)
