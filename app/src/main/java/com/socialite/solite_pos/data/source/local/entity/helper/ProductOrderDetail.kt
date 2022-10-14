@@ -30,6 +30,20 @@ data class ProductOrderDetail(
         }
     }
 
+    fun addOption(option: VariantOption, prevOption: VariantOption? = null) = variants.apply {
+        prevOption?.let {
+            remove(it)
+        }
+        add(option)
+    }
+
+    fun removeOption(option: VariantOption) = variants.apply {
+        val existingOption = variants.find { it == option }
+        if (existingOption != null) {
+            remove(option)
+        }
+    }
+
     companion object {
         const val GRAND_TOTAL = 1
         const val PAYMENT = 2
@@ -57,6 +71,14 @@ data class ProductOrderDetail(
 			variants = arrayListOf(),
 			mixVariants = arrayListOf(),
 			amount = 1,
+        )
+
+        fun empty() = ProductOrderDetail(
+            product = null,
+            variants = arrayListOf(),
+            mixProducts = arrayListOf(),
+            amount = 0,
+            type = null
         )
 
         val grand: ProductOrderDetail

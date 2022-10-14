@@ -72,7 +72,12 @@ fun OrderSelectItems(
             when (modalContent) {
                 ModalContent.BUCKET_VIEW -> BucketView(
                     onClickOrder = onClickOrder,
-                    orderViewModel = orderViewModel
+                    orderViewModel = orderViewModel,
+                    onClearBucket = {
+                        scope.launch {
+                            modalState.hide()
+                        }
+                    }
                 )
 
                 ModalContent.GENERAL_MENUS -> GeneralMenusView(

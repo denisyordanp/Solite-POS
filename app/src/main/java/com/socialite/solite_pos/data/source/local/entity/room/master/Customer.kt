@@ -24,7 +24,7 @@ data class Customer(
 	var isUploaded: Boolean
 ): Serializable{
 	companion object: RemoteClassUtils<Customer> {
-		const val ID_ADD = -1L
+		const val ID_ADD = 0L
 
 		const val ID = "id_customer"
 		const val NAME = "name"
@@ -56,7 +56,7 @@ data class Customer(
 	}
 
 	@Ignore
-	constructor(name: String): this(0, name, false)
+	constructor(name: String): this(ID_ADD, name, false)
 
 	fun isAdd() = id == ID_ADD
 }

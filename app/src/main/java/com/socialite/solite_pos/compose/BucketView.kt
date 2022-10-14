@@ -35,10 +35,15 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 fun BucketView(
     orderViewModel: OrderViewModel,
     customerName: String = "Denis Yordan",
-    onClickOrder: () -> Unit
+    onClickOrder: () -> Unit,
+    onClearBucket: () -> Unit
 ) {
 
     val currentBucket = orderViewModel.currentBucket.collectAsState()
+
+    if (currentBucket.value.isIdle()) {
+        onClearBucket()
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -57,8 +62,10 @@ fun BucketView(
         }
 
         currentBucket.value.products?.let {
-            items(it) {detail ->
-                BucketItem(detail)
+            items(it) { detail ->
+                BucketItem(detail) {
+                    orderViewModel.removeProductFromBucket(detail)
+                }
             }
         }
 
@@ -83,7 +90,8 @@ fun BucketView(
 
 @Composable
 private fun BucketItem(
-    detail: ProductOrderDetail
+    detail: ProductOrderDetail,
+    onRemoveItem: () -> Unit
 ) {
     val textStyle = MaterialTheme.typography.caption
     Column {
@@ -139,7 +147,7 @@ private fun BucketItem(
                             end.linkTo(parent.end)
                             linkTo(top = parent.top, bottom = parent.bottom)
                         },
-                    onClick = { /*TODO*/ }
+                    onClick = onRemoveItem
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_delete),

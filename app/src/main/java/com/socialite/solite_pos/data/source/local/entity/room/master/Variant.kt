@@ -34,6 +34,8 @@ data class Variant(
 	@ColumnInfo(name = ID)
 	var id: Long = 0
 
+	fun isSingleOption() = type == ONE_OPTION
+
 	companion object: RemoteClassUtils<Variant> {
 		const val ID = "id_variant"
 		const val NAME = "name"

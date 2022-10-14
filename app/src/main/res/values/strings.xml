@@ -25,5 +25,7 @@
     <string name="canceled">Dibatalkan</string>
     <string name="must_choice">Pilihan wajib</string>
     <string name="optional_choice">Pilihan optional</string>
+    <string name="amount">Banyaknya</string>
+    <string name="adding">Tambahkan</string>
 
 </resources>

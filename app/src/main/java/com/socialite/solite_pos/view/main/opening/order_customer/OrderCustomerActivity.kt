@@ -104,6 +104,12 @@ class OrderCustomerActivity : AppCompatActivity() {
                                     viewModel = productViewModel,
                                     onBackClicked = {
                                         navController.popBackStack()
+                                    },
+                                    onAddToBucketClicked = {
+                                        lifecycleScope.launch {
+                                            orderViewModel.addProductToBucket(it)
+                                            navController.popBackStack()
+                                        }
                                     }
                                 )
                             }

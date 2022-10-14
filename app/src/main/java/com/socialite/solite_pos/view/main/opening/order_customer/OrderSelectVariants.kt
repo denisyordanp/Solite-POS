@@ -19,6 +19,8 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +29,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,36 +43,62 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.PrimaryButtonView
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun OrderSelectVariants(
     viewModel: ProductViewModel,
     productId: Long,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onAddToBucketClicked: (detail: ProductOrderDetail) -> Unit
 ) {
 
     val variants = viewModel.getProductVariantOptions(productId).collectAsState(initial = null)
-    var product by remember {
-        mutableStateOf<Product?>(null)
+    var productOrderDetail by remember {
+        mutableStateOf(ProductOrderDetail.empty())
     }
-    LaunchedEffect(key1 = Unit) {
-        product = viewModel.getProduct(productId)
+    LaunchedEffect(key1 = productId) {
+        productOrderDetail = productOrderDetail.copy(
+            product = viewModel.getProduct(productId),
+            amount = 1
+        )
     }
+
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             ProductTitle(
-                product,
+                productOrderDetail.product,
                 onBackClicked = onBackClicked
             )
         },
         bottomBar = {
-            AddToCartBottom()
+            AddToCartBottom(
+                productOrderDetail = productOrderDetail,
+                onAmountClicked = {
+                    val newAmount = productOrderDetail.amount.run {
+                        return@run if (it) {
+                            this+1
+                        } else {
+                            if (this == 1) this else this-1
+                        }
+                    }
+
+                    productOrderDetail = productOrderDetail.copy(
+                        amount = newAmount
+                    )
+                },
+                onAddToBucketClicked = {
+                    onAddToBucketClicked(productOrderDetail)
+                }
+            )
         },
         backgroundColor = MaterialTheme.colors.background
     ) { padding ->
@@ -79,8 +108,37 @@ fun OrderSelectVariants(
                 .padding(padding)
         ) {
             variants.value?.let {
-                items(it) {variant ->
-                    VariantItem(variant)
+                items(it) { variant ->
+                    if (variant.variant?.isSingleOption() == true)
+                        VariantItemSingleOption(
+                            variantWithOption = variant,
+                            onOptionSelected = { prevOption, option, isSelected ->
+                                scope.launch {
+                                    productOrderDetail = productOrderDetail.copy(
+                                        variants = if (isSelected) {
+                                            productOrderDetail.addOption(option, prevOption)
+                                        } else {
+                                            productOrderDetail.removeOption(option)
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                    else
+                        VariantItemManyOption(
+                            variantWithOption = variant,
+                            onOptionSelected = { option, isSelected ->
+                                scope.launch {
+                                    productOrderDetail = productOrderDetail.copy(
+                                        variants = if (isSelected) {
+                                            productOrderDetail.addOption(option)
+                                        } else {
+                                            productOrderDetail.removeOption(option)
+                                        }
+                                    )
+                                }
+                            }
+                        )
                 }
             }
         }
@@ -122,9 +180,17 @@ private fun ProductTitle(
 }
 
 @Composable
-private fun VariantItem(
-    variantWithOption: VariantWithOptions
+private fun VariantItemManyOption(
+    variantWithOption: VariantWithOptions,
+    onOptionSelected: (options: VariantOption, isSelected: Boolean) -> Unit
 ) {
+
+    var currentSelectedVariants by remember {
+        mutableStateOf<List<VariantOption>?>(null)
+    }
+
+    val isMust = variantWithOption.variant?.isMust ?: false
+
     Spacer(modifier = Modifier.height(4.dp))
     Column(
         modifier = Modifier
@@ -134,23 +200,68 @@ private fun VariantItem(
     ) {
         VariantTitle(
             titleText = variantWithOption.variant?.name ?: "",
-            isMust = variantWithOption.variant?.isMust ?: false
+            isMust = isMust,
+            isError = isMust && currentSelectedVariants == null
         )
-        variantWithOption.options.forEach {option ->
-            VariantOption(option)
+        variantWithOption.options.forEach { option ->
+            VariantOptionManyOption(
+                option = option,
+                onOptionSelected = {
+                    currentSelectedVariants = if (it) {
+                        currentSelectedVariants.add(option)
+                    } else {
+                        currentSelectedVariants.remove(option)
+                    }
+                    onOptionSelected(option, it)
+                }
+            )
         }
+    }
+}
+
+private fun List<VariantOption>?.add(option: VariantOption): List<VariantOption> {
+    return this?.toMutableList()?.apply {
+        add(option)
+    }?.toList() ?: listOf(option)
+}
+
+private fun List<VariantOption>?.remove(option: VariantOption): List<VariantOption>? {
+    return if (this != null) {
+        val existingOption = this.find { it == option }
+        if (existingOption == null) {
+            this
+        } else {
+            val newVariants = this.toMutableList().apply {
+                remove(existingOption)
+            }.toList()
+
+            return newVariants.ifEmpty { null }
+        }
+    } else {
+        null
     }
 }
 
 @Composable
 private fun VariantTitle(
     titleText: String,
-    isMust: Boolean
+    isMust: Boolean,
+    isError: Boolean
 ) {
-    Text(
-        text = titleText,
-        style = MaterialTheme.typography.body1
-    )
+    Row {
+        Text(
+            text = titleText,
+            style = MaterialTheme.typography.body1
+        )
+        if (isError) {
+            Spacer(modifier = Modifier.width(16.dp))
+            Icon(
+                painter = painterResource(id = R.drawable.ic_error_outline_24),
+                contentDescription = null,
+                tint = Color.Red
+            )
+        }
+    }
     Spacer(modifier = Modifier.height(4.dp))
 
     val descText = if (isMust) {
@@ -173,8 +284,9 @@ private fun VariantTitle(
 }
 
 @Composable
-private fun VariantOption(
-    option: VariantOption
+private fun VariantOptionManyOption(
+    option: VariantOption,
+    onOptionSelected: (isSelected: Boolean) -> Unit
 ) {
 
     var isChecked by remember {
@@ -185,28 +297,17 @@ private fun VariantOption(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        val (name, price, checkBox) = createRefs()
+        val (name, checkBox) = createRefs()
         Text(
             modifier = Modifier
                 .constrainAs(name) {
-                    linkTo(start = parent.start, end = price.start)
+                    linkTo(start = parent.start, end = checkBox.start)
                     linkTo(top = parent.top, bottom = parent.bottom)
                     width = Dimension.fillToConstraints
                 }
                 .fillMaxWidth(),
             text = option.name,
             style = MaterialTheme.typography.body2
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(price) {
-                    end.linkTo(checkBox.start)
-                    linkTo(top = parent.top, bottom = parent.bottom)
-                },
-            text = "+Rp. 0",
-            style = MaterialTheme.typography.body2.copy(
-                fontWeight = FontWeight.Bold
-            )
         )
         Checkbox(
             modifier = Modifier
@@ -216,6 +317,7 @@ private fun VariantOption(
                 },
             checked = isChecked,
             onCheckedChange = {
+                onOptionSelected(it)
                 isChecked = it
             },
             colors = CheckboxDefaults.colors(
@@ -226,7 +328,90 @@ private fun VariantOption(
 }
 
 @Composable
-private fun AddToCartBottom() {
+private fun VariantItemSingleOption(
+    variantWithOption: VariantWithOptions,
+    onOptionSelected: (prevOption: VariantOption?, option: VariantOption, isSelected: Boolean) -> Unit
+) {
+
+    var selectedOption by remember {
+        mutableStateOf<VariantOption?>(null)
+    }
+
+    val isMust = variantWithOption.variant?.isMust ?: false
+
+    Spacer(modifier = Modifier.height(4.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.White)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    ) {
+        VariantTitle(
+            titleText = variantWithOption.variant?.name ?: "",
+            isMust = isMust,
+            isError = isMust && selectedOption == null
+        )
+        variantWithOption.options.forEach { option ->
+            VariantOptionSingleOption(
+                option = option,
+                isSelected = selectedOption == option,
+                onOptionSelected = {
+                    val isSelected = selectedOption != option
+                    onOptionSelected(selectedOption, option, isSelected)
+                    selectedOption = if (selectedOption == option) {
+                        null
+                    } else {
+                        option
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun VariantOptionSingleOption(
+    option: VariantOption,
+    isSelected: Boolean,
+    onOptionSelected: () -> Unit
+) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        val (name, radio) = createRefs()
+        Text(
+            modifier = Modifier
+                .constrainAs(name) {
+                    linkTo(start = parent.start, end = radio.start)
+                    linkTo(top = parent.top, bottom = parent.bottom)
+                    width = Dimension.fillToConstraints
+                }
+                .fillMaxWidth(),
+            text = option.name,
+            style = MaterialTheme.typography.body2
+        )
+        RadioButton(
+            modifier = Modifier
+                .constrainAs(radio) {
+                    end.linkTo(parent.end)
+                    linkTo(top = parent.top, bottom = parent.bottom)
+                },
+            selected = isSelected,
+            onClick = onOptionSelected,
+            colors = RadioButtonDefaults.colors(
+                selectedColor = MaterialTheme.colors.primary
+            )
+        )
+    }
+}
+
+@Composable
+private fun AddToCartBottom(
+    productOrderDetail: ProductOrderDetail,
+    onAmountClicked: (isAdd: Boolean) -> Unit,
+    onAddToBucketClicked: () -> Unit
+) {
     ConstraintLayout(
         modifier = Modifier
             .wrapContentHeight()
@@ -244,7 +429,7 @@ private fun AddToCartBottom() {
                     start.linkTo(parent.start)
                     top.linkTo(parent.top)
                 },
-            text = "Banyaknya"
+            text = stringResource(R.string.amount)
         )
         Row(
             modifier = Modifier
@@ -255,18 +440,26 @@ private fun AddToCartBottom() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
+                modifier = Modifier
+                    .clickable {
+                        onAmountClicked(false)
+                    },
                 painter = painterResource(id = R.drawable.ic_remove_circle),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "1",
+                text = productOrderDetail.amount.toString(),
                 style = MaterialTheme.typography.body1.copy(
                     fontWeight = FontWeight.Black
                 )
             )
             Spacer(modifier = Modifier.width(16.dp))
             Image(
+                modifier = Modifier
+                    .clickable {
+                        onAmountClicked(true)
+                    },
                 painter = painterResource(id = R.drawable.ic_add_circle),
                 contentDescription = null,
             )
@@ -284,8 +477,8 @@ private fun AddToCartBottom() {
                     width = Dimension.fillToConstraints
                 }
                 .fillMaxWidth(),
-            buttonText = "Tambahkan - Rp. 30.000",
-            onClick = {}
+            buttonText = stringResource(R.string.adding),
+            onClick = onAddToBucketClicked
         )
     }
 }

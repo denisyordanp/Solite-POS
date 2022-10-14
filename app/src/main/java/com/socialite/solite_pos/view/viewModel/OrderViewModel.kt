@@ -90,4 +90,23 @@ class OrderViewModel(
             _currentBucket.value = newBucket
         }
     }
+
+    fun removeProductFromBucket(detail: ProductOrderDetail) {
+        viewModelScope.launch {
+            val currentProducts = _currentBucket.value.products?.toMutableList()
+
+            val existingDetail = currentProducts?.find { it.product?.id == detail.product?.id }
+            if (existingDetail != null) {
+                currentProducts.remove(existingDetail)
+            }
+
+            if (currentProducts.isNullOrEmpty()) {
+                _currentBucket.value = BucketOrder.idle()
+            } else {
+                _currentBucket.value = _currentBucket.value.copy(
+                    products = currentProducts
+                )
+            }
+        }
+    }
 }
