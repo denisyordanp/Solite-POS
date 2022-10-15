@@ -14,5 +14,5 @@ interface CustomersDao {
     fun getCustomers(): Flow<List<Customer>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCustomer(data: Customer)
+    fun insertCustomer(data: Customer): Long
 }
