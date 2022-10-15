@@ -9,12 +9,14 @@ enum class MainMenus {
 }
 
 enum class OrderMenus(
-    @StringRes val title: Int
+    @StringRes val title: Int,
+    val status: Int,
 ) {
-    CURRENT_ORDER(R.string.orders),
-    NOT_PAY_YET(R.string.not_pay_yet),
-    DONE(R.string.done),
-    CANCELED(R.string.canceled),
+    CURRENT_ORDER(R.string.orders, 0),
+    NOT_PAY_YET(R.string.not_pay_yet, 1),
+    DONE(R.string.done, 2),
+    CANCELED(R.string.canceled, 3),;
+
 }
 
 enum class GeneralMenus(

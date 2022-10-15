@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.viewModel
 
+import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,10 +11,13 @@ import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
+import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order.Companion.DONE
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.utils.config.DateUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -63,6 +67,32 @@ class OrderViewModel(
 
     fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct) {
         repository.replaceProductOrder(old, new)
+    }
+
+    fun createNewOrderFromBucket(
+        customer: Customer,
+        isTakeAway: Boolean,
+        context: Context
+    ) {
+        _currentBucket.value.products?.let {
+            val order = Order(
+                orderNo = Order.orderNo(context),
+                customer = customer.id,
+                orderTime = DateUtils.currentDateTime,
+                isTakeAway = isTakeAway,
+            )
+            val orderData = OrderData(
+                order = order,
+                customer = customer
+            )
+            val orderProducts = OrderWithProduct(
+                order = orderData,
+                products = it
+            )
+
+            newOrder(order = orderProducts)
+            Order.add(context)
+        }
     }
 
     fun addProductToBucket(detail: ProductOrderDetail) {

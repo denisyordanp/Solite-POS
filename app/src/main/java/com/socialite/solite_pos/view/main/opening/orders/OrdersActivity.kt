@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -23,10 +24,13 @@ import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -43,23 +47,36 @@ import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
+import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
+import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.main.opening.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.main.opening.store.StoreActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.ModalContent
 import com.socialite.solite_pos.view.main.opening.ui.OrderMenus
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class OrdersActivity : AppCompatActivity() {
+
+    private lateinit var orderViewModel: OrderViewModel
 
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        orderViewModel = OrderViewModel.getOrderViewModel(this)
+
         setContent {
             SolitePOSTheme {
                 MainOrder(
+                    viewModel = orderViewModel,
+                    currentDate = DateUtils.currentDate,
                     onGeneralMenuClicked = {
                         when (it) {
                             GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
@@ -96,6 +113,8 @@ class OrdersActivity : AppCompatActivity() {
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 private fun MainOrder(
+    viewModel: OrderViewModel,
+    currentDate: String,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit
 ) {
 
@@ -133,7 +152,10 @@ private fun MainOrder(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                OrderList()
+                OrderList(
+                    viewModel = viewModel,
+                    currentDate = currentDate
+                )
                 GeneralMenuButtonView(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -151,7 +173,10 @@ private fun MainOrder(
 
 @Composable
 @ExperimentalPagerApi
-fun OrderList() {
+fun OrderList(
+    viewModel: OrderViewModel,
+    currentDate: String
+) {
     Column {
         val pagerState = rememberPagerState()
         val scope = rememberCoroutineScope()
@@ -189,25 +214,60 @@ fun OrderList() {
             count = menus.size,
             state = pagerState
         ) { page ->
-            OrderContent(menus[page])
+            OrderContent(
+                menu = menus[page],
+                currentDate = currentDate,
+                viewModel = viewModel
+            )
         }
     }
 }
 
 @Composable
-private fun OrderContent(menu: OrderMenus) {
+private fun OrderContent(
+    menu: OrderMenus,
+    currentDate: String,
+    viewModel: OrderViewModel
+) {
+
+    val orders =
+        viewModel.getOrderList(menu.status, currentDate).collectAsState(initial = emptyList())
+
     LazyColumn(
         modifier = Modifier
             .padding(16.dp)
     ) {
-        items(3) {
-            OrderItem()
+        items(orders.value) {
+            OrderItem(
+                orderData = it,
+                viewModel = viewModel
+            )
         }
     }
 }
 
 @Composable
-fun OrderItem() {
+fun OrderItem(
+    orderData: OrderData,
+    viewModel: OrderViewModel
+) {
+
+    var orderProducts by remember {
+        mutableStateOf(
+            OrderWithProduct(
+                order = orderData
+            )
+        )
+    }
+
+    LaunchedEffect(key1 = orderData) {
+        viewModel.getProductOrder(orderData.order.orderNo)
+            .collectLatest {
+                orderProducts = orderProducts.copy(
+                    products = it
+                )
+            }
+    }
 
     val baseShape = RoundedCornerShape(4.dp)
     ConstraintLayout(
@@ -233,7 +293,7 @@ fun OrderItem() {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                 },
-            text = "Denis Y Panggabean",
+            text = orderProducts.order.customer.name,
             style = MaterialTheme.typography.body1
         )
         Text(
@@ -242,7 +302,7 @@ fun OrderItem() {
                     top.linkTo(name.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                 },
-            text = "Rp. 55.000",
+            text = "Rp. ${orderProducts.grandTotal.thousand()}",
             style = MaterialTheme.typography.body2.copy(
                 fontWeight = FontWeight.Bold
             )
@@ -253,7 +313,9 @@ fun OrderItem() {
                     linkTo(top = total.top, bottom = total.bottom)
                     start.linkTo(total.end, margin = 16.dp)
                 },
-            text = "Di Bungkus",
+            text = stringResource(
+                id = if (orderProducts.order.order.isTakeAway) R.string.take_away else R.string.dine_in
+            ),
             style = MaterialTheme.typography.overline.copy(
                 fontWeight = FontWeight.Bold
             )

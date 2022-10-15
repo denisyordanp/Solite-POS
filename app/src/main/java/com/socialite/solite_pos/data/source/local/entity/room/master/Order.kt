@@ -1,20 +1,25 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Ignore
+import androidx.room.Index
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFormat
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
 import com.socialite.solite_pos.utils.preference.OrderPref
 import com.socialite.solite_pos.utils.preference.SettingPref
-import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 @Entity(
 		tableName = Order.DB_NAME,
@@ -166,6 +171,17 @@ data class Order(
 		orderTime,
 		null,
 		false,
+		ON_PROCESS,
+		false
+	)
+
+	@Ignore
+	constructor(orderNo: String, customer: Long, orderTime: String, isTakeAway: Boolean) : this(
+		orderNo,
+		customer,
+		orderTime,
+		null,
+		isTakeAway,
 		ON_PROCESS,
 		false
 	)

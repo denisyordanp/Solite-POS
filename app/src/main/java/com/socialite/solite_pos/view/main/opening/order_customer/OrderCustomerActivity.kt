@@ -118,14 +118,17 @@ class OrderCustomerActivity : AppCompatActivity() {
                             OrderCustomerDestinations.SELECT_CUSTOMERS
                         ) {
                             OrderCustomerName(
-                                viewModel = mainViewModel,
+                                mainViewModel = mainViewModel,
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
-                                onCLickName = {
-                                    if (it.isAdd()) {
-                                        mainViewModel.insertCustomers(it)
-                                    }
+                                onNewOrder = { customer, isTakeAway ->
+                                    orderViewModel.createNewOrderFromBucket(
+                                        customer = customer,
+                                        isTakeAway = isTakeAway,
+                                        context = this@OrderCustomerActivity
+                                    )
+                                    goToOrdersActivity()
                                 }
                             )
                         }

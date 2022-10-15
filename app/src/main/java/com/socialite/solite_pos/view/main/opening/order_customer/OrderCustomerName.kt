@@ -40,13 +40,39 @@ import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 @Composable
 fun OrderCustomerName(
-    viewModel: MainViewModel,
+    mainViewModel: MainViewModel,
     onBackClicked: () -> Unit,
-    onCLickName: (Customer) -> Unit
+    onNewOrder: (
+        customer: Customer,
+        isTakeAway: Boolean
+    ) -> Unit
 ) {
 
     var searchName by remember {
         mutableStateOf("")
+    }
+
+    var selectedId by remember {
+        mutableStateOf(Customer.ID_ADD)
+    }
+
+    val customers by mainViewModel.filterCustomer(searchName)
+        .collectAsState(initial = emptyList())
+
+    fun selectedCustomer(customer: Customer) {
+        if (customer.isAdd()) {
+            mainViewModel.insertCustomers(
+                customer,
+                onSaved = { id ->
+                    selectedId = id
+                }
+            )
+        } else {
+            selectedId = if (customer.id == selectedId)
+                Customer.ID_ADD
+            else
+                customer.id
+        }
     }
 
     Scaffold(
@@ -60,19 +86,25 @@ fun OrderCustomerName(
             )
         },
         bottomBar = {
-            SelectDineType()
+            SelectDineType(
+                onChooseDine = { isTakeAway ->
+                    customers.find { it.id == selectedId }?.let { customer ->
+                        onNewOrder(customer, isTakeAway)
+                    }
+                }
+            )
         },
         backgroundColor = MaterialTheme.colors.background
     ) { padding ->
-
         CustomerNames(
             modifier = Modifier
                 .padding(padding),
-            viewModel = viewModel,
             keyword = searchName,
-            onCLickName = {
-                searchName = it.name
-                onCLickName(it)
+            selectedId = selectedId,
+            customers = customers,
+            onClickName = {
+                searchName = ""
+                selectedCustomer(it)
             }
         )
     }
@@ -145,42 +177,54 @@ private fun NameSearchBar(
 @Composable
 private fun CustomerNames(
     modifier: Modifier,
-    viewModel: MainViewModel,
+    customers: List<Customer>,
+    selectedId: Long,
     keyword: String,
-    onCLickName: (Customer) -> Unit
+    onClickName: (Customer) -> Unit
 ) {
-
-    val customers by viewModel.filterCustomer(keyword)
-        .collectAsState(initial = emptyList())
-
     LazyColumn(
         modifier = modifier
     ) {
-        if (!customers.isNullOrEmpty()) {
-            items(customers!!) {
-                CustomerItem(
-                    keyword = keyword,
-                    customer = it,
-                    onCLickName = onCLickName
-                )
-            }
-        } else if (keyword.isNotEmpty()){
+        if (keyword.isNotEmpty() && !customers.isAnyMatches(keyword)) {
             item {
                 CustomerItem(
                     keyword = keyword,
-                    onCLickName = onCLickName
+                    selectedId = selectedId,
+                    onCLickName = { selected ->
+                        onClickName(selected)
+                    }
                 )
             }
         }
+        items(customers) {
+            CustomerItem(
+                keyword = keyword,
+                customer = it,
+                selectedId = selectedId,
+                onCLickName = { selected ->
+                    onClickName(selected)
+                }
+            )
+        }
+    }
+}
+
+private fun List<Customer>.isAnyMatches(keyword: String): Boolean {
+    return this.any {
+        it.name.lowercase() == keyword
     }
 }
 
 @Composable
 private fun CustomerItem(
     keyword: String,
+    selectedId: Long,
     customer: Customer? = null,
     onCLickName: (Customer) -> Unit
 ) {
+
+    val isSelected = customer?.id == selectedId
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,12 +247,14 @@ private fun CustomerItem(
             ),
             color = Color.Black
         )
-        if (customer == null) {
+        if (customer == null || isSelected) {
             Icon(
                 modifier = Modifier
                     .size(18.dp)
                     .align(Alignment.CenterVertically),
-                painter = painterResource(id = R.drawable.ic_add),
+                painter = painterResource(
+                    id = if (isSelected) R.drawable.ic_done_all else R.drawable.ic_add
+                ),
                 tint = MaterialTheme.colors.primary,
                 contentDescription = null
             )
@@ -218,7 +264,9 @@ private fun CustomerItem(
 }
 
 @Composable
-private fun SelectDineType() {
+private fun SelectDineType(
+    onChooseDine: (isTakeAway: Boolean) -> Unit
+) {
     Box(
         modifier = Modifier
             .background(
@@ -237,13 +285,17 @@ private fun SelectDineType() {
             PrimaryButtonView(
                 modifier = Modifier.weight(1f),
                 buttonText = stringResource(R.string.dine_in),
-                onClick = {}
+                onClick = {
+                    onChooseDine(false)
+                }
             )
             Spacer(modifier = Modifier.width(16.dp))
             PrimaryButtonView(
                 modifier = Modifier.weight(1f),
                 buttonText = stringResource(R.string.take_away),
-                onClick = {}
+                onClick = {
+                    onChooseDine(true)
+                }
             )
         }
     }

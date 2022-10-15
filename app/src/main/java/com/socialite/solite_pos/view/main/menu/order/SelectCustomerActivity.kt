@@ -12,7 +12,6 @@ import com.socialite.solite_pos.databinding.ActivityCustomerNameBinding
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel.Companion.getMainViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -27,8 +26,6 @@ class SelectCustomerActivity : SocialiteActivity() {
     companion object {
         const val CUSTOMER: String = "customer"
         const val RC_COSTUMER = 10
-
-        private val TAG = SelectCustomerActivity::class.qualifiedName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,6 +134,6 @@ class SelectCustomerActivity : SocialiteActivity() {
     }
 
     private fun getIdCustomer(customer: Customer, callback: (Long) -> Unit) {
-        viewModel.insertCustomers(customer)
+        viewModel.insertCustomers(customer, callback)
     }
 }

@@ -51,16 +51,14 @@ class MainViewModel(
                         customer.name.lowercase().contains(keyword.lowercase())
                     }
                 }
-                .map {
-                    return@map it.ifEmpty { null }
-                }
         }
         else -> customers
     }
 
-    fun insertCustomers(data: Customer) {
+    fun insertCustomers(data: Customer, onSaved: (id: Long) -> Unit) {
         viewModelScope.launch {
-            customersRepository.insertCustomer(data)
+            val id = customersRepository.insertCustomer(data)
+            onSaved(id)
         }
     }
 
