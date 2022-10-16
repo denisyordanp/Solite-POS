@@ -29,7 +29,7 @@ interface OrdersDao {
 
     @Transaction
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
-    fun getOrderByNo(orderNo: String): Flow<OrderData>
+    suspend fun getOrderByNo(orderNo: String): OrderData?
 
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
     fun getDetailOrdersLiveData(orderNo: String): Flow<List<OrderDetail>>

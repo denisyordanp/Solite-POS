@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.main.opening.order_customer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,15 +39,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -74,20 +75,36 @@ fun OrderSelectVariants(
 
     Scaffold(
         topBar = {
-            ProductTitle(
-                productOrderDetail.product,
+            val titleText =
+                "${productOrderDetail.product?.name} - Rp. ${productOrderDetail.product?.sellPrice?.thousand()}"
+            BasicTopBar(
+                titleText = titleText,
                 onBackClicked = onBackClicked
             )
         },
-        bottomBar = {
-            AddToCartBottom(
+        content = { padding ->
+            SelectVariantsContent(
+                modifier = Modifier
+                    .padding(padding),
+                variants = variants.value,
                 productOrderDetail = productOrderDetail,
+                onOptionSelected = { prevOption, option, isSelected ->
+                    scope.launch {
+                        productOrderDetail = productOrderDetail.copy(
+                            variants = if (isSelected) {
+                                productOrderDetail.addOption(option, prevOption)
+                            } else {
+                                productOrderDetail.removeOption(option)
+                            }
+                        )
+                    }
+                },
                 onAmountClicked = {
                     val newAmount = productOrderDetail.amount.run {
                         return@run if (it) {
-                            this+1
+                            this + 1
                         } else {
-                            if (this == 1) this else this-1
+                            if (this == 1) this else this - 1
                         }
                     }
 
@@ -99,82 +116,51 @@ fun OrderSelectVariants(
                     onAddToBucketClicked(productOrderDetail)
                 }
             )
-        },
-        backgroundColor = MaterialTheme.colors.background
-    ) { padding ->
+        }
+    )
+}
+
+@Composable
+private fun SelectVariantsContent(
+    modifier: Modifier = Modifier,
+    variants: List<VariantWithOptions>?,
+    productOrderDetail: ProductOrderDetail,
+    onOptionSelected: (prevOption: VariantOption?, option: VariantOption, isSelected: Boolean) -> Unit,
+    onAmountClicked: (isAdd: Boolean) -> Unit,
+    onAddToBucketClicked: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
         LazyColumn(
             modifier = Modifier
+                .align(Alignment.TopCenter)
                 .fillMaxSize()
-                .padding(padding)
         ) {
-            variants.value?.let {
+            variants?.let {
                 items(it) { variant ->
                     if (variant.variant?.isSingleOption() == true)
                         VariantItemSingleOption(
                             variantWithOption = variant,
-                            onOptionSelected = { prevOption, option, isSelected ->
-                                scope.launch {
-                                    productOrderDetail = productOrderDetail.copy(
-                                        variants = if (isSelected) {
-                                            productOrderDetail.addOption(option, prevOption)
-                                        } else {
-                                            productOrderDetail.removeOption(option)
-                                        }
-                                    )
-                                }
-                            }
+                            onOptionSelected = onOptionSelected
                         )
                     else
                         VariantItemManyOption(
                             variantWithOption = variant,
                             onOptionSelected = { option, isSelected ->
-                                scope.launch {
-                                    productOrderDetail = productOrderDetail.copy(
-                                        variants = if (isSelected) {
-                                            productOrderDetail.addOption(option)
-                                        } else {
-                                            productOrderDetail.removeOption(option)
-                                        }
-                                    )
-                                }
+                                onOptionSelected(null, option, isSelected)
                             }
                         )
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun ProductTitle(
-    product: Product?,
-    onBackClicked: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .background(MaterialTheme.colors.primary)
-            .fillMaxWidth()
-            .wrapContentHeight()
-    ) {
-        Icon(
+        AddToCartBottom(
             modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .clickable { onBackClicked() }
-                .padding(start = 8.dp)
-                .padding(8.dp),
-            painter = painterResource(id = R.drawable.ic_back),
-            contentDescription = null,
-            tint = Color.Black
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterVertically),
-            text = "${product?.name} - Rp. ${product?.sellPrice?.thousand()}",
-            style = MaterialTheme.typography.body1,
-            color = MaterialTheme.colors.onPrimary,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
+                .align(Alignment.BottomCenter),
+            productOrderDetail = productOrderDetail,
+            onAmountClicked = onAmountClicked,
+            onAddToBucketClicked = onAddToBucketClicked
         )
     }
 }
@@ -408,77 +394,81 @@ private fun VariantOptionSingleOption(
 
 @Composable
 private fun AddToCartBottom(
+    modifier: Modifier = Modifier,
     productOrderDetail: ProductOrderDetail,
     onAmountClicked: (isAdd: Boolean) -> Unit,
     onAddToBucketClicked: () -> Unit
 ) {
-    ConstraintLayout(
-        modifier = Modifier
+    Surface(
+        modifier = modifier
             .wrapContentHeight()
-            .fillMaxWidth()
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-            )
-            .padding(16.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        elevation = 10.dp,
+        color = Color.White
     ) {
-        val (text, qty, addCartBtn) = createRefs()
-        Text(
+        ConstraintLayout(
             modifier = Modifier
-                .constrainAs(text) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                },
-            text = stringResource(R.string.amount)
-        )
-        Row(
-            modifier = Modifier
-                .constrainAs(qty) {
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                },
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .clickable {
-                        onAmountClicked(false)
-                    },
-                painter = painterResource(id = R.drawable.ic_remove_circle),
-                contentDescription = null,
-            )
-            Spacer(modifier = Modifier.width(16.dp))
+            val (text, qty, addCartBtn) = createRefs()
             Text(
-                text = productOrderDetail.amount.toString(),
-                style = MaterialTheme.typography.body1.copy(
-                    fontWeight = FontWeight.Black
-                )
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Image(
                 modifier = Modifier
-                    .clickable {
-                        onAmountClicked(true)
+                    .constrainAs(text) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
                     },
-                painter = painterResource(id = R.drawable.ic_add_circle),
-                contentDescription = null,
+                text = stringResource(R.string.amount)
+            )
+            Row(
+                modifier = Modifier
+                    .constrainAs(qty) {
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    modifier = Modifier
+                        .clickable {
+                            onAmountClicked(false)
+                        },
+                    painter = painterResource(id = R.drawable.ic_remove_circle),
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = productOrderDetail.amount.toString(),
+                    style = MaterialTheme.typography.body1.copy(
+                        fontWeight = FontWeight.Black
+                    )
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Image(
+                    modifier = Modifier
+                        .clickable {
+                            onAmountClicked(true)
+                        },
+                    painter = painterResource(id = R.drawable.ic_add_circle),
+                    contentDescription = null,
+                )
+            }
+            PrimaryButtonView(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .constrainAs(addCartBtn) {
+                        linkTo(start = parent.start, end = parent.end)
+                        linkTo(
+                            bottom = parent.bottom,
+                            top = qty.bottom,
+                            topMargin = 16.dp,
+                        )
+                        width = Dimension.fillToConstraints
+                    }
+                    .fillMaxWidth(),
+                buttonText = stringResource(R.string.adding),
+                onClick = onAddToBucketClicked
             )
         }
-        PrimaryButtonView(
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .constrainAs(addCartBtn) {
-                    linkTo(start = parent.start, end = parent.end)
-                    linkTo(
-                        bottom = parent.bottom,
-                        top = qty.bottom,
-                        topMargin = 16.dp,
-                    )
-                    width = Dimension.fillToConstraints
-                }
-                .fillMaxWidth(),
-            buttonText = stringResource(R.string.adding),
-            onClick = onAddToBucketClicked
-        )
     }
 }

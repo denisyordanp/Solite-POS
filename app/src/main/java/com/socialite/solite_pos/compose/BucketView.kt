@@ -137,7 +137,7 @@ private fun BucketItem(
                             width = Dimension.fillToConstraints
                         }
                         .fillMaxWidth(),
-                    text = detail.getBucketDesc(),
+                    text = detail.generateVariantsString(),
                     style = MaterialTheme.typography.overline
                 )
                 Text(

@@ -136,7 +136,7 @@ private fun NameSearchBar(
             tint = MaterialTheme.colors.onPrimary
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -146,30 +146,47 @@ private fun NameSearchBar(
                     shape = RoundedCornerShape(8.dp)
                 )
         ) {
-            BasicTextField(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                value = value,
-                onValueChange = {
-                    onSearch(it)
-                },
-                textStyle = MaterialTheme.typography.body2.copy(
-                    color = Color.Black
-                ),
-            )
-            if (value.isEmpty()) {
-                Text(
+                    .weight(1f)
+            ) {
+                BasicTextField(
                     modifier = Modifier
-                        .padding(start = 8.dp)
-                        .align(Alignment.CenterStart),
-                    text = stringResource(R.string.customer_name),
-                    style = MaterialTheme.typography.body2,
-                    color = Color.Black.copy(
-                        alpha = 0.6f
-                    )
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    value = value,
+                    onValueChange = {
+                        onSearch(it)
+                    },
+                    textStyle = MaterialTheme.typography.body2.copy(
+                        color = Color.Black
+                    ),
                 )
+                if (value.isEmpty()) {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .align(Alignment.CenterStart),
+                        text = stringResource(R.string.customer_name),
+                        style = MaterialTheme.typography.body2,
+                        color = Color.Black.copy(
+                            alpha = 0.6f
+                        )
+                    )
+                }
             }
+            Icon(
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable {
+                        onSearch("")
+                    },
+                painter = painterResource(id = R.drawable.ic_close),
+                tint = MaterialTheme.colors.onPrimary,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
         }
     }
 }
@@ -243,7 +260,7 @@ private fun CustomerItem(
                 .weight(1f),
             text = customer?.name ?: keyword,
             style = MaterialTheme.typography.body2.copy(
-                fontWeight = FontWeight.Bold
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
             ),
             color = Color.Black
         )

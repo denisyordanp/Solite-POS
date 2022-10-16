@@ -32,10 +32,6 @@ class OrderCustomerActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var orderViewModel: OrderViewModel
 
-    companion object {
-        private const val PRODUCT_ID = "product_id"
-    }
-
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +63,7 @@ class OrderCustomerActivity : AppCompatActivity() {
                                 onAddItemClicked = {
                                     lifecycleScope.launch {
                                         if (productViewModel.isProductHasVariant(it.id)) {
-                                            navController.navigate("${OrderCustomerDestinations.SELECT_VARIANTS}/${it.id}")
+                                            navController.navigate(OrderCustomerDestinations.selectVariants(it.id))
                                         } else {
                                             orderViewModel.addProductToBucket(
                                                 ProductOrderDetail.productNoVariant(it)
@@ -91,14 +87,14 @@ class OrderCustomerActivity : AppCompatActivity() {
                             )
                         }
 
-                        val productIdArgument = navArgument(name = PRODUCT_ID) {
+                        val productIdArgument = navArgument(name = OrderCustomerDestinations.PRODUCT_ID) {
                             type = NavType.LongType
                         }
                         composable(
-                            route = "${OrderCustomerDestinations.SELECT_VARIANTS}/{$PRODUCT_ID}",
+                            route = OrderCustomerDestinations.SELECT_VARIANTS,
                             arguments = listOf(productIdArgument)
                         ) {
-                            it.arguments?.getLong(PRODUCT_ID)?.let {id ->
+                            it.arguments?.getLong(OrderCustomerDestinations.PRODUCT_ID)?.let {id ->
                                 OrderSelectVariants(
                                     productId = id,
                                     viewModel = productViewModel,

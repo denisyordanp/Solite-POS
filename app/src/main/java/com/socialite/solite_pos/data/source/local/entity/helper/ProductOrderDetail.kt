@@ -20,7 +20,7 @@ data class ProductOrderDetail(
 
     constructor(type: Int) : this(null, ArrayList(), ArrayList(), 0, type)
 
-    fun getBucketDesc(): String {
+    fun generateVariantsString(): String {
         return if (variants.isEmpty()) {
             product?.desc ?: ""
         } else {
@@ -43,6 +43,8 @@ data class ProductOrderDetail(
             remove(option)
         }
     }
+
+    fun totalPrice() = (product?.sellPrice ?: 0) * amount
 
     companion object {
         const val GRAND_TOTAL = 1

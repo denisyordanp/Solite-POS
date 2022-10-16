@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -28,6 +29,7 @@ class OrdersRepositoryImpl(
     }
 
     override fun getOrderList(status: Int, date: String) = dao.getOrdersByStatus(status, date)
+    override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderByNo(orderNo)
 
     override suspend fun updateOrder(order: Order) {
         dao.updateOrder(order)
