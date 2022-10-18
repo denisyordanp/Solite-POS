@@ -16,6 +16,7 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFor
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
 import com.socialite.solite_pos.utils.preference.OrderPref
 import com.socialite.solite_pos.utils.preference.SettingPref
+import com.socialite.solite_pos.view.main.opening.ui.OrderMenus
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -187,7 +188,7 @@ data class Order(
 	)
 
 	fun getQueueNumber(): String {
-		return orderNo.substring(6, orderNo.length)
+		return orderNo.substring(orderNo.length-3, orderNo.length)
 	}
 
 	fun isCancelable(context: Context): Boolean {
@@ -225,4 +226,6 @@ data class Order(
 			null
 		}
 	}
+
+	fun statusToOrderMenu() = OrderMenus.values().find { it.status == status }
 }

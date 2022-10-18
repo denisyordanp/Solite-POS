@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.domain.GetIncomesRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.NewOrder
+import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -24,6 +25,7 @@ import com.socialite.solite_pos.utils.di.DomainInjection.provideGetIncomesRecapD
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetProductOrder
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetProductVariantOptions
 import com.socialite.solite_pos.utils.di.DomainInjection.provideNewOrder
+import com.socialite.solite_pos.utils.di.DomainInjection.providePayOrder
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideCategoriesRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideCustomersRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideOrdersRepository
@@ -60,6 +62,7 @@ class ViewModelFactory private constructor(
     private val getProductOrder: GetProductOrder,
     private val getIncomesRecapData: GetIncomesRecapData,
     private val variantMixesRepository: VariantMixesRepository,
+    private val payOrder: PayOrder,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -87,6 +90,7 @@ class ViewModelFactory private constructor(
                             provideGetProductOrder(context),
                             provideGetIncomesRecapData(context),
                             provideVariantMixesRepository(context),
+                            providePayOrder(context)
                         )
                     }
                 }
@@ -100,21 +104,22 @@ class ViewModelFactory private constructor(
         return when {
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(
-                    paymentsRepository,
-                    supplierRepository,
-                    customersRepository,
-                    outcomesRepository,
-                    purchasesRepository
+                    paymentRepository = paymentsRepository,
+                    supplierRepository = supplierRepository,
+                    customersRepository = customersRepository,
+                    outcomesRepository = outcomesRepository,
+                    purchasesRepository = purchasesRepository
                 ) as T
             }
 
             modelClass.isAssignableFrom(OrderViewModel::class.java) -> {
                 OrderViewModel(
-                    repository,
-                    ordersRepository,
-                    newOrder,
-                    getProductOrder,
-                    getIncomesRecapData
+                    repository = repository,
+                    orderRepository = ordersRepository,
+                    newOrder = newOrder,
+                    getProductOrder = getProductOrder,
+                    getIncomesRecapData = getIncomesRecapData,
+                    payOrder = payOrder
                 ) as T
             }
 
@@ -124,13 +129,13 @@ class ViewModelFactory private constructor(
 
             modelClass.isAssignableFrom(ProductViewModel::class.java) -> {
                 ProductViewModel(
-                    variantsRepository,
-                    variantOptionsRepository,
-                    categoriesRepository,
-                    productsRepository,
-                    productVariantsRepository,
-                    getProductVariantOptions,
-                    variantMixesRepository
+                    variantsRepository = variantsRepository,
+                    variantOptionsRepository = variantOptionsRepository,
+                    categoriesRepository = categoriesRepository,
+                    productsRepository = productsRepository,
+                    productVariantsRepository = productVariantsRepository,
+                    getProductVariantOptions = getProductVariantOptions,
+                    variantMixesRepository = variantMixesRepository
                 ) as T
             }
 

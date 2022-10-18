@@ -14,9 +14,8 @@ enum class OrderMenus(
 ) {
     CURRENT_ORDER(R.string.orders, 0),
     NOT_PAY_YET(R.string.not_pay_yet, 1),
-    DONE(R.string.done, 2),
-    CANCELED(R.string.canceled, 3),;
-
+    CANCELED(R.string.canceled, 2),
+    DONE(R.string.done, 3),
 }
 
 enum class GeneralMenus(

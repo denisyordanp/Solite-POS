@@ -101,11 +101,14 @@ interface OrdersDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertPaymentOrder(payment: OrderPayment): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewPaymentOrder(payment: OrderPayment)
+
     @Update
     fun updatePaymentOrder(order: OrderPayment)
 
     @Update
-    fun updateOrder(order: Order)
+    suspend fun updateOrder(order: Order)
 
     @Delete
     fun deleteOrderDetail(orderDetail: OrderDetail)

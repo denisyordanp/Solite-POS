@@ -10,19 +10,22 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun PrimaryButtonView(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     buttonText: String,
+    backgroundColor: Color = MaterialTheme.colors.primary,
+    textColor: Color = MaterialTheme.colors.onPrimary,
     onClick: () -> Unit
 ) {
     Box(
         modifier = modifier
             .clickable { onClick() }
             .background(
-                color = MaterialTheme.colors.primary,
+                color = backgroundColor,
                 shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center
@@ -32,7 +35,7 @@ fun PrimaryButtonView(
                 .padding(16.dp),
             text = buttonText,
             style = MaterialTheme.typography.button,
-            color = MaterialTheme.colors.onPrimary
+            color = textColor
         )
     }
 }

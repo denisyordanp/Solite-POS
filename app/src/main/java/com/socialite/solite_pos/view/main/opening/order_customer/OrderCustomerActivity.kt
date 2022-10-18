@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
@@ -34,6 +35,7 @@ class OrderCustomerActivity : AppCompatActivity() {
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
+    @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -119,10 +121,9 @@ class OrderCustomerActivity : AppCompatActivity() {
                                     navController.popBackStack()
                                 },
                                 onNewOrder = { customer, isTakeAway ->
-                                    orderViewModel.createNewOrderFromBucket(
+                                    orderViewModel.newOrderImprovement(
                                         customer = customer,
-                                        isTakeAway = isTakeAway,
-                                        context = this@OrderCustomerActivity
+                                        isTakeAway = isTakeAway
                                     )
                                     goToOrdersActivity()
                                 }

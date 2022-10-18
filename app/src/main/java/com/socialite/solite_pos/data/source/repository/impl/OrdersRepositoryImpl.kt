@@ -31,13 +31,14 @@ class OrdersRepositoryImpl(
     override fun getOrderList(status: Int, date: String) = dao.getOrdersByStatus(status, date)
     override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderByNo(orderNo)
 
-    override suspend fun updateOrder(order: Order) {
-        dao.updateOrder(order)
-    }
+    override suspend fun updateOrder(order: Order) = dao.updateOrder(order)
 
     override suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment {
         val id = dao.insertPaymentOrder(payment)
         payment.id = id
         return payment
     }
+
+    override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
+        dao.insertNewPaymentOrder(payment)
 }

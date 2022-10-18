@@ -202,7 +202,7 @@ class PayFragment(
 			val orderPaymentWithId = viewModel.insertPaymentOrder(order.order.orderPayment!!)
 			order.order.order.status = Order.DONE
 			order.order.orderPayment = orderPaymentWithId
-			viewModel.doneOrder(order)
+			viewModel.doneOrder(order.order.order)
 			setPay(order)
 		}
 	}

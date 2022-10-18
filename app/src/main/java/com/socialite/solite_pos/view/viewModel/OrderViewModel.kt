@@ -1,20 +1,19 @@
 package com.socialite.solite_pos.view.viewModel
 
-import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetIncomesRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.NewOrder
+import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order.Companion.DONE
+import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.utils.config.DateUtils
@@ -28,7 +27,8 @@ class OrderViewModel(
     private val orderRepository: OrdersRepository,
     private val newOrder: NewOrder,
     private val getProductOrder: GetProductOrder,
-    private val getIncomesRecapData: GetIncomesRecapData
+    private val getIncomesRecapData: GetIncomesRecapData,
+    private val payOrder: PayOrder,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<OrderViewModel>() {
@@ -46,14 +46,35 @@ class OrderViewModel(
 
     suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
-    suspend fun getIncomes(date: String) = getIncomesRecapData(DONE, date)
+    suspend fun getIncomes(date: String) = getIncomesRecapData(Order.DONE, date)
 
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment =
         orderRepository.insertPaymentOrder(payment)
 
     fun newOrder(order: OrderWithProduct) {
         viewModelScope.launch {
-            newOrder.invoke(order)
+            newOrder.invoke(
+                customer = order.order.customer,
+                isTakeAway = order.order.order.isTakeAway,
+                products = order.products,
+                currentTime = DateUtils.currentDate
+            )
+        }
+    }
+
+    fun newOrderImprovement(
+        customer: Customer,
+        isTakeAway: Boolean,
+    ) {
+        viewModelScope.launch {
+            _currentBucket.value.products?.let {
+                newOrder.invoke(
+                    customer = customer,
+                    isTakeAway = isTakeAway,
+                    products = it,
+                    currentTime = DateUtils.currentDateTime
+                )
+            }
         }
     }
 
@@ -63,38 +84,35 @@ class OrderViewModel(
         }
     }
 
-    fun doneOrder(order: OrderWithProduct) {
-        repository.doneOrder(order)
+    fun doneOrder(order: Order) {
+        viewModelScope.launch {
+            orderRepository.updateOrder(order.copy(
+                status = Order.NEED_PAY
+            ))
+        }
+    }
+
+    fun cancelOrder(order: Order) {
+        viewModelScope.launch {
+
+        }
+    }
+
+    fun payOrder(order: Order, payment: Payment, pay: Long) {
+        viewModelScope.launch {
+            payOrder.invoke(
+                order = order,
+                payment = OrderPayment(
+                    orderNo = order.orderNo,
+                    idPayment = payment.id,
+                    pay = pay
+                )
+            )
+        }
     }
 
     fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct) {
         repository.replaceProductOrder(old, new)
-    }
-
-    fun createNewOrderFromBucket(
-        customer: Customer,
-        isTakeAway: Boolean,
-        context: Context
-    ) {
-        _currentBucket.value.products?.let {
-            val order = Order(
-                orderNo = Order.orderNo(context),
-                customer = customer.id,
-                orderTime = DateUtils.currentDateTime,
-                isTakeAway = isTakeAway,
-            )
-            val orderData = OrderData(
-                order = order,
-                customer = customer
-            )
-            val orderProducts = OrderWithProduct(
-                order = orderData,
-                products = it
-            )
-
-            newOrder(order = orderProducts)
-            Order.add(context)
-        }
     }
 
     fun addProductToBucket(detail: ProductOrderDetail) {

@@ -5,6 +5,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,24 +21,35 @@ import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.main.opening.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.main.opening.store.StoreActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
+import com.socialite.solite_pos.view.main.opening.ui.OrderMenus
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 class OrdersActivity : AppCompatActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
+    @ExperimentalCoroutinesApi
+    @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
+        mainViewModel = MainViewModel.getMainViewModel(this)
 
         setContent {
             SolitePOSTheme {
 
                 val navController = rememberNavController()
+                var defaultTabPage by remember {
+                    mutableStateOf(0)
+                }
 
                 NavHost(
                     navController = navController,
@@ -44,6 +61,7 @@ class OrdersActivity : AppCompatActivity() {
                         OrderItems(
                             viewModel = orderViewModel,
                             currentDate = DateUtils.currentDate,
+                            defaultTabPage = defaultTabPage,
                             onGeneralMenuClicked = {
                                 when (it) {
                                     GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
@@ -73,6 +91,51 @@ class OrdersActivity : AppCompatActivity() {
                                 orderViewModel = orderViewModel,
                                 onBackClicked = {
                                     navController.popBackStack()
+                                },
+                                onDoneClicked = {
+                                    defaultTabPage = OrderMenus.NOT_PAY_YET.status
+                                    navController.navigate(OrderDetailDestinations.ORDERS) {
+                                        popUpTo(OrderDetailDestinations.ORDERS) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onPayClicked = {
+                                    navController.navigate(
+                                        OrderDetailDestinations.orderPayment(
+                                            orderNo
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                    }
+                    composable(
+                        route = OrderDetailDestinations.ORDER_PAYMENT,
+                        arguments = listOf(orderNoArgument)
+                    ) {
+                        it.arguments?.getString(OrderDetailDestinations.ORDER_NO)?.let { orderNo ->
+                            OrderPaymentView(
+                                orderNo = orderNo,
+                                orderViewModel = orderViewModel,
+                                mainViewModel = mainViewModel,
+                                onBackClicked = {
+                                    navController.popBackStack()
+                                },
+                                onPayClicked = {order, payment, pay ->
+                                    lifecycleScope.launch {
+                                        orderViewModel.payOrder(
+                                            order = order,
+                                            payment = payment,
+                                            pay = pay
+                                        )
+                                        defaultTabPage = OrderMenus.DONE.status
+                                        navController.navigate(OrderDetailDestinations.ORDERS) {
+                                            popUpTo(OrderDetailDestinations.ORDERS) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    }
                                 }
                             )
                         }

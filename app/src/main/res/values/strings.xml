@@ -27,5 +27,19 @@
     <string name="optional_choice">Pilihan optional</string>
     <string name="amount">Banyaknya</string>
     <string name="adding">Tambahkan</string>
+    <string name="done_the_order">Selesaikan pesanan</string>
+    <string name="are_you_sure_will_done_this_order">Anda yakin akan menyelesaikan pesanan ini?</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="cancel_the_order">Batalkan pesanan</string>
+    <string name="are_you_sure_will_cancel_this_order">Anda yakin akan membatalkan pesanan ini?</string>
+    <string name="pay_the_order">Pembayaran pesanan</string>
+    <string name="are_you_sure_will_pay_this_order">Anda yakin akan melakukan pembayaran pada pesanan ini?</string>
+    <string name="cash_amount">Jumlah uang</string>
+    <string name="cash_change">Kembalian</string>
+    <string name="select_payment">Pilih pembayaran</string>
+    <string name="pay">Bayar</string>
+    <string name="pay_amount_can_not_less_than_total_pay">Jumlah uang tidak boleh kurang dari total bayar</string>
+    <string name="please_select_payment">Mohon pilih pembayaran</string>
 
 </resources>

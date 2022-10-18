@@ -11,4 +11,5 @@ interface OrdersRepository {
     suspend fun getOrderDetail(orderNo: String): OrderData?
     suspend fun updateOrder(order: Order)
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment
+    suspend fun insertNewPaymentOrder(payment: OrderPayment)
 }

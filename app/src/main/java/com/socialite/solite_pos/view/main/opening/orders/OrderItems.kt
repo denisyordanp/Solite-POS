@@ -30,7 +30,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -60,6 +59,7 @@ import kotlinx.coroutines.launch
 fun OrderItems(
     viewModel: OrderViewModel,
     currentDate: String,
+    defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onOrderClicked: (orderNo: String) -> Unit
 ) {
@@ -101,6 +101,7 @@ fun OrderItems(
                 OrderList(
                     viewModel = viewModel,
                     currentDate = currentDate,
+                    defaultTabPage = defaultTabPage,
                     onOrderClicked = onOrderClicked
                 )
                 GeneralMenuButtonView(
@@ -123,6 +124,7 @@ fun OrderItems(
 private fun OrderList(
     viewModel: OrderViewModel,
     currentDate: String,
+    defaultTabPage: Int,
     onOrderClicked: (orderNo: String) -> Unit
 ) {
     Column {
@@ -169,6 +171,12 @@ private fun OrderList(
                 onOrderClicked = onOrderClicked
             )
         }
+
+        if (defaultTabPage != 0) {
+            LaunchedEffect(key1 = true) {
+                pagerState.animateScrollToPage(defaultTabPage)
+            }
+        }
     }
 }
 
@@ -183,10 +191,7 @@ private fun OrderContent(
     val orders =
         viewModel.getOrderList(menu.status, currentDate).collectAsState(initial = emptyList())
 
-    LazyColumn(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
+    LazyColumn {
         items(orders.value) {
             OrderItem(
                 orderData = it,
@@ -221,7 +226,6 @@ private fun OrderItem(
             }
     }
 
-    val baseShape = RoundedCornerShape(4.dp)
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,13 +233,8 @@ private fun OrderItem(
             .clickable {
                 onOrderClicked(orderProducts.order.order.orderNo)
             }
-            .shadow(
-                elevation = 4.dp,
-                shape = baseShape
-            )
             .background(
-                color = Color.White,
-                shape = baseShape
+                color = Color.White
             )
             .padding(16.dp)
     ) {

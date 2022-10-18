@@ -13,6 +13,12 @@ import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.utils.config.CashAmounts
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -28,6 +34,27 @@ class MainViewModel(
         fun getMainViewModel(activity: FragmentActivity): MainViewModel {
             return buildViewModel(activity, MainViewModel::class.java)
         }
+    }
+
+    private val _currentCashInput = MutableStateFlow(Pair(0L, 0L))
+
+    @ExperimentalCoroutinesApi
+    val cashSuggestions: Flow<List<Long>?> = _currentCashInput.flatMapLatest { input ->
+        flow {
+            if (input.first != 0L) {
+                val cash = CashAmounts.generateCash().filter {
+                    it.toString().startsWith(input.first.toString(), ignoreCase = true)
+                            && it >= input.second
+                }
+                emit(cash)
+            } else {
+                emit(null)
+            }
+        }
+    }
+
+    fun addCashInput(cash: Long, total: Long) {
+        _currentCashInput.value = Pair(cash, total)
     }
 
     val purchases = purchasesRepository.getPurchases()
@@ -48,10 +75,11 @@ class MainViewModel(
             customers
                 .map {
                     it.filter { customer ->
-                        customer.name.lowercase().contains(keyword.lowercase())
+                        customer.name.contains(keyword, ignoreCase = true)
                     }
                 }
         }
+
         else -> customers
     }
 

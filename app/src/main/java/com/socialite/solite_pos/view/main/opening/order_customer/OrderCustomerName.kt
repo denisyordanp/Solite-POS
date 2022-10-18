@@ -1,7 +1,6 @@
 package com.socialite.solite_pos.view.main.opening.order_customer
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -27,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -34,11 +33,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 @Composable
+@ExperimentalComposeUiApi
 fun OrderCustomerName(
     mainViewModel: MainViewModel,
     onBackClicked: () -> Unit,
@@ -111,6 +112,7 @@ fun OrderCustomerName(
 }
 
 @Composable
+@ExperimentalComposeUiApi
 private fun NameSearchBar(
     value: String,
     onBackClicked: () -> Unit,
@@ -136,58 +138,11 @@ private fun NameSearchBar(
             tint = MaterialTheme.colors.onPrimary
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .border(
-                    width = 0.5.dp,
-                    color = MaterialTheme.colors.onPrimary,
-                    shape = RoundedCornerShape(8.dp)
-                )
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                BasicTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    value = value,
-                    onValueChange = {
-                        onSearch(it)
-                    },
-                    textStyle = MaterialTheme.typography.body2.copy(
-                        color = Color.Black
-                    ),
-                )
-                if (value.isEmpty()) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .align(Alignment.CenterStart),
-                        text = stringResource(R.string.customer_name),
-                        style = MaterialTheme.typography.body2,
-                        color = Color.Black.copy(
-                            alpha = 0.6f
-                        )
-                    )
-                }
-            }
-            Icon(
-                modifier = Modifier
-                    .size(16.dp)
-                    .align(Alignment.CenterVertically)
-                    .clickable {
-                        onSearch("")
-                    },
-                painter = painterResource(id = R.drawable.ic_close),
-                tint = MaterialTheme.colors.onPrimary,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-        }
+        BasicEditText(
+            value = value,
+            placeHolder = stringResource(id = R.string.customer_name),
+            onValueChange = onSearch
+        )
     }
 }
 
