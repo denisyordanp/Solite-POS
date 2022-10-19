@@ -29,9 +29,9 @@ enum class GeneralMenus(
 }
 
 enum class StoreMenus(@StringRes val title: Int) {
-    DAILY_RECAP(R.string.daily_recap),
+    SALES_RECAP(R.string.sales_recap),
+    OUTCOMES(R.string.outcomes),
     PURCHASE(R.string.purchase),
-    HISTORY(R.string.history),
     MASTERS(R.string.masters),
 }
 

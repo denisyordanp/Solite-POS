@@ -1,32 +1,40 @@
 package com.socialite.solite_pos.data.source.domain.impl
 
-import com.socialite.solite_pos.data.source.domain.GetIncomesRecapData
+import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.source.local.entity.helper.Income
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-class GetIncomesRecapDataImpl(
+class GetRecapDataImpl(
     private val repository: OrdersRepository,
     private val getProductOrder: GetProductOrder
-) : GetIncomesRecapData {
-    override suspend fun invoke(status: Int, date: String): Flow<List<RecapData>> {
+) : GetRecapData {
+    override fun invoke(status: Int, date: String): Flow<RecapData> {
+
         return flow {
-            val orders = repository.getOrderList(status, date).first()
-            orders.map {
+            val incomes = repository.getOrderList(status, date).first().map {
                 val products = getProductOrder.invoke(it.order.orderNo).first()
                 val orderWithProduct = OrderWithProduct(it, products)
 
-                RecapData(
-                    orderWithProduct.order.order.orderNo,
-                    orderWithProduct.order.payment?.name,
-                    orderWithProduct.grandTotal,
-                    orderWithProduct.order.payment?.isCash
+                Income(
+                    date = it.order.orderTime,
+                    total = orderWithProduct.grandTotal,
+                    payment = it.payment?.name ?: "",
+                    isCash = it.payment?.isCash ?: false
                 )
             }
+            emit(
+                RecapData(
+                    incomes = incomes,
+                    outcomes = emptyList()
+                )
+            )
         }
+
     }
 }

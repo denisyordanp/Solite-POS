@@ -42,7 +42,7 @@ class MainViewModel(
     val cashSuggestions: Flow<List<Long>?> = _currentCashInput.flatMapLatest { input ->
         flow {
             if (input.first != 0L) {
-                val cash = CashAmounts.generateCash().filter {
+                val cash = CashAmounts.generateCash(input.second).filter {
                     it.toString().startsWith(input.first.toString(), ignoreCase = true)
                             && it >= input.second
                 }

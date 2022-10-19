@@ -3,7 +3,7 @@ package com.socialite.solite_pos.view.viewModel
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetIncomesRecapData
+import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.PayOrder
@@ -27,7 +27,7 @@ class OrderViewModel(
     private val orderRepository: OrdersRepository,
     private val newOrder: NewOrder,
     private val getProductOrder: GetProductOrder,
-    private val getIncomesRecapData: GetIncomesRecapData,
+    private val getRecapData: GetRecapData,
     private val payOrder: PayOrder,
 ) : ViewModel() {
 
@@ -46,7 +46,7 @@ class OrderViewModel(
 
     suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
-    suspend fun getIncomes(date: String) = getIncomesRecapData(Order.DONE, date)
+    fun getIncomes(date: String) = getRecapData(Order.DONE, date)
 
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment =
         orderRepository.insertPaymentOrder(payment)

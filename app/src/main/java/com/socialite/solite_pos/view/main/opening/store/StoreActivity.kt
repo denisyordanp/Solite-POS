@@ -8,12 +8,12 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.socialite.solite_pos.view.main.menu.history.SalesActivity
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActivity
 import com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity
 import com.socialite.solite_pos.view.main.opening.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.main.opening.orders.OrdersActivity
+import com.socialite.solite_pos.view.main.opening.recap.RecapActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.MasterMenus
 import com.socialite.solite_pos.view.main.opening.ui.StoreMenus
@@ -55,9 +55,9 @@ class StoreActivity : AppCompatActivity() {
                             },
                             onStoreMenuClicked = {
                                 when (it) {
-                                    StoreMenus.DAILY_RECAP -> {}
+                                    StoreMenus.SALES_RECAP -> goToRecapActivity()
                                     StoreMenus.PURCHASE -> goToPurchaseActivity()
-                                    StoreMenus.HISTORY -> goToHistoryActivity()
+                                    StoreMenus.OUTCOMES -> {}
                                     else -> {
                                         // Do nothing
                                     }
@@ -68,6 +68,11 @@ class StoreActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun goToRecapActivity() {
+        val intent = Intent(this, RecapActivity::class.java)
+        startActivity(intent)
     }
 
     @ExperimentalMaterialApi
@@ -117,11 +122,6 @@ class StoreActivity : AppCompatActivity() {
 
     private fun goToPurchaseActivity() {
         val intent = Intent(this, PurchaseActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun goToHistoryActivity() {
-        val intent = Intent(this, SalesActivity::class.java)
         startActivity(intent)
     }
 }

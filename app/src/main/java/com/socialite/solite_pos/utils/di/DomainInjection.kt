@@ -1,12 +1,12 @@
 package com.socialite.solite_pos.utils.di
 
 import android.content.Context
-import com.socialite.solite_pos.data.source.domain.GetIncomesRecapData
+import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.PayOrder
-import com.socialite.solite_pos.data.source.domain.impl.GetIncomesRecapDataImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
@@ -38,8 +38,8 @@ object DomainInjection {
         )
     }
 
-    fun provideGetIncomesRecapData(context: Context): GetIncomesRecapData {
-        return GetIncomesRecapDataImpl(
+    fun provideGetIncomesRecapData(context: Context): GetRecapData {
+        return GetRecapDataImpl(
             RepositoryInjection.provideOrdersRepository(context),
             provideGetProductOrder(context)
         )

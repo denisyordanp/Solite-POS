@@ -3,7 +3,7 @@ package com.socialite.solite_pos.viewmodelFactory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
-import com.socialite.solite_pos.data.source.domain.GetIncomesRecapData
+import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.NewOrder
@@ -60,7 +60,7 @@ class ViewModelFactory private constructor(
     private val ordersRepository: OrdersRepository,
     private val newOrder: NewOrder,
     private val getProductOrder: GetProductOrder,
-    private val getIncomesRecapData: GetIncomesRecapData,
+    private val getRecapData: GetRecapData,
     private val variantMixesRepository: VariantMixesRepository,
     private val payOrder: PayOrder,
 ) : NewInstanceFactory() {
@@ -118,7 +118,7 @@ class ViewModelFactory private constructor(
                     orderRepository = ordersRepository,
                     newOrder = newOrder,
                     getProductOrder = getProductOrder,
-                    getIncomesRecapData = getIncomesRecapData,
+                    getRecapData = getRecapData,
                     payOrder = payOrder
                 ) as T
             }
