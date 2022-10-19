@@ -11,13 +11,12 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
-import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.local.room.SoliteDao
 import com.socialite.solite_pos.utils.preference.OrderPref
 
 class NewOrderImpl(
     private val dao: OrdersDao,
-    private val productDao: ProductsDao,
+//    private val productDao: ProductsDao,
     private val soliteDao: SoliteDao,
     private val orderPref: OrderPref
 ) : NewOrder {
@@ -91,7 +90,8 @@ class NewOrderImpl(
                 if (item.product!!.isMix) {
                     for (p in item.mixProducts) {
 
-                        productDao.decreaseProductStock(p.product.id, p.amount)
+                        // TODO: No stock needed for now
+                        // productDao.decreaseProductStock(p.product.id, p.amount)
 
                         val variantMix = OrderProductVariantMix(detail.id, p.product.id, p.amount)
                         variantMix.id = soliteDao.insertVariantMixOrder(variantMix)
@@ -104,10 +104,11 @@ class NewOrderImpl(
                     }
                 } else {
 
-                    productDao.decreaseProductStock(
-                        item.product!!.id,
-                        (item.amount * item.product!!.portion)
-                    )
+                    // TODO: No stock needed for now
+                    // productDao.decreaseProductStock(
+                    //    item.product!!.id,
+                    //    (item.amount * item.product!!.portion)
+                    //)
 
                     for (variant in item.variants) {
                         val orderVariant = OrderProductVariant(detail.id, variant.id)

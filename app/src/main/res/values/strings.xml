@@ -41,5 +41,10 @@
     <string name="pay">Bayar</string>
     <string name="pay_amount_can_not_less_than_total_pay">Jumlah uang tidak boleh kurang dari total bayar</string>
     <string name="please_select_payment">Mohon pilih pembayaran</string>
+    <string name="yeay_all_order_are_done">Yeay, semua pesanan sudah dibuat!</string>
+    <string name="all_orders_are_paid_already">Semua pesanan sudah bayar!</string>
+    <string name="yeay_there_no_cancel_order">Yeay, tidak ada pesanan yang dibatalkan!</string>
+    <string name="no_done_order_yet_spirit_find_some_customer_today">Belum ada pesanan selesai nih, yuk semangat cari pelanggan hari ini!</string>
+    <string name="select_variant">Pilih varian</string>
 
 </resources>

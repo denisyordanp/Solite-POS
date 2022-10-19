@@ -92,21 +92,35 @@ class OrdersActivity : AppCompatActivity() {
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
-                                onDoneClicked = {
-                                    defaultTabPage = OrderMenus.NOT_PAY_YET.status
-                                    navController.navigate(OrderDetailDestinations.ORDERS) {
-                                        popUpTo(OrderDetailDestinations.ORDERS) {
-                                            inclusive = true
+                                onButtonClicked = {buttonType ->
+                                    when (buttonType) {
+                                        OrderButtonType.PRINT -> {}
+                                        OrderButtonType.QUEUE -> {}
+                                        OrderButtonType.PAYMENT -> {
+                                            navController.navigate(
+                                                OrderDetailDestinations.orderPayment(
+                                                    orderNo
+                                                )
+                                            )
+                                        }
+                                        OrderButtonType.DONE -> {
+                                            defaultTabPage = OrderMenus.NOT_PAY_YET.status
+                                            navController.navigate(OrderDetailDestinations.ORDERS) {
+                                                popUpTo(OrderDetailDestinations.ORDERS) {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        }
+                                        OrderButtonType.CANCEL -> {
+                                            defaultTabPage = OrderMenus.CANCELED.status
+                                            navController.navigate(OrderDetailDestinations.ORDERS) {
+                                                popUpTo(OrderDetailDestinations.ORDERS) {
+                                                    inclusive = true
+                                                }
+                                            }
                                         }
                                     }
                                 },
-                                onPayClicked = {
-                                    navController.navigate(
-                                        OrderDetailDestinations.orderPayment(
-                                            orderNo
-                                        )
-                                    )
-                                }
                             )
                         }
                     }
@@ -122,7 +136,7 @@ class OrdersActivity : AppCompatActivity() {
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
-                                onPayClicked = {order, payment, pay ->
+                                onPayClicked = { order, payment, pay ->
                                     lifecycleScope.launch {
                                         orderViewModel.payOrder(
                                             order = order,

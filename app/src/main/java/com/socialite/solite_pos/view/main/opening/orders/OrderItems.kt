@@ -1,11 +1,14 @@
 package com.socialite.solite_pos.view.main.opening.orders
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,9 +34,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -191,12 +196,78 @@ private fun OrderContent(
     val orders =
         viewModel.getOrderList(menu.status, currentDate).collectAsState(initial = emptyList())
 
-    LazyColumn {
-        items(orders.value) {
-            OrderItem(
-                orderData = it,
-                viewModel = viewModel,
-                onOrderClicked = onOrderClicked
+    if (orders.value.isEmpty()) {
+        EmptyOrders(menu = menu)
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+            ) {
+                items(orders.value) {
+                    OrderItem(
+                        orderData = it,
+                        viewModel = viewModel,
+                        onOrderClicked = onOrderClicked
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyOrders(
+    menu: OrderMenus
+) {
+    val (id, text) = when (menu) {
+        OrderMenus.CURRENT_ORDER -> Pair(
+            R.drawable.ic_on_process,
+            R.string.yeay_all_order_are_done
+        )
+        OrderMenus.NOT_PAY_YET -> Pair(
+            R.drawable.ic_get_payment,
+            R.string.all_orders_are_paid_already
+        )
+        OrderMenus.CANCELED -> Pair(
+            R.drawable.ic_happy_face,
+            R.string.yeay_there_no_cancel_order
+        )
+        OrderMenus.DONE -> Pair(
+            R.drawable.ic_cancel_order,
+            R.string.no_done_order_yet_spirit_find_some_customer_today
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth(),
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                painter = painterResource(id = id),
+                contentScale = ContentScale.FillWidth,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(text),
+                style = MaterialTheme.typography.body1.copy(
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
             )
         }
     }

@@ -62,14 +62,20 @@ class OrderCustomerActivity : AppCompatActivity() {
                             OrderSelectItems(
                                 productViewModel = productViewModel,
                                 orderViewModel = orderViewModel,
-                                onAddItemClicked = {
+                                onItemClick = {product, isAdd, hasVariant ->
                                     lifecycleScope.launch {
-                                        if (productViewModel.isProductHasVariant(it.id)) {
-                                            navController.navigate(OrderCustomerDestinations.selectVariants(it.id))
+                                        if (hasVariant) {
+                                            navController.navigate(OrderCustomerDestinations.selectVariants(product.id))
                                         } else {
-                                            orderViewModel.addProductToBucket(
-                                                ProductOrderDetail.productNoVariant(it)
-                                            )
+                                            if (isAdd) {
+                                                orderViewModel.addProductToBucket(
+                                                    ProductOrderDetail.productNoVariant(product)
+                                                )
+                                            } else {
+                                                orderViewModel.removeProductFromBucket(
+                                                    ProductOrderDetail.productNoVariant(product)
+                                                )
+                                            }
                                         }
                                     }
                                 },

@@ -68,12 +68,15 @@ fun BucketView(
 
         currentBucket.value.products?.let {
             items(it) { detail ->
-                BucketItem(detail) {
-                    if (it.size == 1) {
-                        onClearBucket()
+                BucketItem(
+                    detail = detail,
+                    onRemoveItem = {
+                        if (it.size == 1) {
+                            onClearBucket()
+                        }
+                        orderViewModel.removeProductFromBucket(detail)
                     }
-                    orderViewModel.removeProductFromBucket(detail)
-                }
+                )
             }
         }
 
@@ -146,7 +149,7 @@ private fun BucketItem(
                             end.linkTo(delete.start)
                             linkTo(top = parent.top, bottom = parent.bottom)
                         },
-                    text = "Rp. ${detail.product?.sellPrice?.thousand() ?: 0}",
+                    text = "Rp. ${detail.totalPrice().thousand()}",
                     style = MaterialTheme.typography.body2
                 )
                 TextButton(

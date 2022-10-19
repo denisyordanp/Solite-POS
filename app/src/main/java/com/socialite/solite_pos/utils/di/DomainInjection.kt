@@ -24,7 +24,7 @@ object DomainInjection {
         val database = getInstance(context)
         return NewOrderImpl(
             dao = database.ordersDao(),
-            productDao = database.productsDao(),
+//            productDao = database.productsDao(),
             soliteDao = database.soliteDao(),
             orderPref = OrderPref(context)
         )

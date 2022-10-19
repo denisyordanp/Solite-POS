@@ -20,6 +20,12 @@ data class BucketOrder(
 
     fun totalItems() = products?.count() ?: 0
 
+    fun getProductAmount(idProduct: Long): Int? {
+        return products?.find {
+            it.product?.id == idProduct
+        }?.amount
+    }
+
     companion object {
         fun idle() = BucketOrder(
             time = null,

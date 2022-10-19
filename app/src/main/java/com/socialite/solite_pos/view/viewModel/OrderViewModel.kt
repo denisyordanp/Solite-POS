@@ -94,7 +94,9 @@ class OrderViewModel(
 
     fun cancelOrder(order: Order) {
         viewModelScope.launch {
-
+            orderRepository.updateOrder(order.copy(
+                status = Order.CANCEL
+            ))
         }
     }
 
@@ -117,23 +119,25 @@ class OrderViewModel(
 
     fun addProductToBucket(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val currentProducts = _currentBucket.value.products?.toMutableList()
             val newBucket = if(_currentBucket.value.isIdle()) {
                 BucketOrder(
                     time = Calendar.getInstance().timeInMillis,
                     products = listOf(detail)
                 )
             } else {
-                val existingDetail = currentProducts?.find { it.product?.id == detail.product?.id }
+                val currentProducts = _currentBucket.value.products!!.toMutableList()
+                val existingDetail = currentProducts.findExisting(detail)
                 if (existingDetail != null) {
                     currentProducts.remove(existingDetail)
                     currentProducts.add(existingDetail.copy(
                         amount = existingDetail.amount+1
                     ))
+                } else {
+                    currentProducts.add(detail)
                 }
 
                 _currentBucket.value.copy(
-                    products = currentProducts!!.apply { add(detail) }
+                    products = currentProducts
                 )
             }
 
@@ -145,7 +149,7 @@ class OrderViewModel(
         viewModelScope.launch {
             val currentProducts = _currentBucket.value.products?.toMutableList()
 
-            val existingDetail = currentProducts?.find { it.product?.id == detail.product?.id }
+            val existingDetail = currentProducts?.findExisting(detail)
             if (existingDetail != null) {
                 currentProducts.remove(existingDetail)
             }
@@ -157,6 +161,14 @@ class OrderViewModel(
                     products = currentProducts
                 )
             }
+        }
+    }
+
+    private fun List<ProductOrderDetail>.findExisting(compare: ProductOrderDetail): ProductOrderDetail? {
+        return this.find {
+            it.product == compare.product &&
+                    it.variants == compare.variants &&
+                    it.mixProducts == compare.mixProducts
         }
     }
 }

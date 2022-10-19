@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -53,7 +54,7 @@ import kotlinx.coroutines.launch
 fun OrderSelectItems(
     productViewModel: ProductViewModel,
     orderViewModel: OrderViewModel,
-    onAddItemClicked: (product: Product) -> Unit,
+    onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit,
     onClickOrder: () -> Unit,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit
 ) {
@@ -103,6 +104,7 @@ fun OrderSelectItems(
         content = {
             ProductOrderList(
                 orderViewModel = orderViewModel,
+                productViewModel = productViewModel,
                 products = state.value,
                 onBucketClicked = {
                     modalContent = ModalContent.BUCKET_VIEW
@@ -110,7 +112,7 @@ fun OrderSelectItems(
                         modalState.show()
                     }
                 },
-                onAddItemClicked = onAddItemClicked,
+                onItemClick = onItemClick,
                 onMenusClicked = {
                     modalContent = ModalContent.GENERAL_MENUS
                     scope.launch {
@@ -125,9 +127,10 @@ fun OrderSelectItems(
 @Composable
 private fun ProductOrderList(
     orderViewModel: OrderViewModel,
+    productViewModel: ProductViewModel,
     products: Map<Category, List<ProductWithCategory>>?,
     onBucketClicked: () -> Unit,
-    onAddItemClicked: (product: Product) -> Unit,
+    onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit,
     onMenusClicked: () -> Unit,
 ) {
     products?.let {
@@ -137,6 +140,9 @@ private fun ProductOrderList(
                 .background(color = MaterialTheme.colors.background)
         ) {
             val (content, cart, menu) = createRefs()
+
+            val currentBucket = orderViewModel.currentBucket.collectAsState()
+
             LazyColumn(
                 modifier = Modifier
                     .constrainAs(content) {
@@ -146,16 +152,17 @@ private fun ProductOrderList(
             ) {
 
                 it.forEach { categoryWithProduct ->
+
                     item {
                         CategoryWithProducts(
+                            productViewModel = productViewModel,
                             categoryWithProduct = categoryWithProduct,
-                            onAddItemClick = onAddItemClicked
+                            bucketOrder = currentBucket.value,
+                            onItemClick = onItemClick
                         )
                     }
                 }
             }
-
-            val currentBucket = orderViewModel.currentBucket.collectAsState()
 
             if (currentBucket.value != BucketOrder.idle()) {
                 ConstraintLayout(
@@ -193,7 +200,7 @@ private fun ProductOrderList(
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = "${currentBucket.value.totalItems()} barang",
+                            text = "${currentBucket.value.totalItems()} item",
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.onPrimary
                         )
@@ -231,11 +238,13 @@ private fun ProductOrderList(
 
 @Composable
 private fun CategoryWithProducts(
+    productViewModel: ProductViewModel,
     categoryWithProduct: Map.Entry<Category, List<ProductWithCategory>>,
-    onAddItemClick: (product: Product) -> Unit
+    bucketOrder: BucketOrder,
+    onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit
 ) {
 
-    var isExpand by remember {
+    var isExpand by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -267,12 +276,11 @@ private fun CategoryWithProducts(
         if (isExpand) {
             categoryWithProduct.value.forEach { product ->
                 ProductCustomerItemView(
-                    titleText = product.product.name,
-                    subTitleText = product.product.desc,
-                    priceText = product.product.sellPrice,
-                    imageUrl = product.product.image,
-                    onAddItemClick = {
-                        onAddItemClick(product.product)
+                    productViewModel = productViewModel,
+                    product = product.product,
+                    currentAmount = bucketOrder.getProductAmount(product.product.id),
+                    onItemClick = {isAdd, hasVariant ->
+                        onItemClick(product.product, isAdd, hasVariant)
                     }
                 )
             }

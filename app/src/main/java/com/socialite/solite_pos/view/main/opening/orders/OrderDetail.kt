@@ -52,8 +52,7 @@ fun OrderDetail(
     orderNo: String,
     orderViewModel: OrderViewModel,
     onBackClicked: () -> Unit,
-    onDoneClicked: () -> Unit,
-    onPayClicked: () -> Unit,
+    onButtonClicked: (OrderButtonType) -> Unit
 ) {
 
     var orderWithProducts by remember {
@@ -89,8 +88,8 @@ fun OrderDetail(
                     orderWithProduct = it,
                     onMenuClicked = { buttonType ->
                         when (buttonType) {
-                            OrderButtonType.PRINT -> TODO()
-                            OrderButtonType.QUEUE -> TODO()
+                            OrderButtonType.PRINT -> {}
+                            OrderButtonType.QUEUE -> {}
                             OrderButtonType.PAYMENT -> {
                                 alertPaymentState = true
                             }
@@ -112,7 +111,7 @@ fun OrderDetail(
             titleText = stringResource(R.string.pay_the_order),
             descText = stringResource(R.string.are_you_sure_will_pay_this_order),
             positiveAction = {
-                onPayClicked()
+                onButtonClicked(OrderButtonType.PAYMENT)
                 alertPaymentState = false
             },
             positiveText = stringResource(R.string.yes),
@@ -131,6 +130,7 @@ fun OrderDetail(
                 orderWithProducts?.order?.order?.let {
                     orderViewModel.cancelOrder(it)
                 }
+                onButtonClicked(OrderButtonType.CANCEL)
                 alertCancelState = false
             },
             positiveText = stringResource(R.string.yes),
@@ -150,7 +150,7 @@ fun OrderDetail(
                     orderViewModel.doneOrder(it)
                 }
                 alertDoneState = false
-                onDoneClicked()
+                onButtonClicked(OrderButtonType.DONE)
             },
             positiveText = stringResource(R.string.yes),
             negativeAction = {
@@ -431,28 +431,8 @@ private fun RowScope.DoneMenuButton(
     onMenuClicked: (OrderButtonType) -> Unit
 ) {
     OrderDetailButton(
-        buttonType = OrderButtonType.QUEUE,
-        onMenuClicked = onMenuClicked
-    )
-    Spacer(modifier = Modifier.width(16.dp))
-    OrderDetailButton(
         buttonType = OrderButtonType.PRINT,
-        onMenuClicked = onMenuClicked
-    )
-    Spacer(modifier = Modifier.width(16.dp))
-    OrderDetailButton(
-        buttonType = OrderButtonType.DONE,
         isMain = true,
-        onMenuClicked = onMenuClicked
-    )
-    Spacer(modifier = Modifier.width(16.dp))
-    OrderDetailButton(
-        buttonType = OrderButtonType.PAYMENT,
-        onMenuClicked = onMenuClicked
-    )
-    Spacer(modifier = Modifier.width(16.dp))
-    OrderDetailButton(
-        buttonType = OrderButtonType.CANCEL,
         onMenuClicked = onMenuClicked
     )
 }
