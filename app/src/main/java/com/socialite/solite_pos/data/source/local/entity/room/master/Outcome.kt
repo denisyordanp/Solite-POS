@@ -82,6 +82,9 @@ data class Outcome(
 	@Ignore
 	constructor(name: String, desc: String, price: Long, amount: Int, date: String): this(0, name, desc, price, amount, date, false)
 
+	@Ignore
+	constructor(name: String, desc: String, price: Long, date: String): this(0, name, desc, price, 1, date, false)
+
 	val total: Long
 		get() = price * amount
 }

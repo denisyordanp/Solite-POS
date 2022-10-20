@@ -15,7 +15,7 @@ class DateUtils {
         private val dbDateSimpleFormat = SimpleDateFormat(dbDateFormat, locale)
 
         private val locale: Locale
-            get() = Locale.getDefault()
+            get() = Locale("in", "ID")
 
         fun convertDateFromDb(date: String?, format: String): String {
             return if (!date.isNullOrEmpty()) {

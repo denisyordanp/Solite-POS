@@ -11,8 +11,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
-        <activity android:name=".view.main.opening.recap.RecapActivity"/>
-        <activity android:name=".view.main.opening.orders.OrdersActivity"/>
+        <activity android:name=".view.main.opening.recap.RecapActivity" />
+        <activity
+            android:name=".view.main.opening.outcomes.OutcomesActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".view.main.opening.orders.OrdersActivity" />
         <activity android:name=".view.main.opening.store.StoreActivity" />
         <activity android:name=".view.main.opening.order_customer.OrderCustomerActivity" />
         <activity android:name=".view.main.menu.history.SalesActivity" />

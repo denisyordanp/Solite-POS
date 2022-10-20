@@ -45,5 +45,9 @@
     <string name="yeay_there_no_cancel_order">Yeay, tidak ada pesanan yang dibatalkan!</string>
     <string name="no_done_order_yet_spirit_find_some_customer_today">Belum ada pesanan selesai nih, yuk semangat cari pelanggan hari ini!</string>
     <string name="select_variant">Pilih varian</string>
+    <string name="outcome_title">Judul pengeluaran</string>
+    <string name="deskripsi_optional">Deskripsi (Optional)</string>
+    <string name="total_outcome">Jumlah pengeluaran</string>
+    <string name="create_outcome">Buat pengeluaran</string>
 
 </resources>

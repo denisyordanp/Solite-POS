@@ -41,6 +41,7 @@ object DomainInjection {
     fun provideGetIncomesRecapData(context: Context): GetRecapData {
         return GetRecapDataImpl(
             RepositoryInjection.provideOrdersRepository(context),
+            RepositoryInjection.provideOutcomesRepository(context),
             provideGetProductOrder(context)
         )
     }

@@ -13,6 +13,7 @@ import com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActiv
 import com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity
 import com.socialite.solite_pos.view.main.opening.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.main.opening.orders.OrdersActivity
+import com.socialite.solite_pos.view.main.opening.outcomes.OutcomesActivity
 import com.socialite.solite_pos.view.main.opening.recap.RecapActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.MasterMenus
@@ -57,7 +58,7 @@ class StoreActivity : AppCompatActivity() {
                                 when (it) {
                                     StoreMenus.SALES_RECAP -> goToRecapActivity()
                                     StoreMenus.PURCHASE -> goToPurchaseActivity()
-                                    StoreMenus.OUTCOMES -> {}
+                                    StoreMenus.OUTCOMES -> goToOutcomesActivity()
                                     else -> {
                                         // Do nothing
                                     }
@@ -72,6 +73,11 @@ class StoreActivity : AppCompatActivity() {
 
     private fun goToRecapActivity() {
         val intent = Intent(this, RecapActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToOutcomesActivity() {
+        val intent = Intent(this, OutcomesActivity::class.java)
         startActivity(intent)
     }
 

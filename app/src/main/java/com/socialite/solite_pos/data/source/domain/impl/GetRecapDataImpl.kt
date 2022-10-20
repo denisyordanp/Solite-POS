@@ -6,12 +6,14 @@ import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.Income
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
+import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class GetRecapDataImpl(
     private val repository: OrdersRepository,
+    private val outcomesRepository: OutcomesRepository,
     private val getProductOrder: GetProductOrder
 ) : GetRecapData {
     override fun invoke(status: Int, date: String): Flow<RecapData> {
@@ -28,10 +30,12 @@ class GetRecapDataImpl(
                     isCash = it.payment?.isCash ?: false
                 )
             }
+            val outcomes = outcomesRepository.getOutcomes(date).first()
+
             emit(
                 RecapData(
                     incomes = incomes,
-                    outcomes = emptyList()
+                    outcomes = outcomes
                 )
             )
         }
