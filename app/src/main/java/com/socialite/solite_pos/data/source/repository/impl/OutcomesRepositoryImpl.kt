@@ -27,6 +27,7 @@ class OutcomesRepositoryImpl(
     }
 
     override fun getOutcomes(date: String) = dao.getOutcome(date)
+    override fun getOutcomes(from: String, until: String) = dao.getOutcome(from, until)
 
     override suspend fun insertOutcome(data: Outcome) {
         dao.insertOutcome(data)

@@ -49,5 +49,7 @@
     <string name="deskripsi_optional">Deskripsi (Optional)</string>
     <string name="total_outcome">Jumlah pengeluaran</string>
     <string name="create_outcome">Buat pengeluaran</string>
+    <string name="from">Dari</string>
+    <string name="until">Sampai</string>
 
 </resources>

@@ -14,6 +14,9 @@ interface OutcomesDao {
     @Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) = date(:date)")
     fun getOutcome(date: String): Flow<List<Outcome>>
 
+    @Query("SELECT * FROM ${Outcome.DB_NAME} WHERE date(${Outcome.DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getOutcome(from: String, until: String): Flow<List<Outcome>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOutcome(data: Outcome): Long
 

@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -21,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +37,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.Income
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.view.dialog.DatePickerFragment
 import com.socialite.solite_pos.view.main.opening.ui.OrderMenus
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -41,10 +46,14 @@ class RecapActivity : AppCompatActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
 
+    private lateinit var datePicker: DatePickerFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
+
+        datePicker = DatePickerFragment.createInstance()
 
         setContent {
             SolitePOSTheme {
@@ -80,10 +89,7 @@ class RecapActivity : AppCompatActivity() {
 
         val date = DateUtils.currentDate
 
-        val recap = orderViewModel.getIncomes(date)
-            .collectAsState(initial = RecapData.empty())
-
-        val selectedDate by remember {
+        var selectedDate by remember {
             mutableStateOf(
                 Pair(
                     date,
@@ -92,17 +98,42 @@ class RecapActivity : AppCompatActivity() {
             )
         }
 
+        val recap = orderViewModel.getIncomes(selectedDate.first, selectedDate.second)
+            .collectAsState(initial = RecapData.empty())
+
         LazyColumn(
             modifier = modifier
         ) {
             item {
                 DateSelection(
                     selectedDateFrom = selectedDate.first,
-                    selectedDateUntil = selectedDate.second
+                    selectedDateUntil = selectedDate.second,
+                    onFromDateClicked = {
+                        datePicker.show(
+                            manager = supportFragmentManager,
+                            selectedDate = selectedDate.first,
+                            callback = {
+                                selectedDate = selectedDate.copy(
+                                    first = it
+                                )
+                            }
+                        )
+                    },
+                    onUntilDateClicked = {
+                        datePicker.show(
+                            manager = supportFragmentManager,
+                            selectedDate = selectedDate.second,
+                            callback = {
+                                selectedDate = selectedDate.copy(
+                                    second = it
+                                )
+                            }
+                        )
+                    }
                 )
             }
             item {
-                OrdersMenuItem(date)
+                OrdersMenuItem(selectedDate.first)
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -131,23 +162,32 @@ class RecapActivity : AppCompatActivity() {
     private fun DateSelection(
         selectedDateFrom: String,
         selectedDateUntil: String,
+        onFromDateClicked: () -> Unit,
+        onUntilDateClicked: () -> Unit,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = Color.White)
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
-                    text = "Dari",
+                    modifier = Modifier
+                        .padding(4.dp),
+                    text = stringResource(R.string.from),
                     style = MaterialTheme.typography.body1.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Sampai",
+                    modifier = Modifier
+                        .padding(4.dp),
+                    text = stringResource(R.string.until),
                     style = MaterialTheme.typography.body1.copy(
                         fontWeight = FontWeight.Bold
                     )
@@ -156,11 +196,29 @@ class RecapActivity : AppCompatActivity() {
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colors.background,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .clickable {
+                            onFromDateClicked()
+                        }
+                        .padding(4.dp),
                     text = DateUtils.convertDateFromDate(selectedDateFrom, DateUtils.DATE_WITH_DAY_FORMAT),
                     style = MaterialTheme.typography.body1
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colors.background,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .clickable {
+                            onUntilDateClicked()
+                        }
+                        .padding(4.dp),
                     text = DateUtils.convertDateFromDate(selectedDateUntil, DateUtils.DATE_WITH_DAY_FORMAT),
                     style = MaterialTheme.typography.body1
                 )

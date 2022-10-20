@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface OutcomesRepository {
 
     fun getOutcomes(date: String): Flow<List<Outcome>>
+    fun getOutcomes(from: String, until: String): Flow<List<Outcome>>
     suspend fun insertOutcome(data: Outcome)
     suspend fun updateOutcome(data: Outcome)
 }

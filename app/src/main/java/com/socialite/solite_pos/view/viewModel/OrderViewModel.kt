@@ -46,7 +46,7 @@ class OrderViewModel(
 
     suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
-    fun getIncomes(date: String) = getRecapData(Order.DONE, date)
+    fun getIncomes(from: String, until: String) = getRecapData(from, until)
 
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment =
         orderRepository.insertPaymentOrder(payment)

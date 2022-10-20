@@ -5,19 +5,33 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.calendarToStr
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToCalendar
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
-class DatePickerFragment(
-    private var selectedDate: String, private val callback: ((String) -> Unit)?
-) : AppCompatDialogFragment(), DatePickerDialog.OnDateSetListener {
+class DatePickerFragment: AppCompatDialogFragment(), DatePickerDialog.OnDateSetListener {
 
-    constructor() : this(currentDateTime, null)
+    private var selectedDate: String? = null
+    private var callback: ((String) -> Unit)? = null
+
+    companion object {
+
+        private const val TAG = "DatePickerFragment"
+        fun createInstance(): DatePickerFragment {
+            return DatePickerFragment()
+        }
+    }
+
+    fun show(manager: FragmentManager, selectedDate: String, callback: (String) -> Unit) {
+        this.selectedDate = selectedDate
+        this.callback = callback
+        super.show(manager, TAG)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return createDialog(selectedDate)
+        return createDialog(selectedDate ?: "")
     }
 
     private fun createDialog(selectedDate: String): DatePickerDialog {
