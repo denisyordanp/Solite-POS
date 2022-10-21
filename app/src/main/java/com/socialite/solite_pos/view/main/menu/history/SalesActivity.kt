@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
 import com.socialite.solite_pos.databinding.ActivitySalesBinding
 import com.socialite.solite_pos.databinding.MainMenuBinding
 import com.socialite.solite_pos.utils.config.DateUtils
@@ -11,9 +12,11 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFrom
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.view.dialog.DatePickerFragment
-import com.socialite.solite_pos.adapters.viewPager.ViewPagerAdapter
-import com.socialite.solite_pos.view.main.menu.main.*
+import com.socialite.solite_pos.view.main.menu.main.CancelFragment
+import com.socialite.solite_pos.view.main.menu.main.DailyRecapFragment
+import com.socialite.solite_pos.view.main.menu.main.DoneFragment
+import com.socialite.solite_pos.view.main.menu.main.NotPayFragment
+import com.socialite.solite_pos.view.main.menu.main.OnProcessFragment
 
 class SalesActivity : SocialiteActivity() {
 
@@ -94,9 +97,9 @@ class SalesActivity : SocialiteActivity() {
 
     private fun setMenu() {
         _menu.menuDate.setOnClickListener {
-            DatePickerFragment(historyDate) {
-                setFragmentsDate(it)
-            }.show(supportFragmentManager, "select-date")
+//            DatePickerFragment(historyDate) {
+//                setFragmentsDate(it)
+//            }.show(supportFragmentManager, "select-date")
         }
         _menu.menuOrder.setOnClickListener { setMenu(it, 0) }
         _menu.menuNotPay.setOnClickListener { setMenu(it, 1) }

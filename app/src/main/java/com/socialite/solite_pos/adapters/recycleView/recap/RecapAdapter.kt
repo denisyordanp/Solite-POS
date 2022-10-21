@@ -5,15 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
+import com.socialite.solite_pos.data.source.local.entity.helper.Income
 import com.socialite.solite_pos.databinding.RvRecapBinding
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 
 class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 
-    private var recaps: ArrayList<RecapData> = ArrayList()
-    fun setRecaps(recaps: List<RecapData>) {
+    private var recaps: ArrayList<Income> = ArrayList()
+    fun setRecaps(recaps: List<Income>) {
         val recapDiffUtils = RecycleViewDiffUtils(this.recaps, recaps)
         val diffUtilResult = DiffUtil.calculateDiff(recapDiffUtils)
         this.recaps = ArrayList(recaps)
@@ -59,7 +59,7 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
 
     inner class ListViewHolder(var binding: RvRecapBinding, private val isTitle: Boolean) :
         RecyclerView.ViewHolder(binding.root) {
-        fun setDataToView(recap: RecapData?) {
+        fun setDataToView(recap: Income?) {
             if (isTitle) {
                 setTitleView()
             } else {
@@ -82,10 +82,10 @@ class RecapAdapter : RecyclerView.Adapter<RecapAdapter.ListViewHolder>() {
             }
         }
 
-        private fun setTextView(recap: RecapData) {
-            binding.tvRvRcName.text = recap.name
-            binding.tvRvRcDesc.text = recap.desc
-            binding.tvRvRcTotal.text = toRupiah(recap.total)
+        private fun setTextView(recap: Income) {
+//            binding.tvRvRcName.text = recap.name
+//            binding.tvRvRcDesc.text = recap.desc
+//            binding.tvRvRcTotal.text = toRupiah(recap.total)
         }
     }
 

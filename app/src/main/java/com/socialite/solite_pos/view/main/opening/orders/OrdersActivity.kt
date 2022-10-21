@@ -59,7 +59,7 @@ class OrdersActivity : AppCompatActivity() {
                         route = OrderDetailDestinations.ORDERS
                     ) {
                         OrderItems(
-                            viewModel = orderViewModel,
+                            orderViewModel = orderViewModel,
                             currentDate = DateUtils.currentDate,
                             defaultTabPage = defaultTabPage,
                             onGeneralMenuClicked = {
@@ -113,6 +113,14 @@ class OrdersActivity : AppCompatActivity() {
                                         }
                                         OrderButtonType.CANCEL -> {
                                             defaultTabPage = OrderMenus.CANCELED.status
+                                            navController.navigate(OrderDetailDestinations.ORDERS) {
+                                                popUpTo(OrderDetailDestinations.ORDERS) {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        }
+                                        OrderButtonType.PUT_BACK -> {
+                                            defaultTabPage = OrderMenus.CURRENT_ORDER.status
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
                                                 popUpTo(OrderDetailDestinations.ORDERS) {
                                                     inclusive = true

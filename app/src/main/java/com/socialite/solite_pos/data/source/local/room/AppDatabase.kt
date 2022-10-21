@@ -4,10 +4,26 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.*
-import com.socialite.solite_pos.data.source.local.entity.room.master.*
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
+import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
+import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
+import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
+import com.socialite.solite_pos.data.source.local.entity.room.master.Store
+import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
+import com.socialite.solite_pos.data.source.local.entity.room.master.User
+import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
+import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 
 @Database(
         entities = [
@@ -29,8 +45,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.*
             OrderMixProductVariant::class,
             VariantMix::class,
             VariantProduct::class,
-            VariantOption::class],
-        version = 2,
+            VariantOption::class,
+            Store::class],
+        version = 3,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -47,6 +64,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun purchasesDao(): PurchasesDao
     abstract fun ordersDao(): OrdersDao
     abstract fun variantMixesDao(): VariantMixesDao
+    abstract fun storeDao(): StoreDao
 
     companion object {
 
@@ -55,12 +73,6 @@ abstract class AppDatabase : RoomDatabase() {
         const val MAIN = "main"
 
         private var INSTANCE: AppDatabase? = null
-
-        private var migration_1_2: Migration = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE '${Product.DB_NAME}' ADD COLUMN ${Product.MIX} INTEGER NOT NULL DEFAULT 0")
-            }
-        }
 
         fun getInstance(context: Context): AppDatabase {
             if (INSTANCE == null) {
@@ -71,7 +83,6 @@ abstract class AppDatabase : RoomDatabase() {
                             DB_NAME
                     )
                             .allowMainThreadQueries()
-                            .addMigrations(migration_1_2)
 //							.fallbackToDestructiveMigration()
                             .build()
                 }

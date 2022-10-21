@@ -5,11 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,6 +48,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BadgeNumber
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
@@ -62,7 +65,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 fun OrderItems(
-    viewModel: OrderViewModel,
+    orderViewModel: OrderViewModel,
     currentDate: String,
     defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
@@ -82,6 +85,8 @@ fun OrderItems(
         sheetContent = {
             when (modalContent) {
                 ModalContent.GENERAL_MENUS -> GeneralMenusView(
+                    orderViewModel = orderViewModel,
+                    date = currentDate,
                     onClicked = {
                         if (it == GeneralMenus.ORDERS) {
                             scope.launch {
@@ -104,7 +109,7 @@ fun OrderItems(
                     .fillMaxSize()
             ) {
                 OrderList(
-                    viewModel = viewModel,
+                    viewModel = orderViewModel,
                     currentDate = currentDate,
                     defaultTabPage = defaultTabPage,
                     onOrderClicked = onOrderClicked
@@ -156,11 +161,27 @@ private fun OrderList(
                         }
                     }
                 ) {
-                    Text(
+                    val badge = viewModel.getOrderBadge(menu, currentDate)
+                        .collectAsState(initial = null)
+
+                    Row(
                         modifier = Modifier
-                            .padding(16.dp),
-                        text = stringResource(id = menu.title)
-                    )
+                            .padding(16.dp)
+                    ) {
+                        badge.value?.let {
+                            BadgeNumber(
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically),
+                                badge = it
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
+                        Text(
+                            modifier = Modifier,
+                            text = stringResource(id = menu.title),
+                            style = MaterialTheme.typography.body2
+                        )
+                    }
                 }
             }
         }

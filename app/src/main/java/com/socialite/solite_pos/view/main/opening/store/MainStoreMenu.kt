@@ -17,11 +17,14 @@ import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.MasterMenus
 import com.socialite.solite_pos.view.main.opening.ui.ModalContent
 import com.socialite.solite_pos.view.main.opening.ui.StoreMenus
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 fun MainStoreMenu(
+    orderViewModel: OrderViewModel,
+    currentDate: String,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onMasterMenuClicked: (menu: MasterMenus) -> Unit,
     onStoreMenuClicked: (menu: StoreMenus) -> Unit
@@ -45,6 +48,8 @@ fun MainStoreMenu(
                 }
 
                 ModalContent.GENERAL_MENUS -> GeneralMenusView(
+                    orderViewModel = orderViewModel,
+                    date = currentDate,
                     onClicked = {
                         if (it == GeneralMenus.STORE) {
                             scope.launch {

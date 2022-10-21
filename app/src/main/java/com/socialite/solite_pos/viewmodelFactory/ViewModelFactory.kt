@@ -3,6 +3,7 @@ package com.socialite.solite_pos.viewmodelFactory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
+import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
@@ -16,12 +17,15 @@ import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PurchasesRepository
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetIncomesRecapData
+import com.socialite.solite_pos.utils.di.DomainInjection.provideGetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetProductOrder
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetProductVariantOptions
 import com.socialite.solite_pos.utils.di.DomainInjection.provideNewOrder
@@ -34,7 +38,9 @@ import com.socialite.solite_pos.utils.di.RepositoryInjection.providePaymentsRepo
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideProductVariantsRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideProductsRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.providePurchasesRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideSettingRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideSoliteRepository
+import com.socialite.solite_pos.utils.di.RepositoryInjection.provideStoreRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideSupplierRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideVariantMixesRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideVariantOptionsRepository
@@ -63,6 +69,9 @@ class ViewModelFactory private constructor(
     private val getRecapData: GetRecapData,
     private val variantMixesRepository: VariantMixesRepository,
     private val payOrder: PayOrder,
+    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
+    private val storeRepository: StoreRepository,
+    private val settingRepository: SettingRepository,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -90,7 +99,10 @@ class ViewModelFactory private constructor(
                             provideGetProductOrder(context),
                             provideGetIncomesRecapData(context),
                             provideVariantMixesRepository(context),
-                            providePayOrder(context)
+                            providePayOrder(context),
+                            provideGetOrdersGeneralMenuBadge(context),
+                            provideStoreRepository(context),
+                            provideSettingRepository(context)
                         )
                     }
                 }
@@ -108,7 +120,9 @@ class ViewModelFactory private constructor(
                     supplierRepository = supplierRepository,
                     customersRepository = customersRepository,
                     outcomesRepository = outcomesRepository,
-                    purchasesRepository = purchasesRepository
+                    purchasesRepository = purchasesRepository,
+                    storeRepository = storeRepository,
+                    settingRepository = settingRepository
                 ) as T
             }
 
@@ -119,7 +133,8 @@ class ViewModelFactory private constructor(
                     newOrder = newOrder,
                     getProductOrder = getProductOrder,
                     getRecapData = getRecapData,
-                    payOrder = payOrder
+                    payOrder = payOrder,
+                    getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge
                 ) as T
             }
 

@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
@@ -66,9 +65,8 @@ fun NewOutcome(
         Spacer(modifier = Modifier.height(16.dp))
         PrimaryButtonView(
             modifier = Modifier
-                .fillMaxWidth()
-                .navigationBarsWithImePadding(),
-            buttonText = stringResource(R.string.create_outcome),
+                .fillMaxWidth(),
+            buttonText = stringResource(R.string.add_outcome),
             onClick = {
                 onCreateOutcome(
                     Outcome(

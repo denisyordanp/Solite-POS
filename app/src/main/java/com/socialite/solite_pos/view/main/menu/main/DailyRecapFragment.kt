@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.adapters.recycleView.recap.RecapAdapter
-import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.databinding.FragmentDailyRecapBinding
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDate
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDate
@@ -76,29 +75,29 @@ class DailyRecapFragment(private var queryDate: String) : Fragment() {
 
     private fun getIncome() {
         lifecycleScope.launch {
-            orderViewModel.getIncomes(queryDate)
-                .collect {
-                    if (it.isNotEmpty()) {
-                        incomeRecapAdapter.setRecaps(it)
-                        setData()
-                    } else {
-                        incomeRecapAdapter.setRecaps(emptyList())
-                    }
-                }
+//            orderViewModel.getIncomes(queryDate)
+//                .collect {
+//                    if (it.isNotEmpty()) {
+//                        incomeRecapAdapter.setRecaps(it)
+//                        setData()
+//                    } else {
+//                        incomeRecapAdapter.setRecaps(emptyList())
+//                    }
+//                }
         }
     }
 
     private fun getOutCome() {
         lifecycleScope.launch {
-            viewModel.getOutcome(queryDate)
-                .collect {
-                    val outcomes: ArrayList<RecapData> = ArrayList()
-                    for (item in it) {
-                        outcomes.add(RecapData("${item.amount}x", item.name, item.total, null))
-                    }
-                    outcomeRecapAdapter.setRecaps(outcomes)
-                    setData()
-                }
+//            viewModel.getOutcome(queryDate)
+//                .collect {
+//                    val outcomes: ArrayList<RecapData> = ArrayList()
+//                    for (item in it) {
+//                        outcomes.add(RecapData("${item.amount}x", item.name, item.total, null))
+//                    }
+//                    outcomeRecapAdapter.setRecaps(outcomes)
+//                    setData()
+//                }
         }
     }
 

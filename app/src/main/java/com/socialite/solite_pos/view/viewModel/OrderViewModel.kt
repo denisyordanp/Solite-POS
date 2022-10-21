@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.viewModel
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.NewOrder
@@ -17,8 +18,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.view.main.opening.ui.OrderMenus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -29,6 +33,7 @@ class OrderViewModel(
     private val getProductOrder: GetProductOrder,
     private val getRecapData: GetRecapData,
     private val payOrder: PayOrder,
+    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<OrderViewModel>() {
@@ -42,11 +47,28 @@ class OrderViewModel(
 
     fun getOrderList(status: Int, date: String) = orderRepository.getOrderList(status, date)
 
+    fun getOrderList(status: Int, date: String, store: Long) = orderRepository.getOrderList(status, date, store)
+    fun getOrderBadge(orderMenus: OrderMenus, date: String) = when (orderMenus) {
+        OrderMenus.CURRENT_ORDER, OrderMenus.NOT_PAY_YET -> {
+            orderRepository
+                .getOrderList(orderMenus.status, date)
+                .map {
+                    if (it.isEmpty()) null else it.size
+                }
+        }
+
+        else -> {
+            flowOf(null)
+        }
+    }
+
+    fun getMenuBadge(date: String) = getOrdersGeneralMenuBadge(date)
+
     suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderDetail(orderNo)
 
     suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
-    fun getIncomes(from: String, until: String) = getRecapData(from, until)
+    fun getIncomes(from: String, until: String, store: Long) = getRecapData(from, until, store)
 
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment =
         orderRepository.insertPaymentOrder(payment)
@@ -86,17 +108,31 @@ class OrderViewModel(
 
     fun doneOrder(order: Order) {
         viewModelScope.launch {
-            orderRepository.updateOrder(order.copy(
-                status = Order.NEED_PAY
-            ))
+            orderRepository.updateOrder(
+                order.copy(
+                    status = Order.NEED_PAY
+                )
+            )
         }
     }
 
     fun cancelOrder(order: Order) {
         viewModelScope.launch {
-            orderRepository.updateOrder(order.copy(
-                status = Order.CANCEL
-            ))
+            orderRepository.updateOrder(
+                order.copy(
+                    status = Order.CANCEL
+                )
+            )
+        }
+    }
+
+    fun putBackOrder(order: Order) {
+        viewModelScope.launch {
+            orderRepository.updateOrder(
+                order.copy(
+                    status = Order.ON_PROCESS
+                )
+            )
         }
     }
 
@@ -119,7 +155,7 @@ class OrderViewModel(
 
     fun addProductToBucket(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val newBucket = if(_currentBucket.value.isIdle()) {
+            val newBucket = if (_currentBucket.value.isIdle()) {
                 BucketOrder(
                     time = Calendar.getInstance().timeInMillis,
                     products = listOf(detail)
@@ -129,9 +165,11 @@ class OrderViewModel(
                 val existingDetail = currentProducts.findExisting(detail)
                 if (existingDetail != null) {
                     currentProducts.remove(existingDetail)
-                    currentProducts.add(existingDetail.copy(
-                        amount = existingDetail.amount+1
-                    ))
+                    currentProducts.add(
+                        existingDetail.copy(
+                            amount = existingDetail.amount + 1
+                        )
+                    )
                 } else {
                     currentProducts.add(detail)
                 }

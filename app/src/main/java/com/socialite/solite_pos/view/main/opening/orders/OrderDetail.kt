@@ -72,6 +72,7 @@ fun OrderDetail(
     var alertDoneState by remember { mutableStateOf(false) }
     var alertCancelState by remember { mutableStateOf(false) }
     var alertPaymentState by remember { mutableStateOf(false) }
+    var alertPutBackState by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -98,6 +99,9 @@ fun OrderDetail(
                             }
                             OrderButtonType.CANCEL -> {
                                 alertCancelState = true
+                            }
+                            OrderButtonType.PUT_BACK -> {
+                                alertPutBackState = true
                             }
                         }
                     }
@@ -155,6 +159,24 @@ fun OrderDetail(
             positiveText = stringResource(R.string.yes),
             negativeAction = {
                 alertDoneState = false
+            },
+            negativeText = stringResource(R.string.no)
+        )
+    }
+    if (alertPutBackState) {
+        BasicAlertDialog(
+            titleText = stringResource(R.string.put_back_order),
+            descText = stringResource(R.string.are_you_sure_will_put_back_this_order),
+            positiveAction = {
+                orderWithProducts?.order?.order?.let {
+                    orderViewModel.putBackOrder(it)
+                }
+                alertPutBackState = false
+                onButtonClicked(OrderButtonType.PUT_BACK)
+            },
+            positiveText = stringResource(R.string.yes),
+            negativeAction = {
+                alertPutBackState = false
             },
             negativeText = stringResource(R.string.no)
         )
@@ -367,7 +389,7 @@ private fun ButtonBottomBar(
                     OrderMenus.CURRENT_ORDER -> OrderMenuButton(onMenuClicked = onMenuClicked)
                     OrderMenus.NOT_PAY_YET -> NeedPayMenuButton(onMenuClicked = onMenuClicked)
                     OrderMenus.DONE -> DoneMenuButton(onMenuClicked = onMenuClicked)
-                    OrderMenus.CANCELED -> OrderMenuButton(onMenuClicked = onMenuClicked)
+                    OrderMenus.CANCELED -> CanceledMenuButton(onMenuClicked = onMenuClicked)
                 }
             }
         }
@@ -432,6 +454,17 @@ private fun RowScope.DoneMenuButton(
 ) {
     OrderDetailButton(
         buttonType = OrderButtonType.PRINT,
+        isMain = true,
+        onMenuClicked = onMenuClicked
+    )
+}
+
+@Composable
+private fun RowScope.CanceledMenuButton(
+    onMenuClicked: (OrderButtonType) -> Unit
+) {
+    OrderDetailButton(
+        buttonType = OrderButtonType.PUT_BACK,
         isMain = true,
         onMenuClicked = onMenuClicked
     )

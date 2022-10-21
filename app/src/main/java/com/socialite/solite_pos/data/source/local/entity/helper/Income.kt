@@ -9,5 +9,5 @@ data class Income(
     var isCash: Boolean
 ) {
 
-    fun dateString() = DateUtils.convertDateFromDb(date, DateUtils.DATE_WITH_DAY_FORMAT)
+    fun dateString() = DateUtils.convertDateFromDb(date, DateUtils.DATE_WITH_DAY_WITHOUT_YEAR_FORMAT)
 }

@@ -18,7 +18,8 @@
     <string name="supplier">Supplier</string>
     <string name="purchase">Pembelian</string>
     <string name="sales_recap">Rekap penjualan</string>
-    <string name="masters">Data Master</string>
+    <string name="products">Data Produk</string>
+    <string name="stores">Data Kedai</string>
     <string name="not_pay_yet">Belum Bayar</string>
     <string name="done">Selesai</string>
     <string name="canceled">Dibatalkan</string>
@@ -27,7 +28,9 @@
     <string name="amount">Banyaknya</string>
     <string name="adding">Tambahkan</string>
     <string name="done_the_order">Selesaikan pesanan</string>
+    <string name="put_back_order">Kembalikan pesanan</string>
     <string name="are_you_sure_will_done_this_order">Anda yakin akan menyelesaikan pesanan ini?</string>
+    <string name="are_you_sure_will_put_back_this_order">Anda yakin akan mengembalikan pesanan ini?</string>
     <string name="yes">Ya</string>
     <string name="no">Tidak</string>
     <string name="cancel_the_order">Batalkan pesanan</string>
@@ -48,8 +51,13 @@
     <string name="outcome_title">Judul pengeluaran</string>
     <string name="deskripsi_optional">Deskripsi (Optional)</string>
     <string name="total_outcome">Jumlah pengeluaran</string>
-    <string name="create_outcome">Buat pengeluaran</string>
+    <string name="add_outcome">Tambahkan pengeluaran</string>
     <string name="from">Dari</string>
     <string name="until">Sampai</string>
+    <string name="store_name">Nama kedai</string>
+    <string name="address">Alamat</string>
+    <string name="add_store">Tambahkan kedai</string>
+    <string name="select_store">Pilih kedai</string>
+    <string name="are_you_sure_select_this_store_for_next_orders">Anda yakin akan memilih kedai ini untuk pesanan selanjutnya?</string>
 
 </resources>

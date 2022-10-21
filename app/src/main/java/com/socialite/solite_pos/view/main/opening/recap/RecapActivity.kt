@@ -33,18 +33,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
+import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.Income
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
+import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.dialog.DatePickerFragment
 import com.socialite.solite_pos.view.main.opening.ui.OrderMenus
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 class RecapActivity : AppCompatActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     private lateinit var datePicker: DatePickerFragment
 
@@ -52,6 +56,7 @@ class RecapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
+        mainViewModel = MainViewModel.getMainViewModel(this)
 
         datePicker = DatePickerFragment.createInstance()
 
@@ -89,6 +94,10 @@ class RecapActivity : AppCompatActivity() {
 
         val date = DateUtils.currentDate
 
+        var storeExpanded by remember {
+            mutableStateOf(false)
+        }
+
         var selectedDate by remember {
             mutableStateOf(
                 Pair(
@@ -98,7 +107,17 @@ class RecapActivity : AppCompatActivity() {
             )
         }
 
-        val recap = orderViewModel.getIncomes(selectedDate.first, selectedDate.second)
+        var selectedStore by remember {
+            mutableStateOf<Store?>(null)
+        }
+
+        val stores = mainViewModel.getStores().collectAsState(initial = emptyList())
+
+        val recap = orderViewModel.getIncomes(
+            selectedDate.first,
+            selectedDate.second,
+            selectedStore?.id ?: 0L
+        )
             .collectAsState(initial = RecapData.empty())
 
         LazyColumn(
@@ -131,9 +150,25 @@ class RecapActivity : AppCompatActivity() {
                         )
                     }
                 )
+                Spacer(modifier = Modifier.height(4.dp))
             }
+
+            basicDropdown(
+                isExpanded = storeExpanded,
+                title = R.string.select_store,
+                selectedItem = selectedStore?.name,
+                items = stores.value,
+                onHeaderClicked = {
+                    storeExpanded = !storeExpanded
+                },
+                onSelectedItem = {
+                    selectedStore = it as Store
+                    storeExpanded = false
+                }
+            )
+
             item {
-                OrdersMenuItem(selectedDate.first)
+                OrdersMenuItem(selectedDate.first, selectedStore?.id ?: 0L)
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -205,7 +240,10 @@ class RecapActivity : AppCompatActivity() {
                             onFromDateClicked()
                         }
                         .padding(4.dp),
-                    text = DateUtils.convertDateFromDate(selectedDateFrom, DateUtils.DATE_WITH_DAY_FORMAT),
+                    text = DateUtils.convertDateFromDate(
+                        selectedDateFrom,
+                        DateUtils.DATE_WITH_DAY_FORMAT
+                    ),
                     style = MaterialTheme.typography.body1
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -219,7 +257,10 @@ class RecapActivity : AppCompatActivity() {
                             onUntilDateClicked()
                         }
                         .padding(4.dp),
-                    text = DateUtils.convertDateFromDate(selectedDateUntil, DateUtils.DATE_WITH_DAY_FORMAT),
+                    text = DateUtils.convertDateFromDate(
+                        selectedDateUntil,
+                        DateUtils.DATE_WITH_DAY_FORMAT
+                    ),
                     style = MaterialTheme.typography.body1
                 )
             }
@@ -228,7 +269,8 @@ class RecapActivity : AppCompatActivity() {
 
     @Composable
     private fun OrdersMenuItem(
-        date: String
+        date: String,
+        store: Long
     ) {
         Spacer(modifier = Modifier.height(4.dp))
         Column(
@@ -237,13 +279,13 @@ class RecapActivity : AppCompatActivity() {
                 .background(color = Color.White)
                 .padding(16.dp),
         ) {
-            MenuItem(OrderMenus.CURRENT_ORDER, date)
+            MenuItem(OrderMenus.CURRENT_ORDER, date, store)
             Spacer(modifier = Modifier.height(2.dp))
-            MenuItem(OrderMenus.NOT_PAY_YET, date)
+            MenuItem(OrderMenus.NOT_PAY_YET, date, store)
             Spacer(modifier = Modifier.height(2.dp))
-            MenuItem(OrderMenus.CANCELED, date)
+            MenuItem(OrderMenus.CANCELED, date, store)
             Spacer(modifier = Modifier.height(2.dp))
-            MenuItem(OrderMenus.DONE, date)
+            MenuItem(OrderMenus.DONE, date, store)
         }
         Spacer(modifier = Modifier.height(4.dp))
     }
@@ -264,6 +306,12 @@ class RecapActivity : AppCompatActivity() {
                     modifier = Modifier
                         .weight(1f),
                     text = income.dateString(),
+                    style = MaterialTheme.typography.body2
+                )
+                Text(
+                    modifier = Modifier
+                        .weight(1f),
+                    text = income.payment,
                     style = MaterialTheme.typography.body2
                 )
                 Text(
@@ -403,10 +451,11 @@ class RecapActivity : AppCompatActivity() {
     @Composable
     private fun MenuItem(
         menu: OrderMenus,
-        date: String
+        date: String,
+        store: Long,
     ) {
 
-        val amount = orderViewModel.getOrderList(menu.status, date)
+        val amount = orderViewModel.getOrderList(menu.status, date, store)
             .collectAsState(initial = emptyList())
 
         Row {

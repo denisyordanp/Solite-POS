@@ -157,11 +157,11 @@ class RemoteDataSource {
 				.collection(Order.DB_NAME)
 				.get()
 				.addOnSuccessListener {
-					val data = Order.toListClass(it)
-					if (data.isNullOrEmpty())
-						result.value = ApiResponse.empty(null)
-					else
-						result.value = ApiResponse.success(data)
+//					val data = Order.toListClass(it)
+//					if (data.isNullOrEmpty())
+//						result.value = ApiResponse.empty(null)
+//					else
+//						result.value = ApiResponse.success(data)
 				}
 				.addOnFailureListener {
 					result.value = ApiResponse.error(null)
@@ -169,19 +169,19 @@ class RemoteDataSource {
 		return result
 	}
 
-	fun setOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
-		db.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(Order.DB_NAME)
-				.document(order.orderNo)
-				.set(Order.toHashMap(order))
-				.addOnSuccessListener {
-					callback.invoke(ApiResponse.success(true))
-				}
-				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
-				}
-	}
+//	fun setOrder(order: Order, callback: (ApiResponse<Boolean>) -> Unit) {
+//		db.collection(AppDatabase.DB_NAME)
+//				.document(AppDatabase.MAIN)
+//				.collection(Order.DB_NAME)
+//				.document(order.orderNo)
+//				.set(Order.toHashMap(order))
+//				.addOnSuccessListener {
+//					callback.invoke(ApiResponse.success(true))
+//				}
+//				.addOnFailureListener {
+//					callback.invoke(ApiResponse.error(null))
+//				}
+//	}
 
 	private val orderPayments: LiveData<ApiResponse<List<OrderPayment>>>
 	get() {

@@ -31,8 +31,9 @@ enum class GeneralMenus(
 enum class StoreMenus(@StringRes val title: Int) {
     SALES_RECAP(R.string.sales_recap),
     OUTCOMES(R.string.outcomes),
-    PURCHASE(R.string.purchase),
-    MASTERS(R.string.masters),
+//    PURCHASE(R.string.purchase),
+    MASTERS(R.string.products),
+    STORE(R.string.stores),
 }
 
 enum class MasterMenus(@StringRes val title: Int) {

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 fun MenuItemView(
     @StringRes title: Int,
     @DrawableRes icon: Int? = null,
+    badgeNumber: Int? = null,
     onClicked: () -> Unit
 ) {
     Box(
@@ -51,6 +52,10 @@ fun MenuItemView(
                 style = MaterialTheme.typography.button,
                 color = MaterialTheme.colors.onPrimary
             )
+            badgeNumber?.let {
+                Spacer(modifier = Modifier.width(8.dp))
+                BadgeNumber(badge = it)
+            }
         }
     }
     Spacer(modifier = Modifier.height(8.dp))

@@ -1,9 +1,10 @@
-package com.socialite.solite_pos.view.main.opening.outcomes
+package com.socialite.solite_pos.view.main.opening.stores
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,10 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -24,26 +27,32 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
+import com.socialite.solite_pos.compose.BasicAlertDialog
+import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
-import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
-import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.compose.PrimaryButtonView
+import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
-class OutcomesActivity : AppCompatActivity() {
+class StoresActivity : AppCompatActivity() {
 
     private lateinit var mainViewModel: MainViewModel
 
@@ -54,14 +63,12 @@ class OutcomesActivity : AppCompatActivity() {
 
         mainViewModel = MainViewModel.getMainViewModel(this)
 
-        val date = DateUtils.currentDate
-
         setContent {
             SolitePOSTheme {
                 ProvideWindowInsets(
                     windowInsetsAnimationsEnabled = true
                 ) {
-                    OutcomesContent(date = date)
+                    StoresView()
                 }
             }
         }
@@ -70,10 +77,7 @@ class OutcomesActivity : AppCompatActivity() {
     @Composable
     @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
-    private fun OutcomesContent(
-        date: String
-    ) {
-
+    fun StoresView() {
         val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
@@ -84,11 +88,10 @@ class OutcomesActivity : AppCompatActivity() {
                 topEnd = 16.dp
             ),
             sheetContent = {
-                NewOutcome(
-                    date = date,
-                    onCreateOutcome = {
+                NewStore(
+                    onCreateStore = {
                         scope.launch {
-                            mainViewModel.insertOutcome(it)
+                            mainViewModel.insertStore(it)
                             modalState.hide()
                         }
                     }
@@ -97,25 +100,18 @@ class OutcomesActivity : AppCompatActivity() {
             content = {
                 Scaffold(
                     topBar = {
-                        val title = stringResource(id = R.string.outcomes) + " - ${
-                            DateUtils.convertDateFromDate(
-                                date,
-                                DateUtils.DATE_WITH_DAY_FORMAT
-                            )
-                        }"
                         BasicTopBar(
-                            titleText = title,
+                            titleText = stringResource(id = R.string.stores),
                             onBackClicked = {
                                 onBackPressed()
                             }
                         )
                     },
                     content = { padding ->
-                        Outcomes(
+                        StoresContent(
                             modifier = Modifier
                                 .padding(padding),
                             mainViewModel = mainViewModel,
-                            date = date,
                             onAddClicked = {
                                 scope.launch {
                                     modalState.show()
@@ -129,25 +125,34 @@ class OutcomesActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun Outcomes(
-        modifier: Modifier = Modifier,
+    private fun StoresContent(
         mainViewModel: MainViewModel,
-        date: String,
+        modifier: Modifier = Modifier,
         onAddClicked: () -> Unit
     ) {
 
-        val outcomes = mainViewModel.getOutcome(date).collectAsState(initial = emptyList())
+        var alertSelectStore by remember { mutableStateOf<Long?>(null) }
+
+        val stores = mainViewModel.getStores().collectAsState(initial = emptyList())
+        val selected = mainViewModel.selectedStore.collectAsState(initial = 0L)
 
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
         ) {
+
             LazyColumn(
-                modifier = modifier
+                modifier = Modifier
                     .align(Alignment.TopCenter)
             ) {
-                items(outcomes.value) {
-                    OutcomeItem(it)
+                items(stores.value) {
+                    StoreItem(
+                        store = it,
+                        selected = selected.value,
+                        onStoreClicked = {
+                            alertSelectStore = it.id
+                        }
+                    )
                 }
             }
 
@@ -157,13 +162,36 @@ class OutcomesActivity : AppCompatActivity() {
                 onAddClicked = onAddClicked
             )
         }
+
+        alertSelectStore?.let {
+            BasicAlertDialog(
+                titleText = stringResource(R.string.select_store),
+                descText = stringResource(R.string.are_you_sure_select_this_store_for_next_orders),
+                positiveAction = {
+                    mainViewModel.selectStore(it)
+                    alertSelectStore = null
+                },
+                positiveText = stringResource(R.string.yes),
+                negativeAction = {
+                    alertSelectStore = null
+                },
+                negativeText = stringResource(R.string.no)
+            )
+        }
     }
 
     @Composable
-    private fun OutcomeItem(outcome: Outcome) {
+    private fun StoreItem(
+        store: Store,
+        selected: Long,
+        onStoreClicked: () -> Unit
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable {
+                    onStoreClicked()
+                }
                 .background(color = Color.White)
                 .padding(16.dp)
         ) {
@@ -172,23 +200,72 @@ class OutcomesActivity : AppCompatActivity() {
                     .weight(1f)
             ) {
                 Text(
-                    text = outcome.name,
-                    style = MaterialTheme.typography.body2.copy(
+                    text = store.name,
+                    style = MaterialTheme.typography.body1.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = outcome.desc,
+                    text = store.address,
                     style = MaterialTheme.typography.body2
                 )
             }
-            Text(
-                text = "Rp. ${outcome.total.thousand()}",
-                style = MaterialTheme.typography.body1.copy(
-                    fontWeight = FontWeight.Bold
+            if (store.id == selected) {
+                Icon(
+                    modifier = Modifier
+                        .size(18.dp)
+                        .align(Alignment.CenterVertically),
+                    painter = painterResource(id = R.drawable.ic_done_all),
+                    tint = MaterialTheme.colors.primary,
+                    contentDescription = null
                 )
-            )
+            }
         }
         Spacer(modifier = Modifier.height(4.dp))
+    }
+
+    @Composable
+    @ExperimentalComposeUiApi
+    private fun NewStore(
+        onCreateStore: (Store) -> Unit
+    ) {
+        var name by remember { mutableStateOf("") }
+        var address by remember { mutableStateOf("") }
+
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            BasicEditText(
+                value = name,
+                placeHolder = stringResource(R.string.store_name),
+                onValueChange = {
+                    name = it
+                }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            BasicEditText(
+                value = address,
+                placeHolder = stringResource(R.string.address),
+                onValueChange = {
+                    address = it
+                }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            PrimaryButtonView(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                buttonText = stringResource(R.string.add_store),
+                onClick = {
+                    onCreateStore(
+                        Store(
+                            name = name,
+                            address = address
+                        )
+                    )
+                }
+            )
+        }
     }
 }

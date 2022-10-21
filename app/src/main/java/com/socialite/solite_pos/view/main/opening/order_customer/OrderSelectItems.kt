@@ -42,6 +42,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.toIDR
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.ModalContent
@@ -85,6 +86,8 @@ fun OrderSelectItems(
                 )
 
                 ModalContent.GENERAL_MENUS -> GeneralMenusView(
+                    orderViewModel = orderViewModel,
+                    date = DateUtils.currentDate,
                     onClicked = {
                         if (it == GeneralMenus.NEW_ORDER) {
                             scope.launch {

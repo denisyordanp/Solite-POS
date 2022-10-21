@@ -8,22 +8,31 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActivity
-import com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity
+//import com.socialite.solite_pos.view.main.menu.purchase.PurchaseActivity
 import com.socialite.solite_pos.view.main.opening.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.main.opening.orders.OrdersActivity
 import com.socialite.solite_pos.view.main.opening.outcomes.OutcomesActivity
 import com.socialite.solite_pos.view.main.opening.recap.RecapActivity
+import com.socialite.solite_pos.view.main.opening.stores.StoresActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
 import com.socialite.solite_pos.view.main.opening.ui.MasterMenus
 import com.socialite.solite_pos.view.main.opening.ui.StoreMenus
 import com.socialite.solite_pos.view.main.opening.ui.theme.SolitePOSTheme
+import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 @ExperimentalMaterialApi
 class StoreActivity : AppCompatActivity() {
+
+    private lateinit var orderViewModel: OrderViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        orderViewModel = OrderViewModel.getOrderViewModel(this)
+        val date = DateUtils.currentDate
+
         setContent {
             SolitePOSTheme {
 
@@ -35,6 +44,8 @@ class StoreActivity : AppCompatActivity() {
                 ) {
                     composable(StoreDestinations.MAIN_STORE) {
                         MainStoreMenu(
+                            orderViewModel = orderViewModel,
+                            currentDate = date,
                             onGeneralMenuClicked = {
                                 when (it) {
                                     GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
@@ -57,8 +68,9 @@ class StoreActivity : AppCompatActivity() {
                             onStoreMenuClicked = {
                                 when (it) {
                                     StoreMenus.SALES_RECAP -> goToRecapActivity()
-                                    StoreMenus.PURCHASE -> goToPurchaseActivity()
+//                                    StoreMenus.PURCHASE -> goToPurchaseActivity()
                                     StoreMenus.OUTCOMES -> goToOutcomesActivity()
+                                    StoreMenus.STORE -> goToStoresActivity()
                                     else -> {
                                         // Do nothing
                                     }
@@ -78,6 +90,11 @@ class StoreActivity : AppCompatActivity() {
 
     private fun goToOutcomesActivity() {
         val intent = Intent(this, OutcomesActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToStoresActivity() {
+        val intent = Intent(this, StoresActivity::class.java)
         startActivity(intent)
     }
 
@@ -126,8 +143,8 @@ class StoreActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun goToPurchaseActivity() {
-        val intent = Intent(this, PurchaseActivity::class.java)
-        startActivity(intent)
-    }
+//    private fun goToPurchaseActivity() {
+//        val intent = Intent(this, PurchaseActivity::class.java)
+//        startActivity(intent)
+//    }
 }

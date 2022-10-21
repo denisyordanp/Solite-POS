@@ -7,9 +7,7 @@ import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFormat
@@ -55,16 +53,20 @@ data class Order(
 		@ColumnInfo(name = STATUS)
 		var status: Int,
 
+		@ColumnInfo(name = STORE)
+		var store: Long,
+
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable {
 
-	companion object: RemoteClassUtils<Order> {
+	companion object {
 
 		const val ORDER_DATE = "order_date"
 		const val COOK_TIME = "cook_time"
 		const val TAKE_AWAY = "take_away"
 		const val STATUS = "status"
+		const val STORE = "store"
 		const val NO = "order_no"
 
 		const val DB_NAME = "order"
@@ -134,35 +136,6 @@ data class Order(
 		private fun reset() {
             orderPref!!.orderCount = 1
         }
-
-		override fun toHashMap(data: Order): HashMap<String, Any?> {
-			return hashMapOf(
-					NO to data.orderNo,
-					Customer.ID to data.customer,
-					ORDER_DATE to data.orderTime,
-					COOK_TIME to data.cookTime,
-					TAKE_AWAY to data.isTakeAway,
-					STATUS to data.status,
-					UPLOAD to data.isUploaded
-			)
-		}
-
-		override fun toListClass(result: QuerySnapshot): List<Order> {
-			val array: ArrayList<Order> = ArrayList()
-			for (document in result){
-				val order = Order(
-						document.data[NO] as String,
-						document.data[Customer.ID] as Long,
-						document.data[ORDER_DATE] as String,
-						document.data[COOK_TIME] as String?,
-						document.data[TAKE_AWAY] as Boolean,
-						(document.data[STATUS] as Long).toInt(),
-					document.data[UPLOAD] as Boolean
-				)
-				array.add(order)
-			}
-			return array
-		}
 	}
 
 	@Ignore
@@ -173,17 +146,19 @@ data class Order(
 		null,
 		false,
 		ON_PROCESS,
+		0L,
 		false
 	)
 
 	@Ignore
-	constructor(orderNo: String, customer: Long, orderTime: String, isTakeAway: Boolean) : this(
+	constructor(orderNo: String, customer: Long, orderTime: String, store: Long, isTakeAway: Boolean) : this(
 		orderNo,
 		customer,
 		orderTime,
 		null,
 		isTakeAway,
 		ON_PROCESS,
+		store,
 		false
 	)
 

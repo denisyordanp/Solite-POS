@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.Flow
 interface OrdersRepository {
 
     fun getOrderList(status: Int, date: String): Flow<List<OrderData>>
-    fun getOrderList(status: Int, from: String, until: String): Flow<List<OrderData>>
+    fun getOrderList(status: Int, date: String, store: Long): Flow<List<OrderData>>
+    fun getOrderList(status: Int, from: String, until: String, store: Long): Flow<List<OrderData>>
     suspend fun getOrderDetail(orderNo: String): OrderData?
     suspend fun updateOrder(order: Order)
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment

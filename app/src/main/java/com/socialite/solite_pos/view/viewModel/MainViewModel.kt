@@ -7,11 +7,14 @@ import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProd
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.PurchasesRepository
+import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,6 +31,8 @@ class MainViewModel(
     private val customersRepository: CustomersRepository,
     private val outcomesRepository: OutcomesRepository,
     private val purchasesRepository: PurchasesRepository,
+    private val storeRepository: StoreRepository,
+    private val settingRepository: SettingRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -129,6 +134,22 @@ class MainViewModel(
     fun updateOutcome(data: Outcome) {
         viewModelScope.launch {
             outcomesRepository.updateOutcome(data)
+        }
+    }
+
+    fun getStores() = storeRepository.getStores()
+
+    fun insertStore(store: Store) {
+        viewModelScope.launch {
+            storeRepository.insertStore(store)
+        }
+    }
+
+    val selectedStore = settingRepository.getSelectedStore()
+
+    fun selectStore(id: Long) {
+        viewModelScope.launch {
+            settingRepository.selectStore(id)
         }
     }
 }

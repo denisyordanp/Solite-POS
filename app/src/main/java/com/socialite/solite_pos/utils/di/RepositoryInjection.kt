@@ -10,7 +10,9 @@ import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PurchasesRepository
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
+import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
@@ -23,6 +25,8 @@ import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryIm
 import com.socialite.solite_pos.data.source.repository.impl.ProductVariantsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.ProductsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PurchasesRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantMixesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
@@ -95,5 +99,14 @@ object RepositoryInjection {
     fun provideVariantMixesRepository(context: Context): VariantMixesRepository {
         val database = getInstance(context)
         return VariantMixesRepositoryImpl.getInstance(database.variantMixesDao())
+    }
+
+    fun provideStoreRepository(context: Context): StoreRepository {
+        val database = getInstance(context)
+        return StoreRepositoryImpl.getInstance(database.storeDao())
+    }
+
+    fun provideSettingRepository(context: Context): SettingRepository {
+        return SettingRepositoryImpl.getDataStoreInstance(context)
     }
 }

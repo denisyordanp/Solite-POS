@@ -43,47 +43,6 @@ class SoliteRepository private constructor(
         }
     }
 
-    private fun insertOrderProduct(order: OrderWithProduct) {
-        for (item in order.products) {
-            if (item.product != null) {
-
-                val detail = OrderDetail(order.order.order.orderNo, item.product!!.id, item.amount)
-                detail.id = soliteDao.insertDetailOrder(detail)
-
-                if (item.product!!.isMix) {
-                    for (p in item.mixProducts) {
-
-                        soliteDao.decreaseAndGetProduct(p.product.id, p.amount)
-
-                        val variantMix = OrderProductVariantMix(detail.id, p.product.id, p.amount)
-                        variantMix.id = soliteDao.insertVariantMixOrder(variantMix)
-
-                        for (variant in p.variants) {
-                            val mixVariant = OrderMixProductVariant(variantMix.id, variant.id)
-                            mixVariant.id =
-                                soliteDao.insertMixVariantOrder(mixVariant)
-                        }
-                    }
-                } else {
-
-                    soliteDao.decreaseAndGetProduct(
-                        item.product!!.id,
-                        (item.amount * item.product!!.portion)
-                    )
-
-                    for (variant in item.variants) {
-                        val orderVariant = OrderProductVariant(detail.id, variant.id)
-                        soliteDao.insertVariantOrder(orderVariant)
-                    }
-                }
-            }
-        }
-    }
-
-    fun doneOrder(order: OrderWithProduct) {
-        updateOrder(order.order.order)
-    }
-
     override fun replaceProductOrder(
         old: OrderWithProduct,
         new: OrderWithProduct
@@ -139,6 +98,43 @@ class SoliteRepository private constructor(
                 }
 
                 soliteDao.deleteOrderDetail(detail)
+            }
+        }
+    }
+
+    private fun insertOrderProduct(order: OrderWithProduct) {
+        for (item in order.products) {
+            if (item.product != null) {
+
+                val detail = OrderDetail(order.order.order.orderNo, item.product!!.id, item.amount)
+                detail.id = soliteDao.insertDetailOrder(detail)
+
+                if (item.product!!.isMix) {
+                    for (p in item.mixProducts) {
+
+                        soliteDao.decreaseAndGetProduct(p.product.id, p.amount)
+
+                        val variantMix = OrderProductVariantMix(detail.id, p.product.id, p.amount)
+                        variantMix.id = soliteDao.insertVariantMixOrder(variantMix)
+
+                        for (variant in p.variants) {
+                            val mixVariant = OrderMixProductVariant(variantMix.id, variant.id)
+                            mixVariant.id =
+                                soliteDao.insertMixVariantOrder(mixVariant)
+                        }
+                    }
+                } else {
+
+                    soliteDao.decreaseAndGetProduct(
+                        item.product!!.id,
+                        (item.amount * item.product!!.portion)
+                    )
+
+                    for (variant in item.variants) {
+                        val orderVariant = OrderProductVariant(detail.id, variant.id)
+                        soliteDao.insertVariantOrder(orderVariant)
+                    }
+                }
             }
         }
     }

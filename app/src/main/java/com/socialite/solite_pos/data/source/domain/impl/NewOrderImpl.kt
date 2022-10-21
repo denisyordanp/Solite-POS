@@ -12,13 +12,16 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.local.room.SoliteDao
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.preference.OrderPref
+import kotlinx.coroutines.flow.first
 
 class NewOrderImpl(
     private val dao: OrdersDao,
 //    private val productDao: ProductsDao,
     private val soliteDao: SoliteDao,
-    private val orderPref: OrderPref
+    private val orderPref: OrderPref,
+    private val settingRepository: SettingRepository
 ) : NewOrder {
     override suspend fun invoke(
         customer: Customer,
@@ -26,7 +29,8 @@ class NewOrderImpl(
         products: List<ProductOrderDetail>,
         currentTime: String
     ) {
-        val orderData = generateOrder(customer, isTakeAway, currentTime)
+        val selectedStore = settingRepository.getSelectedStore().first()
+        val orderData = generateOrder(customer, isTakeAway, currentTime, selectedStore)
         val orderWithProducts = OrderWithProduct(
             order = orderData,
             products = products
@@ -39,12 +43,14 @@ class NewOrderImpl(
     private fun generateOrder(
         customer: Customer,
         isTakeAway: Boolean,
-        currentTime: String
+        currentTime: String,
+        store: Long
     ): OrderData {
         val order = Order(
             orderNo = generateOrderNo(currentTime),
             customer = customer.id,
             orderTime = currentTime,
+            store = store,
             isTakeAway = isTakeAway,
         )
         return OrderData(

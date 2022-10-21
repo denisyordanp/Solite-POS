@@ -10,5 +10,6 @@ enum class OrderButtonType(
     QUEUE(R.drawable.ic_queue_24),
     PAYMENT(R.drawable.ic_payments),
     DONE(R.drawable.ic_done_all),
-    CANCEL(R.drawable.ic_cross_50dp),
+    CANCEL(R.drawable.ic_cancel_24),
+    PUT_BACK(R.drawable.ic_put_back_24),
 }

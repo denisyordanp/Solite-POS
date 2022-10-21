@@ -17,10 +17,10 @@ class GetRecapDataImpl(
     private val outcomesRepository: OutcomesRepository,
     private val getProductOrder: GetProductOrder
 ) : GetRecapData {
-    override fun invoke(from: String, until: String): Flow<RecapData> {
+    override fun invoke(from: String, until: String, store: Long): Flow<RecapData> {
 
         return flow {
-            val incomes = repository.getOrderList(Order.DONE, from, until).first().map {
+            val incomes = repository.getOrderList(Order.DONE, from, until, store).first().map {
                 val products = getProductOrder.invoke(it.order.orderNo).first()
                 val orderWithProduct = OrderWithProduct(it, products)
 

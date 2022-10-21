@@ -16,9 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -35,9 +33,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -46,6 +42,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
+import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
@@ -138,26 +135,30 @@ private fun PaymentContent(
                 .align(Alignment.TopCenter)
         ) {
             item {
-                PaymentHeader(
-                    totalPay = "Rp. ${orderWithProduct.grandTotal.thousand()}",
-                    paymentExpanded = paymentExpanded,
-                    selectedPayment = selectedPayment,
-                    onSelectPayment = {
-                        paymentExpanded = !paymentExpanded
-                    }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color.White)
+                        .padding(16.dp),
+                    text = "Rp. ${orderWithProduct.grandTotal.thousand()}",
+                    style = MaterialTheme.typography.h3
                 )
+                Spacer(modifier = Modifier.height(4.dp))
             }
-            if (paymentExpanded) {
-                items(payments.value) { payment ->
-                    PaymentItem(
-                        name = payment.name,
-                        onPaymentClicked = {
-                            selectedPayment = payment
-                            paymentExpanded = false
-                        }
-                    )
+
+            basicDropdown(
+                isExpanded = paymentExpanded,
+                title = R.string.select_payment,
+                selectedItem = selectedPayment?.name,
+                items = payments.value,
+                onHeaderClicked = {
+                    paymentExpanded = !paymentExpanded
+                },
+                onSelectedItem = {
+                    selectedPayment = it as Payment
+                    paymentExpanded = false
                 }
-            }
+            )
 
             selectedPayment?.let { payment ->
                 if (payment.isCash) {
@@ -195,69 +196,6 @@ private fun PaymentContent(
             }
         )
     }
-}
-
-@Composable
-private fun PaymentHeader(
-    totalPay: String,
-    paymentExpanded: Boolean,
-    selectedPayment: Payment?,
-    onSelectPayment: () -> Unit
-) {
-
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.White)
-            .padding(16.dp),
-        text = totalPay,
-        style = MaterialTheme.typography.h3
-    )
-
-    Spacer(modifier = Modifier.height(4.dp))
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.White)
-            .clickable {
-                onSelectPayment()
-            }
-            .padding(24.dp)
-    ) {
-        Text(
-            modifier = Modifier
-                .weight(1f),
-            text = selectedPayment?.name ?: stringResource(R.string.select_payment),
-            style = MaterialTheme.typography.body1.copy(
-                fontWeight = FontWeight.Bold
-            )
-        )
-        Icon(
-            painter = painterResource(
-                id = if (paymentExpanded) R.drawable.ic_expand_less_24 else R.drawable.ic_expand_more_24
-            ),
-            contentDescription = null
-        )
-    }
-}
-
-@Composable
-private fun PaymentItem(
-    name: String,
-    onPaymentClicked: () -> Unit
-) {
-    Spacer(modifier = Modifier.height(2.dp))
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.White)
-            .clickable {
-                onPaymentClicked()
-            }
-            .padding(16.dp),
-        text = name,
-        style = MaterialTheme.typography.body2
-    )
 }
 
 @Composable

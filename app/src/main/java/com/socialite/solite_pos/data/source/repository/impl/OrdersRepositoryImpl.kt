@@ -29,7 +29,11 @@ class OrdersRepositoryImpl(
     }
 
     override fun getOrderList(status: Int, date: String) = dao.getOrdersByStatus(status, date)
-    override fun getOrderList(status: Int, from: String, until: String) = dao.getOrdersByStatus(status, from, until)
+    override fun getOrderList(status: Int, date: String, store: Long) =
+        dao.getOrdersByStatus(status, date, store)
+
+    override fun getOrderList(status: Int, from: String, until: String, store: Long) =
+        dao.getOrdersByStatus(status, from, until, store)
 
     override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderByNo(orderNo)
 
