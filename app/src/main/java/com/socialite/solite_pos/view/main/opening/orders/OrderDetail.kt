@@ -52,7 +52,7 @@ fun OrderDetail(
     orderNo: String,
     orderViewModel: OrderViewModel,
     onBackClicked: () -> Unit,
-    onButtonClicked: (OrderButtonType) -> Unit
+    onButtonClicked: (OrderButtonType, OrderWithProduct?) -> Unit,
 ) {
 
     var orderWithProducts by remember {
@@ -89,17 +89,23 @@ fun OrderDetail(
                     orderWithProduct = it,
                     onMenuClicked = { buttonType ->
                         when (buttonType) {
-                            OrderButtonType.PRINT -> {}
-                            OrderButtonType.QUEUE -> {}
+                            OrderButtonType.PRINT, OrderButtonType.QUEUE -> onButtonClicked(
+                                buttonType,
+                                orderWithProducts
+                            )
+
                             OrderButtonType.PAYMENT -> {
                                 alertPaymentState = true
                             }
+
                             OrderButtonType.DONE -> {
                                 alertDoneState = true
                             }
+
                             OrderButtonType.CANCEL -> {
                                 alertCancelState = true
                             }
+
                             OrderButtonType.PUT_BACK -> {
                                 alertPutBackState = true
                             }
@@ -115,7 +121,7 @@ fun OrderDetail(
             titleText = stringResource(R.string.pay_the_order),
             descText = stringResource(R.string.are_you_sure_will_pay_this_order),
             positiveAction = {
-                onButtonClicked(OrderButtonType.PAYMENT)
+                onButtonClicked(OrderButtonType.PAYMENT, null)
                 alertPaymentState = false
             },
             positiveText = stringResource(R.string.yes),
@@ -134,7 +140,7 @@ fun OrderDetail(
                 orderWithProducts?.order?.order?.let {
                     orderViewModel.cancelOrder(it)
                 }
-                onButtonClicked(OrderButtonType.CANCEL)
+                onButtonClicked(OrderButtonType.CANCEL, null)
                 alertCancelState = false
             },
             positiveText = stringResource(R.string.yes),
@@ -154,7 +160,7 @@ fun OrderDetail(
                     orderViewModel.doneOrder(it)
                 }
                 alertDoneState = false
-                onButtonClicked(OrderButtonType.DONE)
+                onButtonClicked(OrderButtonType.DONE, null)
             },
             positiveText = stringResource(R.string.yes),
             negativeAction = {
@@ -172,7 +178,7 @@ fun OrderDetail(
                     orderViewModel.putBackOrder(it)
                 }
                 alertPutBackState = false
-                onButtonClicked(OrderButtonType.PUT_BACK)
+                onButtonClicked(OrderButtonType.PUT_BACK, null)
             },
             positiveText = stringResource(R.string.yes),
             negativeAction = {

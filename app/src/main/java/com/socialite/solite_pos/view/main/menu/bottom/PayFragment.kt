@@ -8,13 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.adapters.recycleView.order.AmountSuggestionsAdapter
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
@@ -25,7 +25,6 @@ import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.utils.tools.MessageBottom
-import com.socialite.solite_pos.adapters.recycleView.order.AmountSuggestionsAdapter
 import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
 import com.socialite.solite_pos.view.main.opening.MainActivity
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -228,13 +227,13 @@ class PayFragment(
 	}
 
     private fun printBill(order: OrderWithProduct) {
-        printBill.doPrint(order, PrintBill.BILL) {
-            if (!it) {
-                Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            dialog?.dismiss()
-        }
+//        printBill.doPrintBill(order, PrintBill.BILL) {
+//            if (!it) {
+//                Toast.makeText(activity, "Print gagal, silahkan coba lagi", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//            dialog?.dismiss()
+//        }
     }
 
     override fun onDestroy() {

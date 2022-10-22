@@ -21,6 +21,7 @@ import com.socialite.solite_pos.utils.config.CashAmounts
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -145,6 +146,11 @@ class MainViewModel(
     }
 
     fun getStores() = storeRepository.getStores()
+
+    suspend fun getStore(): Store? {
+        val selected = settingRepository.getSelectedStore().first()
+        return storeRepository.getStore(selected)
+    }
 
     fun insertStore(store: Store) {
         viewModelScope.launch {

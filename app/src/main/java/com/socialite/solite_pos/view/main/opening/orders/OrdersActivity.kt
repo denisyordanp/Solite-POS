@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.view.main.opening.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.main.opening.store.StoreActivity
 import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
@@ -33,6 +34,8 @@ class OrdersActivity : AppCompatActivity() {
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var mainViewModel: MainViewModel
 
+    private var printBill: PrintBill? = null
+
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
     @ExperimentalCoroutinesApi
@@ -42,6 +45,8 @@ class OrdersActivity : AppCompatActivity() {
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
         mainViewModel = MainViewModel.getMainViewModel(this)
+
+        printBill = PrintBill(this)
 
         setContent {
             SolitePOSTheme {
@@ -92,10 +97,30 @@ class OrdersActivity : AppCompatActivity() {
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
-                                onButtonClicked = {buttonType ->
+                                onButtonClicked = {buttonType, orderWithProduct ->
                                     when (buttonType) {
-                                        OrderButtonType.PRINT -> {}
-                                        OrderButtonType.QUEUE -> {}
+                                        OrderButtonType.PRINT -> {
+                                            lifecycleScope.launch {
+                                                val store = mainViewModel.getStore()
+                                                if (store != null && orderWithProduct != null) {
+                                                    printBill?.doPrintBill(
+                                                        order = orderWithProduct,
+                                                        store = store,
+                                                        callback = {}
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        OrderButtonType.QUEUE -> {
+                                            lifecycleScope.launch {
+                                                if (orderWithProduct != null) {
+                                                    printBill?.doPrintQueue(
+                                                        order = orderWithProduct,
+                                                        callback = {}
+                                                    )
+                                                }
+                                            }
+                                        }
                                         OrderButtonType.PAYMENT -> {
                                             navController.navigate(
                                                 OrderDetailDestinations.orderPayment(
@@ -181,5 +206,11 @@ class OrdersActivity : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        printBill?.onDestroy()
+        printBill = null
+        super.onDestroy()
     }
 }

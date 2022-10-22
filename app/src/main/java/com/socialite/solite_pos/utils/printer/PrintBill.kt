@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.preference.SettingPref
@@ -22,16 +23,26 @@ class PrintBill(private var activity: FragmentActivity) {
 	private var callback: ((Boolean) -> Unit)? = null
 	private var order: OrderWithProduct? = null
 	private var type: Int = 0
+	private var store: Store? = null
 
 	companion object {
 		const val BILL = 11
-		const val ORDER = 22
+		const val QUEUE = 22
 	}
 
-	fun doPrint(order: OrderWithProduct, type: Int, callback: (Boolean) -> Unit) {
+	fun doPrintBill(order: OrderWithProduct, store: Store, callback: (Boolean) -> Unit) {
 		this.order = order
 		this.callback = callback
-		this.type = type
+		this.type = BILL
+		this.store = store
+
+		setData()
+	}
+
+	fun doPrintQueue(order: OrderWithProduct, callback: (Boolean) -> Unit) {
+		this.type = QUEUE
+		this.order = order
+		this.callback = callback
 
 		setData()
 	}
@@ -89,16 +100,18 @@ class PrintBill(private var activity: FragmentActivity) {
 	}
 
 	private fun setHeaderBill() {
-		printLogo()
-		printCustom("Jl.Jend.Sudirman No.16G,Baros", 0, 1)
+//		printLogo()
+		printCustom(store?.name ?: "", 1, 1)
 		printNewLine(1)
-		printCustom("Cimahi Tengah", 0, 1)
+		printCustom(store?.address ?: "", 0, 1)
+//		printNewLine(1)
+//		printCustom("Cimahi Tengah", 0, 1)
 		printNewLine(1)
 		printCustom(PrinterUtils.LINES, 0, 0)
 		printNewLine(1)
 		printCustom("Tgl : ${getDateTime()}", 0, 0)
 		printNewLine(1)
-		printCustom("No  : ${order?.order?.order?.orderNo}", 0, 0)
+		printCustom("No  : ${order?.order?.order?.getQueueNumber()}", 0, 0)
 		printNewLine(1)
 		setBasicHeader()
 	}
@@ -233,12 +246,12 @@ class PrintBill(private var activity: FragmentActivity) {
 
 	private fun setFooter() {
 		printCustom("Terima kasih atas kunjungannya", 1, 1)
-		printNewLine(2)
-		printCustom("Kritik Saran mohon sampaikan ke", 1, 1)
-		printNewLine(1)
-		printCustom("FB / IG : jajanansosialita", 1, 1)
-		printNewLine(1)
-		printCustom("WA : 0821-1711-6825", 1, 1)
+//		printNewLine(2)
+//		printCustom("Kritik Saran mohon sampaikan ke", 1, 1)
+//		printNewLine(1)
+//		printCustom("FB / IG : jajanansosialita", 1, 1)
+//		printNewLine(1)
+//		printCustom("WA : 0821-1711-6825", 1, 1)
 		printNewLine(5)
 	}
 
@@ -273,24 +286,24 @@ class PrintBill(private var activity: FragmentActivity) {
 
 	//print logo
 
-	private fun printLogo() {
-		try {
-			val bmp = BitmapFactory.decodeResource(
-				activity.resources,
-				R.drawable.logo_jansos
-			)
-			if (bmp != null) {
-				val command: ByteArray? = PrinterUtils.decodeBitmap(bmp)
-				outputStream?.write(PrinterCommands.ESC_ALIGN_CENTER)
-				printText(command)
-			} else {
-				Log.e("Print Photo error", "the file isn't exists")
-			}
-		} catch (e: Exception) {
-			e.printStackTrace()
-			Log.e("PrintTools", "the file isn't exists")
-		}
-	}
+//	private fun printLogo() {
+//		try {
+//			val bmp = BitmapFactory.decodeResource(
+//				activity.resources,
+//				R.drawable.logo_jansos
+//			)
+//			if (bmp != null) {
+//				val command: ByteArray? = PrinterUtils.decodeBitmap(bmp)
+//				outputStream?.write(PrinterCommands.ESC_ALIGN_CENTER)
+//				printText(command)
+//			} else {
+//				Log.e("Print Photo error", "the file isn't exists")
+//			}
+//		} catch (e: Exception) {
+//			e.printStackTrace()
+//			Log.e("PrintTools", "the file isn't exists")
+//		}
+//	}
 
 	//print new line
 

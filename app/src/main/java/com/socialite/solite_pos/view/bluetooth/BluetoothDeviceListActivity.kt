@@ -13,6 +13,7 @@ import com.socialite.solite_pos.utils.preference.SettingPref
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.adapters.recycleView.bluetooth.BluetoothDeviceAdapter
+import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 
 
 class BluetoothDeviceListActivity : SocialiteActivity() {
@@ -25,13 +26,15 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 	private lateinit var printBill: PrintBill
 
 	private var order: OrderWithProduct? = null
-
 	private var printType: Int = 0
+	private var store: Store? = null
+
 
 	companion object {
 		const val REQUEST_ENABLE_BT = 0
 		const val EXTRA_ORDER = "extra_order"
 		const val EXTRA_PRINT = "extra_print"
+		const val EXTRA_STORE = "extra_store"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +55,7 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 		binding.btnBtBack.setOnClickListener { onBackPressed() }
 
 		order = intent.getSerializableExtra(EXTRA_ORDER) as OrderWithProduct?
+		store = intent.getSerializableExtra(EXTRA_STORE) as Store?
 		printType = intent.getIntExtra(EXTRA_PRINT, 0)
 
 		checkBluetooth()
@@ -76,7 +80,11 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 	) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		if (requestCode == 1) {
-			getBoundDevice(mBluetoothAdapter!!)
+			if (!setting.printerDevice.isNullOrEmpty()) {
+				printBill()
+			} else {
+				getBoundDevice(mBluetoothAdapter!!)
+			}
 		}
 	}
 
@@ -115,15 +123,39 @@ class BluetoothDeviceListActivity : SocialiteActivity() {
 			finish()
 			return
 		}
+		printBill()
+	}
+
+	private fun printBill() {
 		showLoading(true)
-		printBill.doPrint(order!!, printType) {
-			if (it) {
-				finish()
-			} else {
-				showLoading(false)
-				showToast("Terjadi kesalahan, coba lagi")
+		when (printType) {
+			PrintBill.BILL -> {
+				if (store != null) {
+					printBill.doPrintBill(order!!, store!!) {
+						if (it) {
+							finish()
+						} else {
+							showLoading(false)
+							showToast("Terjadi kesalahan, coba lagi")
+						}
+					}
+				} else {
+					showLoading(false)
+					showToast("Terjadi kesalahan, coba lagi")
+				}
+			}
+			PrintBill.QUEUE -> {
+				printBill.doPrintQueue(order!!) {
+					if (it) {
+						finish()
+					} else {
+						showLoading(false)
+						showToast("Terjadi kesalahan, coba lagi")
+					}
+				}
 			}
 		}
+
 	}
 
 	private fun showLoading(state: Boolean) {

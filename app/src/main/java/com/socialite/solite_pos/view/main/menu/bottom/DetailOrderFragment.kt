@@ -71,18 +71,18 @@ class DetailOrderFragment(private var order: OrderWithProduct?) : BottomSheetDia
 	private fun setListener() {
 		_binding.btnDoCancel.setOnClickListener { cancelOrder() }
 		_binding.btnDoPrintBill.setOnClickListener {
-			if (order != null) {
-				printBill.doPrint(order!!, PrintBill.BILL) {
-
-				}
-			}
+//			if (order != null) {
+//				printBill.doPrintBill(order!!, PrintBill.BILL) {
+//
+//				}
+//			}
 		}
 		_binding.btnDoPrintOrder.setOnClickListener {
-			if (order != null) {
-				printBill.doPrint(order!!, PrintBill.ORDER) {
-
-				}
-			}
+//			if (order != null) {
+//				printBill.doPrintBill(order!!, PrintBill.QUEUE) {
+//
+//				}
+//			}
 		}
 		_binding.btnDoDone.setOnClickListener { doneOrder() }
 		_binding.btnDoEdit.setOnClickListener { editOrder(order!!) }

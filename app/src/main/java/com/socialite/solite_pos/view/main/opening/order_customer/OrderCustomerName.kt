@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +49,8 @@ fun OrderCustomerName(
         isTakeAway: Boolean
     ) -> Unit
 ) {
+
+    val keyboard = LocalSoftwareKeyboardController.current
 
     var searchName by remember {
         mutableStateOf("")
@@ -106,6 +109,7 @@ fun OrderCustomerName(
             onClickName = {
                 searchName = ""
                 selectedCustomer(it)
+                keyboard?.hide()
             }
         )
     }
