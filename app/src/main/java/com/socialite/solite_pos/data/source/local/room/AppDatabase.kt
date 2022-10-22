@@ -47,7 +47,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
             VariantProduct::class,
             VariantOption::class,
             Store::class],
-        version = 3,
+        version = 4,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -83,7 +83,7 @@ abstract class AppDatabase : RoomDatabase() {
                             DB_NAME
                     )
                             .allowMainThreadQueries()
-//							.fallbackToDestructiveMigration()
+							.fallbackToDestructiveMigration()
                             .build()
                 }
             }

@@ -227,6 +227,7 @@ class StoresActivity : AppCompatActivity() {
 
     @Composable
     @ExperimentalComposeUiApi
+    @ExperimentalMaterialApi
     private fun NewStore(
         onCreateStore: (Store) -> Unit
     ) {
@@ -264,6 +265,8 @@ class StoresActivity : AppCompatActivity() {
                             address = address
                         )
                     )
+                    name = ""
+                    address = ""
                 }
             )
         }

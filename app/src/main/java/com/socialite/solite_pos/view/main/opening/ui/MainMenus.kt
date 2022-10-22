@@ -41,5 +41,5 @@ enum class MasterMenus(@StringRes val title: Int) {
     CATEGORY(R.string.category),
     VARIANT(R.string.variant),
     PAYMENT(R.string.payment),
-    SUPPLIER(R.string.supplier)
+//    SUPPLIER(R.string.supplier)
 }

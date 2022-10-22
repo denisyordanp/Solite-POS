@@ -72,7 +72,7 @@ class OrderCustomerActivity : AppCompatActivity() {
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             } else {
-                                                orderViewModel.removeProductFromBucket(
+                                                orderViewModel.decreaseProduct(
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             }

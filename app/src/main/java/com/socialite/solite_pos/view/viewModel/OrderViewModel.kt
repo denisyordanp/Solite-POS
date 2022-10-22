@@ -202,6 +202,32 @@ class OrderViewModel(
         }
     }
 
+    fun decreaseProduct(detail: ProductOrderDetail) {
+        viewModelScope.launch {
+            val currentProducts = _currentBucket.value.products?.toMutableList()
+
+            val existingDetail = currentProducts?.findExisting(detail)
+            if (existingDetail != null) {
+                currentProducts.remove(existingDetail)
+                if (existingDetail.amount > 1) {
+                    currentProducts.add(
+                        existingDetail.copy(
+                            amount = existingDetail.amount - 1
+                        )
+                    )
+                }
+            }
+
+            if (currentProducts.isNullOrEmpty()) {
+                _currentBucket.value = BucketOrder.idle()
+            } else {
+                _currentBucket.value = _currentBucket.value.copy(
+                    products = currentProducts
+                )
+            }
+        }
+    }
+
     private fun List<ProductOrderDetail>.findExisting(compare: ProductOrderDetail): ProductOrderDetail? {
         return this.find {
             it.product == compare.product &&

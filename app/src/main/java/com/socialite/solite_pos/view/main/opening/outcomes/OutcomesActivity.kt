@@ -54,7 +54,7 @@ class OutcomesActivity : AppCompatActivity() {
 
         mainViewModel = MainViewModel.getMainViewModel(this)
 
-        val date = DateUtils.currentDate
+        val date = DateUtils.currentDateTime
 
         setContent {
             SolitePOSTheme {
@@ -88,7 +88,7 @@ class OutcomesActivity : AppCompatActivity() {
                     date = date,
                     onCreateOutcome = {
                         scope.launch {
-                            mainViewModel.insertOutcome(it)
+                            mainViewModel.addNewOutcome(it)
                             modalState.hide()
                         }
                     }
@@ -98,7 +98,7 @@ class OutcomesActivity : AppCompatActivity() {
                 Scaffold(
                     topBar = {
                         val title = stringResource(id = R.string.outcomes) + " - ${
-                            DateUtils.convertDateFromDate(
+                            DateUtils.convertDateFromDb(
                                 date,
                                 DateUtils.DATE_WITH_DAY_FORMAT
                             )

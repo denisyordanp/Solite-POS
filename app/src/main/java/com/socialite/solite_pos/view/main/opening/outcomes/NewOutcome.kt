@@ -76,6 +76,9 @@ fun NewOutcome(
                         date = date
                     )
                 )
+                name = ""
+                desc = ""
+                total = 0L
             }
         )
     }

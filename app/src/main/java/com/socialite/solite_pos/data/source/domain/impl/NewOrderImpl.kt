@@ -13,6 +13,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.local.room.SoliteDao
 import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.preference.OrderPref
 import kotlinx.coroutines.flow.first
 
@@ -62,16 +63,21 @@ class NewOrderImpl(
     private fun generateOrderNo(
         currentTime: String
     ): String {
-        if (currentTime != orderPref.orderDate) {
-            saveDate(currentTime)
+        val time = generateOrderNoFromDate(currentTime)
+        if (time != orderPref.orderDate) {
+            saveDate(time)
         }
-        return "${orderPref.orderDate}${generateQueueNumber(orderPref.orderCount)}"
+        val count = orderPref.orderCount
+        return "${orderPref.orderDate}${generateQueueNumber(count)}"
     }
 
     private fun saveDate(time: String) {
         orderPref.orderDate = time
         orderPref.orderCount = 1
     }
+
+    private fun generateOrderNoFromDate(time: String) =
+        DateUtils.convertDateFromDate(time, DateUtils.DATE_ORDER_NO_FORMAT)
 
     private fun generateQueueNumber(i: Int): String {
         var str = i.toString()

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -34,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.basicDropdown
-import com.socialite.solite_pos.data.source.local.entity.helper.Income
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
@@ -169,16 +167,47 @@ class RecapActivity : AppCompatActivity() {
 
             item {
                 OrdersMenuItem(selectedDate.first, selectedStore?.id ?: 0L)
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .background(color = Color.White)
-                )
             }
-            items(recap.value.incomes) {
-                SalesRecap(it)
+            if (recap.value.incomes.isNotEmpty()) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .background(color = Color.White)
+                            .padding(16.dp)
+                    ) {
+                        recap.value.incomes.forEach {
+                            RecapItem(
+                                firstText = it.dateString(),
+                                middleText = it.payment,
+                                amount = it.total,
+                                isAdd = true
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
             }
+
+            if (recap.value.outcomes.isNotEmpty()) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .background(color = Color.White)
+                            .padding(16.dp)
+                    ) {
+                        recap.value.outcomes.forEach {
+                            RecapItem(
+                                firstText = it.dateString(),
+                                middleText = it.name,
+                                amount = it.total,
+                                isAdd = false
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+
             item {
                 Spacer(
                     modifier = Modifier
@@ -291,13 +320,13 @@ class RecapActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun SalesRecap(income: Income) {
-        Column(
-            modifier = Modifier
-                .background(color = Color.White)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp)
-        ) {
+    private fun RecapItem(
+        firstText: String,
+        middleText: String,
+        amount: Long,
+        isAdd: Boolean
+    ) {
+        Column {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -305,24 +334,25 @@ class RecapActivity : AppCompatActivity() {
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = income.dateString(),
+                    text = firstText,
                     style = MaterialTheme.typography.body2
                 )
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = income.payment,
+                    text = middleText,
                     style = MaterialTheme.typography.body2
                 )
+                val operation = if (isAdd) "+" else "-"
                 Text(
-                    text = "Rp.",
+                    text = "${operation}Rp.",
                     style = MaterialTheme.typography.body2.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = income.total.thousand(),
+                    text = amount.thousand(),
                     style = MaterialTheme.typography.body2.copy(
                         fontWeight = FontWeight.Bold
                     )

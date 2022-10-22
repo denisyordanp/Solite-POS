@@ -421,39 +421,39 @@ class RemoteDataSource {
 			return result
 		}
 
-	val outcomes: LiveData<ApiResponse<List<Outcome>>>
-	get() {
-		val result: MutableLiveData<ApiResponse<List<Outcome>>> = MutableLiveData()
-		db.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(Outcome.DB_NAME)
-				.get()
-				.addOnSuccessListener {
-					val data = Outcome.toListClass(it)
-					if (data.isNullOrEmpty())
-						result.value = ApiResponse.empty(null)
-					else
-						result.value = ApiResponse.success(data)
-				}
-				.addOnFailureListener {
-					result.value = ApiResponse.error(null)
-				}
-		return result
-	}
+//	val outcomes: LiveData<ApiResponse<List<Outcome>>>
+//	get() {
+//		val result: MutableLiveData<ApiResponse<List<Outcome>>> = MutableLiveData()
+//		db.collection(AppDatabase.DB_NAME)
+//				.document(AppDatabase.MAIN)
+//				.collection(Outcome.DB_NAME)
+//				.get()
+//				.addOnSuccessListener {
+//					val data = Outcome.toListClass(it)
+//					if (data.isNullOrEmpty())
+//						result.value = ApiResponse.empty(null)
+//					else
+//						result.value = ApiResponse.success(data)
+//				}
+//				.addOnFailureListener {
+//					result.value = ApiResponse.error(null)
+//				}
+//		return result
+//	}
 
-	fun setOutcome(outcome: Outcome, callback: (ApiResponse<Boolean>) -> Unit) {
-		db.collection(AppDatabase.DB_NAME)
-				.document(AppDatabase.MAIN)
-				.collection(Outcome.DB_NAME)
-				.document(outcome.id.toString())
-				.set(Outcome.toHashMap(outcome))
-				.addOnSuccessListener {
-					callback.invoke(ApiResponse.success(true))
-				}
-				.addOnFailureListener {
-					callback.invoke(ApiResponse.error(null))
-				}
-	}
+//	fun setOutcome(outcome: Outcome, callback: (ApiResponse<Boolean>) -> Unit) {
+//		db.collection(AppDatabase.DB_NAME)
+//				.document(AppDatabase.MAIN)
+//				.collection(Outcome.DB_NAME)
+//				.document(outcome.id.toString())
+//				.set(Outcome.toHashMap(outcome))
+//				.addOnSuccessListener {
+//					callback.invoke(ApiResponse.success(true))
+//				}
+//				.addOnFailureListener {
+//					callback.invoke(ApiResponse.error(null))
+//				}
+//	}
 
 	val variantOptions: LiveData<ApiResponse<List<VariantOption>>>
 	get() {

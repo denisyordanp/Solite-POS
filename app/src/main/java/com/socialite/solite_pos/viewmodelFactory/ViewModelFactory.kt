@@ -8,6 +8,7 @@ import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.NewOrder
+import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
@@ -29,6 +30,7 @@ import com.socialite.solite_pos.utils.di.DomainInjection.provideGetOrdersGeneral
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetProductOrder
 import com.socialite.solite_pos.utils.di.DomainInjection.provideGetProductVariantOptions
 import com.socialite.solite_pos.utils.di.DomainInjection.provideNewOrder
+import com.socialite.solite_pos.utils.di.DomainInjection.provideNewOutcome
 import com.socialite.solite_pos.utils.di.DomainInjection.providePayOrder
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideCategoriesRepository
 import com.socialite.solite_pos.utils.di.RepositoryInjection.provideCustomersRepository
@@ -72,6 +74,7 @@ class ViewModelFactory private constructor(
     private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
     private val storeRepository: StoreRepository,
     private val settingRepository: SettingRepository,
+    private val newOutcome: NewOutcome,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -102,7 +105,8 @@ class ViewModelFactory private constructor(
                             providePayOrder(context),
                             provideGetOrdersGeneralMenuBadge(context),
                             provideStoreRepository(context),
-                            provideSettingRepository(context)
+                            provideSettingRepository(context),
+                            provideNewOutcome(context)
                         )
                     }
                 }
@@ -122,7 +126,8 @@ class ViewModelFactory private constructor(
                     outcomesRepository = outcomesRepository,
                     purchasesRepository = purchasesRepository,
                     storeRepository = storeRepository,
-                    settingRepository = settingRepository
+                    settingRepository = settingRepository,
+                    newOutcome = newOutcome
                 ) as T
             }
 

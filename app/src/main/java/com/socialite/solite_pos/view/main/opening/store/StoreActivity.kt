@@ -62,7 +62,7 @@ class StoreActivity : AppCompatActivity() {
                                     MasterMenus.CATEGORY -> goToCategoryActivity()
                                     MasterMenus.VARIANT -> goToVariantActivity()
                                     MasterMenus.PAYMENT -> goToPaymentActivity()
-                                    MasterMenus.SUPPLIER -> goToSupplierActivity()
+//                                    MasterMenus.SUPPLIER -> goToSupplierActivity()
                                 }
                             },
                             onStoreMenuClicked = {
@@ -137,11 +137,11 @@ class StoreActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun goToSupplierActivity() {
-        val intent = Intent(this, ListMasterActivity::class.java)
-        intent.putExtra(ListMasterActivity.TYPE, ListMasterActivity.SUPPLIER)
-        startActivity(intent)
-    }
+//    private fun goToSupplierActivity() {
+//        val intent = Intent(this, ListMasterActivity::class.java)
+//        intent.putExtra(ListMasterActivity.TYPE, ListMasterActivity.SUPPLIER)
+//        startActivity(intent)
+//    }
 
 //    private fun goToPurchaseActivity() {
 //        val intent = Intent(this, PurchaseActivity::class.java)

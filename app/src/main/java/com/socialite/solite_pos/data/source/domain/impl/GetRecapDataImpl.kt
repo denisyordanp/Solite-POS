@@ -31,7 +31,7 @@ class GetRecapDataImpl(
                     isCash = it.payment?.isCash ?: false
                 )
             }
-            val outcomes = outcomesRepository.getOutcomes(from, until).first()
+            val outcomes = outcomesRepository.getOutcomes(from, until, store).first()
 
             emit(
                 RecapData(

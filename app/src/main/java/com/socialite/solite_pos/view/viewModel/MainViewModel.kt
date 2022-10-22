@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.viewModel
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
@@ -32,7 +33,8 @@ class MainViewModel(
     private val outcomesRepository: OutcomesRepository,
     private val purchasesRepository: PurchasesRepository,
     private val storeRepository: StoreRepository,
-    private val settingRepository: SettingRepository
+    private val settingRepository: SettingRepository,
+    private val newOutcome: NewOutcome
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -125,6 +127,11 @@ class MainViewModel(
 
     fun getOutcome(date: String) = outcomesRepository.getOutcomes(date)
 
+    fun addNewOutcome(outcome: Outcome) {
+        viewModelScope.launch {
+            newOutcome(outcome)
+        }
+    }
     fun insertOutcome(data: Outcome) {
         viewModelScope.launch {
             outcomesRepository.insertOutcome(data)
