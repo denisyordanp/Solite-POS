@@ -17,7 +17,7 @@ import com.socialite.solite_pos.data.source.local.room.SoliteDao
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithData
 import com.socialite.solite_pos.data.source.remote.response.entity.BatchWithObject
 import com.socialite.solite_pos.utils.database.AppExecutors
-import com.socialite.solite_pos.vo.Resource
+import com.socialite.solite_pos.utils.tools.helper.Resource
 
 class SoliteRepository private constructor(
     private val appExecutors: AppExecutors,

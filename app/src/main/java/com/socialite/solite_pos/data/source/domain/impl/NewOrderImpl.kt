@@ -14,7 +14,7 @@ import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.local.room.SoliteDao
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.utils.preference.OrderPref
+import com.socialite.solite_pos.data.source.preference.OrderPref
 import kotlinx.coroutines.flow.first
 
 class NewOrderImpl(

@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
-import com.socialite.solite_pos.utils.preference.SettingPref
+import com.socialite.solite_pos.data.source.preference.SettingPref
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.adapters.recycleView.bluetooth.BluetoothDeviceAdapter

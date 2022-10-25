@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
-import com.socialite.solite_pos.vo.Resource
+import com.socialite.solite_pos.utils.tools.helper.Resource
 
 class UserViewModel(private val repository: SoliteRepository) : ViewModel() {
 

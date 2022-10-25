@@ -26,7 +26,7 @@ import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.main.menu.order.SelectPaymentsActivity
-import com.socialite.solite_pos.view.main.opening.MainActivity
+import com.socialite.solite_pos.view.MainActivity
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel.Companion.getOrderViewModel
 import kotlinx.coroutines.launch

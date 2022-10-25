@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.User
-import com.socialite.solite_pos.vo.Resource
+import com.socialite.solite_pos.utils.tools.helper.Resource
 
 internal interface SoliteDataSource {
     fun updateOrder(order: Order)

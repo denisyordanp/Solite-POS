@@ -5,7 +5,7 @@ package com.socialite.solite_pos.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.socialite.solite_pos.utils.database.AppExecutors
-import com.socialite.solite_pos.vo.Resource
+import com.socialite.solite_pos.utils.tools.helper.Resource
 
 abstract class NetworkBoundResource<ResultType, RequestType> protected constructor(private val mExecutors: AppExecutors) {
 

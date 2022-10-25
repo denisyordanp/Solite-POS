@@ -13,17 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
         <activity
-            android:name=".view.main.opening.stores.StoresActivity"
+            android:name=".view.stores.StoresActivity"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".view.main.opening.recap.RecapActivity" />
+        <activity android:name=".view.recap.RecapActivity" />
         <activity
-            android:name=".view.main.opening.outcomes.OutcomesActivity"
+            android:name=".view.outcomes.OutcomesActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.main.opening.orders.OrdersActivity" />
-        <activity android:name=".view.main.opening.store.StoreActivity" />
-        <activity android:name=".view.main.opening.order_customer.OrderCustomerActivity" />
+        <activity android:name=".view.orders.OrdersActivity" />
+        <activity android:name=".view.store.StoreActivity" />
+        <activity android:name=".view.order_customer.OrderCustomerActivity" />
         <activity android:name=".view.main.menu.history.SalesActivity" />
-        <activity android:name=".view.main.opening.LoginActivity" />
+        <activity android:name=".view.LoginActivity" />
         <activity android:name=".view.main.menu.outcome.DetailOutcomeActivity" />
         <activity android:name=".view.main.menu.order.SelectMixVariantOrderActivity" />
         <activity android:name=".view.main.menu.purchase.PurchaseActivity" />
@@ -36,7 +36,7 @@
         <activity android:name=".view.main.menu.order.OrderActivity" />
         <activity android:name=".view.bluetooth.BluetoothDeviceListActivity" />
         <activity
-            android:name=".view.main.opening.OpeningActivity"
+            android:name=".view.OpeningActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.main.opening.MainActivity" />
+        <activity android:name=".view.MainActivity" />
 
         <receiver android:name=".utils.tools.DoneCookService" />
     </application>

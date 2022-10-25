@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.socialite.solite_pos.view.main.opening.ui.GeneralMenus
+import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.flow.flow
 

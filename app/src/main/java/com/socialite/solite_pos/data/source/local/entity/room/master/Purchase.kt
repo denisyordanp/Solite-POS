@@ -9,7 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentDateTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
-import com.socialite.solite_pos.utils.preference.PurchasePref
+import com.socialite.solite_pos.data.source.preference.PurchasePref
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.text.SimpleDateFormat

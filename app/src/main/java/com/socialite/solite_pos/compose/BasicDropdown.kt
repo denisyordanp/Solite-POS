@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.view.main.opening.ui.DropdownItem
+import com.socialite.solite_pos.view.ui.DropdownItem
 
 fun LazyListScope.basicDropdown(
     isExpanded: Boolean,

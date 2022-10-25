@@ -12,9 +12,9 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFrom
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.dateWithTimeFormat
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
-import com.socialite.solite_pos.utils.preference.OrderPref
-import com.socialite.solite_pos.utils.preference.SettingPref
-import com.socialite.solite_pos.view.main.opening.ui.OrderMenus
+import com.socialite.solite_pos.data.source.preference.OrderPref
+import com.socialite.solite_pos.data.source.preference.SettingPref
+import com.socialite.solite_pos.view.ui.OrderMenus
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Calendar

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="4"
-        tools:context=".view.main.opening.MainActivity"
+        tools:context=".view.MainActivity"
         android:baselineAligned="false">
 
         <include

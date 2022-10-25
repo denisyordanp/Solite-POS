@@ -6,7 +6,7 @@ import android.bluetooth.BluetoothSocket
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-import com.socialite.solite_pos.utils.preference.SettingPref
+import com.socialite.solite_pos.data.source.preference.SettingPref
 import java.io.IOException
 import java.util.*
 

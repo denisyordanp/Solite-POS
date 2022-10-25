@@ -12,11 +12,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.databinding.FragmentSettingBinding
-import com.socialite.solite_pos.utils.preference.SettingPref
-import com.socialite.solite_pos.utils.preference.UserPref
+import com.socialite.solite_pos.data.source.preference.SettingPref
+import com.socialite.solite_pos.data.source.preference.UserPref
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
-import com.socialite.solite_pos.view.main.opening.LoginActivity
+import com.socialite.solite_pos.view.LoginActivity
 
 class SettingFragment : Fragment() {
 

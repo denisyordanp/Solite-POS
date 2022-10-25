@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
-import com.socialite.solite_pos.view.main.opening.ui.DropdownItem
+import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 
 @Entity(

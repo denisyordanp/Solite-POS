@@ -24,9 +24,8 @@ import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.main.menu.master.dialog.DetailOrderProductFragment
 import com.socialite.solite_pos.view.main.menu.order.SelectProductOrderByCategoryFragment
-import com.socialite.solite_pos.view.main.opening.MainActivity
+import com.socialite.solite_pos.view.MainActivity
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PurchaseActivity : SocialiteActivity() {

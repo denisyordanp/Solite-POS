@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.view.main.opening.ui.DropdownItem
+import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 
 @Entity(
