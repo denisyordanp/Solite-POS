@@ -97,6 +97,7 @@ fun ProductCustomerItemView(
                     fontWeight = FontWeight.Bold
                 )
             )
+
             Row(
                 modifier = Modifier
                     .constrainAs(buttons) {
@@ -105,24 +106,34 @@ fun ProductCustomerItemView(
                     },
             ) {
 
-                var hasVariant by remember {
-                    mutableStateOf<Boolean?>(null)
-                }
-
-                LaunchedEffect(key1 = true) {
-                    hasVariant = productViewModel.isProductHasVariant(product.id)
-                }
-
-                hasVariant?.let {
-                    if (it) {
-                        SelectVariantButton(onItemClick = {
-                            onItemClick(true, true)
-                        })
-                    } else {
-                        AmountOption(currentAmount = currentAmount, onItemClick = {isAdd ->
-                            onItemClick(isAdd, false)
-                        })
+                if (product.isActive) {
+                    var hasVariant by remember {
+                        mutableStateOf<Boolean?>(null)
                     }
+
+                    LaunchedEffect(key1 = true) {
+                        hasVariant = productViewModel.isProductHasVariant(product.id)
+                    }
+
+                    hasVariant?.let {
+                        if (it) {
+                            SelectVariantButton(onItemClick = {
+                                onItemClick(true, true)
+                            })
+                        } else {
+                            AmountOption(currentAmount = currentAmount, onItemClick = { isAdd ->
+                                onItemClick(isAdd, false)
+                            })
+                        }
+                    }
+                } else {
+                    Text(
+                        text = stringResource(R.string.out_of_stock),
+                        style = MaterialTheme.typography.body1.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color.Red
+                    )
                 }
             }
         }

@@ -13,7 +13,6 @@ import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.main.menu.master.bottom.ProductMasterFragment
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProductMasterAdapter(
@@ -58,6 +57,7 @@ class ProductMasterAdapter(
             binding.tvRvPmBuyPrice.text = toRupiah(product.buyPrice)
             binding.tvRvPmSellPrice.text = toRupiah(product.sellPrice)
             binding.tvRvPmDesc.text = product.desc
+            binding.swProduct.isChecked = product.isActive
         }
 
         private fun setClickListener(product: ProductWithCategory) {
@@ -66,6 +66,15 @@ class ProductMasterAdapter(
                     activity.supportFragmentManager,
                     "detail-product"
                 )
+            }
+            binding.swProduct.setOnCheckedChangeListener { v, _ ->
+                run {
+                    viewModel.updateProduct(
+                        product.product.copy(
+                            isActive = v.isChecked
+                        )
+                    )
+                }
             }
         }
 

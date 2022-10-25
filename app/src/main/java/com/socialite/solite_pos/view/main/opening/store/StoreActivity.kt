@@ -61,7 +61,6 @@ class StoreActivity : AppCompatActivity() {
                                     MasterMenus.PRODUCT -> goToProductMasterActivity()
                                     MasterMenus.CATEGORY -> goToCategoryActivity()
                                     MasterMenus.VARIANT -> goToVariantActivity()
-                                    MasterMenus.PAYMENT -> goToPaymentActivity()
 //                                    MasterMenus.SUPPLIER -> goToSupplierActivity()
                                 }
                             },
@@ -70,6 +69,7 @@ class StoreActivity : AppCompatActivity() {
                                     StoreMenus.SALES_RECAP -> goToRecapActivity()
 //                                    StoreMenus.PURCHASE -> goToPurchaseActivity()
                                     StoreMenus.OUTCOMES -> goToOutcomesActivity()
+                                    StoreMenus.PAYMENT -> goToPaymentActivity()
                                     StoreMenus.STORE -> goToStoresActivity()
                                     else -> {
                                         // Do nothing

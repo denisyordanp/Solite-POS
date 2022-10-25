@@ -59,5 +59,6 @@
     <string name="add_store">Tambahkan kedai</string>
     <string name="select_store">Pilih kedai</string>
     <string name="are_you_sure_select_this_store_for_next_orders">Anda yakin akan memilih kedai ini untuk pesanan selanjutnya?</string>
+    <string name="out_of_stock">Habis</string>
 
 </resources>
