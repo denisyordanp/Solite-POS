@@ -14,7 +14,7 @@
         android:theme="@style/NoActionBar">
         <activity
             android:name=".view.stores.StoresActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.recap.RecapActivity" />
         <activity
             android:name=".view.outcomes.OutcomesActivity"
@@ -22,18 +22,11 @@
         <activity android:name=".view.orders.OrdersActivity" />
         <activity android:name=".view.store.StoreActivity" />
         <activity android:name=".view.order_customer.OrderCustomerActivity" />
-        <activity android:name=".view.main.menu.history.SalesActivity" />
         <activity android:name=".view.LoginActivity" />
-        <activity android:name=".view.main.menu.outcome.DetailOutcomeActivity" />
-        <activity android:name=".view.main.menu.order.SelectMixVariantOrderActivity" />
-        <activity android:name=".view.main.menu.purchase.PurchaseActivity" />
         <activity android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity" />
         <activity android:name=".view.main.menu.master.detail.VariantOptionActivity" />
-        <activity android:name=".view.main.menu.order.SelectPaymentsActivity" />
         <activity android:name=".view.main.menu.master.product.ProductMasterActivity" />
         <activity android:name=".view.main.menu.master.ListMasterActivity" />
-        <activity android:name=".view.main.menu.order.SelectCustomerActivity" />
-        <activity android:name=".view.main.menu.order.OrderActivity" />
         <activity android:name=".view.bluetooth.BluetoothDeviceListActivity" />
         <activity
             android:name=".view.OpeningActivity"
@@ -44,7 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.MainActivity" />
 
         <receiver android:name=".utils.tools.DoneCookService" />
     </application>

@@ -17,6 +17,7 @@ import com.socialite.solite_pos.data.source.preference.UserPref
 import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.viewModel.UserViewModel
 import com.socialite.solite_pos.utils.tools.helper.Status
+import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -147,6 +148,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun toMain() {
-        startActivity(Intent(this, MainActivity::class.java))
+        val intent = Intent(this, OrderCustomerActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

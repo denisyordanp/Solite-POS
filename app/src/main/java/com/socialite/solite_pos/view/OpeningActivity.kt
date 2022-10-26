@@ -49,8 +49,10 @@ class OpeningActivity : SocialiteActivity() {
 //	}
 
 	private fun toNewMain() {
-		finish()
-		startActivity(Intent(this, OrderCustomerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
+		val intent = Intent(this, OrderCustomerActivity::class.java)
+			.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+		startActivity(intent)
 	}
 
 //	private fun toLogin() {

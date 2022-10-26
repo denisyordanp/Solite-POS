@@ -13,7 +13,7 @@
         <item name="android:windowBackground">@color/whiteGrey</item>
         <item name="extendedFloatingActionButtonStyle">@style/FloatingButton</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/blackGrey</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
@@ -64,10 +64,6 @@
 		<item name="textAllCaps">false</item>
 		<item name="android:textColor">@color/blackGrey</item>
 		<item name="iconTint">@null</item>
-	</style>
-
-	<style name="TextButton.Menu">
-		<item name="android:gravity">start|center_vertical</item>
 	</style>
 
 	<style name="FloatingButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
