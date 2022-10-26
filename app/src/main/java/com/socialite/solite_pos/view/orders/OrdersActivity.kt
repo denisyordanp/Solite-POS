@@ -71,7 +71,7 @@ class OrdersActivity : AppCompatActivity() {
                                 when (it) {
                                     GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
                                     GeneralMenus.STORE -> goToStoreActivity()
-                                    GeneralMenus.SETTING -> TODO()
+                                    GeneralMenus.SETTING -> {}
                                     else -> {
                                         // Do nothing
                                     }

@@ -20,7 +20,6 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
-import okhttp3.internal.toLongOrDefault
 
 @Composable
 @ExperimentalComposeUiApi
@@ -59,7 +58,7 @@ fun NewOutcome(
             visualTransformation = ThousandAndSuggestionVisualTransformation(false),
             placeHolder = stringResource(R.string.total_outcome),
             onValueChange = {
-                total = it.toLongOrDefault(0L)
+                total = it.toLongOrNull() ?: 0L
             }
         )
         Spacer(modifier = Modifier.height(16.dp))

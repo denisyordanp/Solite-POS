@@ -52,7 +52,6 @@ import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import okhttp3.internal.toLongOrDefault
 
 @Composable
 @ExperimentalCoroutinesApi
@@ -228,7 +227,7 @@ private fun PaymentCashOption(
                 visualTransformation = ThousandAndSuggestionVisualTransformation(cashAmount.second),
                 placeHolder = stringResource(R.string.cash_amount),
                 onValueChange = {
-                    val amount = it.toLongOrDefault(0L)
+                    val amount = it.toLongOrNull() ?: 0L
                     onAmountChange(Pair(amount, false))
                 },
                 onAction = {

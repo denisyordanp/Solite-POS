@@ -1,0 +1,21 @@
+ext {
+  kotlinVersion = '1.7.10'
+  gradleVersion = '7.3.0'
+  googleServiceVersion = '4.3.8'
+  crashlyticsVersion = '2.9.2'
+
+  composeVersion = '1.2.1'
+  roomVersion = '2.4.3'
+  firebaseBomVersion = '26.5.0'
+  activityComposeVersion = '1.6.0'
+  accompanistPagerVersion = '0.23.1'
+  constraintComposeVersion = '1.0.1'
+  navigationComposeVersion = '2.5.2'
+  lifecycleVersion = '2.5.1'
+  lifecycleExtensionVersion = '2.2.0'
+  materialVersion = '1.6.1'
+  easyPermissionVersion = '3.0.0'
+  dataStoreVersion = '1.0.0'
+  kotlinCoreVersion = '1.9.0'
+  kotlinCoroutineVersion = '1.6.4'
+}

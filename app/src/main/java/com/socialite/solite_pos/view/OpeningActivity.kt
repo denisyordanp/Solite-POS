@@ -35,7 +35,7 @@ class OpeningActivity : SocialiteActivity() {
 
 	private fun checkUser() {
 //		toMain()
-		toNewMain()
+		toMain()
 //		if (auth.currentUser != null) {
 //			toMain()
 //		} else {
@@ -43,12 +43,7 @@ class OpeningActivity : SocialiteActivity() {
 //		}
 	}
 
-//	private fun toMain() {
-//		finish()
-//		startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
-//	}
-
-	private fun toNewMain() {
+	private fun toMain() {
 		val intent = Intent(this, OrderCustomerActivity::class.java)
 			.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
 			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
