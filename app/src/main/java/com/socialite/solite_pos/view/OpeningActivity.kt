@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatDelegate
 import com.socialite.solite_pos.databinding.ActivityOpeningBinding
 import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
@@ -28,7 +27,6 @@ class OpeningActivity : SocialiteActivity() {
 			e.printStackTrace()
 		}
 
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 		Handler(Looper.getMainLooper()).postDelayed({checkUser()}, 2000)
 
     }

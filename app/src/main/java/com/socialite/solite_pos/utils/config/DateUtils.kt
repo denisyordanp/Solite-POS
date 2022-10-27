@@ -16,7 +16,7 @@ class DateUtils {
         private val dbDateTimeSimpleFormat = SimpleDateFormat(dbDateTimeFormat, locale)
         private val dbDateSimpleFormat = SimpleDateFormat(dbDateFormat, locale)
 
-        private val locale: Locale
+        val locale: Locale
             get() = Locale("in", "ID")
 
         fun convertDateFromDb(date: String?, format: String): String {
@@ -43,16 +43,10 @@ class DateUtils {
                 ""
             }
         }
-
-        fun calendarToStr(calendar: Calendar): String {
-            return dbDateTimeSimpleFormat.format(calendar.time)
-        }
-
-        fun strToCalendar(calendar: String): Calendar {
+        fun millisToDate(millis: Long): String {
             val cal = Calendar.getInstance()
-            val date = dbDateSimpleFormat.parse(calendar)
-            if (date != null) cal.time = date
-            return cal
+            cal.timeInMillis = millis
+            return dbDateSimpleFormat.format(cal.time)
         }
 
         fun strToDate(date: String?): Date {

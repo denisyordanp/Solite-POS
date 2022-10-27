@@ -26,7 +26,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -259,7 +258,7 @@ private fun CategoryWithProducts(
                 .clickable {
                     isExpand = !isExpand
                 }
-                .background(color = Color.White)
+                .background(color = MaterialTheme.colors.surface)
                 .padding(10.dp)
         ) {
             Text(

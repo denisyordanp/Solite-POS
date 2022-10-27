@@ -48,7 +48,7 @@ fun ProductCustomerItemView(
             .fillMaxWidth()
             .wrapContentHeight()
             .background(
-                color = Color.White
+                color = MaterialTheme.colors.surface
             )
     ) {
         ConstraintLayout(
@@ -156,7 +156,7 @@ private fun RowScope.SelectVariantButton(
     Spacer(modifier = Modifier.width(8.dp))
     Icon(
         painter = painterResource(id = R.drawable.ic_arrow_right),
-        tint = Color.Black,
+        tint = MaterialTheme.colors.onSurface,
         contentDescription = null
     )
 }

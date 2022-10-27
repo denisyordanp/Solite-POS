@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -89,15 +90,6 @@ fun OrderCustomerName(
                 }
             )
         },
-        bottomBar = {
-            SelectDineType(
-                onChooseDine = { isTakeAway ->
-                    customers.find { it.id == selectedId }?.let { customer ->
-                        onNewOrder(customer, isTakeAway)
-                    }
-                }
-            )
-        },
         backgroundColor = MaterialTheme.colors.background
     ) { padding ->
         CustomerNames(
@@ -110,6 +102,11 @@ fun OrderCustomerName(
                 searchName = ""
                 selectedCustomer(it)
                 keyboard?.hide()
+            },
+            onChooseDine = { isTakeAway ->
+                customers.find { it.id == selectedId }?.let { customer ->
+                    onNewOrder(customer, isTakeAway)
+                }
             }
         )
     }
@@ -139,7 +136,7 @@ private fun NameSearchBar(
                 .padding(8.dp),
             painter = painterResource(id = R.drawable.ic_back),
             contentDescription = null,
-            tint = MaterialTheme.colors.onPrimary
+            tint = MaterialTheme.colors.onSurface
         )
         Spacer(modifier = Modifier.width(8.dp))
         BasicEditText(
@@ -156,15 +153,33 @@ private fun CustomerNames(
     customers: List<Customer>,
     selectedId: Long,
     keyword: String,
-    onClickName: (Customer) -> Unit
+    onClickName: (Customer) -> Unit,
+    onChooseDine: (isTakeAway: Boolean) -> Unit
 ) {
-    LazyColumn(
+
+    Box(
         modifier = modifier
+            .fillMaxSize()
     ) {
-        if (keyword.isNotEmpty() && !customers.isAnyMatches(keyword)) {
-            item {
+        LazyColumn(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+        ) {
+            if (keyword.isNotEmpty() && !customers.isAnyMatches(keyword)) {
+                item {
+                    CustomerItem(
+                        keyword = keyword,
+                        selectedId = selectedId,
+                        onCLickName = { selected ->
+                            onClickName(selected)
+                        }
+                    )
+                }
+            }
+            items(customers) {
                 CustomerItem(
                     keyword = keyword,
+                    customer = it,
                     selectedId = selectedId,
                     onCLickName = { selected ->
                         onClickName(selected)
@@ -172,16 +187,12 @@ private fun CustomerNames(
                 )
             }
         }
-        items(customers) {
-            CustomerItem(
-                keyword = keyword,
-                customer = it,
-                selectedId = selectedId,
-                onCLickName = { selected ->
-                    onClickName(selected)
-                }
-            )
-        }
+
+        SelectDineType(
+            modifier = Modifier
+                .align(Alignment.BottomCenter),
+            onChooseDine = onChooseDine
+        )
     }
 }
 
@@ -201,6 +212,7 @@ private fun CustomerItem(
 
     val isSelected = customer?.id == selectedId
 
+    Spacer(modifier = Modifier.height(4.dp))
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -210,7 +222,7 @@ private fun CustomerItem(
                 )
             }
             .background(
-                color = Color.White
+                color = MaterialTheme.colors.surface
             )
             .padding(16.dp)
     ) {
@@ -221,7 +233,7 @@ private fun CustomerItem(
             style = MaterialTheme.typography.body2.copy(
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
             ),
-            color = Color.Black
+            color = MaterialTheme.colors.onSurface
         )
         if (customer == null || isSelected) {
             Icon(
@@ -231,27 +243,26 @@ private fun CustomerItem(
                 painter = painterResource(
                     id = if (isSelected) R.drawable.ic_done_all else R.drawable.ic_add
                 ),
-                tint = MaterialTheme.colors.primary,
+                tint = MaterialTheme.colors.onSurface,
                 contentDescription = null
             )
         }
     }
-    Spacer(modifier = Modifier.height(4.dp))
 }
 
 @Composable
 private fun SelectDineType(
+    modifier: Modifier = Modifier,
     onChooseDine: (isTakeAway: Boolean) -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(
-                    topStart = 16.dp,
-                    topEnd = 16.dp
-                )
-            )
+    Surface(
+        modifier = modifier,
+        elevation = 4.dp,
+        shape = RoundedCornerShape(
+            topStart = 16.dp,
+            topEnd = 16.dp
+        ),
+        color = MaterialTheme.colors.surface
     ) {
         Row(
             modifier = Modifier

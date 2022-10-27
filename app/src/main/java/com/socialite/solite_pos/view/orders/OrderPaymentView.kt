@@ -137,7 +137,7 @@ private fun PaymentContent(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.White)
+                        .background(color = MaterialTheme.colors.surface)
                         .padding(16.dp),
                     text = "Rp. ${orderWithProduct.grandTotal.thousand()}",
                     style = MaterialTheme.typography.h3
@@ -212,7 +212,7 @@ private fun PaymentCashOption(
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colors.surface)
             .padding(16.dp)
     ) {
         val maxWidth = maxWidth

@@ -20,7 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,7 +46,7 @@ fun BasicEditText(
             .padding(8.dp)
             .border(
                 width = 0.5.dp,
-                color = MaterialTheme.colors.onPrimary,
+                color = MaterialTheme.colors.onSurface,
                 shape = RoundedCornerShape(8.dp)
             )
     ) {
@@ -70,9 +70,12 @@ fun BasicEditText(
                     onValueChange(it)
                 },
                 textStyle = MaterialTheme.typography.body2.copy(
-                    color = Color.Black
+                    color = MaterialTheme.colors.onPrimary
                 ),
-                visualTransformation = visualTransformation
+                visualTransformation = visualTransformation,
+                cursorBrush = SolidColor(
+                    MaterialTheme.colors.onPrimary
+                ),
             )
             if (value.isEmpty()) {
                 Text(
@@ -81,7 +84,7 @@ fun BasicEditText(
                         .align(Alignment.CenterStart),
                     text = placeHolder,
                     style = MaterialTheme.typography.body2,
-                    color = Color.Black.copy(
+                    color = MaterialTheme.colors.onSurface.copy(
                         alpha = 0.6f
                     )
                 )
@@ -95,7 +98,7 @@ fun BasicEditText(
                     onValueChange("")
                 },
             painter = painterResource(id = R.drawable.ic_close),
-            tint = MaterialTheme.colors.onPrimary,
+            tint = MaterialTheme.colors.onSurface,
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))

@@ -60,7 +60,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			app:layout_constraintTop_toTopOf="parent"
-			app:tabIndicatorColor="@color/primary"
+			app:tabIndicatorColor="@color/yellow"
 			app:tabIndicatorHeight="@dimen/SMargin"
 			app:tabSelectedTextColor="@color/blackGrey"
 			app:tabMode="scrollable"

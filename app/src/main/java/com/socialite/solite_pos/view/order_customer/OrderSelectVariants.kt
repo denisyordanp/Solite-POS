@@ -181,7 +181,7 @@ private fun VariantItemManyOption(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colors.surface)
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         VariantTitle(
@@ -307,7 +307,7 @@ private fun VariantOptionManyOption(
                 isChecked = it
             },
             colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colors.primary
+                checkedColor = MaterialTheme.colors.onSurface
             )
         )
     }
@@ -329,7 +329,7 @@ private fun VariantItemSingleOption(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colors.surface)
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         VariantTitle(
@@ -386,7 +386,7 @@ private fun VariantOptionSingleOption(
             selected = isSelected,
             onClick = onOptionSelected,
             colors = RadioButtonDefaults.colors(
-                selectedColor = MaterialTheme.colors.primary
+                selectedColor = MaterialTheme.colors.onSurface
             )
         )
     }
@@ -405,7 +405,7 @@ private fun AddToCartBottom(
             .fillMaxWidth(),
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         elevation = 10.dp,
-        color = Color.White
+        color = MaterialTheme.colors.surface
     ) {
         ConstraintLayout(
             modifier = Modifier

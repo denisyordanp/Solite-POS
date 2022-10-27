@@ -15,7 +15,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,7 +61,7 @@ private fun DropdownHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colors.surface)
             .clickable {
                 onHeaderClicked()
             }
@@ -80,6 +79,7 @@ private fun DropdownHeader(
             painter = painterResource(
                 id = if (isExpanded) R.drawable.ic_expand_less_24 else R.drawable.ic_expand_more_24
             ),
+            tint = MaterialTheme.colors.onSurface,
             contentDescription = null
         )
     }
@@ -94,7 +94,7 @@ private fun DropdownItem(
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colors.surface)
             .clickable {
                 onItemClicked()
             }

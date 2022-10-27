@@ -4,10 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.socialite.solite_pos.R
 
-enum class MainMenus {
-    ORDER, NOT_PAY, DONE, CANCELED, DAILY_RECAP, PURCHASE, HISTORY, MASTER, SETTING;
-}
-
 enum class OrderMenus(
     @StringRes val title: Int,
     val status: Int,
@@ -30,8 +26,7 @@ enum class GeneralMenus(
 
 enum class StoreMenus(@StringRes val title: Int) {
     SALES_RECAP(R.string.sales_recap),
-    OUTCOMES(R.string.outcomes),
-//    PURCHASE(R.string.purchase),
+    OUTCOMES(R.string.outcome),
     PAYMENT(R.string.payment),
     MASTERS(R.string.products),
     STORE(R.string.stores),
@@ -41,5 +36,8 @@ enum class MasterMenus(@StringRes val title: Int) {
     PRODUCT(R.string.product),
     CATEGORY(R.string.category),
     VARIANT(R.string.variant),
-//    SUPPLIER(R.string.supplier)
+}
+
+enum class SettingMenus(@StringRes val title: Int) {
+    THEME(R.string.theme)
 }

@@ -17,8 +17,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.view.orders.OrdersActivity
+import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
@@ -86,7 +88,7 @@ class OrderCustomerActivity : AppCompatActivity() {
                                     when (it) {
                                         GeneralMenus.ORDERS -> goToOrdersActivity()
                                         GeneralMenus.STORE -> goToStoreActivity()
-                                        GeneralMenus.SETTING -> {}
+                                        GeneralMenus.SETTING -> goToSettingsActivity()
                                         else -> {
                                             // Don nothing
                                         }
@@ -121,19 +123,23 @@ class OrderCustomerActivity : AppCompatActivity() {
                         composable(
                             OrderCustomerDestinations.SELECT_CUSTOMERS
                         ) {
-                            OrderCustomerName(
-                                mainViewModel = mainViewModel,
-                                onBackClicked = {
-                                    navController.popBackStack()
-                                },
-                                onNewOrder = { customer, isTakeAway ->
-                                    orderViewModel.newOrderImprovement(
-                                        customer = customer,
-                                        isTakeAway = isTakeAway
-                                    )
-                                    goToOrdersActivity()
-                                }
-                            )
+                            ProvideWindowInsets(
+                                windowInsetsAnimationsEnabled = true
+                            ) {
+                                OrderCustomerName(
+                                    mainViewModel = mainViewModel,
+                                    onBackClicked = {
+                                        navController.popBackStack()
+                                    },
+                                    onNewOrder = { customer, isTakeAway ->
+                                        orderViewModel.newOrderImprovement(
+                                            customer = customer,
+                                            isTakeAway = isTakeAway
+                                        )
+                                        goToOrdersActivity()
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -141,7 +147,6 @@ class OrderCustomerActivity : AppCompatActivity() {
         }
     }
 
-    @ExperimentalMaterialApi
     private fun goToStoreActivity() {
         val intent = Intent(this, StoreActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -149,9 +154,15 @@ class OrderCustomerActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    @ExperimentalMaterialApi
     private fun goToOrdersActivity() {
         val intent = Intent(this, OrdersActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+    }
+
+    private fun goToSettingsActivity() {
+        val intent = Intent(this, SettingsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)

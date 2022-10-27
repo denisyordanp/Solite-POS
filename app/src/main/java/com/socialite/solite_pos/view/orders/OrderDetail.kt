@@ -113,7 +113,8 @@ fun OrderDetail(
                     }
                 )
             }
-        }
+        },
+        backgroundColor = MaterialTheme.colors.background
     )
 
     if (alertPaymentState) {
@@ -237,7 +238,7 @@ private fun OrderHeader(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color.White
+                color = MaterialTheme.colors.surface
             )
             .padding(16.dp),
     ) {
@@ -276,7 +277,7 @@ private fun ProductOrder(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color.White
+                color = MaterialTheme.colors.surface
             )
             .padding(16.dp),
     ) {
@@ -338,7 +339,7 @@ private fun OrderFooter(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colors.surface)
             .padding(16.dp)
     ) {
         Text(

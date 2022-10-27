@@ -16,10 +16,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
+import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -71,7 +73,7 @@ class OrdersActivity : AppCompatActivity() {
                                 when (it) {
                                     GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
                                     GeneralMenus.STORE -> goToStoreActivity()
-                                    GeneralMenus.SETTING -> {}
+                                    GeneralMenus.SETTING -> goToSettingsActivity()
                                     else -> {
                                         // Do nothing
                                     }
@@ -162,29 +164,33 @@ class OrdersActivity : AppCompatActivity() {
                         arguments = listOf(orderNoArgument)
                     ) {
                         it.arguments?.getString(OrderDetailDestinations.ORDER_NO)?.let { orderNo ->
-                            OrderPaymentView(
-                                orderNo = orderNo,
-                                orderViewModel = orderViewModel,
-                                mainViewModel = mainViewModel,
-                                onBackClicked = {
-                                    navController.popBackStack()
-                                },
-                                onPayClicked = { order, payment, pay ->
-                                    lifecycleScope.launch {
-                                        orderViewModel.payOrder(
-                                            order = order,
-                                            payment = payment,
-                                            pay = pay
-                                        )
-                                        defaultTabPage = OrderMenus.DONE.status
-                                        navController.navigate(OrderDetailDestinations.ORDERS) {
-                                            popUpTo(OrderDetailDestinations.ORDERS) {
-                                                inclusive = true
+                            ProvideWindowInsets(
+                                windowInsetsAnimationsEnabled = true
+                            ) {
+                                OrderPaymentView(
+                                    orderNo = orderNo,
+                                    orderViewModel = orderViewModel,
+                                    mainViewModel = mainViewModel,
+                                    onBackClicked = {
+                                        navController.popBackStack()
+                                    },
+                                    onPayClicked = { order, payment, pay ->
+                                        lifecycleScope.launch {
+                                            orderViewModel.payOrder(
+                                                order = order,
+                                                payment = payment,
+                                                pay = pay
+                                            )
+                                            defaultTabPage = OrderMenus.DONE.status
+                                            navController.navigate(OrderDetailDestinations.ORDERS) {
+                                                popUpTo(OrderDetailDestinations.ORDERS) {
+                                                    inclusive = true
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
@@ -192,7 +198,6 @@ class OrdersActivity : AppCompatActivity() {
         }
     }
 
-    @ExperimentalMaterialApi
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -200,9 +205,15 @@ class OrdersActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    @ExperimentalMaterialApi
     private fun goToStoreActivity() {
         val intent = Intent(this, StoreActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+    }
+
+    private fun goToSettingsActivity() {
+        val intent = Intent(this, SettingsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)

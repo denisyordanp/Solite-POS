@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.NewOutcome
-import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
@@ -65,18 +64,7 @@ class MainViewModel(
         _currentCashInput.value = Pair(cash, total)
     }
 
-    val purchases = purchasesRepository.getPurchases()
-
-    fun getPurchaseProducts(purchaseNo: String) =
-        purchasesRepository.getPurchaseProducts(purchaseNo)
-
-    fun newPurchase(data: PurchaseWithProduct) {
-        viewModelScope.launch {
-            purchasesRepository.newPurchase(data)
-        }
-    }
-
-    val customers = customersRepository.getCustomers()
+    private val customers = customersRepository.getCustomers()
 
     fun filterCustomer(keyword: String) = when {
         keyword.isNotEmpty() -> {
@@ -133,17 +121,6 @@ class MainViewModel(
             newOutcome(outcome)
         }
     }
-    fun insertOutcome(data: Outcome) {
-        viewModelScope.launch {
-            outcomesRepository.insertOutcome(data)
-        }
-    }
-
-    fun updateOutcome(data: Outcome) {
-        viewModelScope.launch {
-            outcomesRepository.updateOutcome(data)
-        }
-    }
 
     fun getStores() = storeRepository.getStores()
 
@@ -163,6 +140,14 @@ class MainViewModel(
     fun selectStore(id: Long) {
         viewModelScope.launch {
             settingRepository.selectStore(id)
+        }
+    }
+
+    val isDarkModeActive = settingRepository.getIsDarkModeActive()
+
+    fun setDarkMode(isActive: Boolean) {
+        viewModelScope.launch {
+            settingRepository.setDarkMode(isActive)
         }
     }
 }

@@ -14,7 +14,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,7 +34,7 @@ fun BasicAlertDialog(
             modifier = Modifier
                 .wrapContentHeight(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colors.primary
+            color = MaterialTheme.colors.background
         ) {
             Column(
                 modifier = Modifier
@@ -67,7 +66,6 @@ fun BasicAlertDialog(
                     PrimaryButtonView(
                         modifier = Modifier
                             .weight(1f),
-                        backgroundColor = Color.White,
                         buttonText = positiveText,
                         onClick = positiveAction
                     )
@@ -76,7 +74,6 @@ fun BasicAlertDialog(
                         PrimaryButtonView(
                             modifier = Modifier
                                 .weight(1f),
-                            backgroundColor = Color.White,
                             buttonText = negativeText,
                             onClick = negativeAction
                         )

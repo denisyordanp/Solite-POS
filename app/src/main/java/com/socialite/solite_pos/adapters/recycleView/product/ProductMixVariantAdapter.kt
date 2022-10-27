@@ -17,7 +17,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.RvProductBinding
 import com.socialite.solite_pos.utils.tools.RecycleViewDiffUtils
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProductMixVariantAdapter(
@@ -109,7 +108,7 @@ class ProductMixVariantAdapter(
                     ColorStateList.valueOf(
                         ResourcesCompat.getColor(
                             binding.root.resources,
-                            R.color.primary,
+                            R.color.yellow,
                             null
                         )
                     )

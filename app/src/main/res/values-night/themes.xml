@@ -1,42 +1,35 @@
-<resources
-	xmlns:tools="http://schemas.android.com/tools">
+<resources>
 	<!-- Base application theme. -->
 	<style name="Theme.SolitePOS" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-		<!-- Primary brand color. -->
-		<item name="colorPrimary">@color/primary</item>
-		<item name="colorPrimaryVariant">@color/primaryVariant</item>
-		<item name="colorOnPrimary">@color/onPrimary</item>
-		<!-- Secondary brand color. -->
-		<item name="colorSecondary">@color/whiteGrey</item>
-        <item name="colorSecondaryVariant">@color/grey</item>
-        <item name="colorOnSecondary">@color/grey</item>
-        <item name="android:windowBackground">@color/whiteGrey</item>
-        <item name="extendedFloatingActionButtonStyle">@style/FloatingButton</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="android:textColor">@color/blackGrey</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
-        <item name="buttonStyle">@style/ButtonStyle</item>
-        <item name="android:datePickerStyle">@style/MyDatePicker</item>
-    </style>
+		<item name="colorPrimary">@color/grayDark</item>
+		<item name="colorPrimaryVariant">@color/blackLight</item>
+		<item name="colorOnPrimary">@color/grayLight</item>
+		<item name="android:windowBackground">@color/gray</item>
+		<item name="extendedFloatingActionButtonStyle">@style/FloatingButton</item>
+		<!-- Status bar color. -->
+		<item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+		<!-- Customize your theme here. -->
+		<item name="android:textColor">@color/grayLight</item>
+		<item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
+		<item name="buttonStyle">@style/ButtonStyle</item>
+		<item name="android:datePickerStyle">@style/MyDatePicker</item>
+	</style>
 
-    <style name="MyDatePicker" parent="android:Widget.Material.DatePicker">
-        <item name="android:datePickerMode">spinner</item>
-    </style>
+	<style name="MyDatePicker" parent="android:Widget.Material.DatePicker">
+		<item name="android:datePickerMode">spinner</item>
+	</style>
 
-    <style name="TextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">@dimen/MMargin</item>
-        <item name="boxCornerRadiusTopEnd">@dimen/MMargin</item>
-        <item name="boxCornerRadiusBottomEnd">@dimen/MMargin</item>
-        <item name="boxCornerRadiusBottomStart">@dimen/MMargin</item>
-        <item name="boxBackgroundColor">@color/white</item>
-
-    </style>
+	<style name="TextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="boxCornerRadiusTopStart">@dimen/MMargin</item>
+		<item name="boxCornerRadiusTopEnd">@dimen/MMargin</item>
+		<item name="boxCornerRadiusBottomEnd">@dimen/MMargin</item>
+		<item name="boxCornerRadiusBottomStart">@dimen/MMargin</item>
+		<item name="boxBackgroundColor">@color/white</item>
+	</style>
 
 	<style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
 		<item name="textAllCaps">false</item>
-		<item name="backgroundTint">@color/primaryVariant</item>
+		<item name="backgroundTint">@color/yellowDark</item>
 		<item name="android:textColor">@color/blackGrey</item>
 	</style>
 
@@ -45,7 +38,7 @@
 	</style>
 
 	<style name="ModalSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
-		<item name="backgroundTint">@color/primary</item>
+		<item name="backgroundTint">@color/yellow</item>
 		<item name="shapeAppearanceOverlay">@style/ShapeAppearance</item>
 	</style>
 
@@ -67,12 +60,13 @@
 	</style>
 
 	<style name="FloatingButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
-		<item name="backgroundTint">@color/primary</item>
+		<item name="backgroundTint">@color/yellow</item>
 	</style>
 
 	<style name="CenterText">
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:textAlignment">center</item>
+		<item name="android:gravity">center</item>
 	</style>
 </resources>

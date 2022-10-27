@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="primary">#F7C600</color>
-	<color name="primaryVariant">#E0A00B</color>
-	<color name="onPrimary">#FF03DAC5</color>
+	<color name="yellow">#F7C600</color>
+	<color name="yellowDark">#E0A00B</color>
+	<color name="grayDark">#3C4443</color>
+	<color name="blackLight">#272727</color>
+	<color name="gray">#5E6B69</color>
+	<color name="grayLight">#FF03DAC5</color>
 
 	<color name="whiteGrey">#F1F1F1</color>
 	<color name="grey">#FF018786</color>

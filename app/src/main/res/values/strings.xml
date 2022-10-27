@@ -3,7 +3,7 @@
     <string name="solite_logo_image" translatable="false">Solite Logo</string>
     <string name="new_order">Pesanan baru</string>
     <string name="order_now">Pesanan sekarang</string>
-    <string name="outcomes">Pengeluaran</string>
+    <string name="outcome">Pengeluaran</string>
     <string name="new_purchase">Pembelian baru</string>
     <string name="orders">Pesanan</string>
     <string name="store">Kedai</string>
@@ -60,5 +60,16 @@
     <string name="select_store">Pilih kedai</string>
     <string name="are_you_sure_select_this_store_for_next_orders">Anda yakin akan memilih kedai ini untuk pesanan selanjutnya?</string>
     <string name="out_of_stock">Habis</string>
+    <string name="select_date">Pilih Tanggal</string>
+    <string name="select">Pilih</string>
+    <string name="cash_sales">Penjualan tunai</string>
+    <string name="non_cash_sales">Penjualan non tunai</string>
+    <string name="gross_sales">Penjualan bersih</string>
+    <string name="total_sales">Total penjualan</string>
+    <string name="undone_orders">Pesanan belum selesai</string>
+    <string name="not_pay_yet_orders">Pesanan belum melakukan pembayaran</string>
+    <string name="canceled_orders">Pesanan dibatalkan</string>
+    <string name="payed_orders">Pesanan sudah bayar</string>
+    <string name="theme">Tema</string>
 
 </resources>

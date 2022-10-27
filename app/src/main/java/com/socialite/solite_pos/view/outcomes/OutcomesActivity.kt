@@ -97,7 +97,7 @@ class OutcomesActivity : AppCompatActivity() {
             content = {
                 Scaffold(
                     topBar = {
-                        val title = stringResource(id = R.string.outcomes) + " - ${
+                        val title = stringResource(id = R.string.outcome) + " - ${
                             DateUtils.convertDateFromDb(
                                 date,
                                 DateUtils.DATE_WITH_DAY_FORMAT

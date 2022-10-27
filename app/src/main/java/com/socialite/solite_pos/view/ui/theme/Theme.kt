@@ -1,34 +1,29 @@
 package com.socialite.solite_pos.view.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
+@SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
-    primary = Yellow,
-    primaryVariant = Yellow100,
-    secondary = Teal200,
-    onPrimary = GrayDark,
-    background = GrayLight
+    primary = GrayDark,
+    primaryVariant = BlackLight,
+    onPrimary = GrayLight,
+    background = Gray,
+    surface = GrayDark,
+
 )
 
 private val LightColorPalette = lightColors(
     primary = Yellow,
-    primaryVariant = Yellow100,
-    secondary = Teal200,
+    primaryVariant = YellowDark,
     onPrimary = GrayDark,
-    background = GrayLight
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+    background = GrayLight,
+    surface = Color.White
 )
 
 @Composable

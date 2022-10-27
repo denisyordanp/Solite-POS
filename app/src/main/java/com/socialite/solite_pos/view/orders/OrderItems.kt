@@ -21,6 +21,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
@@ -35,7 +36,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -142,45 +142,49 @@ private fun OrderList(
         val scope = rememberCoroutineScope()
         val menus = OrderMenus.values()
 
-        ScrollableTabRow(
-            selectedTabIndex = pagerState.currentPage,
-            backgroundColor = MaterialTheme.colors.primary,
-            indicator = {
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, it)
-                )
-            },
-            edgePadding = 16.dp
+        Surface(
+            elevation = 8.dp,
+            color = MaterialTheme.colors.primary
         ) {
-            menus.forEachIndexed { i, menu ->
-                Tab(
-                    selected = pagerState.currentPage == i,
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(i)
+            ScrollableTabRow(
+                selectedTabIndex = pagerState.currentPage,
+                indicator = {
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, it)
+                    )
+                },
+                edgePadding = 16.dp
+            ) {
+                menus.forEachIndexed { i, menu ->
+                    Tab(
+                        selected = pagerState.currentPage == i,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(i)
+                            }
                         }
-                    }
-                ) {
-                    val badge = viewModel.getOrderBadge(menu, currentDate)
-                        .collectAsState(initial = null)
-
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp)
                     ) {
-                        badge.value?.let {
-                            BadgeNumber(
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically),
-                                badge = it
+                        val badge = viewModel.getOrderBadge(menu, currentDate)
+                            .collectAsState(initial = null)
+
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            badge.value?.let {
+                                BadgeNumber(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically),
+                                    badge = it
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+                            Text(
+                                modifier = Modifier,
+                                text = stringResource(id = menu.title),
+                                style = MaterialTheme.typography.body2
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
                         }
-                        Text(
-                            modifier = Modifier,
-                            text = stringResource(id = menu.title),
-                            style = MaterialTheme.typography.body2
-                        )
                     }
                 }
             }
@@ -222,6 +226,7 @@ private fun OrderContent(
     } else {
         Box(
             modifier = Modifier
+                .background(color = MaterialTheme.colors.background)
                 .fillMaxSize()
         ) {
             LazyColumn(
@@ -265,6 +270,7 @@ private fun EmptyOrders(
 
     Box(
         modifier = Modifier
+            .background(color = MaterialTheme.colors.background)
             .fillMaxSize()
     ) {
         Column(
@@ -326,7 +332,7 @@ private fun OrderItem(
                 onOrderClicked(orderProducts.order.order.orderNo)
             }
             .background(
-                color = Color.White
+                color = MaterialTheme.colors.surface
             )
             .padding(16.dp)
     ) {
@@ -340,7 +346,8 @@ private fun OrderItem(
                     start.linkTo(parent.start)
                 },
             text = orderProducts.order.customer.name,
-            style = MaterialTheme.typography.body1
+            style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.onSurface
         )
         Text(
             modifier = Modifier
@@ -351,7 +358,8 @@ private fun OrderItem(
             text = "Rp. ${orderProducts.grandTotal.thousand()}",
             style = MaterialTheme.typography.body2.copy(
                 fontWeight = FontWeight.Bold
-            )
+            ),
+            color = MaterialTheme.colors.onSurface
         )
         Text(
             modifier = Modifier
@@ -364,7 +372,8 @@ private fun OrderItem(
             ),
             style = MaterialTheme.typography.overline.copy(
                 fontWeight = FontWeight.Bold
-            )
+            ),
+            color = MaterialTheme.colors.onSurface
         )
         Icon(
             modifier = Modifier

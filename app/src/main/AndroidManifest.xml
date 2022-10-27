@@ -7,23 +7,26 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
-        android:allowBackup="true"
         android:name=".view.SoliteApp"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
         <activity
-            android:name=".view.stores.StoresActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.recap.RecapActivity" />
-        <activity
             android:name=".view.outcomes.OutcomesActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.orders.OrdersActivity" />
-        <activity android:name=".view.store.StoreActivity" />
-        <activity android:name=".view.order_customer.OrderCustomerActivity" />
+        <activity
+            android:name=".view.orders.OrdersActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.store.StoreActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.order_customer.OrderCustomerActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.settings.SettingsActivity" />
         <activity android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity" />
         <activity android:name=".view.main.menu.master.detail.VariantOptionActivity" />
         <activity android:name=".view.main.menu.master.product.ProductMasterActivity" />
