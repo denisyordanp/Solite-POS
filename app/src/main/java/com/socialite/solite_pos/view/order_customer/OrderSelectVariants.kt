@@ -154,6 +154,8 @@ private fun SelectVariantsContent(
                         )
                 }
             }
+
+            item { SpaceForAddCartButton() }
         }
         AddToCartBottom(
             modifier = Modifier
@@ -163,6 +165,11 @@ private fun SelectVariantsContent(
             onAddToBucketClicked = onAddToBucketClicked
         )
     }
+}
+
+@Composable
+private fun SpaceForAddCartButton() {
+    Spacer(modifier = Modifier.height(140.dp))
 }
 
 @Composable
@@ -349,6 +356,7 @@ private fun VariantItemSingleOption(
                     } else {
                         option
                     }
+
                 }
             )
         }

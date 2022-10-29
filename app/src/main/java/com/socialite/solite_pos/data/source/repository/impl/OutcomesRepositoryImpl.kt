@@ -3,6 +3,7 @@ package com.socialite.solite_pos.data.source.repository.impl
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.room.OutcomesDao
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
+import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
 
 class OutcomesRepositoryImpl(
     private val dao: OutcomesDao
@@ -28,8 +29,8 @@ class OutcomesRepositoryImpl(
 
     override fun getOutcomes(date: String) = dao.getOutcome(date)
 
-    override fun getOutcomes(from: String, until: String, store: Long) =
-        dao.getOutcome(from, until, store)
+    override fun getOutcomes(parameters: OrdersParameter) =
+        dao.getOutcome(parameters.start, parameters.end, parameters.storeId)
 
     override suspend fun insertOutcome(data: Outcome) {
         dao.insertOutcome(data)

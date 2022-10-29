@@ -3,47 +3,56 @@ package com.socialite.solite_pos.view.store
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.compose.RecapMainView
-import com.socialite.solite_pos.compose.StoresView
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.outcomes.OutcomesActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
+import com.socialite.solite_pos.view.store.product.ProductDetailMaster
+import com.socialite.solite_pos.view.store.product.ProductsMaster
+import com.socialite.solite_pos.view.store.recap.RecapMainView
+import com.socialite.solite_pos.view.store.stores.StoresView
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
 import com.socialite.solite_pos.view.ui.StoreMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
-class StoreActivity : AppCompatActivity() {
+class StoreActivity : SoliteActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var productViewModel: ProductViewModel
 
     private lateinit var datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>
 
     @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
         mainViewModel = MainViewModel.getMainViewModel(this)
+        productViewModel = ProductViewModel.getMainViewModel(this)
 
         val constraint = CalendarConstraints.Builder()
             .setValidator(DateValidatorPointBackward.now())
@@ -81,7 +90,11 @@ class StoreActivity : AppCompatActivity() {
                             },
                             onMasterMenuClicked = {
                                 when (it) {
+//                                    MasterMenus.PRODUCT -> {
+//                                        navController.navigate(StoreDestinations.MASTER_PRODUCT)
+//                                    }
                                     MasterMenus.PRODUCT -> goToProductMasterActivity()
+
                                     MasterMenus.CATEGORY -> goToCategoryActivity()
                                     MasterMenus.VARIANT -> goToVariantActivity()
 //                                    MasterMenus.SUPPLIER -> goToSupplierActivity()
@@ -126,8 +139,40 @@ class StoreActivity : AppCompatActivity() {
                             fragmentManager = supportFragmentManager,
                             onBackClicked = {
                                 navController.popBackStack()
+                            },
+                            onOrdersClicked = {
+                                OrdersActivity.createInstanceForRecap(this@StoreActivity, it)
                             }
                         )
+                    }
+                    composable(StoreDestinations.MASTER_PRODUCT) {
+                        ProductsMaster(
+                            productViewModel = productViewModel,
+                            onBackClicked = {
+                                navController.popBackStack()
+                            },
+                            onItemClicked = {
+                                navController.navigate(StoreDestinations.productDetail(it.id))
+                            }
+                        )
+                    }
+
+                    val productIdArgument = navArgument(name = StoreDestinations.PRODUCT_ID) {
+                        type = NavType.LongType
+                    }
+                    composable(
+                        route = StoreDestinations.DETAIL_PRODUCT,
+                        arguments = listOf(productIdArgument)
+                    ) {
+                        it.arguments?.getLong(StoreDestinations.PRODUCT_ID)?.let { id ->
+                            ProductDetailMaster(
+                                productViewModel = productViewModel,
+                                productId = id,
+                                onBackClicked = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
                     }
                 }
             }

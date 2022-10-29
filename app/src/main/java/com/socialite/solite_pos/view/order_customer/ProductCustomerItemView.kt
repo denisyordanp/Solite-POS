@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.compose
+package com.socialite.solite_pos.view.order_customer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -3,6 +3,9 @@ package com.socialite.solite_pos.view.outcomes
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -28,7 +32,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,6 +39,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicTopBar
+import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
@@ -142,20 +146,35 @@ class OutcomesActivity : AppCompatActivity() {
             modifier = Modifier
                 .fillMaxSize()
         ) {
+
+            val listState = rememberLazyListState()
+
             LazyColumn(
                 modifier = modifier
-                    .align(Alignment.TopCenter)
+                    .align(Alignment.TopCenter),
+                state = listState
             ) {
                 items(outcomes.value) {
                     OutcomeItem(it)
                 }
+
+                item { SpaceForFloatingButton() }
             }
 
-            BasicAddButton(
+            AnimatedVisibility(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd),
-                onAddClicked = onAddClicked
-            )
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp),
+                visible = !listState.isScrollInProgress,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                BasicAddButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd),
+                    onAddClicked = onAddClicked
+                )
+            }
         }
     }
 
@@ -164,7 +183,7 @@ class OutcomesActivity : AppCompatActivity() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.White)
+                .background(color = MaterialTheme.colors.surface)
                 .padding(16.dp)
         ) {
             Column(
@@ -183,6 +202,8 @@ class OutcomesActivity : AppCompatActivity() {
                 )
             }
             Text(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
                 text = "Rp. ${outcome.total.thousand()}",
                 style = MaterialTheme.typography.body1.copy(
                     fontWeight = FontWeight.Bold

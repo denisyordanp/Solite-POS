@@ -26,6 +26,7 @@ fun LazyListScope.basicDropdown(
     isExpanded: Boolean,
     @StringRes title: Int,
     selectedItem: String?,
+    isEnable: Boolean = true,
     items: List<DropdownItem>,
     onHeaderClicked: () -> Unit,
     onSelectedItem: (DropdownItem) -> Unit
@@ -35,7 +36,10 @@ fun LazyListScope.basicDropdown(
             isExpanded = isExpanded,
             title = stringResource(id = title),
             selectedItem = selectedItem,
-            onHeaderClicked = onHeaderClicked
+            isEnable = isEnable,
+            onHeaderClicked = {
+                if (isEnable) onHeaderClicked()
+            }
         )
     }
 
@@ -56,6 +60,7 @@ private fun DropdownHeader(
     isExpanded: Boolean,
     title: String,
     selectedItem: String?,
+    isEnable: Boolean,
     onHeaderClicked: () -> Unit
 ) {
     Row(
@@ -75,13 +80,15 @@ private fun DropdownHeader(
                 fontWeight = FontWeight.Bold
             )
         )
-        Icon(
-            painter = painterResource(
-                id = if (isExpanded) R.drawable.ic_expand_less_24 else R.drawable.ic_expand_more_24
-            ),
-            tint = MaterialTheme.colors.onSurface,
-            contentDescription = null
-        )
+        if (isEnable) {
+            Icon(
+                painter = painterResource(
+                    id = if (isExpanded) R.drawable.ic_expand_less_24 else R.drawable.ic_expand_more_24
+                ),
+                tint = MaterialTheme.colors.onSurface,
+                contentDescription = null
+            )
+        }
     }
 }
 

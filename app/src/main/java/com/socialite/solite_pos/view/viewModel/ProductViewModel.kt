@@ -37,17 +37,22 @@ class ProductViewModel(
         }
     }
 
-    fun getProducts(idCategory: Long) = productsRepository.getProductWithCategories(idCategory)
-
     suspend fun getProduct(idProduct: Long) = productsRepository.getProduct(idProduct)
+    fun getProductById(idProduct: Long) = productsRepository.getProductById(idProduct)
     fun getAllProducts() = productsRepository
         .getAllProductWithCategories()
-        .map { it.groupBy {product -> product.category } }
+        .map { it.groupBy { product -> product.category } }
 
     suspend fun isProductHasVariant(idProduct: Long) = productVariantsRepository
         .isProductHasVariants(idProduct)
 
     fun getProductVariantOptions(idProduct: Long) = getProductVariantOptions.invoke(idProduct)
+
+    fun getProductVariantCount(idProduct: Long) = getProductVariantOptions.invoke(idProduct).map {
+        it?.sumOf { variant ->
+            variant.options.size
+        } ?: 0
+    }
 
     fun getVariantProduct(
         idProduct: Long,

@@ -1,9 +1,9 @@
 package com.socialite.solite_pos.view.orders
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,8 +18,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.printer.PrintBill
+import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
+import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
@@ -31,12 +32,22 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
-class OrdersActivity : AppCompatActivity() {
+class OrdersActivity : SoliteActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var mainViewModel: MainViewModel
 
     private var printBill: PrintBill? = null
+
+    companion object {
+
+        private const val EXTRA_DATE_RANGE = "extra_date_range"
+        fun createInstanceForRecap(context: Context, parameters: OrdersParameter) {
+            val intent = Intent(context, OrdersActivity::class.java)
+            intent.putExtra(EXTRA_DATE_RANGE, parameters)
+            context.startActivity(intent)
+        }
+    }
 
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
@@ -49,6 +60,8 @@ class OrdersActivity : AppCompatActivity() {
         mainViewModel = MainViewModel.getMainViewModel(this)
 
         printBill = PrintBill(this)
+
+        val date = getExtraRangeDate() ?: OrdersParameter.createTodayOnly()
 
         setContent {
             SolitePOSTheme {
@@ -67,7 +80,7 @@ class OrdersActivity : AppCompatActivity() {
                     ) {
                         OrderItems(
                             orderViewModel = orderViewModel,
-                            currentDate = DateUtils.currentDate,
+                            parameters = date,
                             defaultTabPage = defaultTabPage,
                             onGeneralMenuClicked = {
                                 when (it) {
@@ -81,6 +94,9 @@ class OrdersActivity : AppCompatActivity() {
                             },
                             onOrderClicked = {
                                 navController.navigate(OrderDetailDestinations.orderDetail(it))
+                            },
+                            onBackClicked = {
+                                onBackPressed()
                             }
                         )
                     }
@@ -99,7 +115,7 @@ class OrdersActivity : AppCompatActivity() {
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
-                                onButtonClicked = {buttonType, orderWithProduct ->
+                                onButtonClicked = { buttonType, orderWithProduct ->
                                     when (buttonType) {
                                         OrderButtonType.PRINT -> {
                                             lifecycleScope.launch {
@@ -113,6 +129,7 @@ class OrdersActivity : AppCompatActivity() {
                                                 }
                                             }
                                         }
+
                                         OrderButtonType.QUEUE -> {
                                             lifecycleScope.launch {
                                                 if (orderWithProduct != null) {
@@ -123,6 +140,7 @@ class OrdersActivity : AppCompatActivity() {
                                                 }
                                             }
                                         }
+
                                         OrderButtonType.PAYMENT -> {
                                             navController.navigate(
                                                 OrderDetailDestinations.orderPayment(
@@ -130,6 +148,7 @@ class OrdersActivity : AppCompatActivity() {
                                                 )
                                             )
                                         }
+
                                         OrderButtonType.DONE -> {
                                             defaultTabPage = OrderMenus.NOT_PAY_YET.status
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
@@ -138,6 +157,7 @@ class OrdersActivity : AppCompatActivity() {
                                                 }
                                             }
                                         }
+
                                         OrderButtonType.CANCEL -> {
                                             defaultTabPage = OrderMenus.CANCELED.status
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
@@ -146,6 +166,7 @@ class OrdersActivity : AppCompatActivity() {
                                                 }
                                             }
                                         }
+
                                         OrderButtonType.PUT_BACK -> {
                                             defaultTabPage = OrderMenus.CURRENT_ORDER.status
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
@@ -197,6 +218,8 @@ class OrdersActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getExtraRangeDate() = intent.getSerializableExtra(EXTRA_DATE_RANGE) as? OrdersParameter
 
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)

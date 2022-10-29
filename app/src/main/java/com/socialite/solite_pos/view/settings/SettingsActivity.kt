@@ -3,10 +3,10 @@ package com.socialite.solite_pos.view.settings
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.ExperimentalMaterialApi
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.store.StoreActivity
@@ -15,7 +15,7 @@ import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : SoliteActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var mainViewModel: MainViewModel

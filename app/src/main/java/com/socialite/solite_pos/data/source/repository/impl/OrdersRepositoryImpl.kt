@@ -5,6 +5,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
+import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
 
 class OrdersRepositoryImpl(
     private val dao: OrdersDao
@@ -32,8 +33,8 @@ class OrdersRepositoryImpl(
     override fun getOrderList(status: Int, date: String, store: Long) =
         dao.getOrdersByStatus(status, date, store)
 
-    override fun getOrderList(status: Int, from: String, until: String, store: Long) =
-        dao.getOrdersByStatus(status, from, until, store)
+    override fun getOrderList(status: Int, parameters: OrdersParameter) =
+        dao.getOrdersByStatus(status, parameters.start, parameters.end, parameters.storeId)
 
     override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderByNo(orderNo)
 

@@ -17,6 +17,9 @@ interface ProductsDao {
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
     suspend fun getProduct(idProduct: Long): Product
 
+    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
+    fun getProductAsFlow(idProduct: Long): Flow<Product>
+
     @Transaction
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Category.ID} = :category")
     fun getProductWithCategories(category: Long): Flow<List<ProductWithCategory>>

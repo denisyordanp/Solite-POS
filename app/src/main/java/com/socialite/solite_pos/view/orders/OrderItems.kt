@@ -1,5 +1,8 @@
 package com.socialite.solite_pos.view.orders
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,12 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
@@ -49,11 +54,14 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BadgeNumber
+import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
+import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -66,76 +74,117 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 fun OrderItems(
     orderViewModel: OrderViewModel,
-    currentDate: String,
+    parameters: OrdersParameter,
     defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
-    onOrderClicked: (orderNo: String) -> Unit
+    onOrderClicked: (orderNo: String) -> Unit,
+    onBackClicked: () -> Unit
 ) {
 
-    val modalContent by remember { mutableStateOf(ModalContent.GENERAL_MENUS) }
-    val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val scope = rememberCoroutineScope()
+    if (parameters.isTodayOnly()) {
+        val modalContent by remember { mutableStateOf(ModalContent.GENERAL_MENUS) }
+        val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+        val scope = rememberCoroutineScope()
 
-    ModalBottomSheetLayout(
-        sheetState = modalState,
-        sheetShape = RoundedCornerShape(
-            topStart = 8.dp,
-            topEnd = 8.dp
-        ),
-        sheetContent = {
-            when (modalContent) {
-                ModalContent.GENERAL_MENUS -> GeneralMenusView(
-                    orderViewModel = orderViewModel,
-                    date = currentDate,
-                    onClicked = {
-                        if (it == GeneralMenus.ORDERS) {
-                            scope.launch {
-                                modalState.hide()
+        ModalBottomSheetLayout(
+            sheetState = modalState,
+            sheetShape = RoundedCornerShape(
+                topStart = 8.dp,
+                topEnd = 8.dp
+            ),
+            sheetContent = {
+                when (modalContent) {
+                    ModalContent.GENERAL_MENUS -> GeneralMenusView(
+                        orderViewModel = orderViewModel,
+                        date = parameters.start,
+                        onClicked = {
+                            if (it == GeneralMenus.ORDERS) {
+                                scope.launch {
+                                    modalState.hide()
+                                }
+                            } else {
+                                onGeneralMenuClicked(it)
                             }
-                        } else {
-                            onGeneralMenuClicked(it)
                         }
-                    }
-                )
+                    )
 
-                else -> {
-                    // Do nothing
+                    else -> {
+                        // Do nothing
+                    }
+                }
+            },
+            content = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+
+                    var shouldShowButton by remember { mutableStateOf(true) }
+
+                    OrderList(
+                        viewModel = orderViewModel,
+                        parameters = parameters,
+                        defaultTabPage = defaultTabPage,
+                        onOrderClicked = onOrderClicked,
+                        onScrollProgress = {
+                            shouldShowButton = !it
+                        }
+                    )
+                    AnimatedVisibility(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(24.dp),
+                        visible = shouldShowButton,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        GeneralMenuButtonView(
+                            onMenuClicked = {
+                                scope.launch {
+                                    modalState.show()
+                                }
+                            }
+                        )
+                    }
                 }
             }
-        },
-        content = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                OrderList(
-                    viewModel = orderViewModel,
-                    currentDate = currentDate,
-                    defaultTabPage = defaultTabPage,
-                    onOrderClicked = onOrderClicked
-                )
-                GeneralMenuButtonView(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(24.dp),
-                    onMenuClicked = {
-                        scope.launch {
-                            modalState.show()
-                        }
-                    }
-                )
-            }
+        )
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Scaffold(
+                topBar = {
+                    BasicTopBar(
+                        titleText = parameters.toTitle(),
+                        onBackClicked = onBackClicked
+                    )
+                },
+                content = { padding ->
+                    OrderList(
+                        modifier = Modifier
+                            .padding(padding),
+                        viewModel = orderViewModel,
+                        parameters = parameters,
+                        defaultTabPage = defaultTabPage,
+                        onOrderClicked = onOrderClicked,
+                    )
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 @ExperimentalPagerApi
 private fun OrderList(
+    modifier: Modifier = Modifier,
     viewModel: OrderViewModel,
-    currentDate: String,
+    parameters: OrdersParameter,
     defaultTabPage: Int,
-    onOrderClicked: (orderNo: String) -> Unit
+    onOrderClicked: (orderNo: String) -> Unit,
+    onScrollProgress: ((Boolean) -> Unit)? = null
 ) {
     Column {
         val pagerState = rememberPagerState()
@@ -143,6 +192,7 @@ private fun OrderList(
         val menus = OrderMenus.values()
 
         Surface(
+            modifier = modifier,
             elevation = 8.dp,
             color = MaterialTheme.colors.primary
         ) {
@@ -164,7 +214,7 @@ private fun OrderList(
                             }
                         }
                     ) {
-                        val badge = viewModel.getOrderBadge(menu, currentDate)
+                        val badge = viewModel.getOrderBadge(menu, parameters)
                             .collectAsState(initial = null)
 
                         Row(
@@ -196,9 +246,10 @@ private fun OrderList(
         ) { page ->
             OrderContent(
                 menu = menus[page],
-                currentDate = currentDate,
+                parameters = parameters,
                 viewModel = viewModel,
-                onOrderClicked = onOrderClicked
+                onOrderClicked = onOrderClicked,
+                onScrollProgress = onScrollProgress
             )
         }
 
@@ -213,13 +264,14 @@ private fun OrderList(
 @Composable
 private fun OrderContent(
     menu: OrderMenus,
-    currentDate: String,
+    parameters: OrdersParameter,
     viewModel: OrderViewModel,
-    onOrderClicked: (orderNo: String) -> Unit
+    onOrderClicked: (orderNo: String) -> Unit,
+    onScrollProgress: ((Boolean) -> Unit)?
 ) {
 
     val orders =
-        viewModel.getOrderList(menu.status, currentDate).collectAsState(initial = emptyList())
+        viewModel.getOrderList(menu.status, parameters).collectAsState(initial = emptyList())
 
     if (orders.value.isEmpty()) {
         EmptyOrders(menu = menu)
@@ -229,9 +281,14 @@ private fun OrderContent(
                 .background(color = MaterialTheme.colors.background)
                 .fillMaxSize()
         ) {
+
+            val listState = rememberLazyListState()
+            onScrollProgress?.invoke(listState.isScrollInProgress)
+
             LazyColumn(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
+                    .align(Alignment.TopCenter),
+                state = listState
             ) {
                 items(orders.value) {
                     OrderItem(
@@ -240,6 +297,8 @@ private fun OrderContent(
                         onOrderClicked = onOrderClicked
                     )
                 }
+
+                item { SpaceForFloatingButton() }
             }
         }
     }
@@ -254,14 +313,17 @@ private fun EmptyOrders(
             R.drawable.ic_on_process,
             R.string.yeay_all_order_are_done
         )
+
         OrderMenus.NOT_PAY_YET -> Pair(
             R.drawable.ic_get_payment,
             R.string.all_orders_are_paid_already
         )
+
         OrderMenus.CANCELED -> Pair(
             R.drawable.ic_happy_face,
             R.string.yeay_there_no_cancel_order
         )
+
         OrderMenus.DONE -> Pair(
             R.drawable.ic_cancel_order,
             R.string.no_done_order_yet_spirit_find_some_customer_today

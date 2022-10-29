@@ -15,7 +15,7 @@ class ThousandAndSuggestionVisualTransformation(
 
         val originalText = text.text
         val formattedText = originalText.toLongOrNull()?.thousand() ?: ""
-        val commas = formattedText.count { it == ',' }
+        val commas = formattedText.count { it == '.' || it == ',' }
 
         val offsetMapping = object : OffsetMapping {
             override fun originalToTransformed(offset: Int): Int {

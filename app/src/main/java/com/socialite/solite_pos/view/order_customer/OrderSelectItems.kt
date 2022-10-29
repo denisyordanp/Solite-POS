@@ -1,5 +1,8 @@
 package com.socialite.solite_pos.view.order_customer
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -36,7 +40,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BucketView
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
-import com.socialite.solite_pos.compose.ProductCustomerItemView
+import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
@@ -145,12 +149,15 @@ private fun ProductOrderList(
 
             val currentBucket = orderViewModel.currentBucket.collectAsState()
 
+            val listState = rememberLazyListState()
+
             LazyColumn(
                 modifier = Modifier
                     .constrainAs(content) {
                         linkTo(start = parent.start, end = parent.end)
                         linkTo(bottom = parent.bottom, top = parent.top, bias = 0f)
-                    }
+                    },
+                state = listState
             ) {
 
                 it.forEach { categoryWithProduct ->
@@ -164,6 +171,8 @@ private fun ProductOrderList(
                         )
                     }
                 }
+
+                item { SpaceForFloatingButton() }
             }
 
             if (currentBucket.value != BucketOrder.idle()) {
@@ -226,14 +235,21 @@ private fun ProductOrderList(
                     )
                 }
             }
-            GeneralMenuButtonView(
+
+            AnimatedVisibility(
                 modifier = Modifier
                     .constrainAs(menu) {
                         end.linkTo(parent.end, margin = 24.dp)
                         bottom.linkTo(parent.bottom, margin = 24.dp)
                     },
-                onMenuClicked = onMenusClicked
-            )
+                visible = !listState.isScrollInProgress,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                GeneralMenuButtonView(
+                    onMenuClicked = onMenusClicked
+                )
+            }
         }
     }
 }
@@ -281,7 +297,7 @@ private fun CategoryWithProducts(
                     productViewModel = productViewModel,
                     product = product.product,
                     currentAmount = bucketOrder.getProductAmount(product.product.id),
-                    onItemClick = {isAdd, hasVariant ->
+                    onItemClick = { isAdd, hasVariant ->
                         onItemClick(product.product, isAdd, hasVariant)
                     }
                 )

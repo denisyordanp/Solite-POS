@@ -8,4 +8,6 @@ data class VariantWithOptions(
         var options: ArrayList<VariantOption>
 ){
     constructor(): this(null, ArrayList())
+
+    fun optionsString() = options.joinToString { it.name }
 }

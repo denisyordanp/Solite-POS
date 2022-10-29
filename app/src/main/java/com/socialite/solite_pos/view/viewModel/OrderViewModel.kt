@@ -4,12 +4,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
-import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
+import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
-import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
@@ -18,6 +17,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,13 +45,13 @@ class OrderViewModel(
     private val _currentBucket = MutableStateFlow(BucketOrder.idle())
     val currentBucket = _currentBucket.asStateFlow()
 
-    fun getOrderList(status: Int, date: String) = orderRepository.getOrderList(status, date)
+    fun getOrderList(status: Int, parameters: OrdersParameter) =
+        orderRepository.getOrderList(status, parameters)
 
-    fun getOrderList(status: Int, date: String, store: Long) = orderRepository.getOrderList(status, date, store)
-    fun getOrderBadge(orderMenus: OrderMenus, date: String) = when (orderMenus) {
+    fun getOrderBadge(orderMenus: OrderMenus, parameters: OrdersParameter) = when (orderMenus) {
         OrderMenus.CURRENT_ORDER, OrderMenus.NOT_PAY_YET -> {
             orderRepository
-                .getOrderList(orderMenus.status, date)
+                .getOrderList(orderMenus.status, parameters)
                 .map {
                     if (it.isEmpty()) null else it.size
                 }
@@ -68,21 +68,7 @@ class OrderViewModel(
 
     suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
-    fun getIncomes(from: String, until: String, store: Long) = getRecapData(from, until, store)
-
-    suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment =
-        orderRepository.insertPaymentOrder(payment)
-
-    fun newOrder(order: OrderWithProduct) {
-        viewModelScope.launch {
-            newOrder.invoke(
-                customer = order.order.customer,
-                isTakeAway = order.order.order.isTakeAway,
-                products = order.products,
-                currentTime = DateUtils.currentDate
-            )
-        }
-    }
+    fun getIncomes(parameters: OrdersParameter) = getRecapData(parameters)
 
     fun newOrderImprovement(
         customer: Customer,
@@ -147,10 +133,6 @@ class OrderViewModel(
                 )
             )
         }
-    }
-
-    fun replaceProductOrder(old: OrderWithProduct, new: OrderWithProduct) {
-        repository.replaceProductOrder(old, new)
     }
 
     fun addProductToBucket(detail: ProductOrderDetail) {

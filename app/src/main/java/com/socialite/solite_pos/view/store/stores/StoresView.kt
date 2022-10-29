@@ -1,5 +1,8 @@
-package com.socialite.solite_pos.compose
+package com.socialite.solite_pos.view.store.stores
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -38,6 +42,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BasicAddButton
+import com.socialite.solite_pos.compose.BasicAlertDialog
+import com.socialite.solite_pos.compose.BasicEditText
+import com.socialite.solite_pos.compose.BasicTopBar
+import com.socialite.solite_pos.compose.PrimaryButtonView
+import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
@@ -114,9 +124,12 @@ private fun StoresContent(
             .fillMaxSize()
     ) {
 
+        val listState = rememberLazyListState()
+
         LazyColumn(
             modifier = Modifier
-                .align(Alignment.TopCenter)
+                .align(Alignment.TopCenter),
+            state = listState
         ) {
             items(stores.value) {
                 StoreItem(
@@ -127,13 +140,24 @@ private fun StoresContent(
                     }
                 )
             }
+
+            item { SpaceForFloatingButton() }
         }
 
-        BasicAddButton(
+        AnimatedVisibility(
             modifier = Modifier
-                .align(Alignment.BottomEnd),
-            onAddClicked = onAddClicked
-        )
+                .align(Alignment.BottomEnd)
+                .padding(24.dp),
+            visible = !listState.isScrollInProgress,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            BasicAddButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd),
+                onAddClicked = onAddClicked
+            )
+        }
     }
 
     alertSelectStore?.let {

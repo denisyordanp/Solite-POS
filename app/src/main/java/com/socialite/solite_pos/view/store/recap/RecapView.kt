@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.compose
+package com.socialite.solite_pos.view.store.recap
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,10 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BasicTopBar
+import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -42,6 +45,7 @@ fun RecapMainView(
     orderViewModel: OrderViewModel,
     datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>,
     fragmentManager: FragmentManager,
+    onOrdersClicked: (parameters: OrdersParameter) -> Unit,
     onBackClicked: () -> Unit
 ) {
     Scaffold(
@@ -58,7 +62,8 @@ fun RecapMainView(
                 mainViewModel = mainViewModel,
                 orderViewModel = orderViewModel,
                 datePicker = datePicker,
-                fragmentManager = fragmentManager
+                fragmentManager = fragmentManager,
+                onOrdersClicked = onOrdersClicked
             )
         }
     )
@@ -70,7 +75,8 @@ private fun RecapContent(
     orderViewModel: OrderViewModel,
     mainViewModel: MainViewModel,
     datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>,
-    fragmentManager: FragmentManager
+    fragmentManager: FragmentManager,
+    onOrdersClicked: (parameters: OrdersParameter) -> Unit,
 ) {
 
     val date = DateUtils.currentDate
@@ -94,11 +100,12 @@ private fun RecapContent(
 
     val stores = mainViewModel.getStores().collectAsState(initial = emptyList())
 
-    val recap = orderViewModel.getIncomes(
-        selectedDate.first,
-        selectedDate.second,
-        selectedStore?.id ?: 0L
+    val parameters = OrdersParameter(
+        start = selectedDate.first,
+        end = selectedDate.second,
+        storeId = selectedStore?.id ?: 0L
     )
+    val recap = orderViewModel.getIncomes(parameters)
         .collectAsState(initial = RecapData.empty())
 
     LazyColumn(
@@ -137,12 +144,18 @@ private fun RecapContent(
             }
         )
 
-        item {
-            OrdersMenuItem(
-                orderViewModel = orderViewModel,
-                date = selectedDate.first,
-                store = selectedStore?.id ?: 0L
-            )
+        selectedStore?.let {
+            item {
+                OrdersMenuItem(
+                    orderViewModel = orderViewModel,
+                    parameters = OrdersParameter(
+                        start = selectedDate.first,
+                        end = selectedDate.second,
+                        storeId = it.id
+                    ),
+                    onOrdersClicked = onOrdersClicked
+                )
+            }
         }
 
         if (recap.value.incomes.isNotEmpty()) {
@@ -185,8 +198,10 @@ private fun RecapContent(
             }
         }
 
-        item {
-            TotalRecap(recap.value)
+        selectedStore?.let {
+            item {
+                TotalRecap(recap.value)
+            }
         }
     }
 }
@@ -248,42 +263,41 @@ private fun DateSelection(
 @Composable
 private fun OrdersMenuItem(
     orderViewModel: OrderViewModel,
-    date: String,
-    store: Long
+    parameters: OrdersParameter,
+    onOrdersClicked: (parameters: OrdersParameter) -> Unit,
 ) {
     Spacer(modifier = Modifier.height(4.dp))
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                onOrdersClicked(parameters)
+            }
             .background(color = MaterialTheme.colors.surface)
             .padding(16.dp),
     ) {
         MenuItem(
             orderViewModel = orderViewModel,
             menu = OrderMenus.CURRENT_ORDER,
-            date = date,
-            store = store
+            parameters = parameters
         )
         Spacer(modifier = Modifier.height(2.dp))
         MenuItem(
             orderViewModel = orderViewModel,
             menu = OrderMenus.NOT_PAY_YET,
-            date = date,
-            store = store
+            parameters = parameters
         )
         Spacer(modifier = Modifier.height(2.dp))
         MenuItem(
             orderViewModel = orderViewModel,
             menu = OrderMenus.CANCELED,
-            date = date,
-            store = store
+            parameters = parameters
         )
         Spacer(modifier = Modifier.height(2.dp))
         MenuItem(
             orderViewModel = orderViewModel,
             menu = OrderMenus.DONE,
-            date = date,
-            store = store
+            parameters = parameters
         )
     }
     Spacer(modifier = Modifier.height(4.dp))
@@ -450,11 +464,10 @@ private fun TotalRecap(recapData: RecapData) {
 private fun MenuItem(
     orderViewModel: OrderViewModel,
     menu: OrderMenus,
-    date: String,
-    store: Long,
+    parameters: OrdersParameter
 ) {
 
-    val amount = orderViewModel.getOrderList(menu.status, date, store)
+    val amount = orderViewModel.getOrderList(menu.status, parameters)
         .collectAsState(initial = emptyList())
 
     Row {

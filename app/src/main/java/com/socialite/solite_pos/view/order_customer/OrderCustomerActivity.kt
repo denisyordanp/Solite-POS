@@ -3,7 +3,6 @@ package com.socialite.solite_pos.view.order_customer
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
@@ -19,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
@@ -29,7 +29,7 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
-class OrderCustomerActivity : AppCompatActivity() {
+class OrderCustomerActivity : SoliteActivity() {
 
     private lateinit var productViewModel: ProductViewModel
     private lateinit var mainViewModel: MainViewModel
@@ -64,10 +64,14 @@ class OrderCustomerActivity : AppCompatActivity() {
                             OrderSelectItems(
                                 productViewModel = productViewModel,
                                 orderViewModel = orderViewModel,
-                                onItemClick = {product, isAdd, hasVariant ->
+                                onItemClick = { product, isAdd, hasVariant ->
                                     lifecycleScope.launch {
                                         if (hasVariant) {
-                                            navController.navigate(OrderCustomerDestinations.selectVariants(product.id))
+                                            navController.navigate(
+                                                OrderCustomerDestinations.selectVariants(
+                                                    product.id
+                                                )
+                                            )
                                         } else {
                                             if (isAdd) {
                                                 orderViewModel.addProductToBucket(
@@ -97,14 +101,15 @@ class OrderCustomerActivity : AppCompatActivity() {
                             )
                         }
 
-                        val productIdArgument = navArgument(name = OrderCustomerDestinations.PRODUCT_ID) {
-                            type = NavType.LongType
-                        }
+                        val productIdArgument =
+                            navArgument(name = OrderCustomerDestinations.PRODUCT_ID) {
+                                type = NavType.LongType
+                            }
                         composable(
                             route = OrderCustomerDestinations.SELECT_VARIANTS,
                             arguments = listOf(productIdArgument)
                         ) {
-                            it.arguments?.getLong(OrderCustomerDestinations.PRODUCT_ID)?.let {id ->
+                            it.arguments?.getLong(OrderCustomerDestinations.PRODUCT_ID)?.let { id ->
                                 OrderSelectVariants(
                                     productId = id,
                                     viewModel = productViewModel,

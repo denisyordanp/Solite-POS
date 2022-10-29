@@ -11,6 +11,7 @@ class DateUtils {
         const val DATE_WITH_DAY_FORMAT = "EEE, dd MMMM yyyy"
         const val DATE_WITH_DAY_WITHOUT_YEAR_FORMAT = "EEE, d MMM"
         const val DATE_WITH_DAY_AND_TIME_FORMAT = "EEE, dd MMMM yyyy HH:mm"
+        const val DATE_WITH_MONTH_FORMAT = "d MMM"
         const val DATE_ORDER_NO_FORMAT = "ddMMyy"
 
         private val dbDateTimeSimpleFormat = SimpleDateFormat(dbDateTimeFormat, locale)

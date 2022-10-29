@@ -71,5 +71,12 @@
     <string name="canceled_orders">Pesanan dibatalkan</string>
     <string name="payed_orders">Pesanan sudah bayar</string>
     <string name="theme">Tema</string>
+    <string name="product_list">Daftar produk</string>
+    <string name="select_category">Pilih kategori</string>
+    <string name="save">Simpan</string>
+    <string name="sell_price">Harga jual</string>
+    <string name="description">Deskripsi</string>
+    <string name="name">Nama</string>
+    <string name="touch_once_more_to_close_the_app">Tekan lagi untuk menutup aplikasi</string>
 
 </resources>
