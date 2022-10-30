@@ -8,7 +8,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
-import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -18,7 +18,7 @@ class GetRecapDataImpl(
     private val outcomesRepository: OutcomesRepository,
     private val getProductOrder: GetProductOrder
 ) : GetRecapData {
-    override fun invoke(parameters: OrdersParameter): Flow<RecapData> {
+    override fun invoke(parameters: ReportsParameter): Flow<RecapData> {
 
         return flow {
             val incomes = repository.getOrderList(Order.DONE, parameters).first().map {

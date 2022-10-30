@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
-import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
@@ -17,7 +17,6 @@ import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
-import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
@@ -39,7 +38,6 @@ import com.socialite.solite_pos.di.RepositoryInjection.provideOutcomesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.providePaymentsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideProductVariantsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideProductsRepository
-import com.socialite.solite_pos.di.RepositoryInjection.providePurchasesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSettingRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSoliteRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideStoreRepository
@@ -63,7 +61,6 @@ class ViewModelFactory private constructor(
     private val outcomesRepository: OutcomesRepository,
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
-    private val purchasesRepository: PurchasesRepository,
     private val getProductVariantOptions: GetProductVariantOptions,
     private val ordersRepository: OrdersRepository,
     private val newOrder: NewOrder,
@@ -95,7 +92,6 @@ class ViewModelFactory private constructor(
                             provideOutcomesRepository(context),
                             provideProductsRepository(context),
                             provideProductVariantsRepository(context),
-                            providePurchasesRepository(context),
                             provideGetProductVariantOptions(context),
                             provideOrdersRepository(context),
                             provideNewOrder(context),
@@ -124,7 +120,6 @@ class ViewModelFactory private constructor(
                     supplierRepository = supplierRepository,
                     customersRepository = customersRepository,
                     outcomesRepository = outcomesRepository,
-                    purchasesRepository = purchasesRepository,
                     storeRepository = storeRepository,
                     settingRepository = settingRepository,
                     newOutcome = newOutcome
@@ -133,7 +128,6 @@ class ViewModelFactory private constructor(
 
             modelClass.isAssignableFrom(OrderViewModel::class.java) -> {
                 OrderViewModel(
-                    repository = repository,
                     orderRepository = ordersRepository,
                     newOrder = newOrder,
                     getProductOrder = getProductOrder,

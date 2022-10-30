@@ -53,6 +53,7 @@
     <string name="total_outcome">Jumlah pengeluaran</string>
     <string name="add_outcome">Tambahkan pengeluaran</string>
     <string name="from">Dari</string>
+    <string name="date">Tanggal</string>
     <string name="until">Sampai</string>
     <string name="store_name">Nama kedai</string>
     <string name="address">Alamat</string>
@@ -78,5 +79,7 @@
     <string name="description">Deskripsi</string>
     <string name="name">Nama</string>
     <string name="touch_once_more_to_close_the_app">Tekan lagi untuk menutup aplikasi</string>
+    <string name="select_time">Pilih waktu</string>
+    <string name="no_data_found">Data tidak ditemukan</string>
 
 </resources>

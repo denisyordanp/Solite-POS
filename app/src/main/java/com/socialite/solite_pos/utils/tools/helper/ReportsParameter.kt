@@ -3,7 +3,7 @@ package com.socialite.solite_pos.utils.tools.helper
 import com.socialite.solite_pos.utils.config.DateUtils
 import java.io.Serializable
 
-data class OrdersParameter(
+data class ReportsParameter(
     val start: String,
     val end: String,
     val storeId: Long
@@ -34,10 +34,13 @@ data class OrdersParameter(
 
         private const val DEFAULT_STORE_ID = -1L
 
-        fun createTodayOnly() = OrdersParameter(
-            DateUtils.currentDate,
-            DateUtils.currentDate,
-            DEFAULT_STORE_ID
-        )
+        fun createTodayOnly(isWithTime: Boolean = false): ReportsParameter {
+            val date = if (isWithTime) DateUtils.currentDateTime else DateUtils.currentDate
+            return ReportsParameter(
+                start = date,
+                end = date,
+                storeId = DEFAULT_STORE_ID
+            )
+        }
     }
 }

@@ -19,7 +19,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.socialite.solite_pos.utils.printer.PrintBill
-import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
@@ -41,10 +41,10 @@ class OrdersActivity : SoliteActivity() {
 
     companion object {
 
-        private const val EXTRA_DATE_RANGE = "extra_date_range"
-        fun createInstanceForRecap(context: Context, parameters: OrdersParameter) {
+        private const val EXTRA_REPORT = "extra_report"
+        fun createInstanceForRecap(context: Context, parameters: ReportsParameter) {
             val intent = Intent(context, OrdersActivity::class.java)
-            intent.putExtra(EXTRA_DATE_RANGE, parameters)
+            intent.putExtra(EXTRA_REPORT, parameters)
             context.startActivity(intent)
         }
     }
@@ -61,7 +61,7 @@ class OrdersActivity : SoliteActivity() {
 
         printBill = PrintBill(this)
 
-        val date = getExtraRangeDate() ?: OrdersParameter.createTodayOnly()
+        val date = getExtraReport() ?: ReportsParameter.createTodayOnly()
 
         setContent {
             SolitePOSTheme {
@@ -219,7 +219,7 @@ class OrdersActivity : SoliteActivity() {
         }
     }
 
-    private fun getExtraRangeDate() = intent.getSerializableExtra(EXTRA_DATE_RANGE) as? OrdersParameter
+    private fun getExtraReport() = intent.getSerializableExtra(EXTRA_REPORT) as? ReportsParameter
 
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)

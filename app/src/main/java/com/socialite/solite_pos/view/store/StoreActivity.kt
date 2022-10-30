@@ -42,8 +42,6 @@ class StoreActivity : SoliteActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var productViewModel: ProductViewModel
 
-    private lateinit var datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>
-
     @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
     @ExperimentalPagerApi
@@ -53,15 +51,6 @@ class StoreActivity : SoliteActivity() {
         orderViewModel = OrderViewModel.getOrderViewModel(this)
         mainViewModel = MainViewModel.getMainViewModel(this)
         productViewModel = ProductViewModel.getMainViewModel(this)
-
-        val constraint = CalendarConstraints.Builder()
-            .setValidator(DateValidatorPointBackward.now())
-            .build()
-        datePicker = MaterialDatePicker.Builder.dateRangePicker()
-            .setCalendarConstraints(constraint)
-            .setTitleText(R.string.select_date)
-            .setPositiveButtonText(R.string.select)
-            .build()
 
         val date = DateUtils.currentDate
 
@@ -94,7 +83,6 @@ class StoreActivity : SoliteActivity() {
 //                                        navController.navigate(StoreDestinations.MASTER_PRODUCT)
 //                                    }
                                     MasterMenus.PRODUCT -> goToProductMasterActivity()
-
                                     MasterMenus.CATEGORY -> goToCategoryActivity()
                                     MasterMenus.VARIANT -> goToVariantActivity()
 //                                    MasterMenus.SUPPLIER -> goToSupplierActivity()
@@ -106,7 +94,10 @@ class StoreActivity : SoliteActivity() {
                                         navController.navigate(StoreDestinations.MASTER_RECAP)
                                     }
 //                                    StoreMenus.PURCHASE -> goToPurchaseActivity()
-                                    StoreMenus.OUTCOMES -> goToOutcomesActivity()
+                                    StoreMenus.OUTCOMES -> {
+                                        OutcomesActivity.createInstanceForRecap(this@StoreActivity)
+                                    }
+
                                     StoreMenus.PAYMENT -> goToPaymentActivity()
                                     StoreMenus.STORE -> {
                                         navController.navigate(StoreDestinations.MASTER_STORES)
@@ -135,13 +126,22 @@ class StoreActivity : SoliteActivity() {
                         RecapMainView(
                             mainViewModel = mainViewModel,
                             orderViewModel = orderViewModel,
-                            datePicker = datePicker,
+                            datePicker = buildRecapDatePicker(),
                             fragmentManager = supportFragmentManager,
                             onBackClicked = {
                                 navController.popBackStack()
                             },
                             onOrdersClicked = {
-                                OrdersActivity.createInstanceForRecap(this@StoreActivity, it)
+                                OrdersActivity.createInstanceForRecap(
+                                    context = this@StoreActivity,
+                                    parameters = it
+                                )
+                            },
+                            onOutcomesClicked = {
+                                OutcomesActivity.createInstanceForRecap(
+                                    context = this@StoreActivity,
+                                    parameters = it
+                                )
                             }
                         )
                     }
@@ -179,10 +179,15 @@ class StoreActivity : SoliteActivity() {
         }
     }
 
-    private fun goToOutcomesActivity() {
-        val intent = Intent(this, OutcomesActivity::class.java)
-        startActivity(intent)
-    }
+    private fun buildRecapDatePicker() = MaterialDatePicker.Builder.dateRangePicker()
+        .setCalendarConstraints(dateConstraint)
+        .setTitleText(R.string.select_date)
+        .setPositiveButtonText(R.string.select)
+        .build()
+
+    private val dateConstraint = CalendarConstraints.Builder()
+        .setValidator(DateValidatorPointBackward.now())
+        .build()
 
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)

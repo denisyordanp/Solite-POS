@@ -6,7 +6,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
@@ -43,7 +43,7 @@ class OrdersRepositoryImpl(
         dao.getOrdersByStatus(status, date, store)
 
     @FlowPreview
-    override fun getOrderList(status: Int, parameters: OrdersParameter): Flow<List<OrderData>> {
+    override fun getOrderList(status: Int, parameters: ReportsParameter): Flow<List<OrderData>> {
         return if (parameters.isTodayOnly()) {
             settingRepository.getSelectedStore().flatMapConcat {
                 dao.getOrdersByStatus(status, parameters.start, parameters.end, it)

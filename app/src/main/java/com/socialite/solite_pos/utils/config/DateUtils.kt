@@ -1,10 +1,12 @@
 package com.socialite.solite_pos.utils.config
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class DateUtils {
-    companion object{
+    companion object {
         private const val dbDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
         private const val dbDateFormat = "yyyy-MM-dd"
         const val dateWithTimeFormat = "dd MMMM yyyy HH:mm"
@@ -13,6 +15,7 @@ class DateUtils {
         const val DATE_WITH_DAY_AND_TIME_FORMAT = "EEE, dd MMMM yyyy HH:mm"
         const val DATE_WITH_MONTH_FORMAT = "d MMM"
         const val DATE_ORDER_NO_FORMAT = "ddMMyy"
+        const val HOUR_AND_TIME_FORMAT = "HH:mm"
 
         private val dbDateTimeSimpleFormat = SimpleDateFormat(dbDateTimeFormat, locale)
         private val dbDateSimpleFormat = SimpleDateFormat(dbDateFormat, locale)
@@ -44,10 +47,14 @@ class DateUtils {
                 ""
             }
         }
-        fun millisToDate(millis: Long): String {
+
+        fun millisToDate(millis: Long, isWithTime: Boolean = false): String {
             val cal = Calendar.getInstance()
             cal.timeInMillis = millis
-            return dbDateSimpleFormat.format(cal.time)
+            return if (isWithTime)
+                dbDateTimeSimpleFormat.format(cal.time)
+            else
+                dbDateSimpleFormat.format(cal.time)
         }
 
         fun strToDate(date: String?): Date {
@@ -56,6 +63,32 @@ class DateUtils {
             } else {
                 return dbDateTimeSimpleFormat.parse(date)!!
             }
+        }
+
+        fun isDateTimeIsToday(dateTime: String): Boolean {
+            val currentDate = convertDateFromDb(dateTime, DATE_ORDER_NO_FORMAT)
+            val todayDate = convertDateFromDb(currentDateTime, DATE_ORDER_NO_FORMAT)
+            return currentDate == todayDate
+        }
+
+        fun strToHourAndMinute(dateTime: String): Pair<Int, Int> {
+            val date = strToDate(dateTime)
+            val cal = Calendar.getInstance()
+            cal.time = date
+
+            return Pair(
+                cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE)
+            )
+        }
+
+        fun strDateTimeReplaceTime(dateTime: String, hour: Int, minute: Int): String {
+            val date = strToDate(dateTime)
+            val cal = Calendar.getInstance()
+            cal.time = date
+            cal.set(Calendar.HOUR_OF_DAY, hour)
+            cal.set(Calendar.MINUTE, minute)
+            return dbDateTimeSimpleFormat.format(cal.time)
         }
 
         val currentDate: String

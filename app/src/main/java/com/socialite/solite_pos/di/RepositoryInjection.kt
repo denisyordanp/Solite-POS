@@ -9,7 +9,6 @@ import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
-import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
@@ -24,7 +23,6 @@ import com.socialite.solite_pos.data.source.repository.impl.OutcomesRepositoryIm
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.ProductVariantsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.ProductsRepositoryImpl
-import com.socialite.solite_pos.data.source.repository.impl.PurchasesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
@@ -73,7 +71,10 @@ object RepositoryInjection {
 
     fun provideOutcomesRepository(context: Context): OutcomesRepository {
         val database = getInstance(context)
-        return OutcomesRepositoryImpl.getInstance(database.outcomesDao())
+        return OutcomesRepositoryImpl.getInstance(
+            database.outcomesDao(),
+            SettingRepositoryImpl.getDataStoreInstance(context)
+        )
     }
 
     fun provideProductsRepository(context: Context): ProductsRepository {
@@ -84,11 +85,6 @@ object RepositoryInjection {
     fun provideProductVariantsRepository(context: Context): ProductVariantsRepository {
         val database = getInstance(context)
         return ProductVariantsRepositoryImpl.getInstance(database.productVariantsDao())
-    }
-
-    fun providePurchasesRepository(context: Context): PurchasesRepository {
-        val database = getInstance(context)
-        return PurchasesRepositoryImpl.getInstance(database.purchasesDao(), database.productsDao())
     }
 
     fun provideOrdersRepository(context: Context): OrdersRepository {

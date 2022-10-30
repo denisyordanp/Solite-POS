@@ -33,7 +33,8 @@ fun BasicTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colors.primary,
+        elevation = 4.dp
     ) {
         Row(
             modifier = Modifier

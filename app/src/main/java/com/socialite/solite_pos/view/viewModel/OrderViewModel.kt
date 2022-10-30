@@ -15,9 +15,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
-import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +26,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class OrderViewModel(
-    private val repository: SoliteRepository,
     private val orderRepository: OrdersRepository,
     private val newOrder: NewOrder,
     private val getProductOrder: GetProductOrder,
@@ -45,10 +43,10 @@ class OrderViewModel(
     private val _currentBucket = MutableStateFlow(BucketOrder.idle())
     val currentBucket = _currentBucket.asStateFlow()
 
-    fun getOrderList(status: Int, parameters: OrdersParameter) =
+    fun getOrderList(status: Int, parameters: ReportsParameter) =
         orderRepository.getOrderList(status, parameters)
 
-    fun getOrderBadge(orderMenus: OrderMenus, parameters: OrdersParameter) = when (orderMenus) {
+    fun getOrderBadge(orderMenus: OrderMenus, parameters: ReportsParameter) = when (orderMenus) {
         OrderMenus.CURRENT_ORDER, OrderMenus.NOT_PAY_YET -> {
             orderRepository
                 .getOrderList(orderMenus.status, parameters)
@@ -68,7 +66,7 @@ class OrderViewModel(
 
     suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
-    fun getIncomes(parameters: OrdersParameter) = getRecapData(parameters)
+    fun getIncomes(parameters: ReportsParameter) = getRecapData(parameters)
 
     fun newOrderImprovement(
         customer: Customer,

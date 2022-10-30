@@ -34,7 +34,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
-import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -45,7 +45,8 @@ fun RecapMainView(
     orderViewModel: OrderViewModel,
     datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>,
     fragmentManager: FragmentManager,
-    onOrdersClicked: (parameters: OrdersParameter) -> Unit,
+    onOrdersClicked: (parameters: ReportsParameter) -> Unit,
+    onOutcomesClicked: (parameters: ReportsParameter) -> Unit,
     onBackClicked: () -> Unit
 ) {
     Scaffold(
@@ -63,7 +64,8 @@ fun RecapMainView(
                 orderViewModel = orderViewModel,
                 datePicker = datePicker,
                 fragmentManager = fragmentManager,
-                onOrdersClicked = onOrdersClicked
+                onOrdersClicked = onOrdersClicked,
+                onOutcomesClicked = onOutcomesClicked
             )
         }
     )
@@ -76,7 +78,8 @@ private fun RecapContent(
     mainViewModel: MainViewModel,
     datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>,
     fragmentManager: FragmentManager,
-    onOrdersClicked: (parameters: OrdersParameter) -> Unit,
+    onOrdersClicked: (parameters: ReportsParameter) -> Unit,
+    onOutcomesClicked: (parameters: ReportsParameter) -> Unit,
 ) {
 
     val date = DateUtils.currentDate
@@ -100,7 +103,7 @@ private fun RecapContent(
 
     val stores = mainViewModel.getStores().collectAsState(initial = emptyList())
 
-    val parameters = OrdersParameter(
+    val parameters = ReportsParameter(
         start = selectedDate.first,
         end = selectedDate.second,
         storeId = selectedStore?.id ?: 0L
@@ -148,7 +151,7 @@ private fun RecapContent(
             item {
                 OrdersMenuItem(
                     orderViewModel = orderViewModel,
-                    parameters = OrdersParameter(
+                    parameters = ReportsParameter(
                         start = selectedDate.first,
                         end = selectedDate.second,
                         storeId = it.id
@@ -178,11 +181,20 @@ private fun RecapContent(
             }
         }
 
-        if (recap.value.outcomes.isNotEmpty()) {
+        if (recap.value.outcomes.isNotEmpty() && selectedStore != null) {
             item {
                 Column(
                     modifier = Modifier
                         .background(color = MaterialTheme.colors.surface)
+                        .clickable {
+                            onOutcomesClicked(
+                                ReportsParameter(
+                                    start = selectedDate.first,
+                                    end = selectedDate.second,
+                                    storeId = selectedStore!!.id
+                                )
+                            )
+                        }
                         .padding(16.dp)
                 ) {
                     recap.value.outcomes.forEach {
@@ -263,8 +275,8 @@ private fun DateSelection(
 @Composable
 private fun OrdersMenuItem(
     orderViewModel: OrderViewModel,
-    parameters: OrdersParameter,
-    onOrdersClicked: (parameters: OrdersParameter) -> Unit,
+    parameters: ReportsParameter,
+    onOrdersClicked: (parameters: ReportsParameter) -> Unit,
 ) {
     Spacer(modifier = Modifier.height(4.dp))
     Column(
@@ -464,7 +476,7 @@ private fun TotalRecap(recapData: RecapData) {
 private fun MenuItem(
     orderViewModel: OrderViewModel,
     menu: OrderMenus,
-    parameters: OrdersParameter
+    parameters: ReportsParameter
 ) {
 
     val amount = orderViewModel.getOrderList(menu.status, parameters)

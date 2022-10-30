@@ -12,11 +12,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
-import com.socialite.solite_pos.data.source.repository.PurchasesRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
+import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +31,6 @@ class MainViewModel(
     private val supplierRepository: SuppliersRepository,
     private val customersRepository: CustomersRepository,
     private val outcomesRepository: OutcomesRepository,
-    private val purchasesRepository: PurchasesRepository,
     private val storeRepository: StoreRepository,
     private val settingRepository: SettingRepository,
     private val newOutcome: NewOutcome
@@ -114,7 +113,7 @@ class MainViewModel(
         }
     }
 
-    fun getOutcome(date: String) = outcomesRepository.getOutcomes(date)
+    fun getOutcome(parameters: ReportsParameter) = outcomesRepository.getOutcomes(parameters)
 
     fun addNewOutcome(outcome: Outcome) {
         viewModelScope.launch {
