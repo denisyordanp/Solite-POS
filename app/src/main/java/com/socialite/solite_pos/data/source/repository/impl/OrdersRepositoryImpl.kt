@@ -5,10 +5,15 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.tools.helper.OrdersParameter
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
 
 class OrdersRepositoryImpl(
-    private val dao: OrdersDao
+    private val dao: OrdersDao,
+    private val settingRepository: SettingRepository
 ) : OrdersRepository {
 
     companion object {
@@ -16,12 +21,16 @@ class OrdersRepositoryImpl(
         private var INSTANCE: OrdersRepositoryImpl? = null
 
         fun getInstance(
-            dao: OrdersDao
+            dao: OrdersDao,
+            settingRepository: SettingRepository
         ): OrdersRepositoryImpl {
             if (INSTANCE == null) {
                 synchronized(OrdersRepositoryImpl::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = OrdersRepositoryImpl(dao = dao)
+                        INSTANCE = OrdersRepositoryImpl(
+                            dao = dao,
+                            settingRepository = settingRepository
+                        )
                     }
                 }
             }
@@ -33,8 +42,16 @@ class OrdersRepositoryImpl(
     override fun getOrderList(status: Int, date: String, store: Long) =
         dao.getOrdersByStatus(status, date, store)
 
-    override fun getOrderList(status: Int, parameters: OrdersParameter) =
-        dao.getOrdersByStatus(status, parameters.start, parameters.end, parameters.storeId)
+    @FlowPreview
+    override fun getOrderList(status: Int, parameters: OrdersParameter): Flow<List<OrderData>> {
+        return if (parameters.isTodayOnly()) {
+            settingRepository.getSelectedStore().flatMapConcat {
+                dao.getOrdersByStatus(status, parameters.start, parameters.end, it)
+            }
+        } else {
+            dao.getOrdersByStatus(status, parameters.start, parameters.end, parameters.storeId)
+        }
+    }
 
     override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderByNo(orderNo)
 
