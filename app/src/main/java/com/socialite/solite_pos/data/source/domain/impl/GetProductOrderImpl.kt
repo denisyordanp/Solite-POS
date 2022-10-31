@@ -21,18 +21,18 @@ class GetProductOrderImpl(
     }
 
     private suspend fun handleListDetail(listDetail: List<OrderDetail>): List<ProductOrderDetail> {
-        val products: ArrayList<ProductOrderDetail> = ArrayList()
+        val products = mutableListOf<ProductOrderDetail>()
         for (item2 in listDetail) {
             val product = productsDao.getProduct(item2.idProduct)
             if (product.isMix) {
                 val mixes = dao.getOrderVariantsMix(item2.id)
-                val mixProduct: ArrayList<ProductMixOrderDetail> = ArrayList()
+                val mixProduct = mutableListOf<ProductMixOrderDetail>()
                 for (mix in mixes.variantsMix) {
                     val variants = dao.getOrderMixVariantsOption(mix.id)
                     mixProduct.add(
                         ProductMixOrderDetail(
                             productsDao.getProduct(mix.idProduct),
-                            ArrayList(variants.options),
+                            variants.options,
                             mix.amount
                         )
                     )
@@ -43,7 +43,7 @@ class GetProductOrderImpl(
                 products.add(
                     ProductOrderDetail.createProduct(
                         product,
-                        ArrayList(variants.options),
+                        variants.options,
                         item2.amount
                     )
                 )

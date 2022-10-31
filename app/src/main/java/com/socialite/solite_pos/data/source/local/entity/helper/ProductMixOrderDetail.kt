@@ -6,6 +6,6 @@ import java.io.Serializable
 
 data class ProductMixOrderDetail(
         var product: Product,
-        var variants: ArrayList<VariantOption>,
+        var variants: List<VariantOption>,
         var amount: Int,
 ): Serializable

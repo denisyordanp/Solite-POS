@@ -64,6 +64,7 @@ fun OrderSelectVariants(
     var productOrderDetail by remember {
         mutableStateOf(ProductOrderDetail.empty())
     }
+
     LaunchedEffect(key1 = productId) {
         productOrderDetail = productOrderDetail.copy(
             product = viewModel.getProduct(productId),
@@ -157,10 +158,13 @@ private fun SelectVariantsContent(
 
             item { SpaceForAddCartButton() }
         }
+
+        val isAddEnabled = productOrderDetail.isAllMustVariantSelected(variants ?: emptyList())
         AddToCartBottom(
             modifier = Modifier
                 .align(Alignment.BottomCenter),
             productOrderDetail = productOrderDetail,
+            isAddEnabled = isAddEnabled,
             onAmountClicked = onAmountClicked,
             onAddToBucketClicked = onAddToBucketClicked
         )
@@ -404,6 +408,7 @@ private fun VariantOptionSingleOption(
 private fun AddToCartBottom(
     modifier: Modifier = Modifier,
     productOrderDetail: ProductOrderDetail,
+    isAddEnabled: Boolean,
     onAmountClicked: (isAdd: Boolean) -> Unit,
     onAddToBucketClicked: () -> Unit
 ) {
@@ -474,7 +479,8 @@ private fun AddToCartBottom(
                         width = Dimension.fillToConstraints
                     }
                     .fillMaxWidth(),
-                buttonText = stringResource(R.string.adding),
+                isEnabled = isAddEnabled,
+                buttonText = stringResource(if (isAddEnabled) R.string.adding else R.string.variant_must_selected),
                 onClick = onAddToBucketClicked
             )
         }

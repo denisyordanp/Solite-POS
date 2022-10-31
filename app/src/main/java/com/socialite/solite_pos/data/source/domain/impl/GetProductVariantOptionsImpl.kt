@@ -17,50 +17,14 @@ class GetProductVariantOptionsImpl(
             }
     }
 
-    private fun handleVariants(variantProducts: List<VariantProductWithOption>?): List<VariantWithOptions> {
-        val variants: ArrayList<VariantWithOptions> = ArrayList()
-        if (!variantProducts.isNullOrEmpty()) {
-            var data = VariantWithOptions()
-            for ((i, v) in variantProducts.withIndex()) {
-
-                when {
-                    variantProducts.size - 1 == i -> {
-                        if (data.variant != null) {
-                            if (v.variant == data.variant!!) {
-                                data.options.add(v.option)
-                                variants.add(data)
-                            } else {
-                                variants.add(data)
-                                data = VariantWithOptions()
-                                data.variant = v.variant
-                                data.options.add(v.option)
-                                variants.add(data)
-                            }
-                        } else {
-                            data.variant = v.variant
-                            data.options.add(v.option)
-                            variants.add(data)
-                        }
+    private fun handleVariants(variantProducts: List<VariantProductWithOption>?) =
+        variantProducts?.groupBy { it.variant }
+            ?.map {
+                VariantWithOptions(
+                    variant = it.key,
+                    options = it.value.map { option ->
+                        option.option
                     }
-
-                    i == 0 -> {
-                        data.variant = v.variant
-                        data.options.add(v.option)
-                    }
-
-                    data.variant != null -> {
-                        if (v.variant == data.variant!!) {
-                            data.options.add(v.option)
-                        } else {
-                            variants.add(data)
-                            data = VariantWithOptions()
-                            data.variant = v.variant
-                            data.options.add(v.option)
-                        }
-                    }
-                }
+                )
             }
-        }
-        return variants
-    }
 }

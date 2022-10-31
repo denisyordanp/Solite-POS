@@ -17,15 +17,20 @@ import androidx.compose.ui.unit.dp
 fun PrimaryButtonView(
     modifier: Modifier = Modifier,
     buttonText: String,
+    isEnabled: Boolean = true,
     backgroundColor: Color = MaterialTheme.colors.primary,
     textColor: Color = MaterialTheme.colors.onPrimary,
     onClick: () -> Unit
 ) {
     Box(
         modifier = modifier
-            .clickable { onClick() }
+            .run {
+                return@run if (isEnabled) {
+                    clickable { onClick() }
+                } else { this }
+            }
             .background(
-                color = backgroundColor,
+                color = if (isEnabled) backgroundColor else backgroundColor.copy(alpha = 0.6f),
                 shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center

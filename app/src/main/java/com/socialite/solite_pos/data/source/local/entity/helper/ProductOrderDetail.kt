@@ -6,19 +6,19 @@ import java.io.Serializable
 
 data class ProductOrderDetail(
     var product: Product?,
-    var variants: ArrayList<VariantOption>,
-    var mixProducts: ArrayList<ProductMixOrderDetail>,
+    var variants: List<VariantOption>,
+    var mixProducts: List<ProductMixOrderDetail>,
     var amount: Int,
     var type: Int?
 ) : Serializable {
     constructor(
         product: Product?,
-        variants: ArrayList<VariantOption>,
-        mixVariants: ArrayList<ProductMixOrderDetail>,
+        variants: List<VariantOption>,
+        mixVariants: List<ProductMixOrderDetail>,
         amount: Int
     ) : this(product, variants, mixVariants, amount, null)
 
-    constructor(type: Int) : this(null, ArrayList(), ArrayList(), 0, type)
+    constructor(type: Int) : this(null, listOf(), listOf(), 0, type)
 
     fun generateVariantsString(): String {
         return if (variants.isEmpty()) {
@@ -30,14 +30,15 @@ data class ProductOrderDetail(
         }
     }
 
-    fun addOption(option: VariantOption, prevOption: VariantOption? = null) = variants.apply {
-        prevOption?.let {
-            remove(it)
+    fun addOption(option: VariantOption, prevOption: VariantOption? = null) =
+        variants.toMutableList().apply {
+            prevOption?.let {
+                remove(it)
+            }
+            add(option)
         }
-        add(option)
-    }
 
-    fun removeOption(option: VariantOption) = variants.apply {
+    fun removeOption(option: VariantOption) = variants.toMutableList().apply {
         val existingOption = variants.find { it == option }
         if (existingOption != null) {
             remove(option)
@@ -46,53 +47,47 @@ data class ProductOrderDetail(
 
     fun totalPrice() = (product?.sellPrice ?: 0) * amount
 
+    fun isAllMustVariantSelected(baseVariants: List<VariantWithOptions>): Boolean {
+        return baseVariants.filter { it.variant?.isMust == true }
+            .any { variant ->
+                val newList = variant.options + variants
+                newList.groupBy { it.id }
+                    .filter { it.value.size > 1 }
+                    .isNotEmpty()
+            }
+    }
+
     companion object {
-        const val GRAND_TOTAL = 1
-        const val PAYMENT = 2
-        const val RETURN = 3
-        const val TITLE = 4
 
         fun createProduct(
             product: Product?,
-            variants: ArrayList<VariantOption>,
+            variants: List<VariantOption>,
             amount: Int
         ): ProductOrderDetail {
-            return ProductOrderDetail(product, variants, ArrayList(), amount)
+            return ProductOrderDetail(product, variants, listOf(), amount)
         }
 
         fun createMix(
             product: Product?,
-            mixes: ArrayList<ProductMixOrderDetail>,
+            mixes: List<ProductMixOrderDetail>,
             amount: Int
         ): ProductOrderDetail {
-            return ProductOrderDetail(product, ArrayList(), mixes, amount)
+            return ProductOrderDetail(product, listOf(), mixes, amount)
         }
 
         fun productNoVariant(product: Product) = ProductOrderDetail(
-			product = product,
-			variants = arrayListOf(),
-			mixVariants = arrayListOf(),
-			amount = 1,
+            product = product,
+            variants = listOf(),
+            mixVariants = listOf(),
+            amount = 1,
         )
 
         fun empty() = ProductOrderDetail(
             product = null,
-            variants = arrayListOf(),
-            mixProducts = arrayListOf(),
+            variants = listOf(),
+            mixProducts = listOf(),
             amount = 0,
             type = null
         )
-
-        val grand: ProductOrderDetail
-            get() = ProductOrderDetail(GRAND_TOTAL)
-
-        val payment: ProductOrderDetail
-            get() = ProductOrderDetail(PAYMENT)
-
-        val payReturn: ProductOrderDetail
-            get() = ProductOrderDetail(RETURN)
-
-        val title: ProductOrderDetail
-            get() = ProductOrderDetail(TITLE)
     }
 }
