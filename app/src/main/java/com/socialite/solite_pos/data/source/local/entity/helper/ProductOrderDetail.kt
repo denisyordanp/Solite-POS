@@ -48,13 +48,17 @@ data class ProductOrderDetail(
     fun totalPrice() = (product?.sellPrice ?: 0) * amount
 
     fun isAllMustVariantSelected(baseVariants: List<VariantWithOptions>): Boolean {
-        return baseVariants.filter { it.variant?.isMust == true }
-            .any { variant ->
-                val newList = variant.options + variants
+        val mustVariants = baseVariants.filter { it.variant.isMust == true }
+        return if (mustVariants.isNotEmpty()) {
+            mustVariants.none { v ->
+                val newList = v.options + variants
                 newList.groupBy { it.id }
                     .filter { it.value.size > 1 }
-                    .isNotEmpty()
+                    .isEmpty()
             }
+        } else {
+            true
+        }
     }
 
     companion object {
