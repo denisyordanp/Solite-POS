@@ -3,11 +3,11 @@ package com.socialite.solite_pos.view.order_customer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,102 +42,95 @@ fun ProductCustomerItemView(
     currentAmount: Int?,
     onItemClick: (isAdd: Boolean, hasVariant: Boolean) -> Unit
 ) {
-    Box(
+    ConstraintLayout(
         modifier = Modifier
-            .padding(bottom = 4.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(
-                color = MaterialTheme.colors.surface
-            )
+            .background(color = MaterialTheme.colors.surface)
+            .padding(8.dp),
     ) {
-        ConstraintLayout(
+        val (title, subTitle, price, buttons) = createRefs()
+        Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-        ) {
-            val (title, subTitle, price, buttons) = createRefs()
-            Text(
-                modifier = Modifier
-                    .constrainAs(title) {
-                        linkTo(
-                            start = parent.start,
-                            startMargin = 16.dp,
-                            end = parent.end,
-                            endMargin = 16.dp,
-                            bias = 0f
-                        )
-                        top.linkTo(parent.top)
-                    },
-                text = product.name,
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(subTitle) {
-                        linkTo(
-                            start = parent.start,
-                            startMargin = 16.dp,
-                            end = parent.end,
-                            endMargin = 16.dp,
-                            bias = 0f
-                        )
-                        top.linkTo(title.bottom)
-                    },
-                text = product.desc
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(price) {
-                        start.linkTo(parent.start, margin = 16.dp)
-                        linkTo(top = subTitle.bottom, bottom = parent.bottom)
-                    },
-                text = product.sellPrice.toIDR(),
-                style = MaterialTheme.typography.body1.copy(
-                    fontWeight = FontWeight.Bold
-                )
-            )
-
-            Row(
-                modifier = Modifier
-                    .constrainAs(buttons) {
-                        end.linkTo(parent.end)
-                        linkTo(top = subTitle.bottom, bottom = parent.bottom)
-                    },
-            ) {
-
-                if (product.isActive) {
-                    var hasVariant by remember {
-                        mutableStateOf<Boolean?>(null)
-                    }
-
-                    LaunchedEffect(key1 = true) {
-                        hasVariant = productViewModel.isProductHasVariant(product.id)
-                    }
-
-                    hasVariant?.let {
-                        if (it) {
-                            SelectVariantButton(onItemClick = {
-                                onItemClick(true, true)
-                            })
-                        } else {
-                            AmountOption(currentAmount = currentAmount, onItemClick = { isAdd ->
-                                onItemClick(isAdd, false)
-                            })
-                        }
-                    }
-                } else {
-                    Text(
-                        text = stringResource(R.string.out_of_stock),
-                        style = MaterialTheme.typography.body1.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = Color.Red
+                .constrainAs(title) {
+                    linkTo(
+                        start = parent.start,
+                        startMargin = 16.dp,
+                        end = parent.end,
+                        endMargin = 16.dp,
+                        bias = 0f
                     )
+                    top.linkTo(parent.top)
+                },
+            text = product.name,
+            style = MaterialTheme.typography.h6
+        )
+        Text(
+            modifier = Modifier
+                .constrainAs(subTitle) {
+                    linkTo(
+                        start = parent.start,
+                        startMargin = 16.dp,
+                        end = parent.end,
+                        endMargin = 16.dp,
+                        bias = 0f
+                    )
+                    top.linkTo(title.bottom)
+                },
+            text = product.desc
+        )
+        Text(
+            modifier = Modifier
+                .constrainAs(price) {
+                    start.linkTo(parent.start, margin = 16.dp)
+                    linkTo(top = subTitle.bottom, bottom = parent.bottom)
+                },
+            text = product.sellPrice.toIDR(),
+            style = MaterialTheme.typography.body1.copy(
+                fontWeight = FontWeight.Bold
+            )
+        )
+
+        Row(
+            modifier = Modifier
+                .constrainAs(buttons) {
+                    end.linkTo(parent.end)
+                    linkTo(top = subTitle.bottom, bottom = parent.bottom)
+                },
+        ) {
+
+            if (product.isActive) {
+                var hasVariant by remember {
+                    mutableStateOf<Boolean?>(null)
                 }
+
+                LaunchedEffect(key1 = true) {
+                    hasVariant = productViewModel.isProductHasVariant(product.id)
+                }
+
+                hasVariant?.let {
+                    if (it) {
+                        SelectVariantButton(onItemClick = {
+                            onItemClick(true, true)
+                        })
+                    } else {
+                        AmountOption(currentAmount = currentAmount, onItemClick = { isAdd ->
+                            onItemClick(isAdd, false)
+                        })
+                    }
+                }
+            } else {
+                Text(
+                    text = stringResource(R.string.out_of_stock),
+                    style = MaterialTheme.typography.body1.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.Red
+                )
             }
         }
     }
+    Spacer(modifier = Modifier.height(4.dp))
 }
 
 @Composable

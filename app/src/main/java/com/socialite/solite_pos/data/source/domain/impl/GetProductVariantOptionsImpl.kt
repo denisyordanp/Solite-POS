@@ -12,14 +12,12 @@ class GetProductVariantOptionsImpl(
 ) : GetProductVariantOptions {
     override fun invoke(idProduct: Long): Flow<List<VariantWithOptions>?> {
         return dao.getVariantProducts(idProduct)
-            .map {
-                handleVariants(it)
-            }
+            .map { it?.handleVariants() }
     }
 
-    private fun handleVariants(variantProducts: List<VariantProductWithOption>?) =
-        variantProducts?.groupBy { it.variant }
-            ?.map {
+    private fun List<VariantProductWithOption>.handleVariants() =
+        this.groupBy { it.variant }
+            .map {
                 VariantWithOptions(
                     variant = it.key,
                     options = it.value.map { option ->

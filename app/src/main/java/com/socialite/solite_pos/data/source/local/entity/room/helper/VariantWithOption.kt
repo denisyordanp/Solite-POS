@@ -7,10 +7,10 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import java.io.Serializable
 
 data class VariantWithOption(
-		@Embedded val options: VariantOption,
+    @Embedded val option: VariantOption,
 
-		@Relation(
-				parentColumn = Variant.ID,
-				entityColumn = Variant.ID,
-		) val variants: Variant
+    @Relation(
+        parentColumn = Variant.ID,
+        entityColumn = Variant.ID,
+    ) val variant: Variant
 ) : Serializable

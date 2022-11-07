@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +31,7 @@ fun PrimaryButtonView(
                 } else { this }
             }
             .background(
-                color = if (isEnabled) backgroundColor else backgroundColor.copy(alpha = 0.6f),
+                color = if (isEnabled) backgroundColor else backgroundColor.copy(alpha = ContentAlpha.disabled),
                 shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center

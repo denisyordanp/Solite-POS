@@ -60,7 +60,8 @@ fun OrderSelectVariants(
     onAddToBucketClicked: (detail: ProductOrderDetail) -> Unit
 ) {
 
-    val variants = viewModel.getProductVariantOptions(productId).collectAsState(initial = null)
+    val variants = viewModel.getProductVariantOptions(productId)
+        .collectAsState(initial = null)
     var productOrderDetail by remember {
         mutableStateOf(ProductOrderDetail.empty())
     }
@@ -141,18 +142,20 @@ private fun SelectVariantsContent(
         ) {
             variants?.let {
                 items(it) { variant ->
-                    if (variant.variant?.isSingleOption() == true)
-                        VariantItemSingleOption(
-                            variantWithOption = variant,
-                            onOptionSelected = onOptionSelected
-                        )
-                    else
-                        VariantItemManyOption(
-                            variantWithOption = variant,
-                            onOptionSelected = { option, isSelected ->
-                                onOptionSelected(null, option, isSelected)
-                            }
-                        )
+                    if (variant.isOptionAvailable()) {
+                        if (variant.variant.isSingleOption())
+                            VariantItemSingleOption(
+                                variantWithOption = variant,
+                                onOptionSelected = onOptionSelected
+                            )
+                        else
+                            VariantItemManyOption(
+                                variantWithOption = variant,
+                                onOptionSelected = { option, isSelected ->
+                                    onOptionSelected(null, option, isSelected)
+                                }
+                            )
+                    }
                 }
             }
 
@@ -186,7 +189,7 @@ private fun VariantItemManyOption(
         mutableStateOf<List<VariantOption>?>(null)
     }
 
-    val isMust = variantWithOption.variant?.isMust ?: false
+    val isMust = variantWithOption.variant.isMust ?: false
 
     Spacer(modifier = Modifier.height(4.dp))
     Column(
@@ -196,23 +199,24 @@ private fun VariantItemManyOption(
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         VariantTitle(
-            titleText = variantWithOption.variant?.name ?: "",
+            titleText = variantWithOption.variant.name,
             isMust = isMust,
             isError = isMust && currentSelectedVariants == null
         )
-        variantWithOption.options.forEach { option ->
-            VariantOptionManyOption(
-                option = option,
-                onOptionSelected = {
-                    currentSelectedVariants = if (it) {
-                        currentSelectedVariants.add(option)
-                    } else {
-                        currentSelectedVariants.remove(option)
+        variantWithOption.options
+            .forEach { option ->
+                VariantOptionManyOption(
+                    option = option,
+                    onOptionSelected = {
+                        currentSelectedVariants = if (it) {
+                            currentSelectedVariants.add(option)
+                        } else {
+                            currentSelectedVariants.remove(option)
+                        }
+                        onOptionSelected(option, it)
                     }
-                    onOptionSelected(option, it)
-                }
-            )
-        }
+                )
+            }
     }
 }
 
@@ -306,21 +310,38 @@ private fun VariantOptionManyOption(
             text = option.name,
             style = MaterialTheme.typography.body2
         )
-        Checkbox(
+        Row(
             modifier = Modifier
                 .constrainAs(checkBox) {
                     end.linkTo(parent.end)
                     linkTo(top = parent.top, bottom = parent.bottom)
                 },
-            checked = isChecked,
-            onCheckedChange = {
-                onOptionSelected(it)
-                isChecked = it
-            },
-            colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colors.onSurface
+        ) {
+            if (!option.isActive) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically),
+                    text = stringResource(id = R.string.out_of_stock),
+                    style = MaterialTheme.typography.body2.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.Red
+                )
+            }
+            Spacer(modifier = Modifier.width(4.dp))
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = {
+                    onOptionSelected(it)
+                    isChecked = it
+                },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colors.onSurface
+                ),
+                enabled = option.isActive
             )
-        )
+        }
     }
 }
 
@@ -334,7 +355,7 @@ private fun VariantItemSingleOption(
         mutableStateOf<VariantOption?>(null)
     }
 
-    val isMust = variantWithOption.variant?.isMust ?: false
+    val isMust = variantWithOption.variant.isMust ?: false
 
     Spacer(modifier = Modifier.height(4.dp))
     Column(
@@ -344,26 +365,27 @@ private fun VariantItemSingleOption(
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         VariantTitle(
-            titleText = variantWithOption.variant?.name ?: "",
+            titleText = variantWithOption.variant.name,
             isMust = isMust,
             isError = isMust && selectedOption == null
         )
-        variantWithOption.options.forEach { option ->
-            VariantOptionSingleOption(
-                option = option,
-                isSelected = selectedOption == option,
-                onOptionSelected = {
-                    val isSelected = selectedOption != option
-                    onOptionSelected(selectedOption, option, isSelected)
-                    selectedOption = if (selectedOption == option) {
-                        null
-                    } else {
-                        option
-                    }
+        variantWithOption.options
+            .forEach { option ->
+                VariantOptionSingleOption(
+                    option = option,
+                    isSelected = selectedOption == option,
+                    onOptionSelected = {
+                        val isSelected = selectedOption != option
+                        onOptionSelected(selectedOption, option, isSelected)
+                        selectedOption = if (selectedOption == option) {
+                            null
+                        } else {
+                            option
+                        }
 
-                }
-            )
-        }
+                    }
+                )
+            }
     }
 }
 
@@ -389,18 +411,35 @@ private fun VariantOptionSingleOption(
             text = option.name,
             style = MaterialTheme.typography.body2
         )
-        RadioButton(
+        Row(
             modifier = Modifier
                 .constrainAs(radio) {
                     end.linkTo(parent.end)
                     linkTo(top = parent.top, bottom = parent.bottom)
                 },
-            selected = isSelected,
-            onClick = onOptionSelected,
-            colors = RadioButtonDefaults.colors(
-                selectedColor = MaterialTheme.colors.onSurface
+        ) {
+            if (!option.isActive) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically),
+                    text = stringResource(id = R.string.out_of_stock),
+                    style = MaterialTheme.typography.body2.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.Red
+                )
+            }
+            Spacer(modifier = Modifier.width(4.dp))
+            RadioButton(
+                selected = isSelected,
+                enabled = option.isActive,
+                onClick = onOptionSelected,
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = MaterialTheme.colors.onSurface
+                )
             )
-        )
+        }
     }
 }
 

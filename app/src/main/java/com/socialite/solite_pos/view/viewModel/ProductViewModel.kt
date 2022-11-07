@@ -28,7 +28,7 @@ class ProductViewModel(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val getProductVariantOptions: GetProductVariantOptions,
-    private val variantMixesRepository: VariantMixesRepository
+    private val variantMixesRepository: VariantMixesRepository,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<ProductViewModel>() {
@@ -38,7 +38,9 @@ class ProductViewModel(
     }
 
     suspend fun getProduct(idProduct: Long) = productsRepository.getProduct(idProduct)
-    fun getProductById(idProduct: Long) = productsRepository.getProductById(idProduct)
+    fun getProductWithCategory(idProduct: Long) =
+        productsRepository.getProductWithCategory(idProduct)
+
     fun getAllProducts() = productsRepository
         .getAllProductWithCategories()
         .map { it.groupBy { product -> product.category } }
@@ -125,7 +127,7 @@ class ProductViewModel(
 
     val variants = variantsRepository.getVariants()
 
-    fun insertVariants(data: Variant) {
+    fun insertVariant(data: Variant) {
         viewModelScope.launch {
             variantsRepository.insertVariant(data)
         }

@@ -254,7 +254,7 @@ private fun NewStore(
         PrimaryButtonView(
             modifier = Modifier
                 .fillMaxWidth(),
-            buttonText = stringResource(R.string.add_store),
+            buttonText = stringResource(R.string.adding),
             onClick = {
                 onCreateStore(
                     Store(

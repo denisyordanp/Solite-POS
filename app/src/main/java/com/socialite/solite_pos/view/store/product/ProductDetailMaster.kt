@@ -18,7 +18,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +37,7 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
+import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.utils.config.thousand
@@ -52,7 +52,8 @@ fun ProductDetailMaster(
     onBackClicked: () -> Unit
 ) {
 
-    val product = productViewModel.getProductById(productId).collectAsState(initial = null)
+    val product = productViewModel.getProductWithCategory(productId)
+        .collectAsState(initial = null)
 
     var isEditMode by remember {
         mutableStateOf(false)
@@ -61,7 +62,7 @@ fun ProductDetailMaster(
     Scaffold(
         topBar = {
             BasicTopBar(
-                titleText = product.value?.name ?: "",
+                titleText = product.value?.product?.name ?: "",
                 onBackClicked = onBackClicked,
                 endIcon = R.drawable.ic_edit_24,
                 endAction = {
@@ -87,7 +88,7 @@ fun ProductDetailMaster(
 private fun DetailContent(
     modifier: Modifier = Modifier,
     productViewModel: ProductViewModel,
-    product: Product,
+    product: ProductWithCategory,
     isEditMode: Boolean,
 ) {
     Box(
@@ -101,21 +102,18 @@ private fun DetailContent(
         ) {
 
             val query = Category.getFilter(Category.ALL)
-            val categories = productViewModel.getCategories(query).collectAsState(initial = emptyList())
-            val variants = productViewModel.getProductVariantOptions(product.id).collectAsState(
-                initial = null
-            )
+            val categories =
+                productViewModel.getCategories(query).collectAsState(initial = emptyList())
+            val variants =
+                productViewModel.getProductVariantOptions(product.product.id)
+                    .collectAsState(initial = null)
 
             var categoryExpanded by remember {
                 mutableStateOf(false)
             }
 
             var selectedCategory by remember {
-                mutableStateOf<Category?>(null)
-            }
-
-            LaunchedEffect(key1 = categories.value) {
-                selectedCategory = categories.value.find { it.id == product.id }
+                mutableStateOf(product.category)
             }
 
             LazyColumn {
@@ -123,7 +121,7 @@ private fun DetailContent(
                 basicDropdown(
                     isExpanded = categoryExpanded,
                     title = R.string.select_category,
-                    selectedItem = selectedCategory?.name,
+                    selectedItem = selectedCategory.name,
                     items = categories.value,
                     isEnable = isEditMode,
                     onHeaderClicked = {
@@ -137,7 +135,7 @@ private fun DetailContent(
 
                 item {
                     TextContent(
-                        product = product,
+                        product = product.product,
                         isEditMode = isEditMode
                     )
                 }
@@ -216,6 +214,9 @@ private fun VariantSelected(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colors.surface)
+            .clickable {
+
+            }
             .padding(16.dp)
     ) {
         if (!variants.isNullOrEmpty()) {
@@ -232,10 +233,7 @@ private fun VariantSelected(
 private fun SelectVariantButton() {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-
-            },
+            .fillMaxWidth(),
     ) {
         Text(
             modifier = Modifier
@@ -258,7 +256,7 @@ private fun VariantItem(
     variant: VariantWithOptions
 ) {
     Text(
-        text = variant.variant?.name ?: "",
+        text = variant.variant.name,
         style = MaterialTheme.typography.body2.copy(
             fontWeight = FontWeight.Bold
         )

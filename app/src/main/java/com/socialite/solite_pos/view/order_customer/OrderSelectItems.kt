@@ -275,13 +275,13 @@ private fun CategoryWithProducts(
                     isExpand = !isExpand
                 }
                 .background(color = MaterialTheme.colors.surface)
-                .padding(10.dp)
+                .padding(16.dp)
         ) {
             Text(
                 modifier = Modifier
                     .weight(1f),
                 text = categoryWithProduct.key.name,
-                style = MaterialTheme.typography.body2.copy(
+                style = MaterialTheme.typography.body1.copy(
                     fontWeight = FontWeight.Bold
                 )
             )

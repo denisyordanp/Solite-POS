@@ -8,7 +8,7 @@ interface ProductsRepository {
 
     fun getProductWithCategories(category: Long): Flow<List<ProductWithCategory>>
     fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
-
+    fun getProductWithCategory(productId: Long): Flow<ProductWithCategory?>
     suspend fun getProduct(productId: Long): Product
     fun getProductById(productId: Long): Flow<Product>
     suspend fun insertProduct(data: Product)

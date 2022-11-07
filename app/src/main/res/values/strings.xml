@@ -57,7 +57,6 @@
     <string name="until">Sampai</string>
     <string name="store_name">Nama kedai</string>
     <string name="address">Alamat</string>
-    <string name="add_store">Tambahkan kedai</string>
     <string name="select_store">Pilih kedai</string>
     <string name="are_you_sure_select_this_store_for_next_orders">Anda yakin akan memilih kedai ini untuk pesanan selanjutnya?</string>
     <string name="out_of_stock">Habis</string>
@@ -81,6 +80,12 @@
     <string name="touch_once_more_to_close_the_app">Tekan lagi untuk menutup aplikasi</string>
     <string name="select_time">Pilih waktu</string>
     <string name="no_data_found">Data tidak ditemukan</string>
-    <string name="variant_must_selected">Varaian wajib harus terpilih</string>
+    <string name="variant_must_selected">Varian wajib harus terpilih</string>
+    <string name="variant_name">Nama varian</string>
+    <string name="single_option">Hanya pilih satu</string>
+    <string name="multiple_option">Dapat pilih banyak</string>
+    <string name="variants">Data varian</string>
+    <string name="add_new_option">Tambah pilihan baru</string>
+    <string name="option_name">Nama pilihan</string>
 
 </resources>

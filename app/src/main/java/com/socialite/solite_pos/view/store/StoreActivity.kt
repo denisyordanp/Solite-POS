@@ -28,6 +28,7 @@ import com.socialite.solite_pos.view.store.product.ProductDetailMaster
 import com.socialite.solite_pos.view.store.product.ProductsMaster
 import com.socialite.solite_pos.view.store.recap.RecapMainView
 import com.socialite.solite_pos.view.store.stores.StoresView
+import com.socialite.solite_pos.view.store.variants.VariantsMaster
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
 import com.socialite.solite_pos.view.ui.StoreMenus
@@ -84,7 +85,10 @@ class StoreActivity : SoliteActivity() {
 //                                    }
                                     MasterMenus.PRODUCT -> goToProductMasterActivity()
                                     MasterMenus.CATEGORY -> goToCategoryActivity()
-                                    MasterMenus.VARIANT -> goToVariantActivity()
+//                                    MasterMenus.VARIANT -> goToVariantActivity()
+                                    MasterMenus.VARIANT -> {
+                                        navController.navigate(StoreDestinations.MASTER_VARIANTS)
+                                    }
 //                                    MasterMenus.SUPPLIER -> goToSupplierActivity()
                                 }
                             },
@@ -174,6 +178,14 @@ class StoreActivity : SoliteActivity() {
                             )
                         }
                     }
+                    composable(StoreDestinations.MASTER_VARIANTS) {
+                        VariantsMaster(
+                            productViewModel = productViewModel,
+                            onBackClicked = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -218,12 +230,6 @@ class StoreActivity : SoliteActivity() {
     private fun goToCategoryActivity() {
         val intent = Intent(this, ListMasterActivity::class.java)
         intent.putExtra(ListMasterActivity.TYPE, ListMasterActivity.CATEGORY)
-        startActivity(intent)
-    }
-
-    private fun goToVariantActivity() {
-        val intent = Intent(this, ListMasterActivity::class.java)
-        intent.putExtra(ListMasterActivity.TYPE, ListMasterActivity.VARIANT)
         startActivity(intent)
     }
 

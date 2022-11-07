@@ -16,8 +16,8 @@ interface CategoriesDao {
     fun getCategories(query: SupportSQLiteQuery): Flow<List<Category>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertCategory(data: Category): Long
+    suspend fun insertCategory(data: Category)
 
     @Update
-    fun updateCategory(data: Category)
+    suspend fun updateCategory(data: Category)
 }

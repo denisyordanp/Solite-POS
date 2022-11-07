@@ -36,6 +36,8 @@ data class Variant(
 
 	fun isSingleOption() = type == ONE_OPTION
 
+	fun isAdd() = id == 0L
+
 	companion object: RemoteClassUtils<Variant> {
 		const val ID = "id_variant"
 		const val NAME = "name"

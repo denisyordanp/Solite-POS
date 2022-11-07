@@ -24,6 +24,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Surface
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
@@ -270,10 +271,16 @@ private fun ProductItem(
                 },
             checked = product.isActive,
             onCheckedChange = {
-                productViewModel.updateProduct(product.copy(
-                    isActive = it
-                ))
-            }
+                productViewModel.updateProduct(
+                    product.copy(
+                        isActive = it
+                    )
+                )
+            },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colors.primary,
+                uncheckedThumbColor = MaterialTheme.colors.primaryVariant
+            )
         )
 
         Row(

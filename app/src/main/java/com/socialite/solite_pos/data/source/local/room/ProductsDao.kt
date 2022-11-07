@@ -25,6 +25,10 @@ interface ProductsDao {
     fun getProductWithCategories(category: Long): Flow<List<ProductWithCategory>>
 
     @Transaction
+    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :productId")
+    fun getProductWithCategory(productId: Long): Flow<ProductWithCategory?>
+
+    @Transaction
     @Query("SELECT * FROM ${Product.DB_NAME}")
     fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
 
@@ -35,7 +39,7 @@ interface ProductsDao {
     fun decreaseProductStock(idProduct: Long, amount: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertProduct(data: Product): Long
+    fun insertProduct(data: Product)
 
     @Update
     fun updateProduct(data: Product)

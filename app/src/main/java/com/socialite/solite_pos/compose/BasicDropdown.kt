@@ -38,7 +38,7 @@ fun LazyListScope.basicDropdown(
             selectedItem = selectedItem,
             isEnable = isEnable,
             onHeaderClicked = {
-                if (isEnable) onHeaderClicked()
+                onHeaderClicked()
             }
         )
     }
@@ -67,8 +67,12 @@ private fun DropdownHeader(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colors.surface)
-            .clickable {
-                onHeaderClicked()
+            .run {
+                return@run if (isEnable) {
+                    clickable {
+                        onHeaderClicked()
+                    }
+                } else { this }
             }
             .padding(24.dp)
     ) {

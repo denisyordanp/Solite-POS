@@ -46,6 +46,8 @@ data class VariantOption(
 		@ColumnInfo(name = UPLOAD)
 		var isUploaded: Boolean
 ): Serializable{
+
+	fun isAdd() = id == 0L
 	companion object: RemoteClassUtils<VariantOption> {
 		const val ID = "id_variant_option"
 		const val STATUS = "status"
