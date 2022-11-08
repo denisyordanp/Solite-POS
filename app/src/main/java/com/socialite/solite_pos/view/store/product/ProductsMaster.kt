@@ -62,7 +62,9 @@ import kotlinx.coroutines.launch
 fun ProductsMaster(
     productViewModel: ProductViewModel,
     onBackClicked: () -> Unit,
-    onItemClicked: (Product) -> Unit
+    onItemClicked: (Product) -> Unit,
+    onVariantClicked: (Product) -> Unit,
+    onAddProductClicked: () -> Unit
 ) {
 
     val pagerState = rememberPagerState()
@@ -95,6 +97,7 @@ fun ProductsMaster(
                         productViewModel = productViewModel,
                         category = categories.value[page],
                         onItemClicked = onItemClicked,
+                        onVariantClicked = onVariantClicked,
                         onScrollInProgress = {
                             shouldShowButton = !it
                         }
@@ -114,7 +117,7 @@ fun ProductsMaster(
             BasicAddButton(
                 modifier = Modifier
                     .align(Alignment.BottomEnd),
-                onAddClicked = {}
+                onAddClicked = onAddProductClicked
             )
         }
     }
@@ -195,6 +198,7 @@ private fun ProductItems(
     productViewModel: ProductViewModel,
     category: Category,
     onItemClicked: (Product) -> Unit,
+    onVariantClicked: (Product) -> Unit,
     onScrollInProgress: (Boolean) -> Unit
 ) {
 
@@ -209,7 +213,10 @@ private fun ProductItems(
             ProductItem(
                 productViewModel = productViewModel,
                 product = it.product,
-                onItemClicked = onItemClicked
+                onItemClicked = onItemClicked,
+                onVariantClicked = {
+                    onVariantClicked(it.product)
+                }
             )
         }
 
@@ -221,7 +228,8 @@ private fun ProductItems(
 private fun ProductItem(
     productViewModel: ProductViewModel,
     product: Product,
-    onItemClicked: (Product) -> Unit
+    onItemClicked: (Product) -> Unit,
+    onVariantClicked: () -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
@@ -286,7 +294,7 @@ private fun ProductItem(
         Row(
             modifier = Modifier
                 .clickable {
-
+                    onVariantClicked()
                 }
                 .constrainAs(variant) {
                     linkTo(top = switch.bottom, bottom = parent.bottom)

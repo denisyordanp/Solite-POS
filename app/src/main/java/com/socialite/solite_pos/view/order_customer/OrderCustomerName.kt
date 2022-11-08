@@ -140,6 +140,8 @@ private fun NameSearchBar(
         )
         Spacer(modifier = Modifier.width(8.dp))
         BasicEditText(
+            modifier = Modifier
+                .padding(8.dp),
             value = value,
             placeHolder = stringResource(id = R.string.customer_name),
             onValueChange = onSearch

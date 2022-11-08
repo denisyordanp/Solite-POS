@@ -39,7 +39,7 @@ interface ProductsDao {
     fun decreaseProductStock(idProduct: Long, amount: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertProduct(data: Product)
+    suspend fun insertProduct(data: Product): Long
 
     @Update
     fun updateProduct(data: Product)

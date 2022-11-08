@@ -18,6 +18,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,36 +51,48 @@ import com.socialite.solite_pos.view.viewModel.ProductViewModel
 fun ProductDetailMaster(
     productViewModel: ProductViewModel,
     productId: Long,
-    onBackClicked: () -> Unit
+    onVariantClicked: () -> Unit,
+    onBackClicked: () -> Unit,
+    onCreateNewProduct: (Product) -> Unit
 ) {
+
+    val isNewProduct = productId == 0L
 
     val product = productViewModel.getProductWithCategory(productId)
         .collectAsState(initial = null)
 
-    var isEditMode by remember {
-        mutableStateOf(false)
+    var isEditMode by remember { mutableStateOf(isNewProduct) }
+    LaunchedEffect(key1 = isNewProduct) {
+        isEditMode = isNewProduct
     }
 
     Scaffold(
         topBar = {
             BasicTopBar(
-                titleText = product.value?.product?.name ?: "",
+                titleText = stringResource(R.string.product_detail),
                 onBackClicked = onBackClicked,
-                endIcon = R.drawable.ic_edit_24,
+                endIcon = if (isNewProduct) null else R.drawable.ic_edit_24,
                 endAction = {
                     isEditMode = !isEditMode
                 }
             )
         },
         content = { padding ->
-            product.value?.let {
-                DetailContent(
-                    modifier = Modifier.padding(padding),
-                    productViewModel = productViewModel,
-                    product = it,
-                    isEditMode = isEditMode
-                )
-            }
+            DetailContent(
+                modifier = Modifier.padding(padding),
+                productViewModel = productViewModel,
+                product = product.value,
+                isEditMode = isEditMode,
+                onVariantClicked = onVariantClicked,
+                onSubmitEditProduct = {
+                    if (isNewProduct) {
+                        onCreateNewProduct(it)
+                    } else {
+                        productViewModel.updateProduct(it)
+                        isEditMode = false
+                    }
+                }
+            )
         }
     )
 }
@@ -88,126 +102,181 @@ fun ProductDetailMaster(
 private fun DetailContent(
     modifier: Modifier = Modifier,
     productViewModel: ProductViewModel,
-    product: ProductWithCategory,
+    product: ProductWithCategory?,
     isEditMode: Boolean,
+    onVariantClicked: () -> Unit,
+    onSubmitEditProduct: (Product) -> Unit
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
 
+        val query = Category.getFilter(Category.ALL)
+        val categories =
+            productViewModel.getCategories(query).collectAsState(initial = emptyList())
+
+        var categoryExpanded by remember {
+            mutableStateOf(false)
+        }
+
+        var selectedCategory by remember {
+            mutableStateOf(product?.category)
+        }
+
+        var isError by remember { mutableStateOf(false) }
+
+        var name by remember { mutableStateOf("") }
+        var desc by remember { mutableStateOf("") }
+        var sellPrice by remember { mutableStateOf(0L) }
+
+        LaunchedEffect(key1 = "$product $isEditMode") {
+            name = product?.product?.name ?: ""
+            desc = product?.product?.desc ?: ""
+            sellPrice = product?.product?.sellPrice ?: 0L
+            selectedCategory = product?.category
+        }
+
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
         ) {
-
-            val query = Category.getFilter(Category.ALL)
-            val categories =
-                productViewModel.getCategories(query).collectAsState(initial = emptyList())
-            val variants =
-                productViewModel.getProductVariantOptions(product.product.id)
-                    .collectAsState(initial = null)
-
-            var categoryExpanded by remember {
-                mutableStateOf(false)
-            }
-
-            var selectedCategory by remember {
-                mutableStateOf(product.category)
-            }
-
             LazyColumn {
-
                 basicDropdown(
                     isExpanded = categoryExpanded,
                     title = R.string.select_category,
-                    selectedItem = selectedCategory.name,
+                    selectedItem = selectedCategory?.name,
                     items = categories.value,
                     isEnable = isEditMode,
                     onHeaderClicked = {
                         categoryExpanded = !categoryExpanded
                     },
                     onSelectedItem = {
+                        isError = false
                         selectedCategory = it as Category
                         categoryExpanded = false
                     }
                 )
 
                 item {
-                    TextContent(
-                        product = product.product,
-                        isEditMode = isEditMode
-                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = MaterialTheme.colors.surface)
+                            .padding(16.dp)
+                    ) {
+                        BasicEditText(
+                            value = name,
+                            placeHolder = stringResource(R.string.name),
+                            isEnabled = isEditMode,
+                            onValueChange = {
+                                isError = false
+                                name = it
+                            }
+                        )
+                        if (isError && name.isEmpty()) { ErrorText() }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        BasicEditText(
+                            value = desc,
+                            placeHolder = stringResource(R.string.description),
+                            isEnabled = isEditMode,
+                            onValueChange = {
+                                isError = false
+                                desc = it
+                            }
+                        )
+                        if (isError && desc.isEmpty()) { ErrorText() }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        val price = if (sellPrice == 0L) "" else sellPrice.toString()
+                        BasicEditText(
+                            value = if (isEditMode) price else "Rp. ${price.toLongOrNull()?.thousand()}",
+                            placeHolder = stringResource(R.string.sell_price),
+                            isEnabled = isEditMode,
+                            visualTransformation = ThousandAndSuggestionVisualTransformation(false),
+                            keyboardType = KeyboardType.Number,
+                            onValueChange = {
+                                isError = false
+                                sellPrice = it.toLongOrNull() ?: 0L
+                            }
+                        )
+                        if (isError && price.isEmpty()) { ErrorText() }
+                    }
                 }
 
-                item {
-                    VariantSelected(
-                        variants = variants.value
-                    )
+                product?.let {
+                    item {
+
+                        val variants =
+                            productViewModel.getProductVariantOptions(it.product.id)
+                                .collectAsState(initial = null)
+
+                        VariantSelected(
+                            variants = variants.value,
+                            onVariantClicked = onVariantClicked
+                        )
+                    }
                 }
+            }
+        }
+
+        fun checkData() {
+            if (
+                name.isNotEmpty() && desc.isNotEmpty() && sellPrice != 0L && selectedCategory != null
+            ) {
+                selectedCategory?.let { category ->
+                    if (product != null) {
+                        onSubmitEditProduct(
+                            product.product.copy(
+                                name = name,
+                                desc = desc,
+                                sellPrice = sellPrice,
+                                category = category.id
+                            )
+                        )
+                    } else {
+                        onSubmitEditProduct(
+                            Product.createNewProduct(
+                                name = name,
+                                desc = desc,
+                                sellPrice = sellPrice,
+                                category = category.id
+                            )
+                        )
+                    }
+                }
+            } else {
+                isError = true
             }
         }
 
         if (isEditMode) {
             EditButton(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.BottomCenter),
+                isEnable = !isError,
+                onSaveButtonClicked = {
+                    checkData()
+                }
             )
         }
     }
 }
 
 @Composable
-@ExperimentalComposeUiApi
-private fun TextContent(
-    product: Product,
-    isEditMode: Boolean
-) {
-    Spacer(modifier = Modifier.height(4.dp))
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colors.surface)
-            .padding(16.dp)
-    ) {
-
-        var name by remember { mutableStateOf(product.name) }
-        var desc by remember { mutableStateOf(product.desc) }
-        var sellPrice by remember { mutableStateOf(product.sellPrice) }
-
-        BasicEditText(
-            value = name,
-            placeHolder = stringResource(R.string.name),
-            isEnabled = isEditMode,
-            onValueChange = {
-                name = it
-            }
-        )
-        BasicEditText(
-            value = desc,
-            placeHolder = stringResource(R.string.description),
-            isEnabled = isEditMode,
-            onValueChange = {
-                desc = it
-            }
-        )
-        val price = if (sellPrice == 0L) "" else sellPrice.toString()
-        BasicEditText(
-            value = if (isEditMode) price else "Rp. ${price.toLong().thousand()}",
-            placeHolder = stringResource(R.string.sell_price),
-            isEnabled = isEditMode,
-            visualTransformation = ThousandAndSuggestionVisualTransformation(false),
-            keyboardType = KeyboardType.Number,
-            onValueChange = {
-                sellPrice = it.toLongOrNull() ?: 0L
-            }
-        )
-    }
+private fun ErrorText() {
+    Text(
+        text = stringResource(R.string.can_not_be_empty),
+        style = MaterialTheme.typography.overline,
+        color = Color.Red
+    )
 }
 
 @Composable
 private fun VariantSelected(
-    variants: List<VariantWithOptions>?
+    variants: List<VariantWithOptions>?,
+    onVariantClicked: () -> Unit
 ) {
     Spacer(modifier = Modifier.padding(bottom = 4.dp))
     Column(
@@ -215,7 +284,7 @@ private fun VariantSelected(
             .fillMaxWidth()
             .background(color = MaterialTheme.colors.surface)
             .clickable {
-
+                onVariantClicked()
             }
             .padding(16.dp)
     ) {
@@ -270,7 +339,9 @@ private fun VariantItem(
 
 @Composable
 private fun EditButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isEnable: Boolean,
+    onSaveButtonClicked: () -> Unit
 ) {
     Surface(
         modifier = modifier
@@ -286,8 +357,9 @@ private fun EditButton(
             PrimaryButtonView(
                 modifier = Modifier
                     .fillMaxWidth(),
+                isEnabled = isEnable,
                 buttonText = stringResource(R.string.save),
-                onClick = {}
+                onClick = onSaveButtonClicked
             )
         }
     }

@@ -4,7 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +22,6 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
-import com.socialite.solite_pos.view.main.menu.master.product.ProductMasterActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.outcomes.OutcomesActivity
@@ -28,7 +30,7 @@ import com.socialite.solite_pos.view.store.product.ProductDetailMaster
 import com.socialite.solite_pos.view.store.product.ProductsMaster
 import com.socialite.solite_pos.view.store.recap.RecapMainView
 import com.socialite.solite_pos.view.store.stores.StoresView
-import com.socialite.solite_pos.view.store.variants.VariantsMaster
+import com.socialite.solite_pos.view.store.variants.VariantView
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
 import com.socialite.solite_pos.view.ui.StoreMenus
@@ -36,6 +38,7 @@ import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
+import kotlinx.coroutines.launch
 
 class StoreActivity : SoliteActivity() {
 
@@ -80,12 +83,10 @@ class StoreActivity : SoliteActivity() {
                             },
                             onMasterMenuClicked = {
                                 when (it) {
-//                                    MasterMenus.PRODUCT -> {
-//                                        navController.navigate(StoreDestinations.MASTER_PRODUCT)
-//                                    }
-                                    MasterMenus.PRODUCT -> goToProductMasterActivity()
+                                    MasterMenus.PRODUCT -> {
+                                        navController.navigate(StoreDestinations.MASTER_PRODUCT)
+                                    }
                                     MasterMenus.CATEGORY -> goToCategoryActivity()
-//                                    MasterMenus.VARIANT -> goToVariantActivity()
                                     MasterMenus.VARIANT -> {
                                         navController.navigate(StoreDestinations.MASTER_VARIANTS)
                                     }
@@ -157,6 +158,12 @@ class StoreActivity : SoliteActivity() {
                             },
                             onItemClicked = {
                                 navController.navigate(StoreDestinations.productDetail(it.id))
+                            },
+                            onVariantClicked = {
+                                navController.navigate(StoreDestinations.productVariants(it.id))
+                            },
+                            onAddProductClicked = {
+                                navController.navigate(StoreDestinations.newProduct())
                             }
                         )
                     }
@@ -168,10 +175,37 @@ class StoreActivity : SoliteActivity() {
                         route = StoreDestinations.DETAIL_PRODUCT,
                         arguments = listOf(productIdArgument)
                     ) {
-                        it.arguments?.getLong(StoreDestinations.PRODUCT_ID)?.let { id ->
+                        var currentId by rememberSaveable {
+                            mutableStateOf(it.arguments?.getLong(StoreDestinations.PRODUCT_ID))
+                        }
+
+                        currentId?.let { id ->
                             ProductDetailMaster(
                                 productViewModel = productViewModel,
                                 productId = id,
+                                onVariantClicked = {
+                                    navController.navigate(StoreDestinations.productVariants(id))
+                                },
+                                onBackClicked = {
+                                    navController.popBackStack()
+                                },
+                                onCreateNewProduct = { product ->
+                                    lifecycleScope.launch {
+                                        val newId = productViewModel.insertProduct(product)
+                                        currentId = newId
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    composable(
+                        route = StoreDestinations.PRODUCT_VARIANTS,
+                        arguments = listOf(productIdArgument)
+                    ) {
+                        it.arguments?.getLong(StoreDestinations.PRODUCT_ID)?.let { id ->
+                            VariantView(
+                                productViewModel = productViewModel,
+                                idProduct = id,
                                 onBackClicked = {
                                     navController.popBackStack()
                                 }
@@ -179,7 +213,7 @@ class StoreActivity : SoliteActivity() {
                         }
                     }
                     composable(StoreDestinations.MASTER_VARIANTS) {
-                        VariantsMaster(
+                        VariantView(
                             productViewModel = productViewModel,
                             onBackClicked = {
                                 navController.popBackStack()
@@ -219,11 +253,6 @@ class StoreActivity : SoliteActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-    }
-
-    private fun goToProductMasterActivity() {
-        val intent = Intent(this, ProductMasterActivity::class.java)
         startActivity(intent)
     }
 

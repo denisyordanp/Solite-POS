@@ -19,7 +19,6 @@ import com.socialite.solite_pos.databinding.FragmentProductMasterBinding
 import com.socialite.solite_pos.utils.tools.BottomSheetView
 import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProductMasterFragment(private val product: ProductWithCategory?) :
@@ -211,8 +210,10 @@ class ProductMasterFragment(private val product: ProductWithCategory?) :
     }
 
     private fun saveData(data: Product) {
-        viewModel.insertProduct(data)
-        dialog?.dismiss()
+        lifecycleScope.launch {
+            viewModel.insertProduct(data)
+            dialog?.dismiss()
+        }
     }
 
     private fun getProduct(): Product {

@@ -37,7 +37,7 @@ class ProductViewModel(
         }
     }
 
-    suspend fun getProduct(idProduct: Long) = productsRepository.getProduct(idProduct)
+    fun getProduct(idProduct: Long) = productsRepository.getProductById(idProduct)
     fun getProductWithCategory(idProduct: Long) =
         productsRepository.getProductWithCategory(idProduct)
 
@@ -60,6 +60,9 @@ class ProductViewModel(
         idProduct: Long,
         idVariantOption: Long
     ) = productVariantsRepository.getVariantProduct(idProduct, idVariantOption)
+
+    fun getVariantsProductById(idProduct: Long) =
+        productVariantsRepository.getVariantsProductById(idProduct)
 
     fun getVariantProductById(idProduct: Long) =
         productVariantsRepository.getVariantProductById(idProduct)
@@ -99,11 +102,7 @@ class ProductViewModel(
     fun getProductWithCategories(category: Long) =
         productsRepository.getProductWithCategories(category)
 
-    fun insertProduct(data: Product) {
-        viewModelScope.launch {
-            productsRepository.insertProduct(data)
-        }
-    }
+    suspend fun insertProduct(data: Product) = productsRepository.insertProduct(data)
 
     fun updateProduct(data: Product) {
         viewModelScope.launch {

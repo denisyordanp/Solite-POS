@@ -71,6 +71,24 @@ data class Product(
 		const val MIX = "mix"
 
 		const val DB_NAME = "product"
+
+		fun createNewProduct(
+			name: String,
+			desc: String,
+			sellPrice: Long,
+			category: Long
+		) = Product(
+			name = name,
+			desc = desc,
+			sellPrice = sellPrice,
+			category = category,
+			image = "",
+			buyPrice = 0L,
+			portion = 1,
+			stock = 0,
+			isMix = false,
+			isActive = true
+		)
 		override fun toHashMap(data: Product): HashMap<String, Any?> {
 			return hashMapOf(
 					ID to data.id,
@@ -116,8 +134,4 @@ data class Product(
 
 	@Ignore
 	constructor(name: String, category: Long, image: String, desc: String, sellPrice: Long, buyPrice: Long, portion: Int, stock: Long, isMix: Boolean, isActive: Boolean): this(0, name, category, image, desc, sellPrice, buyPrice, portion, stock, isMix, isActive, false)
-
-	fun getStockPortion(): Long {
-		return stock / portion
-	}
 }

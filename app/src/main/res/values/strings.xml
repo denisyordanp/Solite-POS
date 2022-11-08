@@ -87,5 +87,8 @@
     <string name="variants">Data varian</string>
     <string name="add_new_option">Tambah pilihan baru</string>
     <string name="option_name">Nama pilihan</string>
+    <string name="option_selected">%s varian terpilih</string>
+    <string name="product_detail">Rincian produk</string>
+    <string name="can_not_be_empty">Tidak boleh kosong</string>
 
 </resources>

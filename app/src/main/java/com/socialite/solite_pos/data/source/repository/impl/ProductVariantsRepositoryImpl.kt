@@ -33,6 +33,8 @@ class ProductVariantsRepositoryImpl(
     override suspend fun isProductHasVariants(idProduct: Long) =
         !dao.getProductVariants(idProduct).isNullOrEmpty()
 
+    override fun getVariantsProductById(idProduct: Long) = dao.getProductVariantsById(idProduct)
+
     override fun getVariantProductById(idProduct: Long): Flow<VariantProduct?> =
         dao.getVariantProductById(idProduct)
 
@@ -41,6 +43,6 @@ class ProductVariantsRepositoryImpl(
     }
 
     override suspend fun removeVariantProduct(data: VariantProduct) {
-        dao.removeVariantProduct(data.idVariant, data.idProduct)
+        dao.removeVariantProduct(data.idVariantOption, data.idProduct)
     }
 }

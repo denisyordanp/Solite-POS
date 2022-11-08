@@ -48,7 +48,7 @@ data class ProductOrderDetail(
     fun totalPrice() = (product?.sellPrice ?: 0) * amount
 
     fun isAllMustVariantSelected(baseVariants: List<VariantWithOptions>): Boolean {
-        val mustVariants = baseVariants.filter { it.variant.isMust == true }
+        val mustVariants = baseVariants.filter { it.variant.isMust == true && it.isOptionAvailable() }
         return if (mustVariants.isNotEmpty()) {
             mustVariants.none { v ->
                 val newList = v.options + variants

@@ -47,19 +47,9 @@ fun BasicEditText(
     onValueChange: (String) -> Unit,
     onAction: (() -> Unit)? = null
 ) {
-
-    if (isEnabled) {
-        modifier.border(
-            width = 0.5.dp,
-            color = MaterialTheme.colors.onSurface,
-            shape = RoundedCornerShape(8.dp)
-        )
-    }
-
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
             .run {
                 return@run if (isEnabled) {
                     border(

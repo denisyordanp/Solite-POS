@@ -50,6 +50,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptio
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,8 +68,9 @@ fun OrderSelectVariants(
     }
 
     LaunchedEffect(key1 = productId) {
+        val product = viewModel.getProduct(productId).first()
         productOrderDetail = productOrderDetail.copy(
-            product = viewModel.getProduct(productId),
+            product = product,
             amount = 1
         )
     }
@@ -142,20 +144,18 @@ private fun SelectVariantsContent(
         ) {
             variants?.let {
                 items(it) { variant ->
-                    if (variant.isOptionAvailable()) {
-                        if (variant.variant.isSingleOption())
-                            VariantItemSingleOption(
-                                variantWithOption = variant,
-                                onOptionSelected = onOptionSelected
-                            )
-                        else
-                            VariantItemManyOption(
-                                variantWithOption = variant,
-                                onOptionSelected = { option, isSelected ->
-                                    onOptionSelected(null, option, isSelected)
-                                }
-                            )
-                    }
+                    if (variant.variant.isSingleOption())
+                        VariantItemSingleOption(
+                            variantWithOption = variant,
+                            onOptionSelected = onOptionSelected
+                        )
+                    else
+                        VariantItemManyOption(
+                            variantWithOption = variant,
+                            onOptionSelected = { option, isSelected ->
+                                onOptionSelected(null, option, isSelected)
+                            }
+                        )
                 }
             }
 
