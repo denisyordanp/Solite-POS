@@ -90,5 +90,12 @@
     <string name="option_selected">%s varian terpilih</string>
     <string name="product_detail">Rincian produk</string>
     <string name="can_not_be_empty">Tidak boleh kosong</string>
+    <string name="categories">Data kategori</string>
+    <string name="category_name">Nama kategori</string>
+    <string name="cash">Tunai</string>
+    <string name="non_cash">Non-tunai</string>
+    <string name="payments">Data pembayaran</string>
+    <string name="cash_payment">Pembayaran tunai</string>
+    <string name="payment_name">Nama pembayaran</string>
 
 </resources>

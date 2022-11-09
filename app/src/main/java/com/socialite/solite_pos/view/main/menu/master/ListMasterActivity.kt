@@ -11,6 +11,7 @@ import com.socialite.solite_pos.adapters.recycleView.supplier.SupplierMasterAdap
 import com.socialite.solite_pos.adapters.recycleView.variant.VariantMasterAdapter
 import com.socialite.solite_pos.adapters.recycleView.variant.VariantProductMasterAdapter
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.ActivityListMasterBinding
@@ -21,7 +22,6 @@ import com.socialite.solite_pos.view.main.menu.master.bottom.SupplierMasterFragm
 import com.socialite.solite_pos.view.main.menu.master.bottom.VariantMasterFragment
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ListMasterActivity : SocialiteActivity() {
@@ -197,7 +197,8 @@ class ListMasterActivity : SocialiteActivity() {
         _binding.rvListMaster.adapter = adapter
 
         lifecycleScope.launch {
-            mainViewModel.payments.collect {
+            val query = Payment.filter(Payment.ALL)
+            mainViewModel.getPayments(query).collect {
                 adapter.setPayments(it)
             }
         }

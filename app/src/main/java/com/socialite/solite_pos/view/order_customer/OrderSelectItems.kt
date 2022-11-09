@@ -62,7 +62,7 @@ fun OrderSelectItems(
     onClickOrder: () -> Unit,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit
 ) {
-    val state = productViewModel.getAllProducts().collectAsState(initial = null)
+    val products = productViewModel.getAllProducts().collectAsState(initial = null)
 
     var modalContent by remember {
         mutableStateOf(ModalContent.BUCKET_VIEW)
@@ -111,7 +111,7 @@ fun OrderSelectItems(
             ProductOrderList(
                 orderViewModel = orderViewModel,
                 productViewModel = productViewModel,
-                products = state.value,
+                products = products.value,
                 onBucketClicked = {
                     modalContent = ModalContent.BUCKET_VIEW
                     scope.launch {

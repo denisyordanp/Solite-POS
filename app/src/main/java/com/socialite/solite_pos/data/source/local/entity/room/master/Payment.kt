@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
@@ -41,6 +42,9 @@ data class Payment(
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
 ) : Serializable, DropdownItem {
+
+    fun isNewPayment() = id == 0L
+
     companion object : RemoteClassUtils<Payment> {
         const val ID = "id_payment"
         const val STATUS = "status"
@@ -50,6 +54,35 @@ data class Payment(
         const val TAX = "tax"
 
         const val DB_NAME = "payment"
+
+        const val ALL = 2
+        const val ACTIVE = 1
+
+        fun createNewPayment(
+            name: String,
+            desc: String,
+            isCash: Boolean
+        ) = Payment(
+            name = name,
+            desc = desc,
+            tax = 0f,
+            isCash = isCash,
+            isActive = true
+        )
+
+        fun filter(state: Int): SimpleSQLiteQuery {
+            val query = StringBuilder().append("SELECT * FROM ")
+            query.append(DB_NAME)
+            when (state) {
+                ACTIVE -> {
+                    query.append(" WHERE ")
+                        .append(STATUS)
+                        .append(" = ").append(ACTIVE)
+                }
+            }
+            return SimpleSQLiteQuery(query.toString())
+        }
+
         override fun toHashMap(data: Payment): HashMap<String, Any?> {
             return hashMapOf(
                 ID to data.id,

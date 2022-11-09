@@ -43,7 +43,10 @@ class ProductViewModel(
 
     fun getAllProducts() = productsRepository
         .getAllProductWithCategories()
-        .map { it.groupBy { product -> product.category } }
+        .map {
+            it.groupBy { product -> product.category }
+                .filterKeys { category -> category.isActive }
+        }
 
     suspend fun isProductHasVariant(idProduct: Long) = productVariantsRepository
         .isProductHasVariants(idProduct)

@@ -1,11 +1,11 @@
 package com.socialite.solite_pos.compose
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,27 +13,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BasicRadioButton(
-    modifier: Modifier = Modifier,
-    isSelected: Boolean,
-    text: String,
-    onClicked: () -> Unit
+fun BasicCheckBox(
+    titleText: String,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
 ) {
-    Row(
-        modifier = modifier
-            .clickable {
-                onClicked()
-            }
-    ) {
-        RadioButton(
-            selected = isSelected,
-            onClick = onClicked
+    Row {
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colors.onSurface
+            )
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            text = text,
+            text = titleText,
             style = MaterialTheme.typography.body2
         )
     }

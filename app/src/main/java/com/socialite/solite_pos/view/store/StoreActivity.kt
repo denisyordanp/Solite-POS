@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
@@ -13,7 +15,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -21,11 +22,12 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
-import com.socialite.solite_pos.view.main.menu.master.ListMasterActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.outcomes.OutcomesActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
+import com.socialite.solite_pos.view.store.categories.CategoryMasterView
+import com.socialite.solite_pos.view.store.payments.PaymentMasterView
 import com.socialite.solite_pos.view.store.product.ProductDetailMaster
 import com.socialite.solite_pos.view.store.product.ProductsMaster
 import com.socialite.solite_pos.view.store.recap.RecapMainView
@@ -86,7 +88,11 @@ class StoreActivity : SoliteActivity() {
                                     MasterMenus.PRODUCT -> {
                                         navController.navigate(StoreDestinations.MASTER_PRODUCT)
                                     }
-                                    MasterMenus.CATEGORY -> goToCategoryActivity()
+
+                                    MasterMenus.CATEGORY -> {
+                                        navController.navigate(StoreDestinations.MASTER_CATEGORY)
+                                    }
+
                                     MasterMenus.VARIANT -> {
                                         navController.navigate(StoreDestinations.MASTER_VARIANTS)
                                     }
@@ -103,7 +109,11 @@ class StoreActivity : SoliteActivity() {
                                         OutcomesActivity.createInstanceForRecap(this@StoreActivity)
                                     }
 
-                                    StoreMenus.PAYMENT -> goToPaymentActivity()
+//                                    StoreMenus.PAYMENT -> goToPaymentActivity()
+                                    StoreMenus.PAYMENT -> {
+                                        navController.navigate(StoreDestinations.MASTER_PAYMENT)
+                                    }
+
                                     StoreMenus.STORE -> {
                                         navController.navigate(StoreDestinations.MASTER_STORES)
                                     }
@@ -115,17 +125,29 @@ class StoreActivity : SoliteActivity() {
                             }
                         )
                     }
+                    composable(StoreDestinations.MASTER_PAYMENT) {
+                        PaymentMasterView(
+                            mainViewModel = mainViewModel,
+                            onBackClicked = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
+                    composable(StoreDestinations.MASTER_CATEGORY) {
+                        CategoryMasterView(
+                            productViewModel = productViewModel,
+                            onBackClicked = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
                     composable(StoreDestinations.MASTER_STORES) {
-                        ProvideWindowInsets(
-                            windowInsetsAnimationsEnabled = true
-                        ) {
-                            StoresView(
-                                mainViewModel = mainViewModel,
-                                onBackClicked = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
+                        StoresView(
+                            mainViewModel = mainViewModel,
+                            onBackClicked = {
+                                navController.popBackStack()
+                            }
+                        )
                     }
                     composable(StoreDestinations.MASTER_RECAP) {
                         RecapMainView(
@@ -253,18 +275,6 @@ class StoreActivity : SoliteActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-    }
-
-    private fun goToCategoryActivity() {
-        val intent = Intent(this, ListMasterActivity::class.java)
-        intent.putExtra(ListMasterActivity.TYPE, ListMasterActivity.CATEGORY)
-        startActivity(intent)
-    }
-
-    private fun goToPaymentActivity() {
-        val intent = Intent(this, ListMasterActivity::class.java)
-        intent.putExtra(ListMasterActivity.TYPE, ListMasterActivity.PAYMENT)
         startActivity(intent)
     }
 }

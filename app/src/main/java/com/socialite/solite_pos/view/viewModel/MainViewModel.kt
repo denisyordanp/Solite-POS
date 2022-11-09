@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.viewModel
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
@@ -99,7 +100,7 @@ class MainViewModel(
         }
     }
 
-    val payments = paymentRepository.getPayments()
+    fun getPayments(query: SupportSQLiteQuery) = paymentRepository.getPayments(query)
 
     fun insertPayment(data: Payment) {
         viewModelScope.launch {
@@ -131,6 +132,12 @@ class MainViewModel(
     fun insertStore(store: Store) {
         viewModelScope.launch {
             storeRepository.insertStore(store)
+        }
+    }
+
+    fun updateStore(store: Store) {
+        viewModelScope.launch {
+            storeRepository.updateStore(store)
         }
     }
 

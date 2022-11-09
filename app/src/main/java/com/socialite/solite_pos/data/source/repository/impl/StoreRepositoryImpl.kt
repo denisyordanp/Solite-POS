@@ -29,6 +29,6 @@ class StoreRepositoryImpl(
 
     override fun getStores(): Flow<List<Store>> = dao.getStores()
     override suspend fun getStore(id: Long) = dao.getStore(id)
-
     override suspend fun insertStore(store: Store) = dao.insertStore(store)
+    override suspend fun updateStore(store: Store) = dao.updateStore(store)
 }

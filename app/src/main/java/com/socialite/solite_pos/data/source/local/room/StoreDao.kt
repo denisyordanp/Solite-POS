@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import kotlinx.coroutines.flow.Flow
 
@@ -18,4 +19,7 @@ interface StoreDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStore(store: Store)
+
+    @Update
+    suspend fun updateStore(store: Store)
 }

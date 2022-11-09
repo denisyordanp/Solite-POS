@@ -39,6 +39,8 @@ data class Category(
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
 ) : Serializable, DropdownItem {
+
+    fun isNewCategory() = id == 0L
     companion object : RemoteClassUtils<Category> {
         const val ID = "id_category"
         const val STATUS = "status"
@@ -58,6 +60,16 @@ data class Category(
         fun getFilter(state: Int): SimpleSQLiteQuery {
             return filter(state, false)
         }
+
+        fun createNewCategory(
+            name: String,
+            desc: String
+        ) = Category(
+            name = name,
+            desc = desc,
+            isStock = false,
+            isActive = true
+        )
 
         private fun filter(state: Int, isStock: Boolean): SimpleSQLiteQuery {
             val query = StringBuilder().append("SELECT * FROM ")

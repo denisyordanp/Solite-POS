@@ -24,6 +24,9 @@ data class Store(
     @ColumnInfo(name = ADDRESS)
     var address: String,
 ): Serializable, DropdownItem {
+
+    fun isNewStore() = id == 0L
+
     companion object {
         const val ID = "id_store"
         const val NAME = "name"

@@ -109,8 +109,8 @@ private fun PaymentContent(
     onPayClicked: (order: Order, payment: Payment, pay: Long) -> Unit
 ) {
 
-    val payments = mainViewModel.payments.collectAsState(initial = emptyList())
-
+    val query = Payment.filter(Payment.ACTIVE)
+    val payments = mainViewModel.getPayments(query).collectAsState(initial = emptyList())
     val cashSuggestions = mainViewModel.cashSuggestions.collectAsState(initial = null)
 
     var paymentExpanded by remember {

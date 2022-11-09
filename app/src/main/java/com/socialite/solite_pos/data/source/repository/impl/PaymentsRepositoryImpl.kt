@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
@@ -34,5 +35,5 @@ class PaymentsRepositoryImpl(
         dao.updatePayment(data)
     }
 
-    override fun getPayments() = dao.getPayments()
+    override fun getPayments(query: SupportSQLiteQuery) = dao.getPayments(query)
 }

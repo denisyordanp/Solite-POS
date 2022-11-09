@@ -8,4 +8,5 @@ interface StoreRepository {
     fun getStores(): Flow<List<Store>>
     suspend fun getStore(id: Long): Store?
     suspend fun insertStore(store: Store)
+    suspend fun updateStore(store: Store)
 }
