@@ -11,12 +11,12 @@ import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
 import com.socialite.solite_pos.data.source.preference.SettingPref
 import com.socialite.solite_pos.utils.printer.PrintBill
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.adapters.recycleView.bluetooth.BluetoothDeviceAdapter
 import com.socialite.solite_pos.data.source.local.entity.room.master.Store
+import com.socialite.solite_pos.view.SoliteActivity
 
 
-class BluetoothDeviceListActivity : SocialiteActivity() {
+class BluetoothDeviceListActivity : SoliteActivity() {
 
 	private var mBluetoothAdapter: BluetoothAdapter? = null
 

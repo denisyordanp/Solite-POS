@@ -7,8 +7,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity.Companion.BROADCAST_KEY
+import com.socialite.solite_pos.view.SoliteActivity
+import com.socialite.solite_pos.view.SoliteActivity.Companion.BROADCAST_KEY
 import java.util.*
 
 class DoneCookService(private var context: Context?) : BroadcastReceiver() {
@@ -23,7 +23,7 @@ class DoneCookService(private var context: Context?) : BroadcastReceiver() {
 		if (context != null){
 			this.context = context
 			val name = intent?.getStringExtra(EXTRA_NAME)
-			if (SocialiteActivity.isActive){
+			if (SoliteActivity.isActive){
 				sendBroadcastAlert(name, context)
 			}
 			sendNotification(name)
@@ -36,7 +36,7 @@ class DoneCookService(private var context: Context?) : BroadcastReceiver() {
 
 	private fun sendBroadcastAlert(name: String?, context: Context){
 		val intent = Intent(BROADCAST_KEY)
-		intent.putExtra(SocialiteActivity.NAME, name)
+		intent.putExtra(SoliteActivity.NAME, name)
 		LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
 	}
 

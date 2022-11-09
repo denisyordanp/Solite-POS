@@ -9,12 +9,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.ActivityMasterVariantMixOptionBinding
 import com.socialite.solite_pos.utils.tools.helper.FragmentWithTitle
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
+import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class VariantMasterMixOptionActivity : SocialiteActivity() {
+class VariantMasterMixOptionActivity : SoliteActivity() {
 
     private lateinit var _binding: ActivityMasterVariantMixOptionBinding
     private lateinit var adapter: ViewPagerAdapter

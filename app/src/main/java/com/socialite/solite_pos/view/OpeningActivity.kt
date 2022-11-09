@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.socialite.solite_pos.databinding.ActivityOpeningBinding
-import com.socialite.solite_pos.utils.tools.helper.SocialiteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 
-class OpeningActivity : SocialiteActivity() {
+class OpeningActivity : SoliteActivity() {
 
 //	private lateinit var auth: FirebaseAuth
 

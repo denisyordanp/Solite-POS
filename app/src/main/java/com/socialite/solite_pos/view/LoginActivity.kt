@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -14,7 +13,6 @@ import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.databinding.ActivityLoginBinding
 import com.socialite.solite_pos.data.source.preference.UserPref
-import com.socialite.solite_pos.utils.tools.MessageBottom
 import com.socialite.solite_pos.view.viewModel.UserViewModel
 import com.socialite.solite_pos.utils.tools.helper.Status
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
@@ -113,11 +111,7 @@ class LoginActivity : AppCompatActivity() {
     private fun showWrongInputMessage(message: String) {
         loginButton.setLoadingButtonOff()
         auth.signOut()
-        MessageBottom(supportFragmentManager)
-            .setMessageImage(ResourcesCompat.getDrawable(resources, R.drawable.ic_alert_message, null))
-                .setMessage(message)
-                .setPositiveListener(getString(android.R.string.ok), null)
-                .show()
+        // Todo: Show error message
     }
 
     class LoginButton(private val view: MaterialCardView) {

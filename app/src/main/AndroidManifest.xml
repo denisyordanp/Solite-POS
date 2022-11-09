@@ -28,9 +28,6 @@
         <activity android:name=".view.LoginActivity" />
         <activity android:name=".view.settings.SettingsActivity" />
         <activity android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity" />
-        <activity android:name=".view.main.menu.master.detail.VariantOptionActivity" />
-        <activity android:name=".view.main.menu.master.product.ProductMasterActivity" />
-        <activity android:name=".view.main.menu.master.ListMasterActivity" />
         <activity android:name=".view.bluetooth.BluetoothDeviceListActivity" />
         <activity
             android:name=".view.OpeningActivity"
