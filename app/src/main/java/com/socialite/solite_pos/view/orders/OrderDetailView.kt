@@ -35,12 +35,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -48,9 +52,12 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.flow.first
 
 @Composable
-fun OrderDetail(
+fun OrderDetailView(
     orderNo: String,
     orderViewModel: OrderViewModel,
+    timePicker: MaterialTimePicker.Builder,
+    datePicker: MaterialDatePicker.Builder<Long>,
+    fragmentManager: FragmentManager,
     onBackClicked: () -> Unit,
     onButtonClicked: (OrderButtonType, OrderWithProduct?) -> Unit,
 ) {
@@ -73,6 +80,48 @@ fun OrderDetail(
     var alertCancelState by remember { mutableStateOf(false) }
     var alertPaymentState by remember { mutableStateOf(false) }
     var alertPutBackState by remember { mutableStateOf(false) }
+    var alertReplaceDate by remember { mutableStateOf(false) }
+
+    var selectedDateTime by remember { mutableStateOf(orderWithProducts?.order?.order?.orderTime) }
+
+    fun selectTime() {
+        if (orderWithProducts != null && selectedDateTime != null) {
+            val hourMinute = DateUtils.strToHourAndMinute(orderWithProducts!!.order.order.orderTime)
+            val picker = timePicker.setHour(hourMinute.first)
+                .setMinute(hourMinute.second)
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
+                .build()
+            picker.addOnPositiveButtonClickListener {
+                selectedDateTime = DateUtils.strDateTimeReplaceTime(
+                    dateTime = selectedDateTime!!,
+                    hour = picker.hour,
+                    minute = picker.minute
+                )
+                picker.dismiss()
+                alertReplaceDate = true
+            }
+            picker.show(fragmentManager, "")
+        }
+    }
+
+    fun selectDate() {
+        orderWithProducts?.let { order ->
+            val date = DateUtils.strToDate(order.order.order.orderTime).time
+            val picker =
+                datePicker.setSelection(date)
+                    .build()
+            picker.addOnPositiveButtonClickListener {
+                val newDate = DateUtils.millisToDate(
+                    millis = it,
+                    isWithTime = true
+                )
+                selectedDateTime = newDate
+                picker.dismiss()
+                selectTime()
+            }
+            picker.show(fragmentManager, "")
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -87,6 +136,9 @@ fun OrderDetail(
                     modifier = Modifier
                         .padding(padding),
                     orderWithProduct = it,
+                    onHeaderClicked = {
+                        selectDate()
+                    },
                     onMenuClicked = { buttonType ->
                         when (buttonType) {
                             OrderButtonType.PRINT, OrderButtonType.QUEUE -> onButtonClicked(
@@ -188,13 +240,35 @@ fun OrderDetail(
             negativeText = stringResource(R.string.no)
         )
     }
+    if (alertReplaceDate && selectedDateTime != null) {
+        val date = DateUtils.convertDateFromDb(selectedDateTime, DateUtils.DATE_WITH_TIME_FORMAT)
+        BasicAlertDialog(
+            titleText = stringResource(R.string.change_order_date),
+            descText = stringResource(R.string.are_you_sure_change_order_date_to, date),
+            positiveAction = {
+                orderWithProducts?.order?.order?.let {
+                    orderViewModel.updateOrder(it.copy(
+                        orderTime = selectedDateTime!!
+                    ))
+                }
+                alertReplaceDate = false
+                onBackClicked()
+            },
+            positiveText = stringResource(R.string.yes),
+            negativeAction = {
+                alertReplaceDate = false
+            },
+            negativeText = stringResource(R.string.no)
+        )
+    }
 }
 
 @Composable
 private fun Details(
     modifier: Modifier = Modifier,
     orderWithProduct: OrderWithProduct,
-    onMenuClicked: (OrderButtonType) -> Unit
+    onMenuClicked: (OrderButtonType) -> Unit,
+    onHeaderClicked: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -206,7 +280,8 @@ private fun Details(
         ) {
             item {
                 OrderHeader(
-                    order = orderWithProduct.order.order
+                    order = orderWithProduct.order.order,
+                    onHeaderClicked = onHeaderClicked
                 )
             }
             itemsIndexed(orderWithProduct.products) { i, product ->
@@ -232,7 +307,8 @@ private fun Details(
 
 @Composable
 private fun OrderHeader(
-    order: Order
+    order: Order,
+    onHeaderClicked: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -240,6 +316,9 @@ private fun OrderHeader(
             .background(
                 color = MaterialTheme.colors.surface
             )
+            .clickable {
+                onHeaderClicked()
+            }
             .padding(16.dp),
     ) {
         Column(

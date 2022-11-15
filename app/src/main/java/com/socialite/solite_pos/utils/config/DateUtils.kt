@@ -9,7 +9,7 @@ class DateUtils {
     companion object {
         private const val dbDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
         private const val dbDateFormat = "yyyy-MM-dd"
-        const val dateWithTimeFormat = "dd MMMM yyyy HH:mm"
+        const val DATE_WITH_TIME_FORMAT = "dd MMMM yyyy HH:mm"
         const val DATE_WITH_DAY_FORMAT = "EEE, dd MMMM yyyy"
         const val DATE_WITH_DAY_WITHOUT_YEAR_FORMAT = "EEE, d MMM"
         const val DATE_WITH_DAY_AND_TIME_FORMAT = "EEE, dd MMMM yyyy HH:mm"

@@ -97,5 +97,7 @@
     <string name="payments">Data pembayaran</string>
     <string name="cash_payment">Pembayaran tunai</string>
     <string name="payment_name">Nama pembayaran</string>
+    <string name="change_order_date">Merubah tanggal pesanan</string>
+    <string name="are_you_sure_change_order_date_to">Anda yakin akan merubah tanggal pesanan menjadi %s</string>
 
 </resources>

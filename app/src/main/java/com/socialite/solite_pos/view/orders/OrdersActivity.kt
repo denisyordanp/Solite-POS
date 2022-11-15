@@ -18,6 +18,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.SoliteActivity
@@ -109,12 +114,15 @@ class OrdersActivity : SoliteActivity() {
                         arguments = listOf(orderNoArgument)
                     ) {
                         it.arguments?.getString(OrderDetailDestinations.ORDER_NO)?.let { orderNo ->
-                            OrderDetail(
+                            OrderDetailView(
                                 orderNo = orderNo,
                                 orderViewModel = orderViewModel,
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
+                                timePicker = buildTimePicker(),
+                                datePicker = buildDatePicker(),
+                                fragmentManager = supportFragmentManager,
                                 onButtonClicked = { buttonType, orderWithProduct ->
                                     when (buttonType) {
                                         OrderButtonType.PRINT -> {
@@ -218,6 +226,18 @@ class OrdersActivity : SoliteActivity() {
             }
         }
     }
+
+    private fun buildTimePicker() = MaterialTimePicker.Builder()
+        .setTitleText(R.string.select_time)
+
+    private fun buildDatePicker() = MaterialDatePicker.Builder.datePicker()
+        .setCalendarConstraints(buildConstraint())
+        .setTitleText(R.string.select_date)
+        .setPositiveButtonText(R.string.select)
+
+    private fun buildConstraint() = CalendarConstraints.Builder()
+        .setValidator(DateValidatorPointBackward.now())
+        .build()
 
     private fun getExtraReport() = intent.getSerializableExtra(EXTRA_REPORT) as? ReportsParameter
 
