@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -69,9 +70,15 @@ fun OutComesView(
 
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    var selectedOutcome by remember { mutableStateOf<Outcome?>(null) }
+
+    if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
+        LocalSoftwareKeyboardController.current?.hide()
+    }
 
     fun onAddClicked() {
         scope.launch {
+            selectedOutcome = null
             modalState.show()
         }
     }
@@ -89,6 +96,7 @@ fun OutComesView(
                 start = newDate,
                 end = newDate
             )
+            picker.dismiss()
         }
         picker.show(fragmentManager, "")
     }
@@ -101,12 +109,14 @@ fun OutComesView(
                 topEnd = 16.dp
             ),
             sheetContent = {
-                NewOutcome(
+                OutcomeDetail(
                     date = selectedDate.start,
                     isTodayDate = DateUtils.isDateTimeIsToday(selectedDate.start),
                     timePicker = timePicker,
+                    datePicker = datePicker,
+                    outcome = selectedOutcome,
                     fragmentManager = fragmentManager,
-                    onCreateOutcome = {
+                    onSubmitOutcome = {
                         scope.launch {
                             mainViewModel.addNewOutcome(it)
                             modalState.hide()
@@ -124,7 +134,13 @@ fun OutComesView(
                     onDateClicked = {
                         onDateClicked()
                     },
-                    onBackClicked = onBackClicked
+                    onBackClicked = onBackClicked,
+                    onItemClicked = {
+                        scope.launch {
+                            selectedOutcome = it
+                            modalState.show()
+                        }
+                    }
                 )
             }
         )
@@ -146,6 +162,7 @@ private fun OutcomesContent(
     onAddClicked: (() -> Unit)? = null,
     onDateClicked: (() -> Unit)? = null,
     onBackClicked: () -> Unit,
+    onItemClicked: ((Outcome) -> Unit)? = null
 ) {
     Scaffold(
         topBar = {
@@ -166,6 +183,7 @@ private fun OutcomesContent(
                     mainViewModel = mainViewModel,
                     parameters = parameters,
                     onAddClicked = onAddClicked,
+                    onItemClicked = onItemClicked
                 )
             }
         }
@@ -178,6 +196,7 @@ private fun Outcomes(
     mainViewModel: MainViewModel,
     parameters: ReportsParameter,
     onAddClicked: (() -> Unit)? = null,
+    onItemClicked: ((Outcome) -> Unit)? = null
 ) {
 
     val outcomes = mainViewModel.getOutcome(parameters).collectAsState(initial = emptyList())
@@ -200,7 +219,8 @@ private fun Outcomes(
                 items(outcomes.value) {
                     OutcomeItem(
                         outcome = it,
-                        isTodayOnly = parameters.isTodayOnly()
+                        isTodayOnly = parameters.isTodayOnly(),
+                        onItemClicked = onItemClicked
                     )
                 }
 
@@ -298,12 +318,20 @@ private fun OutcomeHeader(
 @Composable
 private fun OutcomeItem(
     outcome: Outcome,
-    isTodayOnly: Boolean
+    isTodayOnly: Boolean,
+    onItemClicked: ((Outcome) -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colors.surface)
+            .run {
+                return@run if (onItemClicked != null) {
+                    clickable {
+                        onItemClicked(outcome)
+                    }
+                } else { this }
+            }
             .padding(16.dp)
     ) {
         Column(

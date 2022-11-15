@@ -91,6 +91,21 @@ class DateUtils {
             return dbDateTimeSimpleFormat.format(cal.time)
         }
 
+        fun strDateTimeReplaceDate(oldDate: String, newDate: String): String {
+            val oldDateAsDate = strToDate(oldDate)
+            val newDateAsDate = strToDate(newDate)
+
+            val calOldDate = Calendar.getInstance()
+            val calNewDate = Calendar.getInstance()
+
+            calOldDate.time = oldDateAsDate
+            calNewDate.time = newDateAsDate
+
+            calNewDate.set(Calendar.HOUR_OF_DAY, calOldDate.get(Calendar.HOUR_OF_DAY))
+            calNewDate.set(Calendar.MINUTE, calOldDate.get(Calendar.MINUTE))
+            return dbDateTimeSimpleFormat.format(calNewDate.time)
+        }
+
         val currentDate: String
             get() {
                 return dbDateSimpleFormat.format(currentTime)
