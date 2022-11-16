@@ -10,6 +10,7 @@ import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
+import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -31,6 +32,7 @@ import com.socialite.solite_pos.di.DomainInjection.provideGetProductVariantOptio
 import com.socialite.solite_pos.di.DomainInjection.provideNewOrder
 import com.socialite.solite_pos.di.DomainInjection.provideNewOutcome
 import com.socialite.solite_pos.di.DomainInjection.providePayOrder
+import com.socialite.solite_pos.di.DomainInjection.provideUpdateOrderProducts
 import com.socialite.solite_pos.di.RepositoryInjection.provideCategoriesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideCustomersRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideOrdersRepository
@@ -72,6 +74,7 @@ class ViewModelFactory private constructor(
     private val storeRepository: StoreRepository,
     private val settingRepository: SettingRepository,
     private val newOutcome: NewOutcome,
+    private val updateOrderProducts: UpdateOrderProducts,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -82,27 +85,28 @@ class ViewModelFactory private constructor(
                 synchronized(ViewModelFactory::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = ViewModelFactory(
-                            provideSoliteRepository(context),
-                            providePaymentsRepository(context),
-                            provideSupplierRepository(context),
-                            provideCustomersRepository(context),
-                            provideVariantsRepository(context),
-                            provideVariantOptionsRepository(context),
-                            provideCategoriesRepository(context),
-                            provideOutcomesRepository(context),
-                            provideProductsRepository(context),
-                            provideProductVariantsRepository(context),
-                            provideGetProductVariantOptions(context),
-                            provideOrdersRepository(context),
-                            provideNewOrder(context),
-                            provideGetProductOrder(context),
-                            provideGetIncomesRecapData(context),
-                            provideVariantMixesRepository(context),
-                            providePayOrder(context),
-                            provideGetOrdersGeneralMenuBadge(context),
-                            provideStoreRepository(context),
-                            provideSettingRepository(context),
-                            provideNewOutcome(context)
+                            repository = provideSoliteRepository(context),
+                            paymentsRepository = providePaymentsRepository(context),
+                            supplierRepository = provideSupplierRepository(context),
+                            customersRepository = provideCustomersRepository(context),
+                            variantsRepository = provideVariantsRepository(context),
+                            variantOptionsRepository = provideVariantOptionsRepository(context),
+                            categoriesRepository = provideCategoriesRepository(context),
+                            outcomesRepository = provideOutcomesRepository(context),
+                            productsRepository = provideProductsRepository(context),
+                            productVariantsRepository = provideProductVariantsRepository(context),
+                            getProductVariantOptions = provideGetProductVariantOptions(context),
+                            ordersRepository = provideOrdersRepository(context),
+                            newOrder = provideNewOrder(context),
+                            getProductOrder = provideGetProductOrder(context),
+                            getRecapData = provideGetIncomesRecapData(context),
+                            variantMixesRepository = provideVariantMixesRepository(context),
+                            payOrder = providePayOrder(context),
+                            getOrdersGeneralMenuBadge = provideGetOrdersGeneralMenuBadge(context),
+                            storeRepository = provideStoreRepository(context),
+                            settingRepository = provideSettingRepository(context),
+                            newOutcome = provideNewOutcome(context),
+                            updateOrderProducts = provideUpdateOrderProducts(context)
                         )
                     }
                 }
@@ -133,7 +137,8 @@ class ViewModelFactory private constructor(
                     getProductOrder = getProductOrder,
                     getRecapData = getRecapData,
                     payOrder = payOrder,
-                    getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge
+                    getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge,
+                    updateOrderProducts = updateOrderProducts
                 ) as T
             }
 

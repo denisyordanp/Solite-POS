@@ -8,6 +8,7 @@ import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.PayOrder
+import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
@@ -20,6 +21,7 @@ import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -31,7 +33,8 @@ class OrderViewModel(
     private val getProductOrder: GetProductOrder,
     private val getRecapData: GetRecapData,
     private val payOrder: PayOrder,
-    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge
+    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
+    private val updateOrderProducts: UpdateOrderProducts
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<OrderViewModel>() {
@@ -63,12 +66,13 @@ class OrderViewModel(
     fun getMenuBadge(date: String) = getOrdersGeneralMenuBadge(date)
 
     suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderDetail(orderNo)
+    fun getOrderData(orderNo: String) = orderRepository.getOrderData(orderNo)
 
-    suspend fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
+    fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
 
     fun getIncomes(parameters: ReportsParameter) = getRecapData(parameters)
 
-    fun newOrderImprovement(
+    fun newOrder(
         customer: Customer,
         isTakeAway: Boolean,
     ) {
@@ -87,6 +91,14 @@ class OrderViewModel(
     fun updateOrder(order: Order) {
         viewModelScope.launch {
             orderRepository.updateOrder(order)
+        }
+    }
+
+    fun updateOrderProducts(orderNo: String) {
+        viewModelScope.launch {
+            _currentBucket.value.products?.let {
+                updateOrderProducts.invoke(orderNo, it)
+            }
         }
     }
 
@@ -130,6 +142,22 @@ class OrderViewModel(
                     pay = pay
                 )
             )
+        }
+    }
+
+    fun createBucketForEdit(orderNo: String) {
+        viewModelScope.launch {
+            val order = getOrderDetail(orderNo)
+            order?.let {
+                val productsOrder = getProductOrder(orderNo).first()
+
+                val newBucket = BucketOrder(
+                    time = DateUtils.strToDate(it.order.orderTime).time,
+                    products = productsOrder
+                )
+
+                _currentBucket.value = newBucket
+            }
         }
     }
 

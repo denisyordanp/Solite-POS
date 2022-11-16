@@ -53,6 +53,8 @@ class OrdersRepositoryImpl(
         }
     }
 
+    override fun getOrderData(orderNo: String) = dao.getOrderData(orderNo)
+
     override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderByNo(orderNo)
 
     override suspend fun updateOrder(order: Order) = dao.updateOrder(order)

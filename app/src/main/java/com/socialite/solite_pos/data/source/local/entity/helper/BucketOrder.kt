@@ -18,7 +18,7 @@ data class BucketOrder(
         } ?: ""
     }
 
-    fun totalItems() = products?.count() ?: 0
+    fun totalItems() = products?.sumOf { it.amount } ?: 0
 
     fun getProductAmount(idProduct: Long): Int? {
         return products?.find {

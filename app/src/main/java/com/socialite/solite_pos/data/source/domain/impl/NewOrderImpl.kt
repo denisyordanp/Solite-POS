@@ -92,7 +92,7 @@ class NewOrderImpl(
         orderPref.orderCount = orderPref.orderCount + 1
     }
 
-    private fun insertOrderProduct(order: OrderWithProduct) {
+    private suspend fun insertOrderProduct(order: OrderWithProduct) {
         for (item in order.products) {
             if (item.product != null) {
 

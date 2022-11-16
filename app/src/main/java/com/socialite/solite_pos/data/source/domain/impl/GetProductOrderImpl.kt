@@ -13,8 +13,8 @@ class GetProductOrderImpl(
     private val dao: OrdersDao,
     private val productsDao: ProductsDao,
 ) : GetProductOrder {
-    override suspend fun invoke(orderNo: String): Flow<List<ProductOrderDetail>> {
-        return dao.getDetailOrdersLiveData(orderNo)
+    override fun invoke(orderNo: String): Flow<List<ProductOrderDetail>> {
+        return dao.getDetailOrders(orderNo)
             .map {
                 handleListDetail(it)
             }

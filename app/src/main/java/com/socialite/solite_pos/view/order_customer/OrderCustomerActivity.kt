@@ -137,7 +137,7 @@ class OrderCustomerActivity : SoliteActivity() {
                                         navController.popBackStack()
                                     },
                                     onNewOrder = { customer, isTakeAway ->
-                                        orderViewModel.newOrderImprovement(
+                                        orderViewModel.newOrder(
                                             customer = customer,
                                             isTakeAway = isTakeAway
                                         )

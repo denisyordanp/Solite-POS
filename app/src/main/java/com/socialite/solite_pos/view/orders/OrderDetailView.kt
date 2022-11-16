@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -23,7 +22,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +48,6 @@ import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.OrderMenus
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import kotlinx.coroutines.flow.first
 
 @Composable
 fun OrderDetailView(
@@ -60,20 +58,16 @@ fun OrderDetailView(
     fragmentManager: FragmentManager,
     onBackClicked: () -> Unit,
     onButtonClicked: (OrderButtonType, OrderWithProduct?) -> Unit,
+    onProductsClicked: () -> Unit
 ) {
 
-    var orderWithProducts by remember {
-        mutableStateOf<OrderWithProduct?>(null)
-    }
-
-    LaunchedEffect(key1 = orderNo) {
-        orderViewModel.getOrderDetail(orderNo)?.let {
-            val products = orderViewModel.getProductOrder(orderNo).first()
-            orderWithProducts = OrderWithProduct(
-                order = it,
-                products = products
-            )
-        }
+    val order = orderViewModel.getOrderData(orderNo).collectAsState(initial = null)
+    val products = orderViewModel.getProductOrder(orderNo).collectAsState(initial = emptyList())
+    val orderWithProducts = order.value?.run {
+        OrderWithProduct(
+            order = this,
+            products = products.value
+        )
     }
 
     var alertDoneState by remember { mutableStateOf(false) }
@@ -86,7 +80,7 @@ fun OrderDetailView(
 
     fun selectTime() {
         if (orderWithProducts != null && selectedDateTime != null) {
-            val hourMinute = DateUtils.strToHourAndMinute(orderWithProducts!!.order.order.orderTime)
+            val hourMinute = DateUtils.strToHourAndMinute(orderWithProducts.order.order.orderTime)
             val picker = timePicker.setHour(hourMinute.first)
                 .setMinute(hourMinute.second)
                 .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
@@ -139,6 +133,7 @@ fun OrderDetailView(
                     onHeaderClicked = {
                         selectDate()
                     },
+                    onProductsClicked = onProductsClicked,
                     onMenuClicked = { buttonType ->
                         when (buttonType) {
                             OrderButtonType.PRINT, OrderButtonType.QUEUE -> onButtonClicked(
@@ -247,9 +242,11 @@ fun OrderDetailView(
             descText = stringResource(R.string.are_you_sure_change_order_date_to, date),
             positiveAction = {
                 orderWithProducts?.order?.order?.let {
-                    orderViewModel.updateOrder(it.copy(
-                        orderTime = selectedDateTime!!
-                    ))
+                    orderViewModel.updateOrder(
+                        it.copy(
+                            orderTime = selectedDateTime!!
+                        )
+                    )
                 }
                 alertReplaceDate = false
                 onBackClicked()
@@ -268,7 +265,8 @@ private fun Details(
     modifier: Modifier = Modifier,
     orderWithProduct: OrderWithProduct,
     onMenuClicked: (OrderButtonType) -> Unit,
-    onHeaderClicked: () -> Unit
+    onHeaderClicked: () -> Unit,
+    onProductsClicked: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -284,12 +282,27 @@ private fun Details(
                     onHeaderClicked = onHeaderClicked
                 )
             }
-            itemsIndexed(orderWithProduct.products) { i, product ->
-                ProductOrder(
-                    number = (i + 1).toString(),
-                    productOrderDetail = product
-                )
+
+            item {
+                Column(
+                    modifier = Modifier
+                        .run {
+                            return@run if (orderWithProduct.order.order.isEditable()) {
+                                clickable {
+                                    onProductsClicked()
+                                }
+                            } else { this }
+                        }
+                ) {
+                    orderWithProduct.products.forEachIndexed { i, product ->
+                        ProductOrder(
+                            number = (i + 1).toString(),
+                            productOrderDetail = product
+                        )
+                    }
+                }
             }
+
             item {
                 OrderFooter(orderWithProduct = orderWithProduct)
             }
@@ -407,7 +420,6 @@ private fun ProductOrder(
             )
         )
     }
-    Spacer(modifier = Modifier.height(4.dp))
 }
 
 @Composable

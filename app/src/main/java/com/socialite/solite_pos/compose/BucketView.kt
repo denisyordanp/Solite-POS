@@ -36,6 +36,7 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 @Composable
 fun BucketView(
     orderViewModel: OrderViewModel,
+    isEditOrder: Boolean,
     onClickOrder: () -> Unit,
     onClearBucket: () -> Unit
 ) {
@@ -92,7 +93,9 @@ fun BucketView(
                         color = MaterialTheme.colors.primary,
                         shape = RoundedCornerShape(8.dp)
                     ),
-                buttonText = stringResource(id = R.string.order_now),
+                buttonText = stringResource(
+                    id = if (isEditOrder) R.string.edit_order else R.string.order_now
+                ),
                 onClick = onClickOrder
             )
         }

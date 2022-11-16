@@ -23,10 +23,13 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
+import com.socialite.solite_pos.view.order_customer.OrderSelectItems
+import com.socialite.solite_pos.view.order_customer.OrderSelectVariants
 import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
@@ -34,6 +37,7 @@ import com.socialite.solite_pos.view.ui.OrderMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -41,6 +45,7 @@ class OrdersActivity : SoliteActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var productViewModel: ProductViewModel
 
     private var printBill: PrintBill? = null
 
@@ -63,6 +68,7 @@ class OrdersActivity : SoliteActivity() {
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
         mainViewModel = MainViewModel.getMainViewModel(this)
+        productViewModel = ProductViewModel.getMainViewModel(this)
 
         printBill = PrintBill(this)
 
@@ -72,9 +78,8 @@ class OrdersActivity : SoliteActivity() {
             SolitePOSTheme {
 
                 val navController = rememberNavController()
-                var defaultTabPage by remember {
-                    mutableStateOf(0)
-                }
+                var defaultTabPage by remember { mutableStateOf(0) }
+                var isInitialBucket by remember { mutableStateOf(false) }
 
                 NavHost(
                     navController = navController,
@@ -185,6 +190,12 @@ class OrdersActivity : SoliteActivity() {
                                         }
                                     }
                                 },
+                                onProductsClicked = {
+                                    isInitialBucket = false
+                                    navController.navigate(
+                                        OrderDetailDestinations.orderEditProducts(orderNo)
+                                    )
+                                }
                             )
                         }
                     }
@@ -220,6 +231,75 @@ class OrdersActivity : SoliteActivity() {
                                     }
                                 )
                             }
+                        }
+                    }
+                    composable(
+                        route = OrderDetailDestinations.ORDER_EDIT_PRODUCTS,
+                        arguments = listOf(orderNoArgument)
+                    ) {
+                        it.arguments?.getString(OrderDetailDestinations.ORDER_NO)?.let { orderNo ->
+
+                            if (!isInitialBucket) {
+                                orderViewModel.createBucketForEdit(orderNo)
+                                isInitialBucket = true
+                            }
+
+                            OrderSelectItems(
+                                productViewModel = productViewModel,
+                                orderViewModel = orderViewModel,
+                                onItemClick = { product, isAdd, hasVariant ->
+                                    lifecycleScope.launch {
+                                        if (hasVariant) {
+                                            navController.navigate(
+                                                OrderDetailDestinations.orderSelectVariants(
+                                                    product.id
+                                                )
+                                            )
+                                        } else {
+                                            if (isAdd) {
+                                                orderViewModel.addProductToBucket(
+                                                    ProductOrderDetail.productNoVariant(product)
+                                                )
+                                            } else {
+                                                orderViewModel.decreaseProduct(
+                                                    ProductOrderDetail.productNoVariant(product)
+                                                )
+                                            }
+                                        }
+                                    }
+                                },
+                                onClickOrder = {
+                                    orderViewModel.updateOrderProducts(orderNo)
+                                    navController.popBackStack()
+                                },
+                                onBackClicked = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                    }
+                    val productIdArgument =
+                        navArgument(name = OrderDetailDestinations.PRODUCT_ID) {
+                            type = NavType.LongType
+                        }
+                    composable(
+                        route = OrderDetailDestinations.ORDER_SELECT_VARIANTS,
+                        arguments = listOf(productIdArgument)
+                    ) {
+                        it.arguments?.getLong(OrderDetailDestinations.PRODUCT_ID)?.let { id ->
+                            OrderSelectVariants(
+                                productId = id,
+                                viewModel = productViewModel,
+                                onBackClicked = {
+                                    navController.popBackStack()
+                                },
+                                onAddToBucketClicked = {
+                                    lifecycleScope.launch {
+                                        orderViewModel.addProductToBucket(it)
+                                        navController.popBackStack()
+                                    }
+                                }
+                            )
                         }
                     }
                 }
