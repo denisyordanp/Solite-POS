@@ -103,7 +103,7 @@ data class Order(
         false
     )
 
-    fun isEditable() = status == ON_PROCESS
+    fun isEditable() = status == ON_PROCESS || status == NEED_PAY
 
     fun getQueueNumber(): String {
         return orderNo.substring(orderNo.length - 3, orderNo.length)

@@ -5,20 +5,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
 import java.io.Serializable
 
 data class ProductOrderDetail(
-    var product: Product?,
-    var variants: List<VariantOption>,
-    var mixProducts: List<ProductMixOrderDetail>,
-    var amount: Int,
-    var type: Int?
+    val product: Product?,
+    val variants: List<VariantOption>,
+    val mixProducts: List<ProductMixOrderDetail>,
+    val amount: Int
 ) : Serializable {
-    constructor(
-        product: Product?,
-        variants: List<VariantOption>,
-        mixVariants: List<ProductMixOrderDetail>,
-        amount: Int
-    ) : this(product, variants, mixVariants, amount, null)
-
-    constructor(type: Int) : this(null, listOf(), listOf(), 0, type)
 
     fun generateVariantsString(): String {
         return if (variants.isEmpty()) {
@@ -82,7 +73,7 @@ data class ProductOrderDetail(
         fun productNoVariant(product: Product) = ProductOrderDetail(
             product = product,
             variants = listOf(),
-            mixVariants = listOf(),
+            mixProducts = listOf(),
             amount = 1,
         )
 
@@ -90,8 +81,7 @@ data class ProductOrderDetail(
             product = null,
             variants = listOf(),
             mixProducts = listOf(),
-            amount = 0,
-            type = null
+            amount = 0
         )
     }
 }
