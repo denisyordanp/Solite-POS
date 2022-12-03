@@ -9,6 +9,7 @@ import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
+import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
@@ -23,6 +24,7 @@ import com.socialite.solite_pos.data.source.repository.impl.OutcomesRepositoryIm
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.ProductVariantsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.ProductsRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.PromosRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
@@ -107,5 +109,10 @@ object RepositoryInjection {
 
     fun provideSettingRepository(context: Context): SettingRepository {
         return SettingRepositoryImpl.getDataStoreInstance(context)
+    }
+
+    fun providePromosRepository(context: Context): PromosRepository {
+        val database = getInstance(context)
+        return PromosRepositoryImpl.getInstance(dao = database.promoDao())
     }
 }

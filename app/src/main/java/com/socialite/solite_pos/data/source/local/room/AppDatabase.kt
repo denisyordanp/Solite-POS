@@ -49,10 +49,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
         VariantMix::class,
         VariantProduct::class,
         VariantOption::class,
-        Store::class],
-    version = 5,
+        Store::class,
+        Promo::class],
+    version = 7,
 //    autoMigrations = [
-//        AutoMigration(from = 4, to = 5)
+//        AutoMigration(from = 6, to = 7)
 //    ]
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -70,6 +71,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun ordersDao(): OrdersDao
     abstract fun variantMixesDao(): VariantMixesDao
     abstract fun storeDao(): StoreDao
+    abstract fun promoDao(): PromosDao
 
     companion object {
 
@@ -86,6 +88,13 @@ abstract class AppDatabase : RoomDatabase() {
                             "`${Promo.DESC}` TEXT NOT NULL, `${Promo.CASH}` INTEGER DEFAULT 0 NOT NULL, " +
                             "`${Promo.STATUS}` INTEGER DEFAULT 0 NOT NULL, `${UPLOAD}` INTEGER DEFAULT 0 NOT NULL)"
                 )
+                database.execSQL("CREATE INDEX IF NOT EXISTS `index_promo_id_promo` ON `${Promo.DB_NAME}` (`${Promo.ID}`)")
+            }
+        }
+
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE INDEX IF NOT EXISTS `index_promo_id_promo` ON `${Promo.DB_NAME}` (`${Promo.ID}`)")
             }
         }
 
@@ -97,7 +106,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         DB_NAME
                     )
-                        .addMigrations(MIGRATION_4_5)
+                        .addMigrations(MIGRATION_4_5, MIGRATION_6_7)
                         .allowMainThreadQueries()
                         .build()
                 }
@@ -106,3 +115,4 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
+
