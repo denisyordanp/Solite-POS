@@ -12,21 +12,23 @@ data class OrderWithProduct(
 
 	val grandTotal: Long
 		get() {
-			var total = 0L
-			for (item in products){
-				if (item.product != null){
-					total += item.product!!.sellPrice * item.amount
-				}
+			return products.sumOf {
+				it.product?.let { pr ->
+					pr.sellPrice * it.amount
+				} ?: 0
 			}
-			return total
 		}
+
+	val totalPromo: Long
+		get() = order.orderPromo?.totalPromo ?: 0L
+
+	val grandTotalWithPromo: Long
+		get() { return grandTotal - totalPromo}
 
 	val totalItem: Int
 	get() {
-		var total = 0
-		for (item in products){
-			total += item.amount
+		return products.sumOf {
+			it.amount
 		}
-		return total
 	}
 }

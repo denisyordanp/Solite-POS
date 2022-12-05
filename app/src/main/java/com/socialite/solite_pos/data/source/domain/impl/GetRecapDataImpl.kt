@@ -27,7 +27,7 @@ class GetRecapDataImpl(
 
                 Income(
                     date = it.order.orderTime,
-                    total = orderWithProduct.grandTotal,
+                    total = orderWithProduct.grandTotalWithPromo,
                     payment = it.payment?.name ?: "",
                     isCash = it.payment?.isCash ?: false
                 )

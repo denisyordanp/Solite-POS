@@ -80,7 +80,7 @@ fun BasicEditText(
                 DisabledContent(value = value, placeHolder = placeHolder)
             }
         }
-        if (isEnabled) {
+        if (isEnabled && value.isNotEmpty()) {
             Icon(
                 modifier = Modifier
                     .size(16.dp)

@@ -8,11 +8,13 @@ import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.local.entity.room.master.Store
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
+import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
@@ -34,6 +36,7 @@ class MainViewModel(
     private val outcomesRepository: OutcomesRepository,
     private val storeRepository: StoreRepository,
     private val settingRepository: SettingRepository,
+    private val promosRepository: PromosRepository,
     private val newOutcome: NewOutcome
 ) : ViewModel() {
 
@@ -86,8 +89,6 @@ class MainViewModel(
         }
     }
 
-    val suppliers = supplierRepository.getSuppliers()
-
     fun insertSupplier(data: Supplier) {
         viewModelScope.launch {
             supplierRepository.insertSupplier(data)
@@ -111,6 +112,22 @@ class MainViewModel(
     fun updatePayment(data: Payment) {
         viewModelScope.launch {
             paymentRepository.updatePayment(data)
+        }
+    }
+
+    fun getPromos(status: Promo.Status): Flow<List<Promo>> {
+        return promosRepository.getPromos(Promo.filter(status))
+    }
+
+    fun insertPromo(data: Promo) {
+        viewModelScope.launch {
+            promosRepository.insertPromo(data)
+        }
+    }
+
+    fun updatePromo(data: Promo) {
+        viewModelScope.launch {
+            promosRepository.updatePromo(data)
         }
     }
 

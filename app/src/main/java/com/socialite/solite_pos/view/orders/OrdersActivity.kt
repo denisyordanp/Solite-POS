@@ -214,12 +214,14 @@ class OrdersActivity : SoliteActivity() {
                                     onBackClicked = {
                                         navController.popBackStack()
                                     },
-                                    onPayClicked = { order, payment, pay ->
+                                    onPayClicked = { order, payment, pay, promo, totalPromo ->
                                         lifecycleScope.launch {
                                             orderViewModel.payOrder(
                                                 order = order,
                                                 payment = payment,
-                                                pay = pay
+                                                pay = pay,
+                                                promo = promo,
+                                                totalPromo = totalPromo
                                             )
                                             defaultTabPage = OrderMenus.DONE.status
                                             navController.navigate(OrderDetailDestinations.ORDERS) {

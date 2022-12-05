@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 6,
-    "identityHash": "a3e46d30c67c4f5bea68c83e4c76d39c",
+    "version": 4,
+    "identityHash": "741e9a8daabcda3946c89376890759ae",
     "entities": [
       {
         "tableName": "category",
@@ -1551,173 +1551,12 @@
           }
         ],
         "foreignKeys": []
-      },
-      {
-        "tableName": "promo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_promo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `cash` INTEGER NOT NULL, `value` INTEGER, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id_promo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "desc",
-            "columnName": "desc",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isCash",
-            "columnName": "cash",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "value",
-            "columnName": "value",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "isActive",
-            "columnName": "status",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isUploaded",
-            "columnName": "upload",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id_promo"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [
-          {
-            "name": "index_promo_id_promo",
-            "unique": false,
-            "columnNames": [
-              "id_promo"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_promo_id_promo` ON `${TABLE_NAME}` (`id_promo`)"
-          }
-        ],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "order_promo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_promo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order_no` TEXT NOT NULL, `id_promo` INTEGER NOT NULL, `total_promo` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_promo`) REFERENCES `promo`(`id_promo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id_order_promo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "orderNO",
-            "columnName": "order_no",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "idPromo",
-            "columnName": "id_promo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "totalPromo",
-            "columnName": "total_promo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isUpload",
-            "columnName": "upload",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id_order_promo"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [
-          {
-            "name": "index_order_promo_id_order_promo",
-            "unique": false,
-            "columnNames": [
-              "id_order_promo"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_promo_id_order_promo` ON `${TABLE_NAME}` (`id_order_promo`)"
-          },
-          {
-            "name": "index_order_promo_order_no",
-            "unique": false,
-            "columnNames": [
-              "order_no"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_promo_order_no` ON `${TABLE_NAME}` (`order_no`)"
-          },
-          {
-            "name": "index_order_promo_id_promo",
-            "unique": false,
-            "columnNames": [
-              "id_promo"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_promo_id_promo` ON `${TABLE_NAME}` (`id_promo`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "order",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "order_no"
-            ],
-            "referencedColumns": [
-              "order_no"
-            ]
-          },
-          {
-            "table": "promo",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "id_promo"
-            ],
-            "referencedColumns": [
-              "id_promo"
-            ]
-          }
-        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3e46d30c67c4f5bea68c83e4c76d39c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '741e9a8daabcda3946c89376890759ae')"
     ]
   }
 }

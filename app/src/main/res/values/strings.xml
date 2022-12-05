@@ -15,6 +15,7 @@
     <string name="category">Kategori</string>
     <string name="variant">Varian</string>
     <string name="payment">Pembayaran</string>
+    <string name="promo">Promo</string>
     <string name="supplier">Supplier</string>
     <string name="purchase">Pembelian</string>
     <string name="sales_recap">Rekap penjualan</string>
@@ -38,8 +39,10 @@
     <string name="pay_the_order">Pembayaran pesanan</string>
     <string name="are_you_sure_will_pay_this_order">Anda yakin akan melakukan pembayaran pada pesanan ini?</string>
     <string name="cash_amount">Jumlah uang</string>
+    <string name="promo_amount">Jumlah promo</string>
     <string name="cash_change">Kembalian</string>
     <string name="select_payment">Pilih pembayaran</string>
+    <string name="select_promo">Pilih promo</string>
     <string name="pay">Bayar</string>
     <string name="pay_amount_can_not_less_than_total_pay">Jumlah uang tidak boleh kurang dari total bayar</string>
     <string name="please_select_payment">Mohon pilih pembayaran</string>
@@ -95,11 +98,21 @@
     <string name="cash">Tunai</string>
     <string name="non_cash">Non-tunai</string>
     <string name="payments">Data pembayaran</string>
+    <string name="cash_promo">Promo tunai</string>
+    <string name="percentage_promo">Promo persentase</string>
+    <string name="promos">Data promo</string>
     <string name="cash_payment">Pembayaran tunai</string>
     <string name="payment_name">Nama pembayaran</string>
+    <string name="promo_name">Nama promo</string>
+    <string name="promo_cash">Promo tunai</string>
+    <string name="promo_percentage">Promo persentase</string>
+    <string name="percentage_1_100">Persentase (1 – 100)</string>
     <string name="change_order_date">Merubah tanggal pesanan</string>
     <string name="are_you_sure_change_order_date_to">Anda yakin akan merubah tanggal pesanan menjadi %s</string>
     <string name="edit_order">Rubah pesanan</string>
     <string name="are_you_sure_edit_this_order_products">Anda yakin akan merubah produk pesanan ini?</string>
+    <string name="define_cash_value">Tentukan nilai tunai</string>
+    <string name="total_cash_promo">Jumlah promo tunai</string>
+    <string name="manual_input">Input manual</string>
 
 </resources>

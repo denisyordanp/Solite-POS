@@ -46,6 +46,7 @@ import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 import com.socialite.solite_pos.view.viewModel.MainViewModel
@@ -61,7 +62,7 @@ fun OrderPaymentView(
     mainViewModel: MainViewModel,
     orderViewModel: OrderViewModel,
     onBackClicked: () -> Unit,
-    onPayClicked: (order: Order, payment: Payment, pay: Long) -> Unit
+    onPayClicked: (order: Order, payment: Payment, pay: Long, promo: Promo?, total: Long?) -> Unit
 ) {
 
     var orderWithProducts by remember {
@@ -106,14 +107,21 @@ private fun PaymentContent(
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel,
     orderWithProduct: OrderWithProduct,
-    onPayClicked: (order: Order, payment: Payment, pay: Long) -> Unit
+    onPayClicked: (order: Order, payment: Payment, pay: Long, promo: Promo?, total: Long?) -> Unit
 ) {
+
+    val keyboard = LocalSoftwareKeyboardController.current
 
     val query = Payment.filter(Payment.ACTIVE)
     val payments = mainViewModel.getPayments(query).collectAsState(initial = emptyList())
+    val promos = mainViewModel.getPromos(Promo.Status.ACTIVE).collectAsState(initial = emptyList())
     val cashSuggestions = mainViewModel.cashSuggestions.collectAsState(initial = null)
 
     var paymentExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    var promoExpanded by remember {
         mutableStateOf(false)
     }
 
@@ -121,9 +129,23 @@ private fun PaymentContent(
         mutableStateOf<Payment?>(null)
     }
 
+    var selectedPromo by remember {
+        mutableStateOf<Promo?>(null)
+    }
+
     var cashAmount by remember {
         mutableStateOf(Pair(0L, false))
     }
+
+    var manualInputPromo by remember {
+        mutableStateOf<Long?>(null)
+    }
+
+    val totalPromo = selectedPromo?.calculatePromo(
+        total = orderWithProduct.grandTotal,
+        manualInput = manualInputPromo
+    ) ?: 0L
+    val grandTotal = orderWithProduct.grandTotal - totalPromo
 
     Box(
         modifier = modifier
@@ -133,15 +155,70 @@ private fun PaymentContent(
             modifier = Modifier
                 .align(Alignment.TopCenter)
         ) {
+
+            if (promos.value.isNotEmpty()) {
+                basicDropdown(
+                    isExpanded = promoExpanded,
+                    title = R.string.select_promo,
+                    selectedItem = selectedPromo?.name,
+                    items = promos.value,
+                    onHeaderClicked = {
+                        promoExpanded = !promoExpanded
+                    },
+                    onSelectedItem = {
+                        selectedPromo = if (it == selectedPromo) {
+                            null
+                        } else {
+                            it as Promo
+                        }
+                        promoExpanded = false
+                    }
+                )
+                if (selectedPromo?.isManualInput() == true) {
+                    item {
+                        BasicEditText(
+                            modifier = Modifier
+                                .background(color = MaterialTheme.colors.surface)
+                                .padding(16.dp),
+                            value = manualInputPromo?.toString() ?: "",
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done,
+                            visualTransformation = ThousandAndSuggestionVisualTransformation(cashAmount.second),
+                            placeHolder = stringResource(R.string.promo_amount),
+                            onValueChange = {
+                                val amount = it.toLongOrNull() ?: 0L
+                                manualInputPromo = amount
+                            },
+                            onAction = {
+                                keyboard?.hide()
+                            }
+                        )
+                    }
+                }
+                item {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+
             item {
-                Text(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = MaterialTheme.colors.surface)
-                        .padding(16.dp),
-                    text = "Rp. ${orderWithProduct.grandTotal.thousand()}",
-                    style = MaterialTheme.typography.h3
-                )
+                        .padding(16.dp)
+                ) {
+                    selectedPromo?.let {
+                        Text(
+                            text = "Rp. ${orderWithProduct.grandTotal.thousand()} - ${it.name}",
+                            style = MaterialTheme.typography.subtitle1
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+                    Text(
+                        text = "Rp. ${grandTotal.thousand()}",
+                        style = MaterialTheme.typography.h3
+                    )
+                }
                 Spacer(modifier = Modifier.height(4.dp))
             }
 
@@ -163,13 +240,13 @@ private fun PaymentContent(
                 if (payment.isCash) {
                     item {
                         PaymentCashOption(
-                            totalAmount = orderWithProduct.grandTotal,
+                            totalAmount = grandTotal,
                             cashAmount = cashAmount,
                             cashSuggestions = cashSuggestions.value,
                             onAmountChange = {
                                 mainViewModel.addCashInput(
                                     it.first,
-                                    orderWithProduct.grandTotal
+                                    grandTotal
                                 )
                                 cashAmount = it
                             }
@@ -183,13 +260,15 @@ private fun PaymentContent(
             modifier = Modifier
                 .align(Alignment.BottomCenter),
             selectedPayment = selectedPayment,
-            isEnough = cashAmount.first >= orderWithProduct.grandTotal,
+            isEnough = cashAmount.first >= grandTotal,
             onPayClicked = {
                 selectedPayment?.let {
                     onPayClicked(
                         orderWithProduct.order.order,
                         it,
-                        cashAmount.first
+                        cashAmount.first,
+                        selectedPromo,
+                        totalPromo
                     )
                 }
             }
@@ -207,8 +286,6 @@ private fun PaymentCashOption(
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
-
-    Spacer(modifier = Modifier.height(4.dp))
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()

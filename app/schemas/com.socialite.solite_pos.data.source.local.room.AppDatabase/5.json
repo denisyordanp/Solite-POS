@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "c85cb42c099c5960c7c03498d19c785e",
+    "identityHash": "ec0f8efa8eb804e3342dfde9f7949b71",
     "entities": [
       {
         "tableName": "category",
@@ -1554,7 +1554,7 @@
       },
       {
         "tableName": "promo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_promo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `cash` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_promo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `cash` INTEGER NOT NULL, `value` INTEGER, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1579,6 +1579,12 @@
             "columnName": "cash",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "isActive",
@@ -1616,7 +1622,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c85cb42c099c5960c7c03498d19c785e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec0f8efa8eb804e3342dfde9f7949b71')"
     ]
   }
 }

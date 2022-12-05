@@ -18,6 +18,7 @@ import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
+import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
@@ -40,6 +41,7 @@ import com.socialite.solite_pos.di.RepositoryInjection.provideOutcomesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.providePaymentsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideProductVariantsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideProductsRepository
+import com.socialite.solite_pos.di.RepositoryInjection.providePromosRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSettingRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSoliteRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideStoreRepository
@@ -75,6 +77,7 @@ class ViewModelFactory private constructor(
     private val settingRepository: SettingRepository,
     private val newOutcome: NewOutcome,
     private val updateOrderProducts: UpdateOrderProducts,
+    private val promosRepository: PromosRepository,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -106,7 +109,8 @@ class ViewModelFactory private constructor(
                             storeRepository = provideStoreRepository(context),
                             settingRepository = provideSettingRepository(context),
                             newOutcome = provideNewOutcome(context),
-                            updateOrderProducts = provideUpdateOrderProducts(context)
+                            updateOrderProducts = provideUpdateOrderProducts(context),
+                            promosRepository = providePromosRepository(context)
                         )
                     }
                 }
@@ -126,7 +130,8 @@ class ViewModelFactory private constructor(
                     outcomesRepository = outcomesRepository,
                     storeRepository = storeRepository,
                     settingRepository = settingRepository,
-                    newOutcome = newOutcome
+                    newOutcome = newOutcome,
+                    promosRepository = promosRepository
                 ) as T
             }
 

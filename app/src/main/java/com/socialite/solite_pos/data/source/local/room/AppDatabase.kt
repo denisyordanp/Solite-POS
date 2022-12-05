@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.local.room
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -11,6 +12,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixPro
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
@@ -50,11 +52,12 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
         VariantProduct::class,
         VariantOption::class,
         Store::class,
-        Promo::class],
-    version = 7,
-//    autoMigrations = [
-//        AutoMigration(from = 6, to = 7)
-//    ]
+        Promo::class,
+        OrderPromo::class],
+    version = 6,
+    autoMigrations = [
+        AutoMigration(from = 5, to = 6),
+    ]
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun soliteDao(): SoliteDao
@@ -85,15 +88,9 @@ abstract class AppDatabase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     "CREATE TABLE IF NOT EXISTS `${Promo.DB_NAME}` (`${Promo.ID}` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `${Promo.NAME}` TEXT NOT NULL, " +
-                            "`${Promo.DESC}` TEXT NOT NULL, `${Promo.CASH}` INTEGER DEFAULT 0 NOT NULL, " +
+                            "`${Promo.DESC}` TEXT NOT NULL, `${Promo.CASH}` INTEGER DEFAULT 0 NOT NULL, `${Promo.VALUE}` INTEGER," +
                             "`${Promo.STATUS}` INTEGER DEFAULT 0 NOT NULL, `${UPLOAD}` INTEGER DEFAULT 0 NOT NULL)"
                 )
-                database.execSQL("CREATE INDEX IF NOT EXISTS `index_promo_id_promo` ON `${Promo.DB_NAME}` (`${Promo.ID}`)")
-            }
-        }
-
-        private val MIGRATION_6_7 = object : Migration(6, 7) {
-            override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("CREATE INDEX IF NOT EXISTS `index_promo_id_promo` ON `${Promo.DB_NAME}` (`${Promo.ID}`)")
             }
         }
@@ -106,7 +103,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         DB_NAME
                     )
-                        .addMigrations(MIGRATION_4_5, MIGRATION_6_7)
+                        .addMigrations(MIGRATION_4_5)
                         .allowMainThreadQueries()
                         .build()
                 }

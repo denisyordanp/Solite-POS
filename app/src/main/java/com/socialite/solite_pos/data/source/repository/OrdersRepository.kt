@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.repository
 
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
@@ -16,4 +17,5 @@ interface OrdersRepository {
     suspend fun updateOrder(order: Order)
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
+    suspend fun insertNewPromoOrder(promo: OrderPromo)
 }

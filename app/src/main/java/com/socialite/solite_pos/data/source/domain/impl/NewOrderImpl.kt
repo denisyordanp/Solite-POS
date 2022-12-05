@@ -54,7 +54,7 @@ class NewOrderImpl(
             store = store,
             isTakeAway = isTakeAway,
         )
-        return OrderData(
+        return OrderData.newOrder(
             order = order,
             customer = customer
         )
@@ -96,10 +96,10 @@ class NewOrderImpl(
         for (item in order.products) {
             if (item.product != null) {
 
-                val detail = OrderDetail(order.order.order.orderNo, item.product!!.id, item.amount)
+                val detail = OrderDetail(order.order.order.orderNo, item.product.id, item.amount)
                 detail.id = dao.insertDetailOrder(detail)
 
-                if (item.product!!.isMix) {
+                if (item.product.isMix) {
                     for (p in item.mixProducts) {
 
                         // TODO: No stock needed for now

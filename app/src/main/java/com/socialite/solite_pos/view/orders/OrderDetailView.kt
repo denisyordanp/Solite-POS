@@ -442,8 +442,27 @@ private fun OrderFooter(
         Column(
             horizontalAlignment = Alignment.End
         ) {
+            orderWithProduct.order.promo?.let {
+                Text(
+                    text = "Rp. ${orderWithProduct.grandTotal.thousand()}",
+                    style = MaterialTheme.typography.body1
+                )
+                Row {
+                    Text(
+                        text = it.name,
+                        style = MaterialTheme.typography.body1.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Rp. ${orderWithProduct.totalPromo.thousand()}",
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            }
             Text(
-                text = "Rp. ${orderWithProduct.grandTotal.thousand()}",
+                text = "Rp. ${orderWithProduct.grandTotalWithPromo.thousand()}",
                 style = MaterialTheme.typography.body1.copy(
                     fontWeight = FontWeight.Bold
                 )

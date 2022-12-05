@@ -30,6 +30,7 @@ import com.socialite.solite_pos.view.store.categories.CategoryMasterView
 import com.socialite.solite_pos.view.store.payments.PaymentMasterView
 import com.socialite.solite_pos.view.store.product.ProductDetailMaster
 import com.socialite.solite_pos.view.store.product.ProductsMaster
+import com.socialite.solite_pos.view.store.promo.PromoMasterView
 import com.socialite.solite_pos.view.store.recap.RecapMainView
 import com.socialite.solite_pos.view.store.stores.StoresView
 import com.socialite.solite_pos.view.store.variants.VariantView
@@ -96,7 +97,6 @@ class StoreActivity : SoliteActivity() {
                                     MasterMenus.VARIANT -> {
                                         navController.navigate(StoreDestinations.MASTER_VARIANTS)
                                     }
-//                                    MasterMenus.SUPPLIER -> goToSupplierActivity()
                                 }
                             },
                             onStoreMenuClicked = {
@@ -104,18 +104,19 @@ class StoreActivity : SoliteActivity() {
                                     StoreMenus.SALES_RECAP -> {
                                         navController.navigate(StoreDestinations.MASTER_RECAP)
                                     }
-//                                    StoreMenus.PURCHASE -> goToPurchaseActivity()
                                     StoreMenus.OUTCOMES -> {
                                         OutcomesActivity.createInstanceForRecap(this@StoreActivity)
                                     }
 
-//                                    StoreMenus.PAYMENT -> goToPaymentActivity()
                                     StoreMenus.PAYMENT -> {
                                         navController.navigate(StoreDestinations.MASTER_PAYMENT)
                                     }
 
                                     StoreMenus.STORE -> {
                                         navController.navigate(StoreDestinations.MASTER_STORES)
+                                    }
+                                    StoreMenus.PROMO -> {
+                                        navController.navigate(StoreDestinations.MASTER_PROMO)
                                     }
 
                                     else -> {
@@ -127,6 +128,14 @@ class StoreActivity : SoliteActivity() {
                     }
                     composable(StoreDestinations.MASTER_PAYMENT) {
                         PaymentMasterView(
+                            mainViewModel = mainViewModel,
+                            onBackClicked = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
+                    composable(StoreDestinations.MASTER_PROMO) {
+                        PromoMasterView(
                             mainViewModel = mainViewModel,
                             onBackClicked = {
                                 navController.popBackStack()

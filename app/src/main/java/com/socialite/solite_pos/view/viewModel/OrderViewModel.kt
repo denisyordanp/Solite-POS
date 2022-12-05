@@ -12,9 +12,11 @@ import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
@@ -132,15 +134,24 @@ class OrderViewModel(
         }
     }
 
-    fun payOrder(order: Order, payment: Payment, pay: Long) {
+    fun payOrder(order: Order, payment: Payment, pay: Long, promo: Promo?, totalPromo: Long?) {
         viewModelScope.launch {
+            val newPromo = if (promo != null && totalPromo != null) {
+                OrderPromo.newPromo(
+                    orderNo = order.orderNo,
+                    promo = promo,
+                    totalPromo = totalPromo
+                )
+            } else null
+
             payOrder.invoke(
                 order = order,
                 payment = OrderPayment(
                     orderNo = order.orderNo,
                     idPayment = payment.id,
                     pay = pay
-                )
+                ),
+                promo = newPromo
             )
         }
     }
