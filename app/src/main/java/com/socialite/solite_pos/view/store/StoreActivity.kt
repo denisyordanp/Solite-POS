@@ -19,8 +19,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.firebase.auth.FirebaseAuth
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.view.OpeningActivity
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
@@ -118,7 +120,7 @@ class StoreActivity : SoliteActivity() {
                                     StoreMenus.PROMO -> {
                                         navController.navigate(StoreDestinations.MASTER_PROMO)
                                     }
-
+                                    StoreMenus.LOGOUT -> { logout() }
                                     else -> {
                                         // Do nothing
                                     }
@@ -254,6 +256,19 @@ class StoreActivity : SoliteActivity() {
                 }
             }
         }
+    }
+
+    private fun logout() {
+        val auth = FirebaseAuth.getInstance()
+        auth.signOut()
+        goToOpening()
+    }
+
+    private fun goToOpening() {
+        val intent = Intent(this, OpeningActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     private fun buildRecapDatePicker() = MaterialDatePicker.Builder.dateRangePicker()

@@ -119,7 +119,8 @@
     <string name="fill_with_email_correct_format">Masukan format email yang benar</string>
     <string name="password_must_more_than_8_character">Password harus lebih dari 8 karakter</string>
     <string name="confirm_password_must_match_with_password">Konfirmasi password harus sama dengan password</string>
-    <string name="enter">Masuk</string>
+    <string name="login">Masuk</string>
+    <string name="logout">Keluar</string>
     <string name="register">Daftar</string>
     <string name="registration_form">Form pendaftaran</string>
     <string name="enter_password">Masukan password</string>

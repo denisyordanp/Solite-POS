@@ -100,7 +100,8 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
-                buttonText = stringResource(R.string.enter),
+                isEnabled = email.isNotEmpty() && password.isNotEmpty(),
+                buttonText = stringResource(R.string.login),
                 backgroundColor = MaterialTheme.colors.surface,
                 onClick = {
                     onLogin(email, password)
