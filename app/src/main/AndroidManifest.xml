@@ -25,7 +25,9 @@
         <activity
             android:name=".view.order_customer.OrderCustomerActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.LoginActivity" />
+        <activity
+            android:name=".view.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.settings.SettingsActivity" />
         <activity android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity" />
         <activity android:name=".view.bluetooth.BluetoothDeviceListActivity" />

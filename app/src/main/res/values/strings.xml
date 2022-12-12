@@ -114,5 +114,17 @@
     <string name="define_cash_value">Tentukan nilai tunai</string>
     <string name="total_cash_promo">Jumlah promo tunai</string>
     <string name="manual_input">Input manual</string>
+    <string name="enter_email">Masukan email</string>
+    <string name="field_can_not_emtpy">Kolom tidak boleh kosong</string>
+    <string name="fill_with_email_correct_format">Masukan format email yang benar</string>
+    <string name="password_must_more_than_8_character">Password harus lebih dari 8 karakter</string>
+    <string name="confirm_password_must_match_with_password">Konfirmasi password harus sama dengan password</string>
+    <string name="enter">Masuk</string>
+    <string name="register">Daftar</string>
+    <string name="registration_form">Form pendaftaran</string>
+    <string name="enter_password">Masukan password</string>
+    <string name="enter_confirm_password">Masukan konfirmasi password</string>
+    <string name="enter_store_name">Masukan nama toko anda</string>
+    <string name="email_or_password_not_found_please_try_again">Email atau password tidak ditemukan, silahkan coba lagi</string>
 
 </resources>

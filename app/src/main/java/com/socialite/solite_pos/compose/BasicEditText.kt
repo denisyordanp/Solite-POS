@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,11 +18,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -47,52 +50,63 @@ fun BasicEditText(
     onValueChange: (String) -> Unit,
     onAction: (() -> Unit)? = null
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .run {
-                return@run if (isEnabled) {
-                    border(
-                        width = 0.5.dp,
-                        color = MaterialTheme.colors.onSurface,
-                        shape = RoundedCornerShape(8.dp)
+    val shape = RoundedCornerShape(8.dp)
+    Surface(
+        modifier = Modifier
+            .heightIn(min = 50.dp)
+            .fillMaxWidth(),
+        color = if (isEnabled) MaterialTheme.colors.surface.copy(
+            alpha = 0.3f
+        ) else Color.Transparent,
+        shape = shape
+    ) {
+        Row(
+            modifier = modifier
+                .run {
+                    return@run if (isEnabled) {
+                        border(
+                            width = 0.5.dp,
+                            color = MaterialTheme.colors.onSurface,
+                            shape = shape
+                        )
+                    } else {
+                        this
+                    }
+                }
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(1f)
+            ) {
+                if (isEnabled) {
+                    EnabledContent(
+                        visualTransformation = visualTransformation,
+                        keyboardType = keyboardType,
+                        imeAction = imeAction,
+                        value = value,
+                        placeHolder = placeHolder,
+                        onAction = onAction,
+                        onValueChange = onValueChange
                     )
                 } else {
-                    this
+                    DisabledContent(value = value, placeHolder = placeHolder)
                 }
             }
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            if (isEnabled) {
-                EnabledContent(
-                    visualTransformation = visualTransformation,
-                    keyboardType = keyboardType,
-                    imeAction = imeAction,
-                    value = value,
-                    placeHolder = placeHolder,
-                    onAction = onAction,
-                    onValueChange = onValueChange
+            if (isEnabled && value.isNotEmpty()) {
+                Icon(
+                    modifier = Modifier
+                        .size(16.dp)
+                        .align(Alignment.CenterVertically)
+                        .clickable {
+                            onValueChange("")
+                        },
+                    painter = painterResource(id = R.drawable.ic_close),
+                    tint = MaterialTheme.colors.onSurface,
+                    contentDescription = null
                 )
-            } else {
-                DisabledContent(value = value, placeHolder = placeHolder)
+                Spacer(modifier = Modifier.width(8.dp))
             }
-        }
-        if (isEnabled && value.isNotEmpty()) {
-            Icon(
-                modifier = Modifier
-                    .size(16.dp)
-                    .align(Alignment.CenterVertically)
-                    .clickable {
-                        onValueChange("")
-                    },
-                painter = painterResource(id = R.drawable.ic_close),
-                tint = MaterialTheme.colors.onSurface,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(8.dp))
         }
     }
 }

@@ -19,12 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
 
 @Composable
 fun BasicTopBar(
     titleText: String,
+    elevation: Dp = 4.dp,
     @DrawableRes endIcon: Int? = null,
     endAction: (() -> Unit)? = null,
     onBackClicked: () -> Unit
@@ -34,7 +36,7 @@ fun BasicTopBar(
             .fillMaxWidth()
             .wrapContentHeight(),
         color = MaterialTheme.colors.primary,
-        elevation = 4.dp
+        elevation = elevation
     ) {
         Row(
             modifier = Modifier
