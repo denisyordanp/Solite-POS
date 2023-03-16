@@ -107,13 +107,12 @@ data class Purchase(
 		override fun toListClass(result: QuerySnapshot): List<Purchase> {
 			val array: ArrayList<Purchase> = ArrayList()
 			for (document in result){
-				val purchase = Purchase(
-                        document.data[NO] as String,
-                        document.data[Supplier.ID] as Long,
-                        document.data[PURCHASE_DATE] as String,
-                        document.data[UPLOAD] as Boolean
-                )
-                array.add(purchase)
+                array.add(Purchase(
+					document.data[NO] as String,
+					document.data[Supplier.ID] as Long,
+					document.data[PURCHASE_DATE] as String,
+					document.data[UPLOAD] as Boolean
+				))
             }
             return array
         }

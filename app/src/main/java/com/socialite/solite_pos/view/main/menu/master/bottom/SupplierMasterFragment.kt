@@ -36,7 +36,11 @@ class SupplierMasterFragment(
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-		_binding = FragmentSupplierMasterBinding.inflate(inflater, container, false)
+		_binding = FragmentSupplierMasterBinding.inflate(
+			inflater,
+			container,
+			false
+		)
         return _binding.root
     }
 
