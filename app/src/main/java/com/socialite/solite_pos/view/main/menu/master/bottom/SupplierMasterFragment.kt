@@ -49,7 +49,7 @@ class SupplierMasterFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getMainViewModel(activity!!)
+			viewModel = getMainViewModel(requireActivity())
 
 			if (supplier != null){
 				setData()

@@ -1,11 +1,14 @@
 package com.socialite.solite_pos.view.bluetooth
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
@@ -89,15 +92,27 @@ class BluetoothDeviceListActivity : SoliteActivity() {
 	}
 
 	private fun getBoundDevice(bluetoothAdapter: BluetoothAdapter) {
-		val boundedDevice = bluetoothAdapter.bondedDevices
-		if (!boundedDevice.isNullOrEmpty()) {
-			adapterBluetooth.setDevices(ArrayList(boundedDevice))
+		if (ActivityCompat.checkSelfPermission(
+				this,
+				Manifest.permission.BLUETOOTH_CONNECT
+			) != PackageManager.PERMISSION_GRANTED
+		) {
+			val boundedDevice = bluetoothAdapter.bondedDevices
+			if (!boundedDevice.isNullOrEmpty()) {
+				adapterBluetooth.setDevices(ArrayList(boundedDevice))
+			}
 		}
 	}
 
 	private fun forceToEnableBluetooth() {
-		val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-		startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+		if (ActivityCompat.checkSelfPermission(
+				this,
+				Manifest.permission.BLUETOOTH_CONNECT
+			) != PackageManager.PERMISSION_GRANTED
+		) {
+			val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+		}
 	}
 
 	override fun onActivityResult(reqCode: Int, resultCode: Int, intent: Intent?) {
@@ -181,6 +196,12 @@ class BluetoothDeviceListActivity : SoliteActivity() {
     }
 
 	private fun stopDiscovering() {
-		mBluetoothAdapter?.cancelDiscovery()
+		if (ActivityCompat.checkSelfPermission(
+				this,
+				Manifest.permission.BLUETOOTH_SCAN
+			) != PackageManager.PERMISSION_GRANTED
+		) {
+			mBluetoothAdapter?.cancelDiscovery()
+		}
 	}
 }

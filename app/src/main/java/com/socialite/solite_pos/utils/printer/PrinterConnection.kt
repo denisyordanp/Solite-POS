@@ -1,14 +1,17 @@
 package com.socialite.solite_pos.utils.printer
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.data.source.preference.SettingPref
 import java.io.IOException
-import java.util.*
 
 class PrinterConnection(private val activity: FragmentActivity) {
 
@@ -17,12 +20,18 @@ class PrinterConnection(private val activity: FragmentActivity) {
 	companion object {
 		var mbtSocket: BluetoothSocket? = null
 
-		fun setSocketFromDevice(device: BluetoothDevice) {
-			val uuid: UUID = device.uuids[0].uuid
-			try {
-				mbtSocket = device.createRfcommSocketToServiceRecord(uuid)
-			} catch (e: IOException) {
-				e.printStackTrace()
+		fun setSocketFromDevice(context: Context, device: BluetoothDevice) {
+			 if (ActivityCompat.checkSelfPermission(
+					context,
+					Manifest.permission.BLUETOOTH_CONNECT
+				) != PackageManager.PERMISSION_GRANTED
+			) {
+				 val uuid = device.uuids[0].uuid
+				 try {
+					 mbtSocket = device.createRfcommSocketToServiceRecord(uuid)
+				 } catch (e: IOException) {
+					 e.printStackTrace()
+				 }
 			}
 		}
 	}
@@ -32,7 +41,7 @@ class PrinterConnection(private val activity: FragmentActivity) {
 		if (!address.isNullOrEmpty()) {
 			val device = getDeviceFromAddress(address)
 			if (device != null) {
-				setSocketFromDevice(device)
+				setSocketFromDevice(activity, device)
 				if (mbtSocket != null) {
 					connectSocket(mbtSocket!!, callback)
 				} else {
@@ -59,12 +68,18 @@ class PrinterConnection(private val activity: FragmentActivity) {
 	private fun connectSocket(socket: BluetoothSocket, callback: (BluetoothSocket?) -> Unit) {
 		Thread {
 			try {
-				socket.connect()
-				activity.runOnUiThread {
-					showToast("Printing")
-				}
+				if (ActivityCompat.checkSelfPermission(
+						activity,
+						Manifest.permission.BLUETOOTH_CONNECT
+					) != PackageManager.PERMISSION_GRANTED
+				) {
+					socket.connect()
+					activity.runOnUiThread {
+						showToast("Printing")
+					}
 
-				callback.invoke(mbtSocket)
+					callback.invoke(mbtSocket)
+				}
 			} catch (ex: IOException) {
 				ex.printStackTrace()
 				try {
