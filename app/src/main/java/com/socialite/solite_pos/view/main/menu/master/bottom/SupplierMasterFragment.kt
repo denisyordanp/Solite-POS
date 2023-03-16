@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.main.menu.master.bottom
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -34,8 +35,9 @@ class SupplierMasterFragment(
 	private val desc: String
 		get() = _binding.edtSmDesc.text.toString().trim()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    @SuppressLint("SuspiciousIndentation")
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+							  savedInstanceState: Bundle?): View {
 		_binding = FragmentSupplierMasterBinding.inflate(inflater, container, false)
         return _binding.root
     }
@@ -49,7 +51,7 @@ class SupplierMasterFragment(
 		super.onViewCreated(view, savedInstanceState)
 		if (activity != null){
 
-			viewModel = getMainViewModel(activity!!)
+			viewModel = getMainViewModel(requireActivity())
 
 			if (supplier != null){
 				setData()

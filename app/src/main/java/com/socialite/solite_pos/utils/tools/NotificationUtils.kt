@@ -1,13 +1,16 @@
 package com.socialite.solite_pos.utils.tools
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -54,7 +57,13 @@ class NotificationUtils {
 		val builder = createBuilder(channelId, title, message, pendingIntent)
 
 		createNotificationChannel(channelId, channelName)
-		NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+		if (ActivityCompat.checkSelfPermission(
+				context,
+				Manifest.permission.POST_NOTIFICATIONS
+			) != PackageManager.PERMISSION_GRANTED
+		) {
+			NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+		}
 	}
 
 	private fun createBuilder(channelId: String, title: String, message: String, pendingIntent: PendingIntent): NotificationCompat.Builder {

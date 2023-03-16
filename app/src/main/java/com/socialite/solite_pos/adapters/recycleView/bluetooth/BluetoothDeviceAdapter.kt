@@ -1,9 +1,12 @@
 package com.socialite.solite_pos.adapters.recycleView.bluetooth
 
+import android.Manifest
 import android.bluetooth.BluetoothDevice
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -44,10 +47,17 @@ class BluetoothDeviceAdapter(
 		return devices.size
 	}
 
-	inner class ListViewHolder(val binding: RvStringListBinding) :
+	inner class ListViewHolder(private val binding: RvStringListBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 		fun setTitleView(device: BluetoothDevice) {
-			val text = "${device.name} \n ${device.address}".trimIndent()
+			val text = if (ActivityCompat.checkSelfPermission(
+					binding.root.context,
+					Manifest.permission.BLUETOOTH_CONNECT
+				) != PackageManager.PERMISSION_GRANTED
+			) {
+				"${device.name} \n ${device.address}".trimIndent()
+			} else ""
+
 			binding.tvRvSt.text = text
 		}
 

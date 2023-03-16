@@ -12,7 +12,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.databinding.FragmentMasterProductMixVariantBinding
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProductMasterMixVariantFragment(
@@ -38,7 +37,7 @@ class ProductMasterMixVariantFragment(
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
 
-            viewModel = ProductViewModel.getMainViewModel(activity!!)
+            viewModel = ProductViewModel.getMainViewModel(requireActivity())
             setAdapter()
 
             _binding.rvProductMixVariant.layoutManager = GridLayoutManager(activity, 5)
@@ -46,7 +45,7 @@ class ProductMasterMixVariantFragment(
     }
 
     private fun setAdapter() {
-        adapter = ProductMixVariantAdapter(variant, activity!!)
+        adapter = ProductMixVariantAdapter(variant, requireActivity())
         _binding.rvProductMixVariant.adapter = adapter
 
         getProduct()
