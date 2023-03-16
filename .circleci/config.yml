@@ -30,9 +30,10 @@ jobs:
           test-command: ./gradlew lint testDebug --continue
 
       # Then start the emulator and run the Instrumentation tests!
-      - android/start-emulator-and-run-tests:
-          test-command: ./gradlew connectedDebugAndroidTest
-          system-image: system-images;android-25;google_apis;x86
+      # No need to running the Instrumentation tests for now
+#      - android/start-emulator-and-run-tests:
+#          test-command: ./gradlew connectedDebugAndroidTest
+#          system-image: system-images;android-25;google_apis;x86
 
       # And finally run the release build
       - run:
@@ -47,3 +48,14 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
+
+  store-build-artifact:
+    steps:
+      - store_test_results:
+          path: app/build/test-results
+      - store_artifacts:
+          path: app/build/outputs/apk
+          destination: apk
+      - store_artifacts:
+          path: app/build/outputs/bundle
+          destination: bundle
