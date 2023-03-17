@@ -57,7 +57,7 @@ jobs:
     environment:
       # Set the SonarCloud authentication token as a secret environment variable in CircleCI.
       SONAR_TOKEN: $SONAR_TOKEN
-      ANDROID_HOME: /home/circleci/android-sdk
+#      ANDROID_HOME: /home/circleci/android-sdk
 
     steps:
       - checkout
