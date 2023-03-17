@@ -66,4 +66,8 @@ workflows:
     jobs:
       - build-and-test
 
+    post:
+      - sonarcloud-checks
+
+
 
