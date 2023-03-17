@@ -40,17 +40,9 @@ jobs:
           name: Assemble release build
           command: |
             ./gradlew assembleRelease
-
-  store-build-artifact:
-    steps:
-      - store_test_results:
-          path: app/build/test-results
       - store_artifacts:
-          path: app/build/outputs/apk
+          path: app/build/outputs/apk/release/
           destination: apk
-      - store_artifacts:
-          path: app/build/outputs/bundle
-          destination: bundle
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -59,9 +51,5 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
-
-  storing-artifact:
-    jobs:
-      - store-build-artifacts
 
 
