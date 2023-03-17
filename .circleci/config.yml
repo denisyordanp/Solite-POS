@@ -67,7 +67,9 @@ workflows:
       - build-and-test
 
     post:
-      - sonarcloud-checks
+      - sonarcloud-checks:
+          requires:
+            - build-and-test
 
 
 
