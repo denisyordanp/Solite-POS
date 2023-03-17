@@ -4,6 +4,7 @@ plugins {
 	id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id "org.sonarqube" version "3.5.0.2730"
 }
 
 android {
@@ -104,4 +105,12 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "solite_pos"
+        property "sonar.organization", "solite"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }

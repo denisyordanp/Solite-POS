@@ -46,6 +46,17 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/apk/release/
           destination: apk
+  sonarcloud-checks:
+    docker:
+      - image: circleci/openjdk:11-jdk
+    environment:
+      # Set the SonarCloud authentication token as a secret environment variable in CircleCI.
+      SONAR_TOKEN: <<your SonarCloud authentication token>>
+    steps:
+      - checkout
+      - run:
+          name: SonarCloud analysis
+          command: ./gradlew sonarqube -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.projectKey=$SONAR_PROJECT_KEY
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
