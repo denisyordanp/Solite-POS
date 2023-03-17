@@ -46,6 +46,7 @@ jobs:
           name: Assemble debug build
           command: |
             ./gradlew assembleDebug
+
       - store_artifacts:
           path: app/build/outputs/apk/release/
           destination: apk
