@@ -51,7 +51,7 @@ jobs:
       - image: circleci/openjdk:11-jdk
     environment:
       # Set the SonarCloud authentication token as a secret environment variable in CircleCI.
-      SONAR_TOKEN: <<your SonarCloud authentication token>>
+      SONAR_TOKEN: $SONAR_TOKEN
     steps:
       - checkout
       - run:
