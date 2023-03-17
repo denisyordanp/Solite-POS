@@ -34,7 +34,7 @@ jobs:
 
       # The next step will run the unit tests
       - android/run-tests:
-          test-command: ./gradlew lint testDebug sonarqube --continue
+          test-command: ./gradlew lint testDebug --continue
 
       # save cache for saving build time
       - android/save-gradle-cache
@@ -63,14 +63,12 @@ jobs:
       - image: circleci/openjdk:11-jdk
     environment:
       # Set the SonarCloud authentication token as a secret environment variable in CircleCI.
-      SONAR_TOKEN: $SONAR_TOKEN
-#      ANDROID_HOME: /home/circleci/android-sdk
 
     steps:
       - checkout
       - run:
           name: SonarCloud analysis
-          command: ./gradlew sonarqube
+          command: ./gradlew sonar -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization="solite" -Dsonar.projectKey="solite_pos" -Dsonar.login=$SONAR_TOKEN
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -79,9 +77,9 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
-#      - sonarcloud-checks:
-#          requires:
-#            - build-and-test
+      - sonarcloud-checks:
+          requires:
+            - build-and-test
 
 
 
