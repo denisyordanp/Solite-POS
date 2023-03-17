@@ -34,7 +34,7 @@ jobs:
 
       # The next step will run the unit tests
       - android/run-tests:
-          test-command: ./gradlew lint testDebug --continue
+          test-command: ./gradlew lint testDebug sonar -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization="solite" -Dsonar.projectKey="solite_pos" -Dsonar.login=$SONAR_TOKEN --continue
 
       # save cache for saving build time
       - android/save-gradle-cache
@@ -77,9 +77,9 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
-      - sonarcloud-checks:
-          requires:
-            - build-and-test
+#      - sonarcloud-checks:
+#          requires:
+#            - build-and-test
 
 
 
