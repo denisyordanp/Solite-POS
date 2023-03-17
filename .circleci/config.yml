@@ -28,7 +28,6 @@ jobs:
       # The next step will run the unit tests
       - android/run-tests:
           test-command: ./gradlew lint testDebug --continue
-          no_output_timeout: 10m
 
       - store_test_results:
           path: app/build/test-results
