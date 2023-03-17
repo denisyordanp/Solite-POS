@@ -34,7 +34,11 @@ jobs:
 
       # The next step will run the unit tests
       - android/run-tests:
-          test-command: ./gradlew lint testDebug sonar -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization="solite" -Dsonar.projectKey="solite_pos" -Dsonar.login=$SONAR_TOKEN --continue
+          test-command: ./gradlew lint testDebug --continue
+
+      - run:
+          name: SonarCloud analysis
+          command: ./gradlew sonar -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization="solite" -Dsonar.projectKey="solite_pos" -Dsonar.login=$SONAR_TOKEN
 
       # save cache for saving build time
       - android/save-gradle-cache
