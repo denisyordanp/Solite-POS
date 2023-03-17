@@ -28,6 +28,10 @@ jobs:
       # The next step will run the unit tests
       - android/run-tests:
           test-command: ./gradlew lint testDebug --continue
+          no_output_timeout: 10m
+
+      - store_test_results:
+          path: app/build/test-results
 
       # Then start the emulator and run the Instrumentation tests!
       # No need to running the Instrumentation tests for now
@@ -37,9 +41,9 @@ jobs:
 
       # And finally run the release build
       - run:
-          name: Assemble release build
+          name: Assemble debug build
           command: |
-            ./gradlew assembleRelease
+            ./gradlew assembleDebug
       - store_artifacts:
           path: app/build/outputs/apk/release/
           destination: apk
