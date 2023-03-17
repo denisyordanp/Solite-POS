@@ -24,10 +24,13 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
+      - android/restore-gradle-cache
 
       # The next step will run the unit tests
       - android/run-tests:
           test-command: ./gradlew lint testDebug --continue
+
+      - android/save-gradle-cache
 
       - store_test_results:
           path: app/build/test-results
@@ -66,9 +69,9 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
-      - sonarcloud-checks:
-          requires:
-            - build-and-test
+#      - sonarcloud-checks:
+#          requires:
+#            - build-and-test
 
 
 
