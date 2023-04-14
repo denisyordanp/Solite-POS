@@ -38,7 +38,7 @@ jobs:
 
       - run:
           name: SonarCloud analysis
-          command: ./gradlew sonar -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization="solite" -Dsonar.projectKey="solite_pos" -Dsonar.login=$SONAR_TOKEN
+          command: ./gradlew sonar
 
       # save cache for saving build time
       - android/save-gradle-cache
