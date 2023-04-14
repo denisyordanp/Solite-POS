@@ -27,4 +27,4 @@ Android kotlin POS System project for my own business at Jajanan Sosialita store
 - Online Storage
 
 ## License
-This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. See [LICENSE](LICENSE) for details.
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. See [LICENSE](LICENSE.md) for details.
