@@ -36,10 +36,6 @@ jobs:
       - android/run-tests:
           test-command: ./gradlew lint testDebug --continue
 
-      - run:
-          name: SonarCloud analysis
-          command: ./gradlew sonar
-
       # save cache for saving build time
       - android/save-gradle-cache
 
