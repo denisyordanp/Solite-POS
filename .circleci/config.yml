@@ -50,8 +50,12 @@ jobs:
           command: |
             ./gradlew assembleDebug
 
+      - run:
+          name: Assemble APK and AAB
+          command: ./script/build_assemble.sh
+
       - store_artifacts:
-          path: app/build/outputs/apk/release/
+          path: app/build/outputs/apk/debug/
           destination: apk
 
   sonarcloud-checks:
