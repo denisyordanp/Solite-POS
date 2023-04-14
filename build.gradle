@@ -13,6 +13,10 @@ buildscript {
     }
 }
 
+plugins {
+    id("org.sonarqube") version "4.0.0.2929"
+}
+
 allprojects {
     repositories {
         google()
@@ -20,10 +24,6 @@ allprojects {
 
 		maven { url "https://jitpack.io" }
     }
-}
-
-ext {
-    sqliteJdbc = '3.36.0.1'
 }
 
 task clean(type: Delete) {
