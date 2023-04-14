@@ -13,7 +13,7 @@ orbs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  build-and-test:
+  build-test-sonar:
     # These next lines define the Android machine image executor.
     # See: https://circleci.com/docs/2.0/executor-types/
     executor:
@@ -48,23 +48,14 @@ jobs:
           path: app/build/outputs/apk/debug/
           destination: apk
 
-  sonarcloud-checks:
-    executor:
-      name: android/android-machine
-
-    steps:
-      - checkout
       - run:
           name: SonarCloud analysis
-          command: ./gradlew sonar -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization="solite" -Dsonar.projectKey="solite_pos" -Dsonar.login=$SONAR_TOKEN
+          command: ./gradlew sonar
 
 workflows:
   main-workflow:
     jobs:
-      - build-and-test
-      - sonarcloud-checks:
-          requires:
-            - build-and-test
+      - build-test-sonar
 
 
 
