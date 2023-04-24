@@ -14,6 +14,7 @@ import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.UserRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -28,6 +29,7 @@ import com.socialite.solite_pos.data.source.repository.impl.PromosRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.UserRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantMixesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantsRepositoryImpl
@@ -145,5 +147,10 @@ object RepositoryInjection {
     fun providePromosRepository(context: Context): PromosRepository {
         val database = getInstance(context)
         return PromosRepositoryImpl.getInstance(dao = database.promoDao(), database)
+    }
+
+    fun provideUserRepository(): UserRepository {
+        val service = NetworkInjector.provideSoliteServices()
+        return UserRepositoryImpl(service)
     }
 }

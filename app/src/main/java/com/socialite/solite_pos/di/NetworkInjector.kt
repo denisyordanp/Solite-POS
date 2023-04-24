@@ -26,8 +26,8 @@ object NetworkInjector {
             .addConverterFactory(gsonConverter)
             .build()
 
-    fun provideSoliteServices(
-        retrofit: Retrofit,
-        gsonConverter: Factory
-    ): SoliteServices = retrofit.create(SoliteServices::class.java)
+    fun provideSoliteServices(): SoliteServices =
+        provideRetrofit(
+            provideGsonConverter()
+        ).create(SoliteServices::class.java)
 }
