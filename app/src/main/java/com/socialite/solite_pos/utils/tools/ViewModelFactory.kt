@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.source.domain.LoginUser
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
@@ -32,6 +33,7 @@ import com.socialite.solite_pos.di.DomainInjection.provideGetOrdersGeneralMenuBa
 import com.socialite.solite_pos.di.DomainInjection.provideGetProductOrder
 import com.socialite.solite_pos.di.DomainInjection.provideGetProductVariantOptions
 import com.socialite.solite_pos.di.DomainInjection.provideMigrateToUUID
+import com.socialite.solite_pos.di.DomainInjection.provideLoginUser
 import com.socialite.solite_pos.di.DomainInjection.provideNewOrder
 import com.socialite.solite_pos.di.DomainInjection.provideNewOutcome
 import com.socialite.solite_pos.di.DomainInjection.providePayOrder
@@ -51,6 +53,7 @@ import com.socialite.solite_pos.di.RepositoryInjection.provideSupplierRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantMixesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantsRepository
+import com.socialite.solite_pos.view.login.LoginViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -80,7 +83,8 @@ class ViewModelFactory private constructor(
     private val newOutcome: NewOutcome,
     private val updateOrderProducts: UpdateOrderProducts,
     private val promosRepository: PromosRepository,
-    private val migrateToUUID: MigrateToUUID
+    private val migrateToUUID: MigrateToUUID,
+    private val loginUser: LoginUser,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -114,7 +118,8 @@ class ViewModelFactory private constructor(
                             newOutcome = provideNewOutcome(context),
                             updateOrderProducts = provideUpdateOrderProducts(context),
                             promosRepository = providePromosRepository(context),
-                            migrateToUUID = provideMigrateToUUID(context)
+                            migrateToUUID = provideMigrateToUUID(context),
+                            loginUser = provideLoginUser()
                         )
                     }
                 }
@@ -165,6 +170,12 @@ class ViewModelFactory private constructor(
                     productVariantsRepository = productVariantsRepository,
                     getProductVariantOptions = getProductVariantOptions,
                     variantMixesRepository = variantMixesRepository
+                ) as T
+            }
+
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(
+                    loginUser
                 ) as T
             }
 
