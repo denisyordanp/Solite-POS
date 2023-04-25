@@ -65,11 +65,17 @@ class LoginActivity : ComponentActivity() {
                     route = LoginDestinations.REGISTER
                 ) {
                     RegisterScreen(
+                        errorMessage = state.errorMessage,
                         onBackClick = {
                             navController.navigateUp()
                         },
-                        onRegister = { email, password, store ->
-                            // TODO: Register function
+                        onRegister = { name, email, password, store ->
+                            viewModel.register(
+                                name = name,
+                                email = email,
+                                password = password,
+                                storeName = store
+                            )
                         }
                     )
                 }
