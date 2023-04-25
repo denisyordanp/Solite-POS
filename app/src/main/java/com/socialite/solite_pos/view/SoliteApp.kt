@@ -3,6 +3,13 @@ package com.socialite.solite_pos.view
 import android.app.Application
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
+import com.facebook.flipper.android.AndroidFlipperClient
+import com.facebook.flipper.android.utils.FlipperUtils
+import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
+import com.facebook.flipper.plugins.inspector.DescriptorMapping
+import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
+import com.facebook.soloader.SoLoader
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.BuildConfig
@@ -18,11 +25,11 @@ class SoliteApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        setupFlipper()
         setupViewModel()
         setupTheme()
         setupLocale()
-
-        Firebase.crashlytics.setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        setupFirebase()
     }
 
     private fun setupViewModel() {
@@ -48,5 +55,21 @@ class SoliteApp : Application() {
         Locale.setDefault(DateUtils.locale)
         val res = applicationContext.resources
         res.updateConfiguration(config, res.displayMetrics)
+    }
+
+    private fun setupFlipper() {
+        if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)) {
+            SoLoader.init(this, false)
+            AndroidFlipperClient.getInstance(this).apply {
+                addPlugin(InspectorFlipperPlugin(this@SoliteApp, DescriptorMapping.withDefaults()))
+                addPlugin(DatabasesFlipperPlugin(this@SoliteApp))
+                addPlugin(NetworkFlipperPlugin())
+                start()
+            }
+        }
+    }
+
+    private fun setupFirebase() {
+        Firebase.crashlytics.setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }
 }
