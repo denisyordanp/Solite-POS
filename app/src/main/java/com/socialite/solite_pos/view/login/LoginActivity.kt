@@ -52,7 +52,7 @@ class LoginActivity : ComponentActivity() {
                     route = LoginDestinations.LOGIN
                 ) {
                     LoginScreen(
-                        isError = state.errorMessage.isNullOrEmpty().not(),
+                        errorMessage = state.errorMessage,
                         onLogin = { email, password ->
                             viewModel.login(email, password)
                         },

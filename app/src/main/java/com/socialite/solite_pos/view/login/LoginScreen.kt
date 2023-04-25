@@ -35,7 +35,7 @@ import com.socialite.solite_pos.compose.PrimaryButtonView
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
-    isError: Boolean,
+    errorMessage: String?,
     onLogin: (email: String, password: String) -> Unit,
     onRegister: () -> Unit
 ) {
@@ -56,7 +56,7 @@ fun LoginScreen(
                 painter = painterResource(id = R.drawable.solite),
                 contentDescription = null
             )
-            if (isError) {
+            if (errorMessage.isNullOrEmpty().not()) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -70,7 +70,7 @@ fun LoginScreen(
                     Text(
                         modifier = Modifier
                             .padding(8.dp),
-                        text = stringResource(R.string.email_or_password_not_found_please_try_again),
+                        text = errorMessage!!,
                         color = Color.Red,
                         textAlign = TextAlign.Center
                     )
