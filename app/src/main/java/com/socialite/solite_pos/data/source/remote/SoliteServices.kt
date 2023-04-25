@@ -11,4 +11,12 @@ interface SoliteServices {
         @Query("email") email: String,
         @Query("password") password: String
     ): ApiResponse<TokenResponse>
+
+    @GET("v1/register")
+    suspend fun register(
+        @Query("name") name: String,
+        @Query("email") email: String,
+        @Query("password") password: String,
+        @Query("store") storeName: String
+    ): ApiResponse<TokenResponse>
 }

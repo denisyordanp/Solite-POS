@@ -5,4 +5,11 @@ interface UserRepository {
         email: String,
         password: String
     ): String
+
+    suspend fun register(
+        name: String,
+        email: String,
+        password: String,
+        storeName: String
+    ): String
 }
