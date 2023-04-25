@@ -10,6 +10,7 @@ import com.socialite.solite_pos.data.source.domain.LoginUser
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
+import com.socialite.solite_pos.data.source.domain.RegisterUser
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
@@ -20,6 +21,7 @@ import com.socialite.solite_pos.data.source.domain.impl.LoginUserImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOutcomeImpl
 import com.socialite.solite_pos.data.source.domain.impl.PayOrderImpl
+import com.socialite.solite_pos.data.source.domain.impl.RegisterUserImpl
 import com.socialite.solite_pos.data.source.domain.impl.UpdateOrderProductsImpl
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
@@ -115,5 +117,10 @@ object DomainInjection {
     fun provideLoginUser(): LoginUser {
         val repository = RepositoryInjection.provideUserRepository()
         return LoginUserImpl(repository)
+    }
+
+    fun provideRegisterUser(): RegisterUser {
+        val repository = RepositoryInjection.provideUserRepository()
+        return RegisterUserImpl(repository)
     }
 }

@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.LoginUser
+import com.socialite.solite_pos.data.source.domain.RegisterUser
 import com.socialite.solite_pos.view.viewModel.ViewModelFromFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val loginUser: LoginUser
+    private val loginUser: LoginUser,
+    private val registerUser: RegisterUser,
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<LoginViewModel>() {
@@ -34,6 +36,26 @@ class LoginViewModel(
 
             flow {
                 val token = loginUser(email, password)
+                emit(currentState.copySuccess(token))
+            }.onStart {
+                emit(currentState.copyLoading())
+            }.catch {
+                emit(currentState.copyError(it.message ?: ""))
+            }.collect(_viewState)
+        }
+    }
+
+    fun register(
+        name: String,
+        email: String,
+        password: String,
+        storeName: String
+    ) {
+        viewModelScope.launch {
+            val currentState = _viewState.value
+
+            flow {
+                val token = registerUser(name, email, password, storeName)
                 emit(currentState.copySuccess(token))
             }.onStart {
                 emit(currentState.copyLoading())

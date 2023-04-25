@@ -12,6 +12,7 @@ import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
+import com.socialite.solite_pos.data.source.domain.RegisterUser
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
@@ -37,6 +38,7 @@ import com.socialite.solite_pos.di.DomainInjection.provideLoginUser
 import com.socialite.solite_pos.di.DomainInjection.provideNewOrder
 import com.socialite.solite_pos.di.DomainInjection.provideNewOutcome
 import com.socialite.solite_pos.di.DomainInjection.providePayOrder
+import com.socialite.solite_pos.di.DomainInjection.provideRegisterUser
 import com.socialite.solite_pos.di.DomainInjection.provideUpdateOrderProducts
 import com.socialite.solite_pos.di.RepositoryInjection.provideCategoriesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideCustomersRepository
@@ -85,6 +87,7 @@ class ViewModelFactory private constructor(
     private val promosRepository: PromosRepository,
     private val migrateToUUID: MigrateToUUID,
     private val loginUser: LoginUser,
+    private val registerUser: RegisterUser,
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -119,7 +122,8 @@ class ViewModelFactory private constructor(
                             updateOrderProducts = provideUpdateOrderProducts(context),
                             promosRepository = providePromosRepository(context),
                             migrateToUUID = provideMigrateToUUID(context),
-                            loginUser = provideLoginUser()
+                            loginUser = provideLoginUser(),
+                            registerUser = provideRegisterUser()
                         )
                     }
                 }
@@ -175,7 +179,8 @@ class ViewModelFactory private constructor(
 
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(
-                    loginUser
+                    loginUser = loginUser,
+                    registerUser = registerUser
                 ) as T
             }
 
