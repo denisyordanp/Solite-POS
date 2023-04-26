@@ -64,4 +64,8 @@ class LoginViewModel(
             }.collect(_viewState)
         }
     }
+
+    fun resetState() {
+        _viewState.value = LoginViewState.idle()
+    }
 }
