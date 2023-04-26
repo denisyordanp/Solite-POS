@@ -11,7 +11,6 @@ import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.UserRepository
@@ -33,15 +32,8 @@ import com.socialite.solite_pos.data.source.repository.impl.UserRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantMixesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantsRepositoryImpl
-import com.socialite.solite_pos.utils.database.AppExecutors
 
 object RepositoryInjection {
-
-    fun provideSoliteRepository(context: Context): SoliteRepository {
-        val database = getInstance(context)
-        val appExecutors = AppExecutors(context)
-        return SoliteRepository.getInstance(appExecutors, database.soliteDao())
-    }
 
     fun providePaymentsRepository(context: Context): PaymentsRepository {
         val database = getInstance(context)
