@@ -12,4 +12,8 @@ interface UserRepository {
         password: String,
         storeName: String
     ): String
+
+    suspend fun insertToken(token: String)
+
+    suspend fun getToken(): String?
 }

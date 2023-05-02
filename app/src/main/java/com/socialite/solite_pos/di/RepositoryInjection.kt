@@ -2,6 +2,7 @@ package com.socialite.solite_pos.di
 
 import android.content.Context
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
+import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -141,8 +142,9 @@ object RepositoryInjection {
         return PromosRepositoryImpl.getInstance(dao = database.promoDao(), database)
     }
 
-    fun provideUserRepository(): UserRepository {
+    fun provideUserRepository(context: Context): UserRepository {
         val service = NetworkInjector.provideSoliteServices()
-        return UserRepositoryImpl(service)
+        val userPreferences = UserPreferencesImpl.getDataStoreInstance(context)
+        return UserRepositoryImpl(service, userPreferences)
     }
 }
