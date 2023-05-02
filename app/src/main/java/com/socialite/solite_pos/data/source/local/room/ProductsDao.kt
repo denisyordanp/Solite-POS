@@ -18,6 +18,9 @@ interface ProductsDao {
     @Query("SELECT * FROM ${NewProduct.DB_NAME} WHERE ${NewProduct.ID} = :idProduct LIMIT 1")
     suspend fun getProduct(idProduct: String): NewProduct
 
+    @Query("SELECT * FROM ${Product.DB_NAME}")
+    suspend fun getProducts(): List<Product>
+
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct LIMIT 1")
     suspend fun getProductById(idProduct: Long): Product?
 

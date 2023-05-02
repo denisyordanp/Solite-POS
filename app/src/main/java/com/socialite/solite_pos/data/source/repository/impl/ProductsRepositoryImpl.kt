@@ -39,6 +39,7 @@ class ProductsRepositoryImpl(
     override fun getAllProductWithCategories() = dao.getAllProductWithCategories()
     override fun getProductWithCategory(productId: String) = dao.getProductWithCategory(productId)
     override fun getProductById(productId: String) = dao.getProductAsFlow(productId)
+    override suspend fun getProducts(): List<Product> = dao.getProducts()
     override suspend fun insertProduct(data: NewProduct) = dao.insertNewProduct(data)
     override suspend fun updateProduct(data: NewProduct) {
         dao.updateNewProduct(data)
