@@ -65,7 +65,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.cardview:cardview:1.0.0' // Todo: Unused
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionVersion"
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
 
@@ -106,8 +106,6 @@ dependencies {
 
     // Test
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeVersion"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
