@@ -89,6 +89,16 @@ class OutcomesRepositoryImpl(
             }
         }
     }
+    
+    override suspend fun getOutcomes(): List<Outcome> = dao.getOutcomes()
+
+    override suspend fun insertOutcome(data: Outcome) {
+        dao.insertOutcome(data)
+    }
+
+    override suspend fun updateOutcome(data: Outcome) {
+        dao.updateOutcome(data)
+    }
 
     override suspend fun deleteAllOldOutcomes() {
         dao.deleteAllOldOutcomes()
@@ -97,4 +107,5 @@ class OutcomesRepositoryImpl(
     override suspend fun deleteAllNewOutcomes() {
         dao.deleteAllNewOutcomes()
     }
+}
 }
