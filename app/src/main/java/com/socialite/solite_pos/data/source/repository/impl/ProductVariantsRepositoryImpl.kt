@@ -49,6 +49,8 @@ class ProductVariantsRepositoryImpl(
     override fun getVariantProduct(idProduct: String, idVariantOption: String) =
         dao.getVariantProduct(idProduct, idVariantOption)
 
+    override suspend fun getVariantProducts(): List<VariantProduct> = dao.getVariantProducts()
+
     override suspend fun isProductHasVariants(idProduct: String) =
         !dao.getProductVariants(idProduct).isNullOrEmpty()
 

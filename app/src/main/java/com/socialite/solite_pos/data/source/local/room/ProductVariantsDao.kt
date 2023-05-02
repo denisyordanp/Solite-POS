@@ -35,6 +35,9 @@ interface ProductVariantsDao {
     @Query("SELECT * FROM ${VariantProduct.DB_NAME}")
     suspend fun getVariantProducts(): List<VariantProduct>
 
+    @Query("SELECT * FROM ${VariantProduct.DB_NAME}")
+    fun getVariantProducts(): List<VariantProduct>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertVariantProduct(data: VariantProduct): Long
 
