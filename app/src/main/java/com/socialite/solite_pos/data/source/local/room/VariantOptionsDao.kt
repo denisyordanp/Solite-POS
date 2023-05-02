@@ -25,6 +25,9 @@ interface VariantOptionsDao {
     @Query("SELECT * FROM '${VariantOption.DB_NAME}' WHERE ${VariantOption.ID} = :variantOptionId LIMIT 1")
     suspend fun getVariantOptionById(variantOptionId: Long): VariantOption?
 
+    @Query("SELECT * FROM ${VariantOption.DB_NAME}")
+    suspend fun getVariantOptions(): List<VariantOption>
+
     @Transaction
     @Query("SELECT * FROM ${NewVariantOption.DB_NAME}")
     fun getVariantWithOptions(): Flow<List<VariantWithOption>>
