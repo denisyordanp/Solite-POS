@@ -114,13 +114,13 @@ object DomainInjection {
         )
     }
 
-    fun provideLoginUser(): LoginUser {
-        val repository = RepositoryInjection.provideUserRepository()
+    fun provideLoginUser(context: Context): LoginUser {
+        val repository = RepositoryInjection.provideUserRepository(context)
         return LoginUserImpl(repository)
     }
 
-    fun provideRegisterUser(): RegisterUser {
-        val repository = RepositoryInjection.provideUserRepository()
+    fun provideRegisterUser(context: Context): RegisterUser {
+        val repository = RepositoryInjection.provideUserRepository(context)
         return RegisterUserImpl(repository)
     }
 }

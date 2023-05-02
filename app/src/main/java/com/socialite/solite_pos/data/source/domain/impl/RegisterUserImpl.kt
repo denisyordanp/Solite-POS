@@ -11,5 +11,9 @@ class RegisterUserImpl(
         email: String,
         password: String,
         storeName: String
-    ) = repository.register(name, email, password, storeName)
+    ): Boolean {
+        val userToken = repository.register(name, email, password, storeName)
+        repository.insertToken(userToken)
+        return true
+    }
 }

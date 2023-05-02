@@ -4,5 +4,5 @@ interface LoginUser {
     suspend operator fun invoke(
         email: String,
         password: String
-    ): String
+    ): Boolean
 }

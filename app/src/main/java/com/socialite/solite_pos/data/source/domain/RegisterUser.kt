@@ -6,5 +6,5 @@ interface RegisterUser {
         email: String,
         password: String,
         storeName: String
-    ): String
+    ): Boolean
 }
