@@ -35,9 +35,7 @@ class LoginActivity : ComponentActivity() {
 
         val state = viewModel.viewState.collectAsState().value
 
-        when {
-            state.token.isNullOrEmpty().not() -> toMain()
-        }
+        if (state.isSuccessLogin) toMain()
 
         LoadingView(
             isLoading = state.isLoading

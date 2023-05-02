@@ -3,7 +3,7 @@ package com.socialite.solite_pos.view.login
 data class LoginViewState(
     val errorMessage: String?,
     val isLoading: Boolean,
-    val token: String?
+    val isSuccessLogin: Boolean
 ) {
 
     fun copyLoading() = this.copy(
@@ -11,10 +11,10 @@ data class LoginViewState(
         errorMessage = null
     )
 
-    fun copySuccess(token: String) = this.copy(
+    fun copySucceed() = this.copy(
         errorMessage = null,
         isLoading = false,
-        token = token
+        isSuccessLogin = true
     )
 
     fun copyError(message: String) = this.copy(
@@ -26,7 +26,7 @@ data class LoginViewState(
         fun idle() = LoginViewState(
             errorMessage = null,
             isLoading = false,
-            token = null
+            isSuccessLogin = false
         )
     }
 }

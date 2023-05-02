@@ -35,8 +35,8 @@ class LoginViewModel(
             val currentState = _viewState.value
 
             flow {
-                val token = loginUser(email, password)
-                emit(currentState.copySuccess(token))
+                val isSuccessLogin = loginUser(email, password)
+                if (isSuccessLogin) emit(currentState.copySucceed())
             }.onStart {
                 emit(currentState.copyLoading())
             }.catch {
@@ -55,8 +55,8 @@ class LoginViewModel(
             val currentState = _viewState.value
 
             flow {
-                val token = registerUser(name, email, password, storeName)
-                emit(currentState.copySuccess(token))
+                val isSuccessRegister = registerUser(name, email, password, storeName)
+                if (isSuccessRegister) emit(currentState.copySucceed())
             }.onStart {
                 emit(currentState.copyLoading())
             }.catch {

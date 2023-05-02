@@ -117,8 +117,8 @@ class ViewModelFactory private constructor(
                             updateOrderProducts = provideUpdateOrderProducts(context),
                             promosRepository = providePromosRepository(context),
                             migrateToUUID = provideMigrateToUUID(context),
-                            loginUser = provideLoginUser(),
-                            registerUser = provideRegisterUser()
+                            loginUser = provideLoginUser(context),
+                            registerUser = provideRegisterUser(context)
                         )
                     }
                 }
