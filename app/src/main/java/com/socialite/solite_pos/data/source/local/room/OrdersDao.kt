@@ -34,6 +34,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :store")
     fun getOrdersByStatus(status: Int, date: String, store: String): Flow<List<OrderData>>
 
+    @Query("SELECT * FROM '${Order.DB_NAME}'")
+    suspend fun getOrders(): List<Order>
+
     @Transaction
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
     fun getOrdersByStatus(
@@ -53,6 +56,18 @@ interface OrdersDao {
 
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId")
     fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
+
+    @Query("SELECT * FROM ${OrderDetail.DB_NAME}")
+    suspend fun getOrderDetails(): List<OrderDetail>
+
+    @Query("SELECT * FROM ${OrderPayment.DB_NAME}")
+    suspend fun getOrderPayments(): List<OrderPayment>
+
+    @Query("SELECT * FROM ${OrderPromo.DB_NAME}")
+    suspend fun getOrderPromos(): List<OrderPromo>
+
+    @Query("SELECT * FROM ${OrderProductVariant.DB_NAME}")
+    suspend fun getOrderProductVariants(): List<OrderProductVariant>
 
     @Transaction
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.ID} = :idDetail")
