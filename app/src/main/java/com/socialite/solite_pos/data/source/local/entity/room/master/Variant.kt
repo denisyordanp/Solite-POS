@@ -4,6 +4,7 @@ import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.VariantResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
@@ -94,4 +95,15 @@ data class Variant(
 
 	@Ignore
 	constructor(name: String, type: Int, isMust: Boolean, isMix: Boolean): this(UUID.randomUUID().toString(), name, type, isMust, isMix, false)
+
+	fun toResponse(): VariantResponse {
+		return VariantResponse(
+			id = id.toString(),
+			name = name,
+			type = type,
+			isMix = isMix,
+			isMust = isMust ?: false,
+			isUploaded = true
+		)
+	}
 }

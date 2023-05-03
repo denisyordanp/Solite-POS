@@ -4,20 +4,21 @@ import androidx.room.*
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.REPLACED_UUID
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.CustomerResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.UUID
 
 @Entity(
-	tableName = Customer.DB_NAME,
-	indices = [
-		Index(value = [Customer.ID]),
-	]
+    tableName = Customer.DB_NAME,
+    indices = [
+        Index(value = [Customer.ID]),
+    ]
 )
 data class Customer(
-	@PrimaryKey(autoGenerate = true)
-	@ColumnInfo(name = ID)
-	var id: Long,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = ID)
+    var id: Long,
 
     @ColumnInfo(name = REPLACED_UUID, defaultValue = "")
     val new_id: String,
@@ -25,16 +26,16 @@ data class Customer(
     @ColumnInfo(name = NAME)
     var name: String,
 
-	@ColumnInfo(name = UPLOAD)
-	var isUploaded: Boolean
-): Serializable{
-	companion object: RemoteClassUtils<Customer> {
-		const val ID_ADD = 0L
+    @ColumnInfo(name = UPLOAD)
+    var isUploaded: Boolean
+) : Serializable {
+    companion object : RemoteClassUtils<Customer> {
+        const val ID_ADD = 0L
 
-		const val ID = "id_customer"
-		const val NAME = "name"
+        const val ID = "id_customer"
+        const val NAME = "name"
 
-		const val DB_NAME = "customer"
+        const val DB_NAME = "customer"
 
 		override fun toListClass(result: QuerySnapshot): List<Customer> {
 			val array: ArrayList<Customer> = ArrayList()
@@ -50,13 +51,13 @@ data class Customer(
 			return array
 		}
 
-		override fun toHashMap(data: Customer): HashMap<String, Any?> {
-			return hashMapOf(
-					ID to data.id,
-					NAME to data.name,
-					UPLOAD to data.isUploaded
-			)
-		}
+        override fun toHashMap(data: Customer): HashMap<String, Any?> {
+            return hashMapOf(
+                ID to data.id,
+                NAME to data.name,
+                UPLOAD to data.isUploaded
+            )
+        }
 
         fun add(name: String) = Customer(
             id = ID_ADD,
@@ -66,5 +67,13 @@ data class Customer(
         )
 	}
 
-	fun isAdd() = id == ID_ADD
+    fun isAdd() = id == ID_ADD
+
+    fun toResponse(): CustomerResponse {
+        return CustomerResponse(
+            id = id.toString(),
+            name = name,
+            isUploaded = true
+        )
+    }
 }

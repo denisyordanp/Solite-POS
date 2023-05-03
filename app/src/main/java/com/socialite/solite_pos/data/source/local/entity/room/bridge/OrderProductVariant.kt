@@ -5,6 +5,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderProductVariantResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
@@ -78,4 +79,13 @@ data class OrderProductVariant(
 
 	@Ignore
 	constructor(idOrderDetail: Long, idVariantOption: Long): this(0, UUID.randomUUID().toString(), idOrderDetail, idVariantOption, false)
+
+	fun toResponse(): OrderProductVariantResponse {
+		return OrderProductVariantResponse(
+			id = id.toString(),
+			orderDetail = idOrderDetail.toString(),
+			variantOption = idVariantOption.toString(),
+			isUploaded = true
+		)
+	}
 }

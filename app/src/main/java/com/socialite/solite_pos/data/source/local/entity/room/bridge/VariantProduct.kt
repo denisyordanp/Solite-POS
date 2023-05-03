@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.VariantProductResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
@@ -98,4 +99,14 @@ data class VariantProduct(
 
 	@Ignore
 	constructor(idVariant: Long, idVariantOption: Long, idProduct: Long): this(0, UUID.randomUUID().toString(), idVariant, idVariantOption, idProduct, false)
+
+	fun toResponse(): VariantProductResponse {
+		return VariantProductResponse(
+			id = id.toString(),
+			product = idProduct.toString(),
+			variantOption = idVariantOption.toString(),
+			variant = idVariant.toString(),
+			isUploaded = true
+		)
+	}
 }

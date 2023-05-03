@@ -7,6 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.OutcomeResponse
 import com.socialite.solite_pos.utils.config.DateUtils
 import java.io.Serializable
 import java.util.UUID
@@ -57,41 +58,7 @@ data class Outcome(
 		const val STORE = "store"
 
 		const val DB_NAME = "outcome"
-//		override fun toHashMap(data: Outcome): HashMap<String, Any?> {
-//			return hashMapOf(
-//					ID to data.id,
-//					NAME to data.name,
-//					DESC to data.desc,
-//					PRICE to data.price,
-//					AMOUNT to data.amount,
-//					DATE to data.date,
-//					UPLOAD to data.isUploaded
-//			)
-//		}
-//
-//		override fun toListClass(result: QuerySnapshot): List<Outcome> {
-//			val array: ArrayList<Outcome> = ArrayList()
-//			for (document in result){
-//				val outcome = Outcome(
-//						document.data[ID] as Long,
-//						document.data[NAME] as String,
-//						document.data[DESC] as String,
-//						document.data[PRICE] as Long,
-//						(document.data[AMOUNT] as Long).toInt(),
-//						document.data[DATE] as String,
-//						document.data[UPLOAD] as Boolean
-//				)
-//				array.add(outcome)
-//			}
-//			return array
-//		}
 	}
-
-	@Ignore
-	constructor(id: Long, name: String, desc: String, price: Long, amount: Int, date: String): this(id, UUID.randomUUID().toString(), name, desc, price, amount, date, 0L, false)
-
-	@Ignore
-	constructor(name: String, desc: String, price: Long, amount: Int, date: String): this(0, UUID.randomUUID().toString(), name, desc, price, amount, date, 0L, false)
 
 	@Ignore
 	constructor(name: String, desc: String, price: Long, date: String): this(0, UUID.randomUUID().toString(), name, desc, price, 1, date, 0L, false)
@@ -100,4 +67,17 @@ data class Outcome(
 
 	val total: Long
 		get() = price * amount
+
+	fun toResponse(): OutcomeResponse {
+		return OutcomeResponse(
+			id = id.toString(),
+			name = name,
+			desc = desc,
+			date = date,
+			amount = amount,
+			price = price.toInt(),
+			store = store.toInt(),
+			isUploaded = true
+		)
+	}
 }

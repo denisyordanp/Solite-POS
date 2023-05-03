@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
+import com.socialite.solite_pos.data.source.remote.response.entity.StoreResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 import java.util.UUID
@@ -46,5 +47,14 @@ data class Store(
                 address = address
             )
         }
+    }
+
+    fun toResponse(): StoreResponse {
+        return StoreResponse(
+            id = id.toString(),
+            name = name,
+            address = address,
+            isUploaded = true
+        )
     }
 }

@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.ProductResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.UUID
@@ -171,31 +172,20 @@ data class Product(
         false
     )
 
-    @Ignore
-    constructor(
-        name: String,
-        category: Long,
-        image: String,
-        desc: String,
-        sellPrice: Long,
-        buyPrice: Long,
-        portion: Int,
-        stock: Long,
-        isMix: Boolean,
-        isActive: Boolean
-    ) : this(
-        0,
-        UUID.randomUUID().toString(),
-        name,
-        category,
-        image,
-        desc,
-        sellPrice,
-        buyPrice,
-        portion,
-        stock,
-        isMix,
-        isActive,
-        false
-    )
+	fun toResponse(): ProductResponse {
+		return ProductResponse(
+			id = id.toString(),
+			name = name,
+			desc = desc,
+			category = category.toInt(),
+			portion = portion,
+			image = image,
+			buyPrice = buyPrice.toInt(),
+			sellPrice = sellPrice.toInt(),
+			stock = stock.toInt(),
+			isMix = isMix,
+			isActive = isActive,
+			isUploaded = true
+		)
+	}
 }

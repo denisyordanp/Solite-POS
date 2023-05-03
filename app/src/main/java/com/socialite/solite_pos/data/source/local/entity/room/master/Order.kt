@@ -9,6 +9,7 @@ import androidx.room.Index
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.preference.SettingPref
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderResponse
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_TIME_FORMAT
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
@@ -79,19 +80,6 @@ data class Order(
     }
 
     @Ignore
-    constructor(orderNo: String, customer: Long, orderTime: String) : this(
-        orderNo,
-        UUID.randomUUID().toString(),
-        customer,
-        orderTime,
-        null,
-        false,
-        ON_PROCESS,
-        0L,
-        false
-    )
-
-    @Ignore
     constructor(
         orderNo: String,
         customer: Long,
@@ -134,4 +122,17 @@ data class Order(
     }
 
     fun statusToOrderMenu() = OrderMenus.values().find { it.status == status }
+
+    fun toResponse(): OrderResponse {
+        return OrderResponse(
+            orderNo = orderNo,
+            customer = customer.toInt(),
+            orderTime = orderTime,
+            status = status,
+            store = store.toInt(),
+            cookTime = cookTime,
+            isTakeAway = isTakeAway,
+            isUploaded = true
+        )
+    }
 }

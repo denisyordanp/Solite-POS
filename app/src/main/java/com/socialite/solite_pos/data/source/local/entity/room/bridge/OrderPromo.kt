@@ -9,6 +9,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import java.util.UUID
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderPromoResponse
 
 @Entity(
     tableName = OrderPromo.DB_NAME,
@@ -70,6 +71,16 @@ data class OrderPromo(
             idPromo = promo.id,
             totalPromo = totalPromo,
             isUpload = false
+        )
+    }
+
+    fun toResponse(): OrderPromoResponse {
+        return OrderPromoResponse(
+            id = id.toString(),
+            order = orderNO,
+            promo = idPromo.toString(),
+            totalPromo = totalPromo.toInt(),
+            isUploaded = true
         )
     }
 }

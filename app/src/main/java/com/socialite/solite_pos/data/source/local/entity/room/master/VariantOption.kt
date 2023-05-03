@@ -10,6 +10,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.VariantOptionResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.UUID
@@ -135,4 +136,16 @@ data class VariantOption(
         isCount: Boolean,
         isActive: Boolean
     ) : this(0, UUID.randomUUID().toString(), idVariant, name, desc, isCount, isActive, false)
+
+	fun toResponse(): VariantOptionResponse {
+		return VariantOptionResponse(
+			id = id.toString(),
+			name = name,
+			desc = desc,
+			variant = idVariant.toString(),
+			isCount = isCount,
+			isActive = isActive,
+			isUploaded = true
+		)
+	}
 }

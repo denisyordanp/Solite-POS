@@ -6,6 +6,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderPaymentResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
 import java.util.*
@@ -87,5 +88,15 @@ import java.util.*
 
 	fun inReturn(total: Long): Long{
 		return pay - total
+	}
+
+	fun toResponse(): OrderPaymentResponse {
+		return OrderPaymentResponse(
+			id = id.toString(),
+			pay = pay.toInt(),
+			order = orderNO,
+			payment = idPayment.toString(),
+			isUploaded = true
+		)
 	}
 }

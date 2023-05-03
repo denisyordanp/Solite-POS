@@ -9,6 +9,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.CategoryResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
@@ -57,10 +58,6 @@ data class Category(
 
         const val ALL = 2
         const val ACTIVE = 1
-
-        fun getFilter(state: Int, isStock: Boolean): SimpleSQLiteQuery {
-            return filter(state, isStock)
-        }
 
         fun getFilter(state: Int): SimpleSQLiteQuery {
             return filter(state, false)
@@ -142,4 +139,15 @@ data class Category(
         isActive,
         false
     )
+
+    fun toResponse(): CategoryResponse {
+        return CategoryResponse(
+            id = id.toString(),
+            name = name,
+            desc = desc,
+            isActive = isActive,
+            isStock = isStock,
+            isUploaded = true
+        )
+    }
 }
