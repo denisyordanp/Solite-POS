@@ -4,6 +4,6 @@ data class OrderPaymentResponse(
     val id: String,
     val isUploaded: Boolean,
     val order: String,
-    val pay: String,
+    val pay: Int,
     val payment: String
 )

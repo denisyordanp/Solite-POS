@@ -5,5 +5,5 @@ data class OrderPromoResponse(
     val isUploaded: Boolean,
     val order: String,
     val promo: String,
-    val totalPromo: String
+    val totalPromo: Int
 )

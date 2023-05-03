@@ -7,5 +7,5 @@ data class PromoResponse(
     val isCash: Boolean,
     val isUploaded: Boolean,
     val name: String,
-    val value: Any
+    val value: Int?
 )

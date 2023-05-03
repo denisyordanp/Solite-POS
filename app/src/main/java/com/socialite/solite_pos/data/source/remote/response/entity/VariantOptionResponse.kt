@@ -7,5 +7,5 @@ data class VariantOptionResponse(
     val isCount: Boolean,
     val isUploaded: Boolean,
     val name: String,
-    val variant: Int
+    val variant: String
 )

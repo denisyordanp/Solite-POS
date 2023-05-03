@@ -7,5 +7,5 @@ data class PaymentResponse(
     val isCash: Boolean,
     val isUploaded: Boolean,
     val name: String,
-    val tax: Double
+    val tax: Float
 )

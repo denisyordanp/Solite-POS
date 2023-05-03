@@ -4,5 +4,5 @@ data class OrderProductVariantResponse(
     val id: String,
     val isUploaded: Boolean,
     val orderDetail: String,
-    val variantOption: Int
+    val variantOption: String
 )
