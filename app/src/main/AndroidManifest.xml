@@ -45,9 +45,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
-            android:exported="true"/>
-
         <receiver android:name=".utils.tools.DoneCookService" />
 
         <meta-data
