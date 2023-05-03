@@ -1,7 +1,9 @@
 package com.socialite.solite_pos.data.source.remote
 
+import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeResponse
 import com.socialite.solite_pos.data.source.remote.response.entity.TokenResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -23,4 +25,9 @@ interface SoliteServices {
         @Field("password") password: String,
         @Field("store") storeName: String
     ): ApiResponse<TokenResponse>
+
+    @POST
+    suspend fun synchronize(
+        @Body synchronize: SynchronizeResponse
+    ): ApiResponse<SynchronizeResponse>
 }
