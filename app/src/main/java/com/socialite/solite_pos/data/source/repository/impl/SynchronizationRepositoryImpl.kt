@@ -1,7 +1,6 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.remote.SoliteServices
 import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeResponse
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
@@ -37,9 +36,9 @@ class SynchronizationRepositoryImpl(
         val needUploadCustomers =
             customersRepository.getNeedUploadCustomers().map { it.toResponse() }
         val needUploadStores = storeRepository.getNeedUploadStores().map { it.toResponse() }
-        val needUploadCategories = categoriesRepository.getNeedUploadCategories().map { it.toResponse() }
-        val promo = promosRepository.getPromos(Promo.filter(Promo.Status.ALL)).firstOrNull()
-            ?.map { it.toResponse() } ?: emptyList()
+        val needUploadCategories =
+            categoriesRepository.getNeedUploadCategories().map { it.toResponse() }
+        val needUploadPromo = promosRepository.getNeedUploadPromos().map { it.toResponse() }
         val payment = paymentsRepository.getPayments(Payment.filter(Payment.ALL)).firstOrNull()
             ?.map { it.toResponse() } ?: emptyList()
         val order = ordersRepository.getOrders().map { it.toResponse() }
@@ -58,7 +57,7 @@ class SynchronizationRepositoryImpl(
             customer = needUploadCustomers,
             store = needUploadStores,
             category = needUploadCategories,
-            promo = promo,
+            promo = needUploadPromo,
             payment = payment,
             order = order,
             outcome = outcome,
@@ -83,6 +82,9 @@ class SynchronizationRepositoryImpl(
         if (needUploadCategories.isNotEmpty()) {
             categoriesRepository.insertCategories(needUploadCategories.map { it.toEntity() })
         }
+        if (needUploadPromo.isNotEmpty()) {
+            promosRepository.insertPromos(needUploadPromo.map { it.toEntity() })
+        }
 
         // Insert all missing data that given by server
         val missingCustomer = response.data?.customer
@@ -96,6 +98,10 @@ class SynchronizationRepositoryImpl(
         val missingCategories = response.data?.category
         if (!missingCategories.isNullOrEmpty()) {
             categoriesRepository.insertCategories(missingCategories.map { it.toEntity() })
+        }
+        val missingPromo = response.data?.promo
+        if (!missingPromo.isNullOrEmpty()) {
+            promosRepository.insertPromos(missingPromo.map { it.toEntity() })
         }
 
 

@@ -17,6 +17,9 @@ interface PromosDao {
     @RawQuery(observedEntities = [Promo::class])
     fun getPromos(query: SupportSQLiteQuery): Flow<List<Promo>>
 
+    @Query("SELECT * FROM ${Promo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadPromos(): List<Promo>
+
     @RawQuery(observedEntities = [NewPromo::class])
     fun getNewPromos(query: SupportSQLiteQuery): Flow<List<NewPromo>>
 
@@ -28,6 +31,9 @@ interface PromosDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPromo(data: NewPromo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPromos(data: List<Promo>)
 
     @Update
     suspend fun updatePromo(data: Promo)
