@@ -41,8 +41,12 @@ class PaymentsRepositoryImpl(
     override suspend fun updatePayment(data: NewPayment) {
         dao.updateNewPayment(data)
     }
+    override suspend fun insertPayments(list: List<Payment>) {
+        dao.insertPayments(list)
+    }
 
     override fun getPayments(query: SupportSQLiteQuery) = dao.getNewPayments(query)
+    override suspend fun getNeedUploadPayments() = dao.getNeedUploadPayments()
     override suspend fun migrateToUUID() {
         val payments = dao.getPayments(Payment.filter(Payment.ALL)).firstOrNull()
         if (!payments.isNullOrEmpty()) {

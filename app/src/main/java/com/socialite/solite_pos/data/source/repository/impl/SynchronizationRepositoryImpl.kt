@@ -1,6 +1,5 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.remote.SoliteServices
 import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeResponse
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
@@ -39,8 +38,7 @@ class SynchronizationRepositoryImpl(
         val needUploadCategories =
             categoriesRepository.getNeedUploadCategories().map { it.toResponse() }
         val needUploadPromo = promosRepository.getNeedUploadPromos().map { it.toResponse() }
-        val payment = paymentsRepository.getPayments(Payment.filter(Payment.ALL)).firstOrNull()
-            ?.map { it.toResponse() } ?: emptyList()
+        val needUploadPayments = paymentsRepository.getNeedUploadPayments().map { it.toResponse() }
         val order = ordersRepository.getOrders().map { it.toResponse() }
         val outcome = outcomesRepository.getOutcomes().map { it.toResponse() }
         val product = productsRepository.getProducts().map { it.toResponse() }
@@ -58,7 +56,7 @@ class SynchronizationRepositoryImpl(
             store = needUploadStores,
             category = needUploadCategories,
             promo = needUploadPromo,
-            payment = payment,
+            payment = needUploadPayments,
             order = order,
             outcome = outcome,
             product = product,
@@ -85,6 +83,9 @@ class SynchronizationRepositoryImpl(
         if (needUploadPromo.isNotEmpty()) {
             promosRepository.insertPromos(needUploadPromo.map { it.toEntity() })
         }
+        if (needUploadPayments.isNotEmpty()) {
+            paymentsRepository.insertPayments(needUploadPayments.map { it.toEntity() })
+        }
 
         // Insert all missing data that given by server
         val missingCustomer = response.data?.customer
@@ -102,6 +103,10 @@ class SynchronizationRepositoryImpl(
         val missingPromo = response.data?.promo
         if (!missingPromo.isNullOrEmpty()) {
             promosRepository.insertPromos(missingPromo.map { it.toEntity() })
+        }
+        val missingPayment = response.data?.payment
+        if (!missingPayment.isNullOrEmpty()) {
+            paymentsRepository.insertPayments(missingPayment.map { it.toEntity() })
         }
 
 
