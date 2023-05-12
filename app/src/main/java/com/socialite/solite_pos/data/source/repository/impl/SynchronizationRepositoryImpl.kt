@@ -46,7 +46,7 @@ class SynchronizationRepositoryImpl(
             ordersRepository.getNeedUploadOrderDetails().map { it.toResponse() }
         val needUploadOrderPayments =
             ordersRepository.getNeedUploadOrderPayments().map { it.toResponse() }
-        val orderPromo = ordersRepository.getOrderPromos().map { it.toResponse() }
+        val needUploadOrderPromos = ordersRepository.getNeedUploadOrderPromos().map { it.toResponse() }
         val variantOption = variantOptionsRepository.getVariantOptions().map { it.toResponse() }
         val orderProductVariant = ordersRepository.getOrderProductVariants().map { it.toResponse() }
         val variantProduct = productVariantsRepository.getVariantProducts().map { it.toResponse() }
@@ -63,7 +63,7 @@ class SynchronizationRepositoryImpl(
             variant = needUploadVariants,
             orderDetail = needUploadOrderDetails,
             orderPayment = needUploadOrderPayments,
-            orderPromo = orderPromo,
+            orderPromo = needUploadOrderPromos,
             variantOption = variantOption,
             orderProductVariant = orderProductVariant,
             variantProduct = variantProduct
@@ -103,6 +103,9 @@ class SynchronizationRepositoryImpl(
         }
         if (needUploadOrderPayments.isNotEmpty()) {
             ordersRepository.insertOrderPayments(needUploadOrderPayments.map { it.toEntity() })
+        }
+        if (needUploadOrderPromos.isNotEmpty()) {
+            ordersRepository.insertOrderPromos(needUploadOrderPromos.map { it.toEntity() })
         }
 
         // Insert all missing data that given by server
@@ -149,6 +152,10 @@ class SynchronizationRepositoryImpl(
         val missingOrderPayment = response.data?.orderPayment
         if (!missingOrderPayment.isNullOrEmpty()) {
             ordersRepository.insertOrderPayments(missingOrderPayment.map { it.toEntity() })
+        }
+        val missingOrderPromo = response.data?.orderPromo
+        if (!missingOrderPromo.isNullOrEmpty()) {
+            ordersRepository.insertOrderPromos(missingOrderPromo.map { it.toEntity() })
         }
 
 
