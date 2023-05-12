@@ -40,7 +40,7 @@ class SynchronizationRepositoryImpl(
         val needUploadPromo = promosRepository.getNeedUploadPromos().map { it.toResponse() }
         val needUploadPayments = paymentsRepository.getNeedUploadPayments().map { it.toResponse() }
         val needUploadOrders = ordersRepository.getNeedUploadOrders().map { it.toResponse() }
-        val outcome = outcomesRepository.getOutcomes().map { it.toResponse() }
+        val needUploadOutcomes = outcomesRepository.getNeedUploadOutcomes().map { it.toResponse() }
         val product = productsRepository.getProducts().map { it.toResponse() }
         val variant =
             variantsRepository.getVariants().firstOrNull()?.map { it.toResponse() } ?: emptyList()
@@ -58,7 +58,7 @@ class SynchronizationRepositoryImpl(
             promo = needUploadPromo,
             payment = needUploadPayments,
             order = needUploadOrders,
-            outcome = outcome,
+            outcome = needUploadOutcomes,
             product = product,
             variant = variant,
             orderDetail = orderDetail,
@@ -89,6 +89,9 @@ class SynchronizationRepositoryImpl(
         if (needUploadOrders.isNotEmpty()) {
             ordersRepository.insertOrders(needUploadOrders.map { it.toEntity() })
         }
+        if (needUploadOutcomes.isNotEmpty()) {
+            outcomesRepository.insertOutcomes(needUploadOutcomes.map { it.toEntity() })
+        }
 
         // Insert all missing data that given by server
         val missingCustomer = response.data?.customer
@@ -114,6 +117,10 @@ class SynchronizationRepositoryImpl(
         val missingOrder = response.data?.order
         if (!missingOrder.isNullOrEmpty()) {
             ordersRepository.insertOrders(missingOrder.map { it.toEntity() })
+        }
+        val missingOutcome = response.data?.outcome
+        if (!missingOutcome.isNullOrEmpty()) {
+            outcomesRepository.insertOutcomes(missingOutcome.map { it.toEntity() })
         }
 
 

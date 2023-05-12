@@ -8,9 +8,11 @@ interface OutcomesRepository {
 
     fun getOutcomes(date: String): Flow<List<Outcome>>
     fun getOutcomes(parameters: ReportsParameter): Flow<List<Outcome>>
-    suspend fun getOutcomes(): List<Outcome>
+    suspend fun getNeedUploadOutcomes(): List<Outcome>
     suspend fun insertOutcome(data: Outcome)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldOutcomes()
     suspend fun deleteAllNewOutcomes()
+    suspend fun insertOutcomes(list: List<Outcome>)
+    suspend fun updateOutcome(data: Outcome)
 }
