@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ProductsDao {
 
+    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadProducts(): List<Product>
+
     @Query("SELECT * FROM ${NewProduct.DB_NAME} WHERE ${NewProduct.ID} = :idProduct LIMIT 1")
     suspend fun getProduct(idProduct: String): NewProduct
 
@@ -53,6 +56,9 @@ interface ProductsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewProduct(data: NewProduct)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProducts(list: List<Product>)
 
     @Update
     suspend fun updateProduct(data: Product)
