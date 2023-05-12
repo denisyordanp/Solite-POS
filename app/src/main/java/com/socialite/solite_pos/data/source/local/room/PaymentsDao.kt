@@ -27,13 +27,13 @@ interface PaymentsDao {
     suspend fun getPaymentById(paymentId: Long): Payment?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPayment(data: Payment)
+    suspend fun insertPayment(data: Payment)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewPayment(data: NewPayment)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPayments(list: List<Payment>)
+    suspend fun insertPayments(list: List<Payment>)
 
     @Update
     suspend fun updatePayment(data: Payment)

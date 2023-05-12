@@ -33,13 +33,13 @@ interface VariantOptionsDao {
     fun getVariantWithOptions(): Flow<List<VariantWithOption>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertVariantOption(data: VariantOption)
+    suspend fun insertVariantOption(data: VariantOption)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewVariantOption(data: NewVariantOption)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertVariantOptions(list: List<VariantOption>)
+    suspend fun insertVariantOptions(list: List<VariantOption>)
 
     @Update
     suspend fun updateVariantOption(data: VariantOption)

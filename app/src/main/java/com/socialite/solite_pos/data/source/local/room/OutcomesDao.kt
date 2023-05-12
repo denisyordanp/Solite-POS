@@ -26,13 +26,13 @@ interface OutcomesDao {
     suspend fun getOutcomes(): List<Outcome>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOutcome(data: Outcome): Long
+    suspend fun insertOutcome(data: Outcome): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewOutcome(data: NewOutcome)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOutcomes(list: List<Outcome>)
+    suspend fun insertOutcomes(list: List<Outcome>)
 
     @Update
     suspend fun updateOutcome(data: Outcome)

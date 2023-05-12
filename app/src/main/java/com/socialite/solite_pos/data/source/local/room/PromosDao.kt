@@ -27,13 +27,13 @@ interface PromosDao {
     suspend fun getPromoById(promoId: Long): Promo?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPromo(data: Promo)
+    suspend fun insertPromo(data: Promo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPromo(data: NewPromo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPromos(data: List<Promo>)
+    suspend fun insertPromos(data: List<Promo>)
 
     @Update
     suspend fun updatePromo(data: Promo)

@@ -25,7 +25,7 @@ interface CustomersDao {
     suspend fun getNeedUploadCustomers(): List<Customer>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCustomer(data: Customer): Long
+    suspend fun insertCustomer(data: Customer): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewCustomer(data: NewCustomer)
@@ -40,5 +40,5 @@ interface CustomersDao {
     suspend fun deleteAllNewCustomers()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCustomers(datas: List<Customer>)
+    suspend fun insertCustomers(datas: List<Customer>)
 }

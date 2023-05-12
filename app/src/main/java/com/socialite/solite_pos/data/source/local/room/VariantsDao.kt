@@ -25,13 +25,13 @@ interface VariantsDao {
     suspend fun getNeedUploadVariants(): List<Variant>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertVariant(data: Variant): Long
+    suspend fun insertVariant(data: Variant): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewVariant(data: NewVariant)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertVariants(list: List<Variant>)
+    suspend fun insertVariants(list: List<Variant>)
 
     @Update
     suspend fun updateVariant(data: Variant)

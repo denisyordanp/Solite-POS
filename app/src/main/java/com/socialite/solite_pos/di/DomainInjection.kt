@@ -37,7 +37,6 @@ object DomainInjection {
         val database = getInstance(context)
         return NewOrderImpl(
             dao = database.ordersDao(),
-//            productDao = database.productsDao(),
             orderPref = OrderPref(context),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context)
         )
