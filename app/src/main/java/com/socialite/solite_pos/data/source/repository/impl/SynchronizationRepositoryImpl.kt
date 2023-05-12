@@ -36,7 +36,7 @@ class SynchronizationRepositoryImpl(
     override suspend fun synchronize(): Boolean {
         // Get all un uploaded data
         val needUploadCustomers = customersRepository.getNeedUploadCustomers().map { it.toResponse() }
-        val store = storeRepository.getStores().firstOrNull()?.map { it.toResponse() } ?: emptyList()
+        val needUploadStores = storeRepository.getNeedUploadStores().map { it.toResponse() }
         val category =
             categoriesRepository.getCategories(Category.getFilter(Category.ALL)).firstOrNull()
                 ?.map { it.toResponse() } ?: emptyList()
@@ -57,8 +57,8 @@ class SynchronizationRepositoryImpl(
 
         val synchronizeData = SynchronizeResponse(
             customer = needUploadCustomers,
+            store = needUploadStores,
             category = category,
-            store = store,
             promo = promo,
             payment = payment,
             order = order,
@@ -78,12 +78,20 @@ class SynchronizationRepositoryImpl(
         if (needUploadCustomers.isNotEmpty()) {
             customersRepository.insertCustomers(needUploadCustomers.map { it.toEntity() })
         }
+        if (needUploadStores.isNotEmpty()) {
+            storeRepository.insertStores(needUploadStores.map { it.toEntity() })
+        }
 
         // Insert all missing data that given by server
         val missingCustomer = response.data?.customer
         if (!missingCustomer.isNullOrEmpty()) {
             customersRepository.insertCustomers(missingCustomer.map { it.toEntity() })
         }
+        val missingStore = response.data?.store
+        if (!missingStore.isNullOrEmpty()) {
+            storeRepository.insertStores(missingStore.map { it.toEntity() })
+        }
+
 
         return true
     }
