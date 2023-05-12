@@ -46,8 +46,10 @@ class SynchronizationRepositoryImpl(
             ordersRepository.getNeedUploadOrderDetails().map { it.toResponse() }
         val needUploadOrderPayments =
             ordersRepository.getNeedUploadOrderPayments().map { it.toResponse() }
-        val needUploadOrderPromos = ordersRepository.getNeedUploadOrderPromos().map { it.toResponse() }
-        val variantOption = variantOptionsRepository.getVariantOptions().map { it.toResponse() }
+        val needUploadOrderPromos =
+            ordersRepository.getNeedUploadOrderPromos().map { it.toResponse() }
+        val needUploadVariantOptions =
+            variantOptionsRepository.getNeedUploadVariantOptions().map { it.toResponse() }
         val orderProductVariant = ordersRepository.getOrderProductVariants().map { it.toResponse() }
         val variantProduct = productVariantsRepository.getVariantProducts().map { it.toResponse() }
 
@@ -64,7 +66,7 @@ class SynchronizationRepositoryImpl(
             orderDetail = needUploadOrderDetails,
             orderPayment = needUploadOrderPayments,
             orderPromo = needUploadOrderPromos,
-            variantOption = variantOption,
+            variantOption = needUploadVariantOptions,
             orderProductVariant = orderProductVariant,
             variantProduct = variantProduct
         )
@@ -106,6 +108,9 @@ class SynchronizationRepositoryImpl(
         }
         if (needUploadOrderPromos.isNotEmpty()) {
             ordersRepository.insertOrderPromos(needUploadOrderPromos.map { it.toEntity() })
+        }
+        if (needUploadVariantOptions.isNotEmpty()) {
+            variantOptionsRepository.insertVariantOptions(needUploadVariantOptions.map { it.toEntity() })
         }
 
         // Insert all missing data that given by server
@@ -157,7 +162,10 @@ class SynchronizationRepositoryImpl(
         if (!missingOrderPromo.isNullOrEmpty()) {
             ordersRepository.insertOrderPromos(missingOrderPromo.map { it.toEntity() })
         }
-
+        val missingVariantOption = response.data?.variantOption
+        if (!missingVariantOption.isNullOrEmpty()) {
+            variantOptionsRepository.insertVariantOptions(missingVariantOption.map { it.toEntity() })
+        }
 
         return true
     }

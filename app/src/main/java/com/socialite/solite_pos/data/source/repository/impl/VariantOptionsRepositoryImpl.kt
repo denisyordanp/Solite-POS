@@ -54,12 +54,14 @@ class VariantOptionsRepositoryImpl(
             }
     }
 
-    override suspend fun getVariantOptions() = dao.getVariantOptions()
+    override suspend fun getNeedUploadVariantOptions() = dao.getNeedUploadVariantOptions()
 
     override suspend fun insertVariantOption(data: NewVariantOption) {
         dao.insertNewVariantOption(data)
     }
-
+    override suspend fun insertVariantOptions(list: List<VariantOption>) {
+        dao.insertVariantOptions(list)
+    }
     override suspend fun updateVariantOption(data: NewVariantOption) {
         dao.updateNewVariantOption(data)
     }
