@@ -21,6 +21,9 @@ interface CustomersDao {
     @Query("SELECT * FROM ${Customer.DB_NAME} WHERE ${Customer.ID} = :customerId LIMIT 1")
     suspend fun getCustomerById(customerId: Long): Customer?
 
+    @Query("SELECT * FROM ${Customer.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNotUploadedCustomers(): List<Customer>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCustomer(data: Customer): Long
 
@@ -35,4 +38,7 @@ interface CustomersDao {
 
     @Query("DELETE FROM ${NewCustomer.DB_NAME}")
     suspend fun deleteAllNewCustomers()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCustomers(datas: List<Customer>)
 }

@@ -34,8 +34,8 @@ class SynchronizationRepositoryImpl(
     private val service: SoliteServices
 ) : SynchronizationRepository {
     override suspend fun synchronize(): Boolean {
-        val customer =
-            customersRepository.getCustomers().firstOrNull()?.map { it.toResponse() } ?: emptyList()
+        // Get all un uploaded data
+        val needUploadCustomers = customersRepository.getNotUploadedCustomers().map { it.toResponse() }
         val store = storeRepository.getStores().firstOrNull()?.map { it.toResponse() } ?: emptyList()
         val category =
             categoriesRepository.getCategories(Category.getFilter(Category.ALL)).firstOrNull()
@@ -56,7 +56,7 @@ class SynchronizationRepositoryImpl(
         val variantProduct = productVariantsRepository.getVariantProducts().map { it.toResponse() }
 
         val synchronizeData = SynchronizeResponse(
-            customer = customer,
+            customer = needUploadCustomers,
             category = category,
             store = store,
             promo = promo,
@@ -72,10 +72,18 @@ class SynchronizationRepositoryImpl(
             orderProductVariant = orderProductVariant,
             variantProduct = variantProduct
         )
-
         val response = service.synchronize(synchronizeData)
 
-        // save upcoming missing data, and update is_uploaded data
+        // Update all un uploaded data that already uploaded
+        if (needUploadCustomers.isNotEmpty()) {
+            customersRepository.insertCustomers(needUploadCustomers.map { it.toEntity() })
+        }
+
+        // Insert all missing data that given by server
+        val missingCustomer = response.data?.customer
+        if (!missingCustomer.isNullOrEmpty()) {
+            customersRepository.insertCustomers(missingCustomer.map { it.toEntity() })
+        }
 
         return true
     }
