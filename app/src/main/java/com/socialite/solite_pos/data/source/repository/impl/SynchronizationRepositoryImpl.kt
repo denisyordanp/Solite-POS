@@ -1,6 +1,5 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.remote.SoliteServices
@@ -35,11 +34,10 @@ class SynchronizationRepositoryImpl(
 ) : SynchronizationRepository {
     override suspend fun synchronize(): Boolean {
         // Get all un uploaded data
-        val needUploadCustomers = customersRepository.getNeedUploadCustomers().map { it.toResponse() }
+        val needUploadCustomers =
+            customersRepository.getNeedUploadCustomers().map { it.toResponse() }
         val needUploadStores = storeRepository.getNeedUploadStores().map { it.toResponse() }
-        val category =
-            categoriesRepository.getCategories(Category.getFilter(Category.ALL)).firstOrNull()
-                ?.map { it.toResponse() } ?: emptyList()
+        val needUploadCategories = categoriesRepository.getNeedUploadCategories().map { it.toResponse() }
         val promo = promosRepository.getPromos(Promo.filter(Promo.Status.ALL)).firstOrNull()
             ?.map { it.toResponse() } ?: emptyList()
         val payment = paymentsRepository.getPayments(Payment.filter(Payment.ALL)).firstOrNull()
@@ -47,7 +45,8 @@ class SynchronizationRepositoryImpl(
         val order = ordersRepository.getOrders().map { it.toResponse() }
         val outcome = outcomesRepository.getOutcomes().map { it.toResponse() }
         val product = productsRepository.getProducts().map { it.toResponse() }
-        val variant = variantsRepository.getVariants().firstOrNull()?.map { it.toResponse() } ?: emptyList()
+        val variant =
+            variantsRepository.getVariants().firstOrNull()?.map { it.toResponse() } ?: emptyList()
         val orderDetail = ordersRepository.getOrderDetails().map { it.toResponse() }
         val orderPayment = ordersRepository.getOrderPayments().map { it.toResponse() }
         val orderPromo = ordersRepository.getOrderPromos().map { it.toResponse() }
@@ -58,7 +57,7 @@ class SynchronizationRepositoryImpl(
         val synchronizeData = SynchronizeResponse(
             customer = needUploadCustomers,
             store = needUploadStores,
-            category = category,
+            category = needUploadCategories,
             promo = promo,
             payment = payment,
             order = order,
@@ -81,6 +80,9 @@ class SynchronizationRepositoryImpl(
         if (needUploadStores.isNotEmpty()) {
             storeRepository.insertStores(needUploadStores.map { it.toEntity() })
         }
+        if (needUploadCategories.isNotEmpty()) {
+            categoriesRepository.insertCategories(needUploadCategories.map { it.toEntity() })
+        }
 
         // Insert all missing data that given by server
         val missingCustomer = response.data?.customer
@@ -90,6 +92,10 @@ class SynchronizationRepositoryImpl(
         val missingStore = response.data?.store
         if (!missingStore.isNullOrEmpty()) {
             storeRepository.insertStores(missingStore.map { it.toEntity() })
+        }
+        val missingCategories = response.data?.category
+        if (!missingCategories.isNullOrEmpty()) {
+            categoriesRepository.insertCategories(missingCategories.map { it.toEntity() })
         }
 
 

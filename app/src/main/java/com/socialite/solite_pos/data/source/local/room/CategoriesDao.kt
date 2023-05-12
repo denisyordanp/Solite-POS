@@ -20,11 +20,17 @@ interface CategoriesDao {
     @RawQuery(observedEntities = [NewCategory::class])
     fun getNewCategories(query: SupportSQLiteQuery): Flow<List<NewCategory>>
 
+    @Query("SELECT * FROM ${Category.DB_NAME}  WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadCategories(): List<Category>
+
     @Query("SELECT * FROM ${Category.DB_NAME} WHERE ${Category.ID} = :categoryId LIMIT 1")
     suspend fun getCategoryById(categoryId: Long): Category?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(data: Category)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategories(list: List<Category>)
 
     @Update
     suspend fun updateCategory(data: Category)
