@@ -11,5 +11,6 @@ interface CustomersRepository {
     suspend fun deleteAllOldCustomers()
     suspend fun deleteAllNewCustomers()
     suspend fun getNotUploadedCustomers(): List<Customer>
+    suspend fun getNeedUploadCustomers(): List<Customer>
     suspend fun insertCustomers(datas: List<Customer>)
 }

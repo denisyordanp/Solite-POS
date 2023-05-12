@@ -32,8 +32,8 @@ class CustomersRepositoryImpl(
         }
     }
 
-    override fun getCustomers() = dao.getNewCustomers()
-    override suspend fun getNotUploadedCustomers() = dao.getNotUploadedCustomers()
+    override fun getCustomers() = dao.getCustomers()
+    override suspend fun getNeedUploadCustomers() = dao.getNeedUploadCustomers()
 
     override suspend fun insertCustomer(data: NewCustomer) = dao.insertNewCustomer(data)
     override suspend fun insertCustomers(datas: List<Customer>) = dao.insertCustomers(datas)

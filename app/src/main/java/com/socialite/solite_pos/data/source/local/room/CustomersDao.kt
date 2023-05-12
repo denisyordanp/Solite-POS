@@ -22,7 +22,7 @@ interface CustomersDao {
     suspend fun getCustomerById(customerId: Long): Customer?
 
     @Query("SELECT * FROM ${Customer.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNotUploadedCustomers(): List<Customer>
+    suspend fun getNeedUploadCustomers(): List<Customer>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCustomer(data: Customer): Long

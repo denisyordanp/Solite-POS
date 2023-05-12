@@ -35,7 +35,7 @@ class SynchronizationRepositoryImpl(
 ) : SynchronizationRepository {
     override suspend fun synchronize(): Boolean {
         // Get all un uploaded data
-        val needUploadCustomers = customersRepository.getNotUploadedCustomers().map { it.toResponse() }
+        val needUploadCustomers = customersRepository.getNeedUploadCustomers().map { it.toResponse() }
         val store = storeRepository.getStores().firstOrNull()?.map { it.toResponse() } ?: emptyList()
         val category =
             categoriesRepository.getCategories(Category.getFilter(Category.ALL)).firstOrNull()
