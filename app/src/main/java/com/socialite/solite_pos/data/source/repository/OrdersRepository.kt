@@ -21,7 +21,7 @@ interface OrdersRepository {
     suspend fun getNeedUploadOrderDetails(): List<OrderDetail>
     suspend fun getNeedUploadOrderPayments(): List<OrderPayment>
     suspend fun getNeedUploadOrderPromos(): List<OrderPromo>
-    suspend fun getOrderProductVariants(): List<OrderProductVariant>
+    suspend fun getNeedUploadOrderProductVariants(): List<OrderProductVariant>
     suspend fun updateOrder(order: Order)
     suspend fun insertOrders(list: List<Order>)
     suspend fun insertOrderPayments(list: List<OrderPayment>)
@@ -32,4 +32,5 @@ interface OrdersRepository {
     suspend fun deleteAllOldOrders()
     suspend fun deleteAllNewOrders()
     suspend fun insertOrderPromos(list: List<OrderPromo>)
+    suspend fun insertOrderProductVariants(list: List<OrderProductVariant>)
 }

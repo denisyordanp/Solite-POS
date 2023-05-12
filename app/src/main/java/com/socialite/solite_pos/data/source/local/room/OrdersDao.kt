@@ -66,8 +66,8 @@ interface OrdersDao {
     @Query("SELECT * FROM ${OrderPromo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadOrderPromos(): List<OrderPromo>
 
-    @Query("SELECT * FROM ${OrderProductVariant.DB_NAME}")
-    suspend fun getOrderProductVariants(): List<OrderProductVariant>
+    @Query("SELECT * FROM ${OrderProductVariant.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedOrderProductVariants(): List<OrderProductVariant>
 
     @Transaction
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.ID} = :idDetail")
@@ -146,6 +146,9 @@ interface OrdersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderProductVariant(orderProductVariant: NewOrderProductVariant)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderProductVariants(list: List<OrderProductVariant>)
 
     @Update
     suspend fun updateOrder(order: Order)

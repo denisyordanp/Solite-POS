@@ -50,7 +50,8 @@ class SynchronizationRepositoryImpl(
             ordersRepository.getNeedUploadOrderPromos().map { it.toResponse() }
         val needUploadVariantOptions =
             variantOptionsRepository.getNeedUploadVariantOptions().map { it.toResponse() }
-        val orderProductVariant = ordersRepository.getOrderProductVariants().map { it.toResponse() }
+        val needUploadOrderProductVariants =
+            ordersRepository.getNeedUploadOrderProductVariants().map { it.toResponse() }
         val variantProduct = productVariantsRepository.getVariantProducts().map { it.toResponse() }
 
         val synchronizeData = SynchronizeResponse(
@@ -67,7 +68,7 @@ class SynchronizationRepositoryImpl(
             orderPayment = needUploadOrderPayments,
             orderPromo = needUploadOrderPromos,
             variantOption = needUploadVariantOptions,
-            orderProductVariant = orderProductVariant,
+            orderProductVariant = needUploadOrderProductVariants,
             variantProduct = variantProduct
         )
         val response = service.synchronize(synchronizeData)
@@ -111,6 +112,9 @@ class SynchronizationRepositoryImpl(
         }
         if (needUploadVariantOptions.isNotEmpty()) {
             variantOptionsRepository.insertVariantOptions(needUploadVariantOptions.map { it.toEntity() })
+        }
+        if (needUploadOrderProductVariants.isNotEmpty()) {
+            ordersRepository.insertOrderProductVariants(needUploadOrderProductVariants.map { it.toEntity() })
         }
 
         // Insert all missing data that given by server
@@ -165,6 +169,10 @@ class SynchronizationRepositoryImpl(
         val missingVariantOption = response.data?.variantOption
         if (!missingVariantOption.isNullOrEmpty()) {
             variantOptionsRepository.insertVariantOptions(missingVariantOption.map { it.toEntity() })
+        }
+        val missingOrderProductVariant = response.data?.orderProductVariant
+        if (!missingOrderProductVariant.isNullOrEmpty()) {
+            ordersRepository.insertOrderProductVariants(missingOrderProductVariant.map { it.toEntity() })
         }
 
         return true
