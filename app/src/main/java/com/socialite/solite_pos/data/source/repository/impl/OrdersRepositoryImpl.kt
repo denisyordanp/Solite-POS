@@ -87,7 +87,7 @@ class OrdersRepositoryImpl(
     }
 
     override fun getOrderData(orderId: String) = dao.getOrderData(orderId)
-    override suspend fun getOrders(): List<Order> = dao.getOrders()
+    override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
 
     override suspend fun getOrderDetail(orderId: String): OrderData? = dao.getOrderDataById(orderId)
 
@@ -97,7 +97,9 @@ class OrdersRepositoryImpl(
     override suspend fun getOrderProductVariants(): List<OrderProductVariant> = dao.getOrderProductVariants()
 
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(order)
-
+    override suspend fun insertOrders(list: List<Order>) {
+        dao.insertOrders(list)
+    }
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
         dao.insertNewOrderPayment(payment)
 

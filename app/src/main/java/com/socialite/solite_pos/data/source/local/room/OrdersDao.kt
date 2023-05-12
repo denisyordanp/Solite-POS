@@ -34,8 +34,8 @@ interface OrdersDao {
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :store")
     fun getOrdersByStatus(status: Int, date: String, store: String): Flow<List<OrderData>>
 
-    @Query("SELECT * FROM '${Order.DB_NAME}'")
-    suspend fun getOrders(): List<Order>
+    @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrders(): List<Order>
 
     @Transaction
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
@@ -102,13 +102,16 @@ interface OrdersDao {
     @Query("SELECT * FROM '${OrderProductVariant.DB_NAME}'")
     suspend fun getOrderProductVariants(): List<OrderProductVariant>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: Order): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrder(order: NewOrder)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrders(list: List<Order>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDetailOrder(detail: OrderDetail): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -117,7 +120,7 @@ interface OrdersDao {
     @Query("DELETE FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
     suspend fun deleteDetailOrders(orderNo: String)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVariantOrder(variants: OrderProductVariant): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

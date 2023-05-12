@@ -13,7 +13,7 @@ interface OrdersRepository {
 
     fun getOrderList(status: Int, date: String): Flow<List<OrderData>>
     fun getOrderList(status: Int, date: String, store: String): Flow<List<OrderData>>
-    suspend fun getOrders(): List<Order>
+    suspend fun getNeedUploadOrders(): List<Order>
     fun getOrderList(status: Int, date: String, store: Long): Flow<List<OrderData>>
     fun getOrderList(status: Int, parameters: ReportsParameter): Flow<List<OrderData>>
     fun getOrderData(orderId: String): Flow<OrderData?>
@@ -23,6 +23,7 @@ interface OrdersRepository {
     suspend fun getOrderPromos(): List<OrderPromo>
     suspend fun getOrderProductVariants(): List<OrderProductVariant>
     suspend fun updateOrder(order: Order)
+    suspend fun insertOrders(list: List<Order>)
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
     suspend fun insertNewPromoOrder(promo: OrderPromo)
     suspend fun migrateToUUID()
