@@ -33,11 +33,13 @@ class VariantsRepositoryImpl(
     }
 
     override fun getVariants() = dao.getNewVariants()
-
+    override suspend fun getNeedUploadVariants() = dao.getNeedUploadVariants()
     override suspend fun insertVariant(data: NewVariant) {
         dao.insertNewVariant(data)
     }
-
+    override suspend fun insertVariants(list: List<Variant>) {
+        dao.insertVariants(list)
+    }
     override suspend fun updateVariant(data: NewVariant) {
         dao.updateNewVariant(data)
     }

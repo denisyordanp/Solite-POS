@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 interface VariantsRepository {
 
     fun getVariants(): Flow<List<Variant>>
+    suspend fun getNeedUploadVariants(): List<Variant>
     suspend fun insertVariant(data: Variant)
+    suspend fun insertVariants(list: List<Variant>)
     suspend fun updateVariant(data: Variant)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldVariants()

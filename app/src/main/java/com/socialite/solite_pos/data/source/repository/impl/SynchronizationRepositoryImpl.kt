@@ -14,7 +14,6 @@ import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SynchronizationRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
-import kotlinx.coroutines.flow.firstOrNull
 
 class SynchronizationRepositoryImpl(
     private val customersRepository: CustomersRepository,
@@ -42,8 +41,7 @@ class SynchronizationRepositoryImpl(
         val needUploadOrders = ordersRepository.getNeedUploadOrders().map { it.toResponse() }
         val needUploadOutcomes = outcomesRepository.getNeedUploadOutcomes().map { it.toResponse() }
         val needUploadProducts = productsRepository.getNeedUploadProducts().map { it.toResponse() }
-        val variant =
-            variantsRepository.getVariants().firstOrNull()?.map { it.toResponse() } ?: emptyList()
+        val needUploadVariants = variantsRepository.getNeedUploadVariants().map { it.toResponse() }
         val orderDetail = ordersRepository.getOrderDetails().map { it.toResponse() }
         val orderPayment = ordersRepository.getOrderPayments().map { it.toResponse() }
         val orderPromo = ordersRepository.getOrderPromos().map { it.toResponse() }
@@ -60,7 +58,7 @@ class SynchronizationRepositoryImpl(
             order = needUploadOrders,
             outcome = needUploadOutcomes,
             product = needUploadProducts,
-            variant = variant,
+            variant = needUploadVariants,
             orderDetail = orderDetail,
             orderPayment = orderPayment,
             orderPromo = orderPromo,
@@ -95,6 +93,9 @@ class SynchronizationRepositoryImpl(
         if (needUploadProducts.isNotEmpty()) {
             productsRepository.insertProducts(needUploadProducts.map { it.toEntity() })
         }
+        if (needUploadVariants.isNotEmpty()) {
+            variantsRepository.insertVariants(needUploadVariants.map { it.toEntity() })
+        }
 
         // Insert all missing data that given by server
         val missingCustomer = response.data?.customer
@@ -128,6 +129,10 @@ class SynchronizationRepositoryImpl(
         val missingProduct = response.data?.product
         if (!missingProduct.isNullOrEmpty()) {
             productsRepository.insertProducts(missingProduct.map { it.toEntity() })
+        }
+        val missingVariant = response.data?.variant
+        if (!missingVariant.isNullOrEmpty()) {
+            variantsRepository.insertVariants(missingVariant.map { it.toEntity() })
         }
 
 
