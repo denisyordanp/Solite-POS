@@ -44,7 +44,8 @@ class SynchronizationRepositoryImpl(
         val needUploadVariants = variantsRepository.getNeedUploadVariants().map { it.toResponse() }
         val needUploadOrderDetails =
             ordersRepository.getNeedUploadOrderDetails().map { it.toResponse() }
-        val orderPayment = ordersRepository.getOrderPayments().map { it.toResponse() }
+        val needUploadOrderPayments =
+            ordersRepository.getNeedUploadOrderPayments().map { it.toResponse() }
         val orderPromo = ordersRepository.getOrderPromos().map { it.toResponse() }
         val variantOption = variantOptionsRepository.getVariantOptions().map { it.toResponse() }
         val orderProductVariant = ordersRepository.getOrderProductVariants().map { it.toResponse() }
@@ -61,7 +62,7 @@ class SynchronizationRepositoryImpl(
             product = needUploadProducts,
             variant = needUploadVariants,
             orderDetail = needUploadOrderDetails,
-            orderPayment = orderPayment,
+            orderPayment = needUploadOrderPayments,
             orderPromo = orderPromo,
             variantOption = variantOption,
             orderProductVariant = orderProductVariant,
@@ -99,6 +100,9 @@ class SynchronizationRepositoryImpl(
         }
         if (needUploadOrderDetails.isNotEmpty()) {
             ordersRepository.insertOrderDetails(needUploadOrderDetails.map { it.toEntity() })
+        }
+        if (needUploadOrderPayments.isNotEmpty()) {
+            ordersRepository.insertOrderPayments(needUploadOrderPayments.map { it.toEntity() })
         }
 
         // Insert all missing data that given by server
@@ -141,6 +145,10 @@ class SynchronizationRepositoryImpl(
         val missingOrderDetail = response.data?.orderDetail
         if (!missingOrderDetail.isNullOrEmpty()) {
             ordersRepository.insertOrderDetails(missingOrderDetail.map { it.toEntity() })
+        }
+        val missingOrderPayment = response.data?.orderPayment
+        if (!missingOrderPayment.isNullOrEmpty()) {
+            ordersRepository.insertOrderPayments(missingOrderPayment.map { it.toEntity() })
         }
 
 

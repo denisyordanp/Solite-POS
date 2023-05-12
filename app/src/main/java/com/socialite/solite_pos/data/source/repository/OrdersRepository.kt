@@ -19,11 +19,12 @@ interface OrdersRepository {
     fun getOrderData(orderId: String): Flow<OrderData?>
     suspend fun getOrderDetail(orderId: String): OrderData?
     suspend fun getNeedUploadOrderDetails(): List<OrderDetail>
-    suspend fun getOrderPayments(): List<OrderPayment>
+    suspend fun getNeedUploadOrderPayments(): List<OrderPayment>
     suspend fun getOrderPromos(): List<OrderPromo>
     suspend fun getOrderProductVariants(): List<OrderProductVariant>
     suspend fun updateOrder(order: Order)
     suspend fun insertOrders(list: List<Order>)
+    suspend fun insertOrderPayments(list: List<OrderPayment>)
     suspend fun insertOrderDetails(list: List<OrderDetail>)
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
     suspend fun insertNewPromoOrder(promo: OrderPromo)
