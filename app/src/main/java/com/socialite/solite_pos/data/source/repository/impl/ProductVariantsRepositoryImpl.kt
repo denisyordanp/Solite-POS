@@ -49,7 +49,7 @@ class ProductVariantsRepositoryImpl(
     override fun getVariantProduct(idProduct: String, idVariantOption: String) =
         dao.getVariantProduct(idProduct, idVariantOption)
 
-    override suspend fun getVariantProducts(): List<VariantProduct> = dao.getVariantProducts()
+    override suspend fun getNeedUploadVariantProducts(): List<VariantProduct> = dao.getNeedUploadVariantProducts()
 
     override suspend fun isProductHasVariants(idProduct: String) =
         !dao.getProductVariants(idProduct).isNullOrEmpty()
@@ -62,7 +62,9 @@ class ProductVariantsRepositoryImpl(
     override suspend fun insertVariantProduct(data: NewVariantProduct) {
         dao.insertNewVariantProduct(data)
     }
-
+    override suspend fun insertVariantProducts(list: List<VariantProduct>) {
+        dao.insertVariantProducts(list)
+    }
     override suspend fun removeVariantProduct(data: NewVariantProduct) {
         dao.removeVariantProduct(data.variantOption, data.product)
     }

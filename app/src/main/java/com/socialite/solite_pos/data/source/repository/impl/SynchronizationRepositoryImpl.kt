@@ -52,7 +52,8 @@ class SynchronizationRepositoryImpl(
             variantOptionsRepository.getNeedUploadVariantOptions().map { it.toResponse() }
         val needUploadOrderProductVariants =
             ordersRepository.getNeedUploadOrderProductVariants().map { it.toResponse() }
-        val variantProduct = productVariantsRepository.getVariantProducts().map { it.toResponse() }
+        val needUploadVariantProducts =
+            productVariantsRepository.getNeedUploadVariantProducts().map { it.toResponse() }
 
         val synchronizeData = SynchronizeResponse(
             customer = needUploadCustomers,
@@ -69,7 +70,7 @@ class SynchronizationRepositoryImpl(
             orderPromo = needUploadOrderPromos,
             variantOption = needUploadVariantOptions,
             orderProductVariant = needUploadOrderProductVariants,
-            variantProduct = variantProduct
+            variantProduct = needUploadVariantProducts
         )
         val response = service.synchronize(synchronizeData)
 
@@ -115,6 +116,9 @@ class SynchronizationRepositoryImpl(
         }
         if (needUploadOrderProductVariants.isNotEmpty()) {
             ordersRepository.insertOrderProductVariants(needUploadOrderProductVariants.map { it.toEntity() })
+        }
+        if (needUploadVariantProducts.isNotEmpty()) {
+            productVariantsRepository.insertVariantProducts(needUploadVariantProducts.map { it.toEntity() })
         }
 
         // Insert all missing data that given by server
@@ -173,6 +177,10 @@ class SynchronizationRepositoryImpl(
         val missingOrderProductVariant = response.data?.orderProductVariant
         if (!missingOrderProductVariant.isNullOrEmpty()) {
             ordersRepository.insertOrderProductVariants(missingOrderProductVariant.map { it.toEntity() })
+        }
+        val missingVariantProduct = response.data?.variantProduct
+        if (!missingVariantProduct.isNullOrEmpty()) {
+            productVariantsRepository.insertVariantProducts(missingVariantProduct.map { it.toEntity() })
         }
 
         return true
