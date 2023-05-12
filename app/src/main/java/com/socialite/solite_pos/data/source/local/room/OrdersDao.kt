@@ -57,8 +57,8 @@ interface OrdersDao {
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId")
     fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
 
-    @Query("SELECT * FROM ${OrderDetail.DB_NAME}")
-    suspend fun getOrderDetails(): List<OrderDetail>
+    @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrderDetails(): List<OrderDetail>
 
     @Query("SELECT * FROM ${OrderPayment.DB_NAME}")
     suspend fun getOrderPayments(): List<OrderPayment>
@@ -125,6 +125,9 @@ interface OrdersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderDetails(list: List<OrderDetail>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderPayment(payment: NewOrderPayment)

@@ -42,7 +42,8 @@ class SynchronizationRepositoryImpl(
         val needUploadOutcomes = outcomesRepository.getNeedUploadOutcomes().map { it.toResponse() }
         val needUploadProducts = productsRepository.getNeedUploadProducts().map { it.toResponse() }
         val needUploadVariants = variantsRepository.getNeedUploadVariants().map { it.toResponse() }
-        val orderDetail = ordersRepository.getOrderDetails().map { it.toResponse() }
+        val needUploadOrderDetails =
+            ordersRepository.getNeedUploadOrderDetails().map { it.toResponse() }
         val orderPayment = ordersRepository.getOrderPayments().map { it.toResponse() }
         val orderPromo = ordersRepository.getOrderPromos().map { it.toResponse() }
         val variantOption = variantOptionsRepository.getVariantOptions().map { it.toResponse() }
@@ -59,7 +60,7 @@ class SynchronizationRepositoryImpl(
             outcome = needUploadOutcomes,
             product = needUploadProducts,
             variant = needUploadVariants,
-            orderDetail = orderDetail,
+            orderDetail = needUploadOrderDetails,
             orderPayment = orderPayment,
             orderPromo = orderPromo,
             variantOption = variantOption,
@@ -95,6 +96,9 @@ class SynchronizationRepositoryImpl(
         }
         if (needUploadVariants.isNotEmpty()) {
             variantsRepository.insertVariants(needUploadVariants.map { it.toEntity() })
+        }
+        if (needUploadOrderDetails.isNotEmpty()) {
+            ordersRepository.insertOrderDetails(needUploadOrderDetails.map { it.toEntity() })
         }
 
         // Insert all missing data that given by server
@@ -133,6 +137,10 @@ class SynchronizationRepositoryImpl(
         val missingVariant = response.data?.variant
         if (!missingVariant.isNullOrEmpty()) {
             variantsRepository.insertVariants(missingVariant.map { it.toEntity() })
+        }
+        val missingOrderDetail = response.data?.orderDetail
+        if (!missingOrderDetail.isNullOrEmpty()) {
+            ordersRepository.insertOrderDetails(missingOrderDetail.map { it.toEntity() })
         }
 
 
