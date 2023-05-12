@@ -8,6 +8,7 @@ plugins {
 
 android {
     compileSdkVersion 33
+    namespace 'com.socialite.solite_pos'
 
     defaultConfig {
         applicationId "com.socialite.solite_pos"
