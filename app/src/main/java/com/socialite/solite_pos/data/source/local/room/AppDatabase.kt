@@ -54,9 +54,10 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOpti
         Store::class,
         Promo::class,
         OrderPromo::class],
-    version = 6,
+    version = 7,
     autoMigrations = [
         AutoMigration(from = 5, to = 6),
+        AutoMigration(from = 6, to = 7),
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -80,6 +81,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         const val DB_NAME = "solite_db"
         const val UPLOAD = "upload"
+        const val REPLACED_UUID = "replaced_uuid"
         const val MAIN = "main"
 
         private var INSTANCE: AppDatabase? = null

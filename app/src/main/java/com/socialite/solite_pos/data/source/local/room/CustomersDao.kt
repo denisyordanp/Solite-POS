@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import kotlinx.coroutines.flow.Flow
 
@@ -15,4 +16,7 @@ interface CustomersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCustomer(data: Customer): Long
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateCustomer(data: Customer)
 }

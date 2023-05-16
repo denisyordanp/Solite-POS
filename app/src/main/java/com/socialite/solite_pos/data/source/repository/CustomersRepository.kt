@@ -7,4 +7,5 @@ interface CustomersRepository {
 
     fun getCustomers(): Flow<List<Customer>>
     suspend fun insertCustomer(data: Customer): Long
+    suspend fun migrateToUUID()
 }
