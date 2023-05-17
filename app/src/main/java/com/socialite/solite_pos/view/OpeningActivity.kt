@@ -7,6 +7,7 @@ import android.os.Looper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.socialite.solite_pos.BuildConfig
 import com.socialite.solite_pos.databinding.ActivityOpeningBinding
 import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
@@ -35,11 +36,14 @@ class OpeningActivity : SoliteActivity() {
     }
 
 	private fun checkUser() {
-		toMain()
-		if (auth.currentUser != null) {
+		if (BuildConfig.DEBUG) {
 			toMain()
 		} else {
-			toLogin()
+			if (auth.currentUser != null) {
+				toMain()
+			} else {
+				toLogin()
+			}
 		}
 	}
 
