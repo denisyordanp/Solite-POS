@@ -72,6 +72,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${OrderPromo.DB_NAME}'")
     suspend fun getOrderPromos(): List<OrderPromo>
 
+    @Query("SELECT * FROM '${OrderProductVariant.DB_NAME}'")
+    suspend fun getOrderProductVariants(): List<OrderProductVariant>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrder(order: Order): Long
 
@@ -104,4 +107,7 @@ interface OrdersDao {
 
     @Update
     suspend fun updateOrderPromo(orderPromo: OrderPromo)
+
+    @Update
+    suspend fun updateOrderProductVariant(orderProductVariant: OrderProductVariant)
 }

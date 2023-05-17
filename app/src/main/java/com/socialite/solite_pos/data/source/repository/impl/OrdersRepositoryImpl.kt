@@ -81,6 +81,7 @@ class OrdersRepositoryImpl(
         val orderDetails = dao.getOrderDetails()
         val orderPayments = dao.getOrderPayments()
         val orderPromos = dao.getOrderPromos()
+        val orderProductVariants = dao.getOrderProductVariants()
 
         db.withTransaction {
             for (order in orders) {
@@ -100,6 +101,11 @@ class OrdersRepositoryImpl(
             }
             for (orderPromo in orderPromos) {
                 dao.updateOrderPromo(orderPromo.copy(
+                    new_id = UUID.randomUUID().toString()
+                ))
+            }
+            for (orderProductVariant in orderProductVariants) {
+                dao.updateOrderProductVariant(orderProductVariant.copy(
                     new_id = UUID.randomUUID().toString()
                 ))
             }
