@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.preference.SettingPref
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_TIME_FORMAT
@@ -14,6 +15,7 @@ import com.socialite.solite_pos.utils.config.DateUtils.Companion.strToDate
 import com.socialite.solite_pos.view.ui.OrderMenus
 import java.io.Serializable
 import java.util.Calendar
+import java.util.UUID
 
 @Entity(
     tableName = Order.DB_NAME,
@@ -33,6 +35,9 @@ import java.util.Calendar
 data class Order(
     @ColumnInfo(name = NO)
     var orderNo: String,
+
+    @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+    val new_id: String,
 
     @ColumnInfo(name = Customer.ID)
     var customer: Long,
@@ -76,6 +81,7 @@ data class Order(
     @Ignore
     constructor(orderNo: String, customer: Long, orderTime: String) : this(
         orderNo,
+        UUID.randomUUID().toString(),
         customer,
         orderTime,
         null,
@@ -94,6 +100,7 @@ data class Order(
         isTakeAway: Boolean
     ) : this(
         orderNo,
+        UUID.randomUUID().toString(),
         customer,
         orderTime,
         null,

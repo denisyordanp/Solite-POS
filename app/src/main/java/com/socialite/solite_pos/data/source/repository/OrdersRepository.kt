@@ -18,4 +18,5 @@ interface OrdersRepository {
     suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
     suspend fun insertNewPromoOrder(promo: OrderPromo)
+    suspend fun migrateToUUID()
 }

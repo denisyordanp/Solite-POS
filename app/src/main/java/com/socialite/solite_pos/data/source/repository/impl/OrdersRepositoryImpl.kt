@@ -1,9 +1,11 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
+import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
@@ -11,10 +13,12 @@ import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
+import java.util.UUID
 
 class OrdersRepositoryImpl(
     private val dao: OrdersDao,
-    private val settingRepository: SettingRepository
+    private val settingRepository: SettingRepository,
+    private val db: AppDatabase
 ) : OrdersRepository {
 
     companion object {
@@ -23,14 +27,16 @@ class OrdersRepositoryImpl(
 
         fun getInstance(
             dao: OrdersDao,
-            settingRepository: SettingRepository
+            settingRepository: SettingRepository,
+            db: AppDatabase
         ): OrdersRepositoryImpl {
             if (INSTANCE == null) {
                 synchronized(OrdersRepositoryImpl::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = OrdersRepositoryImpl(
                             dao = dao,
-                            settingRepository = settingRepository
+                            settingRepository = settingRepository,
+                            db = db
                         )
                     }
                 }
@@ -70,4 +76,14 @@ class OrdersRepositoryImpl(
         dao.insertNewPaymentOrder(payment)
 
     override suspend fun insertNewPromoOrder(promo: OrderPromo) = dao.insertNewPromoOrder(promo)
+    override suspend fun migrateToUUID() {
+        val orders = dao.getOrders()
+        db.withTransaction {
+            for (order in orders) {
+                dao.updateOrder(order.copy(
+                    new_id = UUID.randomUUID().toString()
+                ))
+            }
+        }
+    }
 }

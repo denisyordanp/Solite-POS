@@ -60,6 +60,9 @@ interface OrdersDao {
     @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
     suspend fun getOrderVariantsMix(idDetail: Long): DetailWithVariantMixOption
 
+    @Query("SELECT * FROM '${Order.DB_NAME}'")
+    suspend fun getOrders(): List<Order>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrder(order: Order): Long
 
