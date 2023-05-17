@@ -6,6 +6,7 @@ import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
+import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 
@@ -17,6 +18,7 @@ class MigrateToUUIDImpl(
     private val paymentsRepository: PaymentsRepository,
     private val ordersRepository: OrdersRepository,
     private val outcomesRepository: OutcomesRepository,
+    private val productsRepository: ProductsRepository,
 ) : MigrateToUUID {
     override suspend fun invoke() {
         customersRepository.migrateToUUID()
@@ -26,5 +28,6 @@ class MigrateToUUIDImpl(
         paymentsRepository.migrateToUUID()
         ordersRepository.migrateToUUID()
         outcomesRepository.migrateToUUID()
+        productsRepository.migrateToUUID()
     }
 }

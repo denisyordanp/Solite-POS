@@ -12,4 +12,5 @@ interface ProductsRepository {
     fun getProductById(productId: Long): Flow<Product>
     suspend fun insertProduct(data: Product): Long
     suspend fun updateProduct(data: Product)
+    suspend fun migrateToUUID()
 }

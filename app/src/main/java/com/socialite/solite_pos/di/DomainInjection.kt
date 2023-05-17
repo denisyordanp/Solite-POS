@@ -91,6 +91,7 @@ object DomainInjection {
         val paymentsRepository = RepositoryInjection.providePaymentsRepository(context)
         val ordersRepository = RepositoryInjection.provideOrdersRepository(context)
         val outcomesRepository = RepositoryInjection.provideOutcomesRepository(context)
+        val productsRepository = RepositoryInjection.provideProductsRepository(context)
         return MigrateToUUIDImpl(
             customersRepository = customerRepository,
             storeRepository = storeRepository,
@@ -98,7 +99,8 @@ object DomainInjection {
             promosRepository = promosRepository,
             paymentsRepository = paymentsRepository,
             ordersRepository = ordersRepository,
-            outcomesRepository = outcomesRepository
+            outcomesRepository = outcomesRepository,
+            productsRepository = productsRepository,
         )
     }
 }

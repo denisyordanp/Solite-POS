@@ -32,6 +32,9 @@ interface ProductsDao {
     @Query("SELECT * FROM ${Product.DB_NAME}")
     fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
 
+    @Query("SELECT * FROM '${Product.DB_NAME}'")
+    suspend fun getProducts(): List<Product>
+
     @Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
     fun increaseProductStock(idProduct: Long, amount: Int)
 
@@ -42,5 +45,5 @@ interface ProductsDao {
     suspend fun insertProduct(data: Product): Long
 
     @Update
-    fun updateProduct(data: Product)
+    suspend fun updateProduct(data: Product)
 }
