@@ -31,9 +31,15 @@ interface ProductVariantsDao {
     @Query("SELECT * FROM ${VariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
     fun getVariantProductById(idProduct: Long): Flow<VariantProduct?>
 
+    @Query("SELECT * FROM ${VariantProduct.DB_NAME}")
+    suspend fun getVariantProducts(): List<VariantProduct>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertVariantProduct(data: VariantProduct): Long
 
     @Query("DELETE FROM ${VariantProduct.DB_NAME} WHERE ${VariantOption.ID} = :idVariant AND ${Product.ID} = :idProduct")
     fun removeVariantProduct(idVariant: Long, idProduct: Long)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateProductVariant(data: VariantProduct)
 }

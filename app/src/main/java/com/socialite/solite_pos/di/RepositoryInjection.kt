@@ -90,7 +90,7 @@ object RepositoryInjection {
 
     fun provideProductVariantsRepository(context: Context): ProductVariantsRepository {
         val database = getInstance(context)
-        return ProductVariantsRepositoryImpl.getInstance(database.productVariantsDao())
+        return ProductVariantsRepositoryImpl.getInstance(database.productVariantsDao(), database)
     }
 
     fun provideOrdersRepository(context: Context): OrdersRepository {
