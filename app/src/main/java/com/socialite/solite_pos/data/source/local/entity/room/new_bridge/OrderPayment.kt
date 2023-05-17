@@ -39,7 +39,7 @@ data class OrderPayment(
     @ColumnInfo(name = ID, defaultValue = "")
     var id: String,
 
-    @ColumnInfo(name = Order.NO)
+    @ColumnInfo(name = Order.ID)
     var order: String,
 
     @ColumnInfo(name = Payment.ID)

@@ -15,7 +15,6 @@ import java.util.UUID
 
 @Entity(
     tableName = Order.DB_NAME,
-    primaryKeys = [Order.ID],
     foreignKeys = [
         ForeignKey(
             entity = Customer::class,
@@ -25,7 +24,8 @@ import java.util.UUID
         )
     ],
     indices = [
-        Index(value = [Customer.ID])
+        Index(value = [Customer.ID]),
+        Index(value = [Order.ID])
     ]
 )
 data class Order(
@@ -61,7 +61,7 @@ data class Order(
         const val TAKE_AWAY = "take_away"
         const val STATUS = "status"
         const val NO = "order_no"
-        const val ID = "id"
+        const val ID = "order_id"
 
         const val DB_NAME = "new_order"
 
