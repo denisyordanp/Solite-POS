@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
@@ -37,7 +38,8 @@ class MainViewModel(
     private val storeRepository: StoreRepository,
     private val settingRepository: SettingRepository,
     private val promosRepository: PromosRepository,
-    private val newOutcome: NewOutcome
+    private val newOutcome: NewOutcome,
+    private val migrateToUUID: MigrateToUUID
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -171,6 +173,12 @@ class MainViewModel(
     fun setDarkMode(isActive: Boolean) {
         viewModelScope.launch {
             settingRepository.setDarkMode(isActive)
+        }
+    }
+
+    fun beginMigratingToUUID() {
+        viewModelScope.launch {
+            migrateToUUID()
         }
     }
 }

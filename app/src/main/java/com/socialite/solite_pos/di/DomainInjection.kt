@@ -5,6 +5,7 @@ import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
@@ -13,6 +14,7 @@ import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadg
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
+import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOutcomeImpl
 import com.socialite.solite_pos.data.source.domain.impl.PayOrderImpl
@@ -79,5 +81,10 @@ object DomainInjection {
             database.ordersDao(),
             database.soliteDao()
         )
+    }
+
+    fun provideMigrateToUUID(context: Context): MigrateToUUID {
+        val customerRepository = RepositoryInjection.provideCustomersRepository(context)
+        return MigrateToUUIDImpl(customerRepository)
     }
 }
