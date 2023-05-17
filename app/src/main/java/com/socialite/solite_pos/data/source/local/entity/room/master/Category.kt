@@ -7,10 +7,12 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Category.DB_NAME,
@@ -23,6 +25,9 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = ID)
     var id: Long,
+
+    @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+    val new_id: String,
 
     @ColumnInfo(name = NAME)
     override var name: String,
@@ -105,6 +110,7 @@ data class Category(
             for (document in result) {
                 val category = Category(
                     document.data[ID] as Long,
+                    document.data[AppDatabase.REPLACED_UUID] as String,
                     document.data[NAME] as String,
                     document.data[DESC] as String,
                     document.data[STOCK] as Boolean,
@@ -124,11 +130,12 @@ data class Category(
         desc: String,
         isStock: Boolean,
         isActive: Boolean
-    ) : this(id, name, desc, isStock, isActive, false)
+    ) : this(id, UUID.randomUUID().toString(), name, desc, isStock, isActive, false)
 
     @Ignore
     constructor(name: String, desc: String, isStock: Boolean, isActive: Boolean) : this(
         0,
+        UUID.randomUUID().toString(),
         name,
         desc,
         isStock,

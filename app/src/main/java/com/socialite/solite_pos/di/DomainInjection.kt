@@ -86,9 +86,11 @@ object DomainInjection {
     fun provideMigrateToUUID(context: Context): MigrateToUUID {
         val customerRepository = RepositoryInjection.provideCustomersRepository(context)
         val storeRepository = RepositoryInjection.provideStoreRepository(context)
+        val categoriesRepository = RepositoryInjection.provideCategoriesRepository(context)
         return MigrateToUUIDImpl(
             customersRepository = customerRepository,
-            storeRepository = storeRepository
+            storeRepository = storeRepository,
+            categoriesRepository = categoriesRepository,
         )
     }
 }

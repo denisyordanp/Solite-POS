@@ -9,4 +9,5 @@ interface CategoriesRepository {
     fun getCategories(query: SimpleSQLiteQuery): Flow<List<Category>>
     suspend fun insertCategory(data: Category)
     suspend fun updateCategory(data: Category)
+    suspend fun migrateToUUID()
 }

@@ -71,7 +71,7 @@ object RepositoryInjection {
 
     fun provideCategoriesRepository(context: Context): CategoriesRepository {
         val database = getInstance(context)
-        return CategoriesRepositoryImpl.getInstance(database.categoriesDao())
+        return CategoriesRepositoryImpl.getInstance(database.categoriesDao(), database)
     }
 
     fun provideOutcomesRepository(context: Context): OutcomesRepository {
