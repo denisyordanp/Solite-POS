@@ -66,6 +66,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}'")
     suspend fun getOrderDetails(): List<OrderDetail>
 
+    @Query("SELECT * FROM '${OrderPayment.DB_NAME}'")
+    suspend fun getOrderPayments(): List<OrderPayment>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrder(order: Order): Long
 
@@ -92,4 +95,7 @@ interface OrdersDao {
 
     @Update
     suspend fun updateOrderDetail(orderDetail: OrderDetail)
+
+    @Update
+    suspend fun updateOrderPayment(orderPayment: OrderPayment)
 }

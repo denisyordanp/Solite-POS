@@ -79,6 +79,7 @@ class OrdersRepositoryImpl(
     override suspend fun migrateToUUID() {
         val orders = dao.getOrders()
         val orderDetails = dao.getOrderDetails()
+        val orderPayments = dao.getOrderPayments()
         db.withTransaction {
             for (order in orders) {
                 dao.updateOrder(order.copy(
@@ -87,6 +88,11 @@ class OrdersRepositoryImpl(
             }
             for (orderDetail in orderDetails) {
                 dao.updateOrderDetail(orderDetail.copy(
+                    new_id = UUID.randomUUID().toString()
+                ))
+            }
+            for (orderPayment in orderPayments) {
+                dao.updateOrderPayment(orderPayment.copy(
                     new_id = UUID.randomUUID().toString()
                 ))
             }
