@@ -78,7 +78,8 @@ object RepositoryInjection {
         val database = getInstance(context)
         return OutcomesRepositoryImpl.getInstance(
             database.outcomesDao(),
-            SettingRepositoryImpl.getDataStoreInstance(context)
+            SettingRepositoryImpl.getDataStoreInstance(context),
+            database
         )
     }
 

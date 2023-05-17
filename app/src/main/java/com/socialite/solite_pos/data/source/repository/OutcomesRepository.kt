@@ -10,4 +10,5 @@ interface OutcomesRepository {
     fun getOutcomes(parameters: ReportsParameter): Flow<List<Outcome>>
     suspend fun insertOutcome(data: Outcome)
     suspend fun updateOutcome(data: Outcome)
+    suspend fun migrateToUUID()
 }
