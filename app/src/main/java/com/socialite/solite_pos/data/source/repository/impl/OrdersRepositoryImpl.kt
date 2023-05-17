@@ -78,9 +78,15 @@ class OrdersRepositoryImpl(
     override suspend fun insertNewPromoOrder(promo: OrderPromo) = dao.insertNewPromoOrder(promo)
     override suspend fun migrateToUUID() {
         val orders = dao.getOrders()
+        val orderDetails = dao.getOrderDetails()
         db.withTransaction {
             for (order in orders) {
                 dao.updateOrder(order.copy(
+                    new_id = UUID.randomUUID().toString()
+                ))
+            }
+            for (orderDetail in orderDetails) {
+                dao.updateOrderDetail(orderDetail.copy(
                     new_id = UUID.randomUUID().toString()
                 ))
             }

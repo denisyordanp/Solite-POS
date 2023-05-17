@@ -4,6 +4,7 @@ import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
@@ -33,6 +34,9 @@ data class OrderDetail(
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
 		var id: Long,
+
+		@ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+		val new_id: String,
 
 		@ColumnInfo(name = Order.NO)
 		var orderNo: String,
@@ -68,6 +72,7 @@ data class OrderDetail(
 				val detail = OrderDetail(
 						document.data[ID] as Long,
 						document.data[Order.NO] as String,
+						document.data[AppDatabase.REPLACED_UUID] as String,
 						document.data[Product.ID] as Long,
 						(document.data[AMOUNT] as Long).toInt(),
 						document.data[UPLOAD] as Boolean
@@ -79,8 +84,8 @@ data class OrderDetail(
 	}
 
 	@Ignore
-	constructor(orderNo: String, idProduct: Long, amount: Int): this(0, orderNo, idProduct, amount, false)
+	constructor(orderNo: String, idProduct: Long, amount: Int): this(0, UUID.randomUUID().toString(), orderNo, idProduct, amount, false)
 
 	@Ignore
-	constructor(): this(0,"", 0, 0, false)
+	constructor(): this(0, UUID.randomUUID().toString(), "", 0, 0, false)
 }
