@@ -2,6 +2,7 @@ package com.socialite.solite_pos.data.source.local.entity.room.master
 
 import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
@@ -14,6 +15,9 @@ import java.util.*
 		]
 )
 data class Variant(
+	@ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+	val new_id: String,
+
 		@ColumnInfo(name = NAME)
 		var name: String,
 
@@ -79,15 +83,15 @@ data class Variant(
 	}
 
 	@Ignore
-	constructor(idVariant: Long, name: String, type: Int, isMust: Boolean, isMix: Boolean, isUploaded: Boolean): this(name, type, isMust, isMix, isUploaded){
+	constructor(idVariant: Long, name: String, type: Int, isMust: Boolean, isMix: Boolean, isUploaded: Boolean): this(UUID.randomUUID().toString(), name, type, isMust, isMix, isUploaded){
 		this.id = idVariant
 	}
 
 	@Ignore
-	constructor(idVariant: Long, name: String, type: Int, isMust: Boolean, isMix: Boolean): this(name, type, isMust, isMix, false){
+	constructor(idVariant: Long, name: String, type: Int, isMust: Boolean, isMix: Boolean): this(UUID.randomUUID().toString(), name, type, isMust, isMix, false){
 		this.id = idVariant
 	}
 
 	@Ignore
-	constructor(name: String, type: Int, isMust: Boolean, isMix: Boolean): this(name, type, isMust, isMix, false)
+	constructor(name: String, type: Int, isMust: Boolean, isMix: Boolean): this(UUID.randomUUID().toString(), name, type, isMust, isMix, false)
 }

@@ -8,4 +8,5 @@ interface VariantsRepository {
     fun getVariants(): Flow<List<Variant>>
     suspend fun insertVariant(data: Variant)
     suspend fun updateVariant(data: Variant)
+    suspend fun migrateToUUID()
 }

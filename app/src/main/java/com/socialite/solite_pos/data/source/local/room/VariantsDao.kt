@@ -18,5 +18,5 @@ interface VariantsDao {
     fun insertVariant(data: Variant): Long
 
     @Update
-    fun updateVariant(data: Variant)
+    suspend fun updateVariant(data: Variant)
 }
