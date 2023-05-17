@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
+import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
@@ -37,7 +38,7 @@ class CustomersRepositoryImpl(
 
     override suspend fun migrateToUUID() {
         val customers = dao.getCustomers().first()
-        db.runInTransaction {
+        db.withTransaction {
             for (customer in customers) {
                 dao.updateCustomer(customer.copy(
                     new_id = UUID.randomUUID().toString()
