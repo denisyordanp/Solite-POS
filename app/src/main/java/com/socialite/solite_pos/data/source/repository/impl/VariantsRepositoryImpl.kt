@@ -46,9 +46,11 @@ class VariantsRepositoryImpl(
         val variants = dao.getVariants().first()
         db.withTransaction {
             for (variant in variants) {
-                dao.updateVariant(variant.copy(
+                val newVariant = variant.copy(
                     new_id = UUID.randomUUID().toString()
-                ))
+                )
+                newVariant.id = variant.id
+                dao.updateVariant(newVariant)
             }
         }
     }
