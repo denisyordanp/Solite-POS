@@ -5,7 +5,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
 class CustomersRepositoryImpl(
@@ -37,12 +37,14 @@ class CustomersRepositoryImpl(
     override suspend fun insertCustomer(data: Customer) = dao.insertCustomer(data)
 
     override suspend fun migrateToUUID() {
-        val customers = dao.getCustomers().first()
-        db.withTransaction {
-            for (customer in customers) {
-                dao.updateCustomer(customer.copy(
-                    new_id = UUID.randomUUID().toString()
-                ))
+        val customers = dao.getCustomers().firstOrNull()
+        if (!customers.isNullOrEmpty()) {
+            db.withTransaction {
+                for (customer in customers) {
+                    dao.updateCustomer(customer.copy(
+                        new_id = UUID.randomUUID().toString()
+                    ))
+                }
             }
         }
     }

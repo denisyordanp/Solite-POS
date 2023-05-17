@@ -5,7 +5,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
 class VariantsRepositoryImpl(
@@ -43,14 +43,16 @@ class VariantsRepositoryImpl(
     }
 
     override suspend fun migrateToUUID() {
-        val variants = dao.getVariants().first()
-        db.withTransaction {
-            for (variant in variants) {
-                val newVariant = variant.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                newVariant.id = variant.id
-                dao.updateVariant(newVariant)
+        val variants = dao.getVariants().firstOrNull()
+        if (!variants.isNullOrEmpty()) {
+            db.withTransaction {
+                for (variant in variants) {
+                    val newVariant = variant.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    newVariant.id = variant.id
+                    dao.updateVariant(newVariant)
+                }
             }
         }
     }

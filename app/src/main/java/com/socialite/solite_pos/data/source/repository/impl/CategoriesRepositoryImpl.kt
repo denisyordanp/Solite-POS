@@ -6,7 +6,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CategoriesDao
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
 class CategoriesRepositoryImpl(
@@ -44,12 +44,14 @@ class CategoriesRepositoryImpl(
     }
 
     override suspend fun migrateToUUID() {
-        val categories = dao.getCategories(Category.getFilter(Category.ALL)).first()
-        db.withTransaction {
-            for (category in categories) {
-                dao.updateCategory(category.copy(
-                    new_id = UUID.randomUUID().toString()
-                ))
+        val categories = dao.getCategories(Category.getFilter(Category.ALL)).firstOrNull()
+        if (!categories.isNullOrEmpty()) {
+            db.withTransaction {
+                for (category in categories) {
+                    dao.updateCategory(category.copy(
+                        new_id = UUID.randomUUID().toString()
+                    ))
+                }
             }
         }
     }

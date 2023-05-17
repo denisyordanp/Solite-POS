@@ -6,7 +6,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.source.repository.PromosRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
 class PromosRepositoryImpl(
@@ -39,12 +39,14 @@ class PromosRepositoryImpl(
 
     override fun getPromos(query: SupportSQLiteQuery) = dao.getPromos(query)
     override suspend fun migrateToUUID() {
-        val promos = dao.getPromos(Promo.filter(Promo.Status.ALL)).first()
-        db.withTransaction {
-            for (promo in promos) {
-                dao.updatePromo(promo.copy(
-                    new_id = UUID.randomUUID().toString()
-                ))
+        val promos = dao.getPromos(Promo.filter(Promo.Status.ALL)).firstOrNull()
+        if (!promos.isNullOrEmpty()) {
+            db.withTransaction {
+                for (promo in promos) {
+                    dao.updatePromo(promo.copy(
+                        new_id = UUID.randomUUID().toString()
+                    ))
+                }
             }
         }
     }

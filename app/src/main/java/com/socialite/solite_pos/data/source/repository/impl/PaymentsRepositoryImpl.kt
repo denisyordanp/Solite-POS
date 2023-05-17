@@ -6,7 +6,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
 class PaymentsRepositoryImpl(
@@ -43,12 +43,14 @@ class PaymentsRepositoryImpl(
 
     override fun getPayments(query: SupportSQLiteQuery) = dao.getPayments(query)
     override suspend fun migrateToUUID() {
-        val payments = dao.getPayments(Payment.filter(Payment.ALL)).first()
-        db.withTransaction {
-            for (payment in payments) {
-                dao.updatePayment(payment.copy(
-                    new_id = UUID.randomUUID().toString()
-                ))
+        val payments = dao.getPayments(Payment.filter(Payment.ALL)).firstOrNull()
+        if (!payments.isNullOrEmpty()) {
+            db.withTransaction {
+                for (payment in payments) {
+                    dao.updatePayment(payment.copy(
+                        new_id = UUID.randomUUID().toString()
+                    ))
+                }
             }
         }
     }
