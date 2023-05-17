@@ -116,6 +116,6 @@ object RepositoryInjection {
 
     fun providePromosRepository(context: Context): PromosRepository {
         val database = getInstance(context)
-        return PromosRepositoryImpl.getInstance(dao = database.promoDao())
+        return PromosRepositoryImpl.getInstance(dao = database.promoDao(), database)
     }
 }
