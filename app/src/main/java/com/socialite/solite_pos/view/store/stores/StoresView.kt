@@ -283,7 +283,7 @@ private fun StoreDetail(
                         store?.copy(
                             name = name,
                             address = address
-                        ) ?: Store(
+                        ) ?: Store.newStore(
                             name = name,
                             address = address
                         )

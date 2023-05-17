@@ -9,4 +9,5 @@ interface StoreRepository {
     suspend fun getStore(id: Long): Store?
     suspend fun insertStore(store: Store)
     suspend fun updateStore(store: Store)
+    suspend fun migrateToUUID()
 }

@@ -107,7 +107,7 @@ object RepositoryInjection {
 
     fun provideStoreRepository(context: Context): StoreRepository {
         val database = getInstance(context)
-        return StoreRepositoryImpl.getInstance(database.storeDao())
+        return StoreRepositoryImpl.getInstance(database.storeDao(), database)
     }
 
     fun provideSettingRepository(context: Context): SettingRepository {
