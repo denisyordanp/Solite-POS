@@ -11,4 +11,5 @@ interface VariantOptionsRepository {
     fun getVariantsWithOptions(): Flow<List<VariantWithOptions>>
     suspend fun insertVariantOption(data: VariantOption)
     suspend fun updateVariantOption(data: VariantOption)
+    suspend fun migrateToUUID()
 }

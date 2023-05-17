@@ -18,6 +18,9 @@ interface VariantOptionsDao {
     @RawQuery(observedEntities = [VariantOption::class])
     fun getVariantOptions(query: SupportSQLiteQuery): Flow<List<VariantOption>>
 
+    @Query("SELECT * FROM '${VariantOption.DB_NAME}'")
+    suspend fun getVariantOptions(): List<VariantOption>
+
     @Transaction
     @Query("SELECT * FROM ${VariantOption.DB_NAME}")
     fun getVariantWithOptions(): Flow<List<VariantWithOption>>
@@ -26,5 +29,5 @@ interface VariantOptionsDao {
     fun insertVariantOption(data: VariantOption)
 
     @Update
-    fun updateVariantOption(data: VariantOption)
+    suspend fun updateVariantOption(data: VariantOption)
 }
