@@ -1,12 +1,17 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
+import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
+import kotlinx.coroutines.flow.first
+import java.util.UUID
 
 class PaymentsRepositoryImpl(
-    private val dao: PaymentsDao
+    private val dao: PaymentsDao,
+    private val db: AppDatabase
 ) : PaymentsRepository {
 
     companion object {
@@ -14,12 +19,13 @@ class PaymentsRepositoryImpl(
         private var INSTANCE: PaymentsRepositoryImpl? = null
 
         fun getInstance(
-            dao: PaymentsDao
+            dao: PaymentsDao,
+            db: AppDatabase
         ): PaymentsRepositoryImpl {
             if (INSTANCE == null) {
                 synchronized(PaymentsRepositoryImpl::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = PaymentsRepositoryImpl(dao = dao)
+                        INSTANCE = PaymentsRepositoryImpl(dao = dao, db = db)
                     }
                 }
             }
@@ -36,4 +42,14 @@ class PaymentsRepositoryImpl(
     }
 
     override fun getPayments(query: SupportSQLiteQuery) = dao.getPayments(query)
+    override suspend fun migrateToUUID() {
+        val payments = dao.getPayments(Payment.filter(Payment.ALL)).first()
+        db.withTransaction {
+            for (payment in payments) {
+                dao.updatePayment(payment.copy(
+                    new_id = UUID.randomUUID().toString()
+                ))
+            }
+        }
+    }
 }

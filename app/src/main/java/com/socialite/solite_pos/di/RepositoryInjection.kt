@@ -43,7 +43,7 @@ object RepositoryInjection {
 
     fun providePaymentsRepository(context: Context): PaymentsRepository {
         val database = getInstance(context)
-        return PaymentsRepositoryImpl.getInstance(database.paymentsDao())
+        return PaymentsRepositoryImpl.getInstance(database.paymentsDao(), database)
     }
 
     fun provideSupplierRepository(context: Context): SuppliersRepository {

@@ -7,10 +7,12 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.firestore.QuerySnapshot
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Payment.DB_NAME,
@@ -23,6 +25,9 @@ data class Payment(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = ID)
     var id: Long,
+
+    @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+    val new_id: String,
 
     @ColumnInfo(name = NAME)
     override var name: String,
@@ -100,6 +105,7 @@ data class Payment(
             for (document in result) {
                 val payment = Payment(
                     document.data[ID] as Long,
+                    document.data[AppDatabase.REPLACED_UUID] as String,
                     document.data[NAME] as String,
                     document.data[DESC] as String,
                     (document.data[TAX] as String).toFloat(),
@@ -121,7 +127,7 @@ data class Payment(
         tax: Float,
         isCash: Boolean,
         isActive: Boolean
-    ) : this(id, name, desc, tax, isCash, isActive, false)
+    ) : this(id, UUID.randomUUID().toString(), name, desc, tax, isCash, isActive, false)
 
     @Ignore
     constructor(
@@ -130,5 +136,5 @@ data class Payment(
         tax: Float,
         isCash: Boolean,
         isActive: Boolean
-    ) : this(0, name, desc, tax, isCash, isActive, false)
+    ) : this(0, UUID.randomUUID().toString(), name, desc, tax, isCash, isActive, false)
 }

@@ -8,4 +8,5 @@ interface PaymentsRepository {
     suspend fun insertPayment(data: Payment)
     suspend fun updatePayment(data: Payment)
     fun getPayments(query: SupportSQLiteQuery) : Flow<List<Payment>>
+    suspend fun migrateToUUID()
 }

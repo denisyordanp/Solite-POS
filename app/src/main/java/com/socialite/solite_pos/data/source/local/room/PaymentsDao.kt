@@ -19,5 +19,5 @@ interface PaymentsDao {
     fun insertPayment(data: Payment)
 
     @Update
-    fun updatePayment(data: Payment)
+    suspend fun updatePayment(data: Payment)
 }
