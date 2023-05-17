@@ -19,5 +19,5 @@ interface PromosDao {
     fun insertPromo(data: Promo)
 
     @Update
-    fun updatePromo(data: Promo)
+    suspend fun updatePromo(data: Promo)
 }

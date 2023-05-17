@@ -5,9 +5,11 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Promo.DB_NAME,
@@ -20,6 +22,9 @@ data class Promo(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = ID)
     var id: Long,
+
+    @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+    val new_id: String,
 
     @ColumnInfo(name = NAME)
     override var name: String,
@@ -90,6 +95,7 @@ data class Promo(
             value: Int?
         ) = Promo(
             id = 0L,
+            new_id = UUID.randomUUID().toString(),
             name = name,
             desc = desc,
             isCash = isCash,

@@ -8,4 +8,5 @@ interface PromosRepository {
     suspend fun insertPromo(data: Promo)
     suspend fun updatePromo(data: Promo)
     fun getPromos(query: SupportSQLiteQuery): Flow<List<Promo>>
+    suspend fun migrateToUUID()
 }
