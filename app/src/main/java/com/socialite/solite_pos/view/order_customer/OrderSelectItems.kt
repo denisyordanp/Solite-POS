@@ -47,8 +47,8 @@ import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.toIDR
 import com.socialite.solite_pos.view.ui.GeneralMenus

@@ -2,8 +2,8 @@ package com.socialite.solite_pos.data.source.local.entity.room.helper
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 
 data class ProductWithCategory(
 	@Embedded

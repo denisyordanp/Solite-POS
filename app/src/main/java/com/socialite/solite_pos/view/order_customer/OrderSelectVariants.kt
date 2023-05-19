@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OrderSelectVariants(
     viewModel: ProductViewModel,
-    productId: Long,
+    productId: String,
     onBackClicked: () -> Unit,
     onAddToBucketClicked: (detail: ProductOrderDetail) -> Unit
 ) {
@@ -80,7 +80,7 @@ fun OrderSelectVariants(
     Scaffold(
         topBar = {
             val titleText =
-                "${productOrderDetail.product?.name} - Rp. ${productOrderDetail.product?.sellPrice?.thousand()}"
+                "${productOrderDetail.product?.name} - Rp. ${productOrderDetail.product?.price?.thousand()}"
             BasicTopBar(
                 titleText = titleText,
                 onBackClicked = onBackClicked

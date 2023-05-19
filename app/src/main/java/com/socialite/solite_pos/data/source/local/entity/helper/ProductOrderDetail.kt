@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.local.entity.helper
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
 import java.io.Serializable
 
@@ -36,7 +36,7 @@ data class ProductOrderDetail(
         }
     }
 
-    fun totalPrice() = (product?.sellPrice ?: 0) * amount
+    fun totalPrice() = (product?.price ?: 0) * amount
 
     fun isAllMustVariantSelected(baseVariants: List<VariantWithOptions>): Boolean {
         val mustVariants = baseVariants.filter { it.variant.isMust == true && it.isOptionAvailable() }

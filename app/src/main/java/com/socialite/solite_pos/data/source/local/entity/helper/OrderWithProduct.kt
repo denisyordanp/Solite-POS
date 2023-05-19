@@ -14,7 +14,7 @@ data class OrderWithProduct(
 		get() {
 			return products.sumOf {
 				it.product?.let { pr ->
-					pr.sellPrice * it.amount
+					pr.price * it.amount
 				} ?: 0
 			}
 		}

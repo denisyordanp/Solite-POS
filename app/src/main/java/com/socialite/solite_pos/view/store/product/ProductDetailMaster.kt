@@ -40,8 +40,8 @@ import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -50,13 +50,13 @@ import com.socialite.solite_pos.view.viewModel.ProductViewModel
 @ExperimentalComposeUiApi
 fun ProductDetailMaster(
     productViewModel: ProductViewModel,
-    productId: Long,
+    productId: String,
     onVariantClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCreateNewProduct: (Product) -> Unit
 ) {
 
-    val isNewProduct = productId == 0L
+    val isNewProduct = productId.isEmpty()
 
     val product = productViewModel.getProductWithCategory(productId)
         .collectAsState(initial = null)
@@ -128,12 +128,12 @@ private fun DetailContent(
 
         var name by remember { mutableStateOf("") }
         var desc by remember { mutableStateOf("") }
-        var sellPrice by remember { mutableStateOf(0L) }
+        var price by remember { mutableStateOf(0L) }
 
         LaunchedEffect(key1 = "$product $isEditMode") {
             name = product?.product?.name ?: ""
             desc = product?.product?.desc ?: ""
-            sellPrice = product?.product?.sellPrice ?: 0L
+            price = product?.product?.price ?: 0L
             selectedCategory = product?.category
         }
 
@@ -189,19 +189,19 @@ private fun DetailContent(
                         if (isError && desc.isEmpty()) { ErrorText() }
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        val price = if (sellPrice == 0L) "" else sellPrice.toString()
+                        val priceText = if (price == 0L) "" else price.toString()
                         BasicEditText(
-                            value = if (isEditMode) price else "Rp. ${price.toLongOrNull()?.thousand()}",
+                            value = if (isEditMode) priceText else "Rp. ${priceText.toLongOrNull()?.thousand()}",
                             placeHolder = stringResource(R.string.sell_price),
                             isEnabled = isEditMode,
                             visualTransformation = ThousandAndSuggestionVisualTransformation(false),
                             keyboardType = KeyboardType.Number,
                             onValueChange = {
                                 isError = false
-                                sellPrice = it.toLongOrNull() ?: 0L
+                                price = it.toLongOrNull() ?: 0L
                             }
                         )
-                        if (isError && price.isEmpty()) { ErrorText() }
+                        if (isError && priceText.isEmpty()) { ErrorText() }
                     }
                 }
 
@@ -223,7 +223,7 @@ private fun DetailContent(
 
         fun checkData() {
             if (
-                name.isNotEmpty() && desc.isNotEmpty() && sellPrice != 0L && selectedCategory != null
+                name.isNotEmpty() && desc.isNotEmpty() && price != 0L && selectedCategory != null
             ) {
                 selectedCategory?.let { category ->
                     if (product != null) {
@@ -231,7 +231,7 @@ private fun DetailContent(
                             product.product.copy(
                                 name = name,
                                 desc = desc,
-                                sellPrice = sellPrice,
+                                price = price,
                                 category = category.id
                             )
                         )
@@ -240,7 +240,7 @@ private fun DetailContent(
                             Product.createNewProduct(
                                 name = name,
                                 desc = desc,
-                                sellPrice = sellPrice,
+                                price = price,
                                 category = category.id
                             )
                         )

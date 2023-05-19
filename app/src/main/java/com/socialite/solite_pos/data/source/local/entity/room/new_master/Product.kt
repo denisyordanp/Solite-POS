@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -67,51 +66,14 @@ data class Product(
             price: Long,
             category: String
         ) = Product(
+            id = UUID.randomUUID().toString(),
             name = name,
             desc = desc,
             price = price,
             category = category,
             image = "",
-            isActive = true
+            isActive = true,
+            isUploaded = false
         )
     }
-
-    @Ignore
-    constructor(
-        id: String,
-        name: String,
-        category: String,
-        image: String,
-        desc: String,
-        price: Long,
-        isActive: Boolean
-    ) : this(
-        id,
-        name,
-        category,
-        image,
-        desc,
-        price,
-        isActive,
-        false
-    )
-
-    @Ignore
-    constructor(
-        name: String,
-        category: String,
-        image: String,
-        desc: String,
-        price: Long,
-        isActive: Boolean
-    ) : this(
-        UUID.randomUUID().toString(),
-        name,
-        category,
-        image,
-        desc,
-        price,
-        isActive,
-        false
-    )
 }

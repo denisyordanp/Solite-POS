@@ -202,40 +202,40 @@ class StoreActivity : SoliteActivity() {
                     }
 
                     val productIdArgument = navArgument(name = StoreDestinations.PRODUCT_ID) {
-                        type = NavType.LongType
+                        type = NavType.StringType
                     }
                     composable(
                         route = StoreDestinations.DETAIL_PRODUCT,
                         arguments = listOf(productIdArgument)
                     ) {
                         var currentId by rememberSaveable {
-                            mutableStateOf(it.arguments?.getLong(StoreDestinations.PRODUCT_ID))
+                            val idFromNav = it.arguments?.getString(StoreDestinations.PRODUCT_ID) ?: ""
+                            val isNewProduct = StoreDestinations.isNewProduct(idFromNav)
+                            mutableStateOf(if (isNewProduct) "" else idFromNav)
                         }
 
-                        currentId?.let { id ->
-                            ProductDetailMaster(
-                                productViewModel = productViewModel,
-                                productId = id,
-                                onVariantClicked = {
-                                    navController.navigate(StoreDestinations.productVariants(id))
-                                },
-                                onBackClicked = {
-                                    navController.popBackStack()
-                                },
-                                onCreateNewProduct = { product ->
-                                    lifecycleScope.launch {
-                                        val newId = productViewModel.insertProduct(product)
-                                        currentId = newId
-                                    }
+                        ProductDetailMaster(
+                            productViewModel = productViewModel,
+                            productId = currentId,
+                            onVariantClicked = {
+                                navController.navigate(StoreDestinations.productVariants(currentId))
+                            },
+                            onBackClicked = {
+                                navController.popBackStack()
+                            },
+                            onCreateNewProduct = { product ->
+                                lifecycleScope.launch {
+                                    productViewModel.insertProduct(product)
+                                    currentId = product.id
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
                     composable(
                         route = StoreDestinations.PRODUCT_VARIANTS,
                         arguments = listOf(productIdArgument)
                     ) {
-                        it.arguments?.getLong(StoreDestinations.PRODUCT_ID)?.let { id ->
+                        it.arguments?.getString(StoreDestinations.PRODUCT_ID)?.let { id ->
                             VariantView(
                                 productViewModel = productViewModel,
                                 idProduct = id,

@@ -407,7 +407,7 @@ private fun ProductOrder(
         Text(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            text = productOrderDetail.product?.sellPrice?.thousand()?.rupiahToK() ?: "",
+            text = productOrderDetail.product?.price?.thousand()?.rupiahToK() ?: "",
             style = MaterialTheme.typography.body2
         )
         Spacer(modifier = Modifier.width(16.dp))

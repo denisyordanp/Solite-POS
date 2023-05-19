@@ -51,8 +51,8 @@ import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
@@ -264,7 +264,7 @@ private fun ProductItem(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Rp. ${product.sellPrice.thousand()}",
+                text = "Rp. ${product.price.thousand()}",
                 style = MaterialTheme.typography.body2.copy(
                     fontWeight = FontWeight.Bold
                 )
