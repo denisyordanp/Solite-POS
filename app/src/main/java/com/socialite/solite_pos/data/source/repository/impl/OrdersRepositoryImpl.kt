@@ -7,9 +7,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
+import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -25,6 +27,7 @@ class OrdersRepositoryImpl(
     private val customersDao: CustomersDao,
     private val storesDao: StoreDao,
     private val productsDao: ProductsDao,
+    private val paymentDao: PaymentsDao,
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
 ) : OrdersRepository {
@@ -38,6 +41,7 @@ class OrdersRepositoryImpl(
             customersDao: CustomersDao,
             storesDao: StoreDao,
             productsDao: ProductsDao,
+            paymentDao: PaymentsDao,
             settingRepository: SettingRepository,
             db: AppDatabase
         ): OrdersRepositoryImpl {
@@ -49,6 +53,7 @@ class OrdersRepositoryImpl(
                             customersDao = customersDao,
                             storesDao = storesDao,
                             productsDao = productsDao,
+                            paymentDao = paymentDao,
                             settingRepository = settingRepository,
                             db = db
                         )
@@ -76,7 +81,7 @@ class OrdersRepositoryImpl(
 
     override fun getOrderData(orderNo: String) = dao.getOrderData(orderNo)
 
-    override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderByNo(orderNo)
+    override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderDataByNo(orderNo)
 
     override suspend fun updateOrder(order: Order) = dao.updateOrder(order)
 
@@ -142,10 +147,25 @@ class OrdersRepositoryImpl(
             }
 
             for (orderPayment in orderPayments) {
-                dao.updateOrderPayment(orderPayment.copy(
+                val updatedOrderPayment = orderPayment.copy(
                     new_id = UUID.randomUUID().toString()
-                ))
+                )
+                dao.updateOrderPayment(updatedOrderPayment)
+
+                val order = dao.getOrderByNo(orderPayment.orderNO)
+                val payment = paymentDao.getPaymentById(orderPayment.idPayment)
+                if (order != null && payment != null) {
+                    val newOrderPayment = NewOrderPayment(
+                        id = updatedOrderPayment.new_id,
+                        order = order.new_id,
+                        payment = payment.new_id,
+                        pay = orderPayment.pay,
+                        isUpload = orderPayment.isUpload
+                    )
+                    dao.insertNewOrderPayment(newOrderPayment)
+                }
             }
+
             for (orderPromo in orderPromos) {
                 dao.updateOrderPromo(orderPromo.copy(
                     new_id = UUID.randomUUID().toString()

@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
@@ -103,6 +104,9 @@ interface OrdersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewOrderPayment(payment: NewOrderPayment)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPromoOrder(promo: OrderPromo)

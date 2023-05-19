@@ -105,6 +105,7 @@ object RepositoryInjection {
             customersDao = database.customersDao(),
             storesDao = database.storeDao(),
             productsDao = database.productsDao(),
+            paymentDao = database.paymentsDao(),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context),
             db = database
         )

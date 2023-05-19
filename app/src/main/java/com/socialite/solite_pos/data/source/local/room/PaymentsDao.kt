@@ -3,6 +3,7 @@ package com.socialite.solite_pos.data.source.local.room
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -15,6 +16,9 @@ interface PaymentsDao {
 
     @RawQuery(observedEntities = [Payment::class])
     fun getPayments(query: SupportSQLiteQuery): Flow<List<Payment>>
+
+    @Query("SELECT * FROM '${Payment.DB_NAME}' WHERE ${Payment.ID} = :paymentId LIMIT 1")
+    suspend fun getPaymentById(paymentId: Long): Payment?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPayment(data: Payment)
