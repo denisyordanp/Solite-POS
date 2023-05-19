@@ -17,6 +17,9 @@ interface PaymentsDao {
     @RawQuery(observedEntities = [Payment::class])
     fun getPayments(query: SupportSQLiteQuery): Flow<List<Payment>>
 
+    @RawQuery(observedEntities = [NewPayment::class])
+    fun getNewPayments(query: SupportSQLiteQuery): Flow<List<NewPayment>>
+
     @Query("SELECT * FROM '${Payment.DB_NAME}' WHERE ${Payment.ID} = :paymentId LIMIT 1")
     suspend fun getPaymentById(paymentId: Long): Payment?
 
@@ -28,4 +31,10 @@ interface PaymentsDao {
 
     @Update
     suspend fun updatePayment(data: Payment)
+
+    @Update
+    suspend fun updateNewPayment(data: NewPayment)
+
+    @Query("DELETE FROM '${Payment.DB_NAME}'")
+    suspend fun deleteAllOldPayments()
 }

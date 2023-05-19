@@ -2,13 +2,13 @@ package com.socialite.solite_pos.data.source.local.entity.room.new_master
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Payment.DB_NAME,
@@ -43,6 +43,10 @@ data class Payment(
 
     fun isNewPayment() = id == ID_ADD
 
+    fun asNewPayment() = this.copy(
+        id = UUID.randomUUID().toString()
+    )
+
     companion object {
         const val ID = "id_payment"
         const val STATUS = "status"
@@ -62,11 +66,13 @@ data class Payment(
             desc: String,
             isCash: Boolean
         ) = Payment(
+            id = ID_ADD,
             name = name,
             desc = desc,
             tax = 0f,
             isCash = isCash,
-            isActive = true
+            isActive = true,
+            isUploaded = false
         )
 
         fun filter(state: Int): SimpleSQLiteQuery {
@@ -82,25 +88,4 @@ data class Payment(
             return SimpleSQLiteQuery(query.toString())
         }
     }
-
-    @Ignore
-    constructor(
-        id: String,
-        name: String,
-        desc: String,
-        tax: Float,
-        isCash: Boolean,
-        isActive: Boolean
-    ) : this(id, name, desc, tax, isCash, isActive, false)
-
-    @Ignore
-    constructor(
-        name: String,
-        desc: String,
-        tax: Float,
-        isCash: Boolean,
-        isActive: Boolean
-    ) : this(ID_ADD, name, desc, tax, isCash, isActive, false)
-
-    // TODO: Create a new payment function to add the UUID
 }

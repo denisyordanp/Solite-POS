@@ -6,7 +6,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment as NewPayment
@@ -35,40 +34,41 @@ class PaymentsRepositoryImpl(
         }
     }
 
-    override suspend fun insertPayment(data: Payment) {
-        dao.insertPayment(data)
+    override suspend fun insertPayment(data: NewPayment) {
+        dao.insertNewPayment(data)
     }
 
-    override suspend fun updatePayment(data: Payment) {
-        dao.updatePayment(data)
+    override suspend fun updatePayment(data: NewPayment) {
+        dao.updateNewPayment(data)
     }
 
-    override fun getPayments(query: SupportSQLiteQuery) = dao.getPayments(query)
+    override fun getPayments(query: SupportSQLiteQuery) = dao.getNewPayments(query)
     override suspend fun migrateToUUID() {
         val payments = dao.getPayments(Payment.filter(Payment.ALL)).firstOrNull()
         if (!payments.isNullOrEmpty()) {
             db.withTransaction {
                 for (payment in payments) {
-                    dao.updatePayment(
-                        payment.copy(
-                            new_id = UUID.randomUUID().toString()
-                        )
+                    val updatedPayment = payment.copy(
+                        new_id = UUID.randomUUID().toString()
                     )
+                    dao.updatePayment(updatedPayment)
+
+                    val newPayment = NewPayment(
+                        id = updatedPayment.new_id,
+                        name = payment.name,
+                        desc = payment.desc,
+                        tax = payment.tax,
+                        isCash = payment.isCash,
+                        isActive = payment.isActive,
+                        isUploaded = payment.isUploaded
+                    )
+                    dao.insertNewPayment(newPayment)
                 }
             }
-            val updatedPayments = dao.getPayments(Payment.filter(Payment.ALL)).first()
-            for (payment in updatedPayments) {
-                val newPayment = NewPayment(
-                    id = payment.new_id,
-                    name = payment.name,
-                    desc = payment.desc,
-                    tax = payment.tax,
-                    isCash = payment.isCash,
-                    isActive = payment.isActive,
-                    isUploaded = payment.isUploaded
-                )
-                dao.insertNewPayment(newPayment)
-            }
         }
+    }
+
+    override suspend fun deleteAllOldCustomers() {
+        dao.deleteAllOldPayments()
     }
 }
