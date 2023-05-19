@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.source.domain.impl
 
 import com.socialite.solite_pos.data.source.domain.NewOutcome
-import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import kotlinx.coroutines.flow.first

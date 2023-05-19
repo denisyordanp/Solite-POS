@@ -6,10 +6,10 @@ import java.io.Serializable
 data class ReportsParameter(
     val start: String,
     val end: String,
-    val storeId: Long
+    val storeId: String
 ) : Serializable {
 
-    fun isTodayOnly() = storeId == DEFAULT_STORE_ID
+    fun isTodayOnly() = storeId.isEmpty()
 
     fun toTitle() = if (start == end) {
         DateUtils.convertDateFromDate(
@@ -31,15 +31,12 @@ data class ReportsParameter(
     }
 
     companion object {
-
-        private const val DEFAULT_STORE_ID = -1L
-
         fun createTodayOnly(isWithTime: Boolean = false): ReportsParameter {
             val date = if (isWithTime) DateUtils.currentDateTime else DateUtils.currentDate
             return ReportsParameter(
                 start = date,
                 end = date,
-                storeId = DEFAULT_STORE_ID
+                storeId = ""
             )
         }
     }
