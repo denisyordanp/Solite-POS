@@ -3,9 +3,11 @@ package com.socialite.solite_pos.data.source.repository.impl
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo as NewPromo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.source.repository.PromosRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -46,6 +48,19 @@ class PromosRepositoryImpl(
                     dao.updatePromo(promo.copy(
                         new_id = UUID.randomUUID().toString()
                     ))
+                }
+                val updatedPromos = dao.getPromos(Promo.filter(Promo.Status.ALL)).first()
+                for (promo in updatedPromos) {
+                    val newPromo = NewPromo(
+                        id = promo.new_id,
+                        name = promo.name,
+                        desc = promo.desc,
+                        isCash = promo.isCash,
+                        value = promo.value,
+                        isActive = promo.isActive,
+                        isUploaded = promo.isUploaded
+                    )
+                    dao.insertNewPromo(newPromo)
                 }
             }
         }

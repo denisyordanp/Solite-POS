@@ -7,6 +7,7 @@ import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo as NewPromo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,6 +18,9 @@ interface PromosDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPromo(data: Promo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewPromo(data: NewPromo)
 
     @Update
     suspend fun updatePromo(data: Promo)
