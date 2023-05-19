@@ -47,7 +47,7 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.flow.first

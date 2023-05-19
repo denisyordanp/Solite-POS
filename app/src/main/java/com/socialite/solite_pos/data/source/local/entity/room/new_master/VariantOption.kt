@@ -60,13 +60,13 @@ data class VariantOption(
         const val DB_NAME = "new_variant_option"
         const val ID_ADD = "add_id"
 
-        fun getFilter(idVariant: Long, state: Int): SimpleSQLiteQuery {
+        fun getFilter(idVariant: String, state: Int): SimpleSQLiteQuery {
             val query = StringBuilder().append("SELECT * FROM ")
             query.append(DB_NAME)
             query.append(" WHERE ")
                 .append(Variant.ID)
                 .append(" = ")
-                .append(idVariant)
+                .append("'${idVariant}'")
             if (state == ACTIVE) {
                 query.append(" AND ")
                     .append(STATUS)
@@ -75,22 +75,6 @@ data class VariantOption(
             return SimpleSQLiteQuery(query.toString())
         }
     }
-
-    @Ignore
-    constructor(
-        id: String,
-        idVariant: String,
-        name: String,
-        desc: String,
-        isActive: Boolean
-    ) : this(
-        id = id,
-        variant = idVariant,
-        name = name,
-        desc = desc,
-        isActive = isActive,
-        isUploaded = false
-    )
 
     @Ignore
     constructor(

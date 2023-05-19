@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface VariantOptionsDao {
 
-    @RawQuery(observedEntities = [VariantOption::class])
-    fun getVariantOptions(query: SupportSQLiteQuery): Flow<List<VariantOption>>
+    @RawQuery(observedEntities = [NewVariantOption::class])
+    fun getVariantOptions(query: SupportSQLiteQuery): Flow<List<NewVariantOption>>
 
     @Query("SELECT * FROM '${VariantOption.DB_NAME}'")
     suspend fun getVariantOptions(): List<VariantOption>
@@ -26,7 +26,7 @@ interface VariantOptionsDao {
     suspend fun getVariantOptionById(variantOptionId: Long): VariantOption?
 
     @Transaction
-    @Query("SELECT * FROM ${VariantOption.DB_NAME}")
+    @Query("SELECT * FROM ${NewVariantOption.DB_NAME}")
     fun getVariantWithOptions(): Flow<List<VariantWithOption>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -37,4 +37,10 @@ interface VariantOptionsDao {
 
     @Update
     suspend fun updateVariantOption(data: VariantOption)
+
+    @Update
+    suspend fun updateNewVariantOption(data: NewVariantOption)
+
+    @Query("DELETE FROM ${VariantOption.DB_NAME}")
+    suspend fun deleteAllOldVariantOptions()
 }

@@ -8,9 +8,9 @@ import androidx.room.Transaction
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import kotlinx.coroutines.flow.Flow
 
 @Dao

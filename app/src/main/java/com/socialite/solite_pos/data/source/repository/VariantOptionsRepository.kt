@@ -2,7 +2,7 @@ package com.socialite.solite_pos.data.source.repository
 
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import kotlinx.coroutines.flow.Flow
 
 interface VariantOptionsRepository {
@@ -12,4 +12,5 @@ interface VariantOptionsRepository {
     suspend fun insertVariantOption(data: VariantOption)
     suspend fun updateVariantOption(data: VariantOption)
     suspend fun migrateToUUID()
+    suspend fun deleteAllOldVariantOptions()
 }
