@@ -6,9 +6,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
+import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
@@ -22,6 +24,7 @@ class OrdersRepositoryImpl(
     private val dao: OrdersDao,
     private val customersDao: CustomersDao,
     private val storesDao: StoreDao,
+    private val productsDao: ProductsDao,
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
 ) : OrdersRepository {
@@ -34,6 +37,7 @@ class OrdersRepositoryImpl(
             dao: OrdersDao,
             customersDao: CustomersDao,
             storesDao: StoreDao,
+            productsDao: ProductsDao,
             settingRepository: SettingRepository,
             db: AppDatabase
         ): OrdersRepositoryImpl {
@@ -44,6 +48,7 @@ class OrdersRepositoryImpl(
                             dao = dao,
                             customersDao = customersDao,
                             storesDao = storesDao,
+                            productsDao = productsDao,
                             settingRepository = settingRepository,
                             db = db
                         )
@@ -94,17 +99,16 @@ class OrdersRepositoryImpl(
 
         db.withTransaction {
             for (order in orders) {
-                dao.updateOrder(order.copy(
+                val updatedOrder = order.copy(
                     new_id = UUID.randomUUID().toString()
-                ))
-            }
-            val updatedOrders = dao.getOrders()
-            for (order in updatedOrders) {
+                )
+                dao.updateOrder(updatedOrder)
+
                 val customer = customersDao.getCustomerById(order.customer)
                 val store = storesDao.getStore(order.store)
                 if (customer != null && store != null) {
                     val newOrder = NewOrder(
-                        id = order.new_id,
+                        id = updatedOrder.new_id,
                         orderNo = order.orderNo,
                         customer = customer.new_id,
                         orderTime = order.orderTime,
@@ -118,10 +122,25 @@ class OrdersRepositoryImpl(
             }
 
             for (orderDetail in orderDetails) {
-                dao.updateOrderDetail(orderDetail.copy(
+                val updatedOrderDetail = orderDetail.copy(
                     new_id = UUID.randomUUID().toString()
-                ))
+                )
+                dao.updateOrderDetail(updatedOrderDetail)
+
+                val order = dao.getOrderByNo(orderDetail.orderNo)
+                val product = productsDao.getProductById(orderDetail.idProduct)
+                if (order != null && product != null) {
+                    val newOrderDetail = NewOrderDetail(
+                        id = updatedOrderDetail.new_id,
+                        order = order.new_id,
+                        product = product.new_id,
+                        amount = orderDetail.amount,
+                        isUpload = orderDetail.isUpload
+                    )
+                    dao.insertNewOrderDetail(newOrderDetail)
+                }
             }
+
             for (orderPayment in orderPayments) {
                 dao.updateOrderPayment(orderPayment.copy(
                     new_id = UUID.randomUUID().toString()

@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
@@ -40,7 +41,7 @@ interface OrdersDao {
 
     @Transaction
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
-    suspend fun getOrderByNo(orderNo: String): OrderData?
+    suspend fun getOrderDataByNo(orderNo: String): OrderData?
 
     @Transaction
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo")
@@ -64,6 +65,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${Order.DB_NAME}'")
     suspend fun getOrders(): List<Order>
 
+    @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo LIMIT 1")
+    suspend fun getOrderByNo(orderNo: String): Order?
+
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}'")
     suspend fun getOrderDetails(): List<OrderDetail>
 
@@ -84,6 +88,9 @@ interface OrdersDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDetailOrder(detail: OrderDetail): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewOrderDetail(detail: NewOrderDetail)
 
     @Query("DELETE FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
     suspend fun deleteDetailOrders(orderNo: String)
