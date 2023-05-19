@@ -10,6 +10,7 @@ import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithOption
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption as NewVariantOption
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,6 +28,9 @@ interface VariantOptionsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertVariantOption(data: VariantOption)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertNewVariantOption(data: NewVariantOption)
 
     @Update
     suspend fun updateVariantOption(data: VariantOption)

@@ -66,7 +66,11 @@ object RepositoryInjection {
 
     fun provideVariantOptionsRepository(context: Context): VariantOptionsRepository {
         val database = getInstance(context)
-        return VariantOptionsRepositoryImpl.getInstance(database.variantOptionsDao(), database)
+        return VariantOptionsRepositoryImpl.getInstance(
+            dao = database.variantOptionsDao(),
+            variantsDao = database.variantsDao(),
+            db = database
+        )
     }
 
     fun provideCategoriesRepository(context: Context): CategoriesRepository {

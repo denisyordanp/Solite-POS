@@ -4,14 +4,17 @@ import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption as NewVariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
+import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 class VariantOptionsRepositoryImpl(
     private val dao: VariantOptionsDao,
+    private val variantsDao: VariantsDao,
     private val db: AppDatabase
 ) : VariantOptionsRepository {
 
@@ -21,12 +24,17 @@ class VariantOptionsRepositoryImpl(
 
         fun getInstance(
             dao: VariantOptionsDao,
+            variantsDao: VariantsDao,
             db: AppDatabase
         ): VariantOptionsRepositoryImpl {
             if (INSTANCE == null) {
                 synchronized(VariantOptionsRepositoryImpl::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = VariantOptionsRepositoryImpl(dao = dao, db = db)
+                        INSTANCE = VariantOptionsRepositoryImpl(
+                            dao = dao,
+                            db = db,
+                            variantsDao = variantsDao
+                        )
                     }
                 }
             }
@@ -59,9 +67,23 @@ class VariantOptionsRepositoryImpl(
         val variantOptions = dao.getVariantOptions()
         db.withTransaction {
             for (variantOption in variantOptions) {
-                dao.updateVariantOption(variantOption.copy(
+                val updatedVariantOption = variantOption.copy(
                     new_id = UUID.randomUUID().toString()
-                ))
+                )
+                dao.updateVariantOption(updatedVariantOption)
+
+                val variant = variantsDao.getVariantById(variantOption.idVariant)
+                if (variant != null) {
+                    val newVariantOption = NewVariantOption(
+                        id = updatedVariantOption.new_id,
+                        variant = variant.new_id,
+                        name = variantOption.name,
+                        desc = variantOption.desc,
+                        isActive = variantOption.isActive,
+                        isUploaded = variantOption.isUploaded
+                    )
+                    dao.insertNewVariantOption(newVariantOption)
+                }
             }
         }
     }

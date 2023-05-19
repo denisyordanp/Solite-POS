@@ -15,6 +15,9 @@ interface VariantsDao {
     @Query("SELECT * FROM ${Variant.DB_NAME}")
     fun getVariants(): Flow<List<Variant>>
 
+    @Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :variantId")
+    suspend fun getVariantById(variantId: Long): Variant?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertVariant(data: Variant): Long
 
