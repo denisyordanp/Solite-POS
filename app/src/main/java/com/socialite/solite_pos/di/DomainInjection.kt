@@ -95,6 +95,7 @@ object DomainInjection {
         val variantsRepository = RepositoryInjection.provideVariantsRepository(context)
         val variantOptionsRepository = RepositoryInjection.provideVariantOptionsRepository(context)
         val productVariantsRepository = RepositoryInjection.provideProductVariantsRepository(context)
+        val settingRepository = RepositoryInjection.provideSettingRepository(context)
         return MigrateToUUIDImpl(
             customersRepository = customerRepository,
             storeRepository = storeRepository,
@@ -107,6 +108,7 @@ object DomainInjection {
             variantsRepository = variantsRepository,
             variantOptionsRepository = variantOptionsRepository,
             productVariantsRepository = productVariantsRepository,
+            settingRepository = settingRepository
         )
     }
 }

@@ -9,6 +9,7 @@ import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -25,18 +26,23 @@ class MigrateToUUIDImpl(
     private val variantsRepository: VariantsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
+    private val settingRepository: SettingRepository
 ) : MigrateToUUID {
     override suspend fun invoke() {
-        customersRepository.migrateToUUID()
-        storeRepository.migrateToUUID()
-        categoriesRepository.migrateToUUID()
-        promosRepository.migrateToUUID()
-        paymentsRepository.migrateToUUID()
-        ordersRepository.migrateToUUID()
-        outcomesRepository.migrateToUUID()
-        productsRepository.migrateToUUID()
-        variantsRepository.migrateToUUID()
-        variantOptionsRepository.migrateToUUID()
-        productVariantsRepository.migrateToUUID()
+        if (settingRepository.isMigrated().not()) {
+            customersRepository.migrateToUUID()
+            storeRepository.migrateToUUID()
+            categoriesRepository.migrateToUUID()
+            promosRepository.migrateToUUID()
+            paymentsRepository.migrateToUUID()
+            ordersRepository.migrateToUUID()
+            outcomesRepository.migrateToUUID()
+            productsRepository.migrateToUUID()
+            variantsRepository.migrateToUUID()
+            variantOptionsRepository.migrateToUUID()
+            productVariantsRepository.migrateToUUID()
+
+            settingRepository.setMigration(true)
+        }
     }
 }

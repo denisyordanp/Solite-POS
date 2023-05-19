@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.socialite.solite_pos.data.source.repository.SettingRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private const val SETTING_DATASTORE = "setting_datastore"
@@ -28,6 +29,7 @@ class SettingRepositoryImpl(
     private object PreferencesKeys {
         val SELECTED_STORE = longPreferencesKey("selected_store")
         val IS_DARK_MODE = booleanPreferencesKey("is_dark_mode")
+        val IS_MIGRATE = booleanPreferencesKey("is_migrate")
     }
 
     override fun getSelectedStore() = dataStore.data.map {
@@ -47,6 +49,16 @@ class SettingRepositoryImpl(
     override suspend fun setDarkMode(isActive: Boolean) {
         dataStore.edit {
             it[PreferencesKeys.IS_DARK_MODE] = isActive
+        }
+    }
+
+    override suspend fun isMigrated() = dataStore.data.map {
+        it[PreferencesKeys.IS_MIGRATE] ?: false
+    }.first()
+
+    override suspend fun setMigration(isMigrate: Boolean) {
+        dataStore.edit {
+            it[PreferencesKeys.IS_MIGRATE] = isMigrate
         }
     }
 }
