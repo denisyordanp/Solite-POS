@@ -1,14 +1,12 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant as NewVariant
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant as NewVariant
 
 class VariantsRepositoryImpl(
     private val dao: VariantsDao,
@@ -34,14 +32,14 @@ class VariantsRepositoryImpl(
         }
     }
 
-    override fun getVariants() = dao.getVariants()
+    override fun getVariants() = dao.getNewVariants()
 
-    override suspend fun insertVariant(data: Variant) {
-        dao.insertVariant(data)
+    override suspend fun insertVariant(data: NewVariant) {
+        dao.insertNewVariant(data)
     }
 
-    override suspend fun updateVariant(data: Variant) {
-        dao.updateVariant(data)
+    override suspend fun updateVariant(data: NewVariant) {
+        dao.updateNewVariant(data)
     }
 
     override suspend fun migrateToUUID() {
@@ -49,16 +47,14 @@ class VariantsRepositoryImpl(
         if (!variants.isNullOrEmpty()) {
             db.withTransaction {
                 for (variant in variants) {
-                    val newVariant = variant.copy(
+                    val updatedVariant = variant.copy(
                         new_id = UUID.randomUUID().toString()
                     )
-                    newVariant.id = variant.id
-                    dao.updateVariant(newVariant)
-                }
-                val updatedVariants = dao.getVariants().first()
-                for (variant in updatedVariants) {
+                    updatedVariant.id = variant.id
+                    dao.updateVariant(updatedVariant)
+
                     val newVariant = NewVariant(
-                        id = variant.new_id,
+                        id = updatedVariant.new_id,
                         name = variant.name,
                         type = variant.type,
                         isMust = variant.isMust,
@@ -68,5 +64,9 @@ class VariantsRepositoryImpl(
                 }
             }
         }
+    }
+
+    override suspend fun deleteAllOldVariants() {
+        dao.deleteAllOldVariants()
     }
 }

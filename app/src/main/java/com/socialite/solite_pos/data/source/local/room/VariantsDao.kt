@@ -15,6 +15,9 @@ interface VariantsDao {
     @Query("SELECT * FROM ${Variant.DB_NAME}")
     fun getVariants(): Flow<List<Variant>>
 
+    @Query("SELECT * FROM ${NewVariant.DB_NAME}")
+    fun getNewVariants(): Flow<List<NewVariant>>
+
     @Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :variantId")
     suspend fun getVariantById(variantId: Long): Variant?
 
@@ -26,4 +29,10 @@ interface VariantsDao {
 
     @Update
     suspend fun updateVariant(data: Variant)
+
+    @Update
+    suspend fun updateNewVariant(data: NewVariant)
+
+    @Query("DELETE FROM ${Variant.DB_NAME}")
+    suspend fun deleteAllOldVariants()
 }
