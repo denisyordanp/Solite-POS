@@ -3,6 +3,7 @@ package com.socialite.solite_pos.data.source.local.room
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -15,6 +16,9 @@ interface PromosDao {
 
     @RawQuery(observedEntities = [Promo::class])
     fun getPromos(query: SupportSQLiteQuery): Flow<List<Promo>>
+
+    @Query("SELECT * FROM '${Promo.DB_NAME}' WHERE ${Promo.ID} = :promoId LIMIT 1")
+    suspend fun getPromoById(promoId: Long): Promo?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPromo(data: Promo)

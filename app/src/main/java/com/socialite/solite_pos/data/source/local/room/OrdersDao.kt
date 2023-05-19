@@ -13,6 +13,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPa
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailProductMixWithVariantOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantMixOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
@@ -110,6 +111,9 @@ interface OrdersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPromoOrder(promo: OrderPromo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewOrderPromo(promo: NewOrderPromo)
 
     @Update
     suspend fun updateOrder(order: Order)
