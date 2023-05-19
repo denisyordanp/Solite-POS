@@ -2,9 +2,11 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant as NewVariant
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -52,6 +54,17 @@ class VariantsRepositoryImpl(
                     )
                     newVariant.id = variant.id
                     dao.updateVariant(newVariant)
+                }
+                val updatedVariants = dao.getVariants().first()
+                for (variant in updatedVariants) {
+                    val newVariant = NewVariant(
+                        id = variant.new_id,
+                        name = variant.name,
+                        type = variant.type,
+                        isMust = variant.isMust,
+                        isUploaded = variant.isUploaded
+                    )
+                    dao.insertNewVariant(newVariant)
                 }
             }
         }
