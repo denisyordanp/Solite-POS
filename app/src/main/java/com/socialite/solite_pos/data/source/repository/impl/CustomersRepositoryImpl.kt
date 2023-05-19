@@ -1,8 +1,7 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer as NewCUstomer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer as NewCustomer
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
@@ -34,9 +33,9 @@ class CustomersRepositoryImpl(
         }
     }
 
-    override fun getCustomers() = dao.getCustomers()
+    override fun getCustomers() = dao.getNewCustomers()
 
-    override suspend fun insertCustomer(data: Customer) = dao.insertCustomer(data)
+    override suspend fun insertCustomer(data: NewCustomer) = dao.insertNewCustomer(data)
 
     override suspend fun migrateToUUID() {
         val customers = dao.getCustomers().firstOrNull()
@@ -49,13 +48,14 @@ class CustomersRepositoryImpl(
                 }
                 val updatedCustomers = dao.getCustomers().first()
                 for (customer in updatedCustomers) {
-                    val newCustomer = NewCUstomer(
+                    val newCustomer = NewCustomer(
                         id = customer.new_id,
                         name = customer.name,
                         isUploaded = customer.isUploaded
                     )
                     dao.insertNewCustomer(newCustomer)
                 }
+                dao.deleteAllOldCustomers()
             }
         }
     }

@@ -15,6 +15,9 @@ interface CustomersDao {
     @Query("SELECT * FROM ${Customer.DB_NAME}")
     fun getCustomers(): Flow<List<Customer>>
 
+    @Query("SELECT * FROM ${NewCustomer.DB_NAME}")
+    fun getNewCustomers(): Flow<List<NewCustomer>>
+
     @Query("SELECT * FROM ${Customer.DB_NAME} WHERE ${Customer.ID} = :customerId LIMIT 1")
     suspend fun getCustomerById(customerId: Long): Customer?
 
@@ -22,8 +25,11 @@ interface CustomersDao {
     fun insertCustomer(data: Customer): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNewCustomer(data: NewCustomer): Long
+    suspend fun insertNewCustomer(data: NewCustomer)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCustomer(data: Customer)
+
+    @Query("DELETE FROM ${Customer.DB_NAME}")
+    suspend fun deleteAllOldCustomers()
 }

@@ -6,6 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
 	tableName = Customer.DB_NAME,
@@ -25,6 +26,8 @@ data class Customer(
 	@ColumnInfo(name = UPLOAD)
 	var isUploaded: Boolean
 ): Serializable{
+	fun isAdd() = id == ID_ADD
+
 	companion object {
 		const val ID_ADD = "add_id"
 
@@ -38,9 +41,11 @@ data class Customer(
             name = name,
             isUploaded = false
         )
+
+		fun createNew(name: String) = Customer(
+			id = UUID.randomUUID().toString(),
+			name = name,
+			isUploaded = false
+		)
 	}
-
-	fun isAdd() = id == ID_ADD
-
-	// TODO: Create a new customer function to add the UUID
 }
