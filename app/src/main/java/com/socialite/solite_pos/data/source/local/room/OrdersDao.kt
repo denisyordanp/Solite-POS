@@ -16,6 +16,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithV
 import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -77,6 +78,9 @@ interface OrdersDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrder(order: Order): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewOrder(order: NewOrder)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDetailOrder(detail: OrderDetail): Long

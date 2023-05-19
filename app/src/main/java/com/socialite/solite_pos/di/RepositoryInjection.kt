@@ -96,9 +96,11 @@ object RepositoryInjection {
     fun provideOrdersRepository(context: Context): OrdersRepository {
         val database = getInstance(context)
         return OrdersRepositoryImpl.getInstance(
-            database.ordersDao(),
-            SettingRepositoryImpl.getDataStoreInstance(context),
-            database
+            dao = database.ordersDao(),
+            customersDao = database.customersDao(),
+            storesDao = database.storeDao(),
+            settingRepository = SettingRepositoryImpl.getDataStoreInstance(context),
+            db = database
         )
     }
 

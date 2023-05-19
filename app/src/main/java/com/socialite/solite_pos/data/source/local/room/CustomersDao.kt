@@ -15,6 +15,9 @@ interface CustomersDao {
     @Query("SELECT * FROM ${Customer.DB_NAME}")
     fun getCustomers(): Flow<List<Customer>>
 
+    @Query("SELECT * FROM ${Customer.DB_NAME} WHERE ${Customer.ID} = :customerId LIMIT 1")
+    suspend fun getCustomerById(customerId: Long): Customer?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCustomer(data: Customer): Long
 

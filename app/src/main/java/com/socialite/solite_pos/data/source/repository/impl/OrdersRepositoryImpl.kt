@@ -5,8 +5,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPaymen
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
+import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
+import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
@@ -17,6 +20,8 @@ import java.util.UUID
 
 class OrdersRepositoryImpl(
     private val dao: OrdersDao,
+    private val customersDao: CustomersDao,
+    private val storesDao: StoreDao,
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
 ) : OrdersRepository {
@@ -27,6 +32,8 @@ class OrdersRepositoryImpl(
 
         fun getInstance(
             dao: OrdersDao,
+            customersDao: CustomersDao,
+            storesDao: StoreDao,
             settingRepository: SettingRepository,
             db: AppDatabase
         ): OrdersRepositoryImpl {
@@ -35,6 +42,8 @@ class OrdersRepositoryImpl(
                     if (INSTANCE == null) {
                         INSTANCE = OrdersRepositoryImpl(
                             dao = dao,
+                            customersDao = customersDao,
+                            storesDao = storesDao,
                             settingRepository = settingRepository,
                             db = db
                         )
@@ -89,6 +98,25 @@ class OrdersRepositoryImpl(
                     new_id = UUID.randomUUID().toString()
                 ))
             }
+            val updatedOrders = dao.getOrders()
+            for (order in updatedOrders) {
+                val customer = customersDao.getCustomerById(order.customer)
+                val store = storesDao.getStore(order.store)
+                if (customer != null && store != null) {
+                    val newOrder = NewOrder(
+                        id = order.new_id,
+                        orderNo = order.orderNo,
+                        customer = customer.new_id,
+                        orderTime = order.orderTime,
+                        isTakeAway = order.isTakeAway,
+                        status = order.status,
+                        store = store.new_id,
+                        isUploaded = order.isUploaded
+                    )
+                    dao.insertNewOrder(newOrder)
+                }
+            }
+
             for (orderDetail in orderDetails) {
                 dao.updateOrderDetail(orderDetail.copy(
                     new_id = UUID.randomUUID().toString()

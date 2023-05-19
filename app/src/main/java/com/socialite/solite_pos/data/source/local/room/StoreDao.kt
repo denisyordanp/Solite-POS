@@ -15,7 +15,7 @@ interface StoreDao {
     @Query("SELECT * FROM ${Store.DB_NAME}")
     fun getStores(): Flow<List<Store>>
 
-    @Query("SELECT * FROM ${Store.DB_NAME} WHERE ${Store.ID} = :id")
+    @Query("SELECT * FROM ${Store.DB_NAME} WHERE ${Store.ID} = :id LIMIT 1")
     suspend fun getStore(id: Long): Store?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
