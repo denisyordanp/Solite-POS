@@ -3,6 +3,7 @@ package com.socialite.solite_pos.data.source.local.room
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -15,6 +16,9 @@ interface CategoriesDao {
 
     @RawQuery(observedEntities = [Category::class])
     fun getCategories(query: SupportSQLiteQuery): Flow<List<Category>>
+
+    @Query("SELECT * FROM ${Category.DB_NAME} WHERE ${Category.ID} = :categoryId LIMIT 1")
+    suspend fun getCategoryById(categoryId: Long): Category?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(data: Category)

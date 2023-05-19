@@ -9,13 +9,17 @@ import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product as NewProduct
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductsDao {
 
-    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
+    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct LIMIT 1")
     suspend fun getProduct(idProduct: Long): Product
+
+    @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct LIMIT 1")
+    suspend fun getProductById(idProduct: Long): Product?
 
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct")
     fun getProductAsFlow(idProduct: Long): Flow<Product>
@@ -43,6 +47,9 @@ interface ProductsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProduct(data: Product): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewProduct(data: NewProduct)
 
     @Update
     suspend fun updateProduct(data: Product)
