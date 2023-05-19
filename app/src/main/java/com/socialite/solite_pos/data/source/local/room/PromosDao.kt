@@ -17,6 +17,9 @@ interface PromosDao {
     @RawQuery(observedEntities = [Promo::class])
     fun getPromos(query: SupportSQLiteQuery): Flow<List<Promo>>
 
+    @RawQuery(observedEntities = [NewPromo::class])
+    fun getNewPromos(query: SupportSQLiteQuery): Flow<List<NewPromo>>
+
     @Query("SELECT * FROM '${Promo.DB_NAME}' WHERE ${Promo.ID} = :promoId LIMIT 1")
     suspend fun getPromoById(promoId: Long): Promo?
 
@@ -28,4 +31,10 @@ interface PromosDao {
 
     @Update
     suspend fun updatePromo(data: Promo)
+
+    @Update
+    suspend fun updateNewPromo(data: NewPromo)
+
+    @Query("DELETE FROM '${Promo.DB_NAME}'")
+    suspend fun deleteAllOldPromos()
 }

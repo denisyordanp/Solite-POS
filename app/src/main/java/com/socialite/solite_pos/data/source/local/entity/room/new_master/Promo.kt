@@ -8,6 +8,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Promo.DB_NAME,
@@ -54,6 +55,10 @@ data class Promo(
             ((value!!.toFloat() / 100) * total).toLong()
         }
     }
+
+    fun asNewPromo() = this.copy(
+        id = UUID.randomUUID().toString()
+    )
 
     companion object {
         const val ID = "id_promo"

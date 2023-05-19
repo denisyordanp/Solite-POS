@@ -9,7 +9,7 @@ import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
@@ -122,7 +122,7 @@ class MainViewModel(
 
     fun insertPromo(data: Promo) {
         viewModelScope.launch {
-            promosRepository.insertPromo(data)
+            promosRepository.insertPromo(data.asNewPromo())
         }
     }
 
