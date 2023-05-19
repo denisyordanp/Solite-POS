@@ -7,6 +7,7 @@ import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category as NewCategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,4 +21,7 @@ interface CategoriesDao {
 
     @Update
     suspend fun updateCategory(data: Category)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewCategory(data: NewCategory)
 }

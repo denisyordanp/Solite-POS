@@ -3,9 +3,11 @@ package com.socialite.solite_pos.data.source.repository.impl
 import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category as NewCategory
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CategoriesDao
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -51,6 +53,17 @@ class CategoriesRepositoryImpl(
                     dao.updateCategory(category.copy(
                         new_id = UUID.randomUUID().toString()
                     ))
+                }
+                val updatedCategories = dao.getCategories(Category.getFilter(Category.ALL)).first()
+                for (category in updatedCategories) {
+                    val newCategory = NewCategory(
+                        id = category.new_id,
+                        name = category.name,
+                        desc = category.desc,
+                        isActive = category.isActive,
+                        isUploaded = category.isUploaded
+                    )
+                    dao.insertNewCategory(newCategory)
                 }
             }
         }
