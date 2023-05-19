@@ -35,14 +35,14 @@ class CategoriesRepositoryImpl(
         }
     }
 
-    override fun getCategories(query: SimpleSQLiteQuery) = dao.getCategories(query)
+    override fun getCategories(query: SimpleSQLiteQuery) = dao.getNewCategories(query)
 
-    override suspend fun insertCategory(data: Category) {
-        dao.insertCategory(data)
+    override suspend fun insertCategory(data: NewCategory) {
+        dao.insertNewCategory(data)
     }
 
-    override suspend fun updateCategory(data: Category) {
-        dao.updateCategory(data)
+    override suspend fun updateCategory(data: NewCategory) {
+        dao.updateNewCategory(data)
     }
 
     override suspend fun migrateToUUID() {
@@ -65,6 +65,7 @@ class CategoriesRepositoryImpl(
                     )
                     dao.insertNewCategory(newCategory)
                 }
+                dao.deleteAllOldCategories()
             }
         }
     }

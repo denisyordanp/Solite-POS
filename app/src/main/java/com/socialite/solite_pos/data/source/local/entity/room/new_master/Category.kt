@@ -36,7 +36,11 @@ data class Category(
     var isUploaded: Boolean
 ) : Serializable, DropdownItem {
 
-    fun isNewCategory() = id.isEmpty()
+    fun isNewCategory() = id == ID_ADD
+
+    fun asNewCategory() = this.copy(
+        id = UUID.randomUUID().toString()
+    )
 
     companion object {
         const val ID = "id_category"
@@ -45,6 +49,7 @@ data class Category(
         const val DESC = "desc"
 
         const val DB_NAME = "new_category"
+        private const val ID_ADD = "add_id"
 
         const val ALL = 2
         const val ACTIVE = 1
@@ -66,6 +71,7 @@ data class Category(
             name: String,
             desc: String
         ) = Category(
+            id = ID_ADD,
             name = name,
             desc = desc,
             isActive = true
@@ -80,15 +86,6 @@ data class Category(
         isActive: Boolean
     ) : this(
         id = id,
-        name = name,
-        desc = desc,
-        isActive = isActive,
-        isUploaded = false
-    )
-
-    @Ignore
-    constructor(name: String, desc: String, isActive: Boolean) : this(
-        id = UUID.randomUUID().toString(),
         name = name,
         desc = desc,
         isActive = isActive,

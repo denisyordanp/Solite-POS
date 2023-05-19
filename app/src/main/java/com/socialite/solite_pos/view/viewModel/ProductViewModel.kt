@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
@@ -117,7 +117,7 @@ class ProductViewModel(
 
     fun insertCategory(data: Category) {
         viewModelScope.launch {
-            categoriesRepository.insertCategory(data)
+            categoriesRepository.insertCategory(data.asNewCategory())
         }
     }
 
