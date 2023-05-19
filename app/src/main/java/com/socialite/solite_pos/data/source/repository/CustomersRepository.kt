@@ -8,4 +8,5 @@ interface CustomersRepository {
     fun getCustomers(): Flow<List<Customer>>
     suspend fun insertCustomer(data: Customer)
     suspend fun migrateToUUID()
+    suspend fun deleteAllOldCustomers()
 }

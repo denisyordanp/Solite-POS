@@ -42,6 +42,10 @@ class MigrateToUUIDImpl(
             variantOptionsRepository.migrateToUUID()
             productVariantsRepository.migrateToUUID()
 
+            customersRepository.deleteAllOldCustomers()
+            storeRepository.deleteAllOldStores()
+            categoriesRepository.deleteAllOldCategories()
+
             settingRepository.setMigration(true)
         }
     }

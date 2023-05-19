@@ -7,7 +7,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Categor
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CategoriesDao
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -50,14 +49,13 @@ class CategoriesRepositoryImpl(
         if (!categories.isNullOrEmpty()) {
             db.withTransaction {
                 for (category in categories) {
-                    dao.updateCategory(category.copy(
+                    val updatedCategory = category.copy(
                         new_id = UUID.randomUUID().toString()
-                    ))
-                }
-                val updatedCategories = dao.getCategories(Category.getFilter(Category.ALL)).first()
-                for (category in updatedCategories) {
+                    )
+                    dao.updateCategory(updatedCategory)
+
                     val newCategory = NewCategory(
-                        id = category.new_id,
+                        id = updatedCategory.new_id,
                         name = category.name,
                         desc = category.desc,
                         isActive = category.isActive,
@@ -65,8 +63,11 @@ class CategoriesRepositoryImpl(
                     )
                     dao.insertNewCategory(newCategory)
                 }
-                dao.deleteAllOldCategories()
             }
         }
+    }
+
+    override suspend fun deleteAllOldCategories() {
+        dao.deleteAllOldCategories()
     }
 }

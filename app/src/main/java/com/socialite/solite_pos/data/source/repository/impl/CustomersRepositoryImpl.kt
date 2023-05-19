@@ -5,7 +5,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Custome
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -42,21 +41,23 @@ class CustomersRepositoryImpl(
         if (!customers.isNullOrEmpty()) {
             db.withTransaction {
                 for (customer in customers) {
-                    dao.updateCustomer(customer.copy(
+                    val updatedCustomer = customer.copy(
                         new_id = UUID.randomUUID().toString()
-                    ))
-                }
-                val updatedCustomers = dao.getCustomers().first()
-                for (customer in updatedCustomers) {
+                    )
+                    dao.updateCustomer(updatedCustomer)
+
                     val newCustomer = NewCustomer(
-                        id = customer.new_id,
+                        id = updatedCustomer.new_id,
                         name = customer.name,
                         isUploaded = customer.isUploaded
                     )
                     dao.insertNewCustomer(newCustomer)
                 }
-                dao.deleteAllOldCustomers()
             }
         }
+    }
+
+    override suspend fun deleteAllOldCustomers() {
+        dao.deleteAllOldCustomers()
     }
 }

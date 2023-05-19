@@ -5,7 +5,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store a
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.repository.StoreRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -42,22 +41,24 @@ class StoreRepositoryImpl(
         if (!stores.isNullOrEmpty()) {
             db.withTransaction {
                 for (store in stores) {
-                    dao.updateStore(store.copy(
+                    val updatedStore = store.copy(
                         new_id = UUID.randomUUID().toString()
-                    ))
-                }
-                val updatedStores = dao.getStores().first()
-                for (store in updatedStores) {
+                    )
+                    dao.updateStore(updatedStore)
+
                     val newStore = NewStore(
-                        id = store.new_id,
+                        id = updatedStore.new_id,
                         name = store.name,
                         address = store.address,
                         isUploaded = false
                     )
                     dao.insertNewStore(newStore)
                 }
-                dao.deleteAllOldStore()
             }
         }
+    }
+
+    override suspend fun deleteAllOldStores() {
+        dao.deleteAllOldStore()
     }
 }
