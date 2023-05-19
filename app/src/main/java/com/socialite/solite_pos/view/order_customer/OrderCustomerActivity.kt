@@ -103,13 +103,13 @@ class OrderCustomerActivity : SoliteActivity() {
 
                         val productIdArgument =
                             navArgument(name = OrderCustomerDestinations.PRODUCT_ID) {
-                                type = NavType.LongType
+                                type = NavType.StringType
                             }
                         composable(
                             route = OrderCustomerDestinations.SELECT_VARIANTS,
                             arguments = listOf(productIdArgument)
                         ) {
-                            it.arguments?.getLong(OrderCustomerDestinations.PRODUCT_ID)?.let { id ->
+                            it.arguments?.getString(OrderCustomerDestinations.PRODUCT_ID)?.let { id ->
                                 OrderSelectVariants(
                                     productId = id,
                                     viewModel = productViewModel,

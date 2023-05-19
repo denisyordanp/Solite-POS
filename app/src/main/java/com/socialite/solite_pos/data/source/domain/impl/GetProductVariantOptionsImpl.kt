@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 class GetProductVariantOptionsImpl(
     private val dao: ProductVariantsDao
 ) : GetProductVariantOptions {
-    override fun invoke(idProduct: Long): Flow<List<VariantWithOptions>?> {
+    override fun invoke(idProduct: String): Flow<List<VariantWithOptions>?> {
         return dao.getVariantProducts(idProduct)
             .map { it?.handleVariants() }
     }

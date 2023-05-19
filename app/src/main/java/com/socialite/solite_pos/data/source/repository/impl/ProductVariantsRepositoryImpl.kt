@@ -1,16 +1,14 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.ProductVariantsDao
 import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
-import kotlinx.coroutines.flow.Flow
 import java.util.UUID
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
 
 class ProductVariantsRepositoryImpl(
     private val dao: ProductVariantsDao,
@@ -48,23 +46,23 @@ class ProductVariantsRepositoryImpl(
         }
     }
 
-    override fun getVariantProduct(idProduct: Long, idVariantOption: Long) =
+    override fun getVariantProduct(idProduct: String, idVariantOption: String) =
         dao.getVariantProduct(idProduct, idVariantOption)
 
-    override suspend fun isProductHasVariants(idProduct: Long) =
+    override suspend fun isProductHasVariants(idProduct: String) =
         !dao.getProductVariants(idProduct).isNullOrEmpty()
 
-    override fun getVariantsProductById(idProduct: Long) = dao.getProductVariantsById(idProduct)
+    override fun getVariantsProductById(idProduct: String) = dao.getProductVariantsById(idProduct)
 
-    override fun getVariantProductById(idProduct: Long): Flow<VariantProduct?> =
+    override fun getVariantProductById(idProduct: String) =
         dao.getVariantProductById(idProduct)
 
-    override suspend fun insertVariantProduct(data: VariantProduct) {
-        dao.insertVariantProduct(data)
+    override suspend fun insertVariantProduct(data: NewVariantProduct) {
+        dao.insertNewVariantProduct(data)
     }
 
-    override suspend fun removeVariantProduct(data: VariantProduct) {
-        dao.removeVariantProduct(data.idVariantOption, data.idProduct)
+    override suspend fun removeVariantProduct(data: NewVariantProduct) {
+        dao.removeVariantProduct(data.variantOption, data.product)
     }
 
     override suspend fun migrateToUUID() {
@@ -91,5 +89,9 @@ class ProductVariantsRepositoryImpl(
                 }
             }
         }
+    }
+
+    override suspend fun deleteAllOldProductVariants() {
+        dao.deleteAllOldProductVariants()
     }
 }
