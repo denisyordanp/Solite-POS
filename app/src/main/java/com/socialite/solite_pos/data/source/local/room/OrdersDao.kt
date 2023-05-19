@@ -11,6 +11,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDe
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
@@ -73,6 +74,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}'")
     suspend fun getOrderDetails(): List<OrderDetail>
 
+    @Query("SELECT * FROM '${OrderDetail.DB_NAME}' WHERE ${OrderDetail.ID} = :orderDetailId LIMIT 1")
+    suspend fun getOrderDetailById(orderDetailId: Long): OrderDetail?
+
     @Query("SELECT * FROM '${OrderPayment.DB_NAME}'")
     suspend fun getOrderPayments(): List<OrderPayment>
 
@@ -114,6 +118,9 @@ interface OrdersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderPromo(promo: NewOrderPromo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewOrderProductVariant(orderProductvariant: NewOrderProductVariant)
 
     @Update
     suspend fun updateOrder(order: Order)

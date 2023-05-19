@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
@@ -16,6 +17,7 @@ import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.source.local.room.StoreDao
+import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
@@ -31,6 +33,7 @@ class OrdersRepositoryImpl(
     private val productsDao: ProductsDao,
     private val paymentDao: PaymentsDao,
     private val promosDao: PromosDao,
+    private val variantOptionsDao: VariantOptionsDao,
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
 ) : OrdersRepository {
@@ -46,6 +49,7 @@ class OrdersRepositoryImpl(
             productsDao: ProductsDao,
             paymentDao: PaymentsDao,
             promosDao: PromosDao,
+            variantOptionsDao: VariantOptionsDao,
             settingRepository: SettingRepository,
             db: AppDatabase
         ): OrdersRepositoryImpl {
@@ -59,6 +63,7 @@ class OrdersRepositoryImpl(
                             productsDao = productsDao,
                             paymentDao = paymentDao,
                             promosDao = promosDao,
+                            variantOptionsDao = variantOptionsDao,
                             settingRepository = settingRepository,
                             db = db
                         )
@@ -192,9 +197,22 @@ class OrdersRepositoryImpl(
             }
 
             for (orderProductVariant in orderProductVariants) {
-                dao.updateOrderProductVariant(orderProductVariant.copy(
+                val updatedOrderProductVariant = orderProductVariant.copy(
                     new_id = UUID.randomUUID().toString()
-                ))
+                )
+                dao.updateOrderProductVariant(updatedOrderProductVariant)
+
+                val orderDetail = dao.getOrderDetailById(orderProductVariant.idOrderDetail)
+                val variantOption = variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
+                if (orderDetail != null && variantOption != null) {
+                    val newOrderProductVariant = NewOrderProductVariant(
+                        id = updatedOrderProductVariant.new_id,
+                        variantOption = variantOption.new_id,
+                        orderDetail = orderDetail.new_id,
+                        isUpload = updatedOrderProductVariant.isUpload
+                    )
+                    dao.insertNewOrderProductVariant(newOrderProductVariant)
+                }
             }
         }
     }
