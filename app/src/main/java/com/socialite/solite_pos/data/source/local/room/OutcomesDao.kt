@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome as NewOutcome
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,6 +23,9 @@ interface OutcomesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOutcome(data: Outcome): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertNewOutcome(data: NewOutcome)
 
     @Update
     suspend fun updateOutcome(data: Outcome)
