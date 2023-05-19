@@ -2,9 +2,11 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer as NewCUstomer
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -44,6 +46,15 @@ class CustomersRepositoryImpl(
                     dao.updateCustomer(customer.copy(
                         new_id = UUID.randomUUID().toString()
                     ))
+                }
+                val updatedCustomers = dao.getCustomers().first()
+                for (customer in updatedCustomers) {
+                    val newCustomer = NewCUstomer(
+                        id = customer.new_id,
+                        name = customer.name,
+                        isUploaded = customer.isUploaded
+                    )
+                    dao.insertNewCustomer(newCustomer)
                 }
             }
         }
