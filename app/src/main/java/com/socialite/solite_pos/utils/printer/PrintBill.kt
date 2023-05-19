@@ -5,7 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Store
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.preference.SettingPref
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah

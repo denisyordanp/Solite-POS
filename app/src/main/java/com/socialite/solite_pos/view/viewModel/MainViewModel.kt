@@ -10,7 +10,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Custome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
-import com.socialite.solite_pos.data.source.local.entity.room.master.Store
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
@@ -149,7 +149,7 @@ class MainViewModel(
 
     fun insertStore(store: Store) {
         viewModelScope.launch {
-            storeRepository.insertStore(store)
+            storeRepository.insertStore(store.asNewStore())
         }
     }
 
@@ -161,7 +161,7 @@ class MainViewModel(
 
     val selectedStore = settingRepository.getSelectedStore()
 
-    fun selectStore(id: Long) {
+    fun selectStore(id: String) {
         viewModelScope.launch {
             settingRepository.selectStore(id)
         }

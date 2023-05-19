@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Store.DB_NAME,
@@ -31,6 +32,10 @@ data class Store(
 
     fun isNewStore() = id == ID_ADD
 
+    fun asNewStore() = this.copy(
+        id = UUID.randomUUID().toString()
+    )
+
     companion object {
         const val ID = "id_store"
         const val NAME = "name"
@@ -39,7 +44,7 @@ data class Store(
         const val DB_NAME = "new_store"
         const val ID_ADD = "add_id"
 
-        fun newStore(name: String, address: String): Store {
+        fun add(name: String, address: String): Store {
             return Store(
                 id = ID_ADD,
                 name = name,
