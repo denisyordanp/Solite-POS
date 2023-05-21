@@ -49,13 +49,16 @@ class CategoriesRepositoryImpl(
         if (!categories.isNullOrEmpty()) {
             db.withTransaction {
                 for (category in categories) {
-                    val updatedCategory = category.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updateCategory(updatedCategory)
+                    val uuid = category.new_id.ifEmpty {
+                        val updatedCategory = category.copy(
+                            new_id = UUID.randomUUID().toString()
+                        )
+                        dao.updateCategory(updatedCategory)
+                        updatedCategory.new_id
+                    }
 
                     val newCategory = NewCategory(
-                        id = updatedCategory.new_id,
+                        id = uuid,
                         name = category.name,
                         desc = category.desc,
                         isActive = category.isActive,

@@ -55,16 +55,21 @@ class StoreRepositoryImpl(
         if (!stores.isNullOrEmpty()) {
             db.withTransaction {
                 for (store in stores) {
-                    val updatedStore = store.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updateStore(updatedStore)
-                    if (activeStore != 0L && activeStore == updatedStore.id) {
-                        settingRepository.selectNewStore(updatedStore.new_id)
+                    val uuid = store.new_id.ifEmpty {
+                        val updatedStore = store.copy(
+                            new_id = UUID.randomUUID().toString()
+                        )
+                        dao.updateStore(updatedStore)
+
+                        if (activeStore != 0L && activeStore == updatedStore.id) {
+                            settingRepository.selectNewStore(updatedStore.new_id)
+                        }
+
+                        updatedStore.new_id
                     }
 
                     val newStore = NewStore(
-                        id = updatedStore.new_id,
+                        id = uuid,
                         name = store.name,
                         address = store.address,
                         isUploaded = false

@@ -105,16 +105,19 @@ class OrdersRepositoryImpl(
 
         db.withTransaction {
             for (order in orders) {
-                val updatedOrder = order.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateOrder(updatedOrder)
+                val uuid = order.new_id.ifEmpty {
+                    val updatedOrder = order.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateOrder(updatedOrder)
+                    updatedOrder.new_id
+                }
 
                 val customer = customersDao.getCustomerById(order.customer)
                 val store = storesDao.getStore(order.store)
                 if (customer != null && store != null) {
                     val newOrder = Order(
-                        id = updatedOrder.new_id,
+                        id = uuid,
                         orderNo = order.orderNo,
                         customer = customer.new_id,
                         orderTime = order.orderTime,
@@ -130,16 +133,19 @@ class OrdersRepositoryImpl(
 
         db.withTransaction {
             for (orderDetail in orderDetails) {
-                val updatedOrderDetail = orderDetail.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateOrderDetail(updatedOrderDetail)
+                val uuid = orderDetail.new_id.ifEmpty {
+                    val updatedOrderDetail = orderDetail.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateOrderDetail(updatedOrderDetail)
+                    updatedOrderDetail.new_id
+                }
 
                 val order = dao.getOrderByNo(orderDetail.orderNo)
                 val product = productsDao.getProductById(orderDetail.idProduct)
                 if (order != null && product != null) {
                     val newOrderDetail = NewOrderDetail(
-                        id = updatedOrderDetail.new_id,
+                        id = uuid,
                         order = order.new_id,
                         product = product.new_id,
                         amount = orderDetail.amount,
@@ -152,16 +158,19 @@ class OrdersRepositoryImpl(
 
         db.withTransaction {
             for (orderPayment in orderPayments) {
-                val updatedOrderPayment = orderPayment.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateOrderPayment(updatedOrderPayment)
+                val uuid = orderPayment.new_id.ifEmpty {
+                    val updatedOrderPayment = orderPayment.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateOrderPayment(updatedOrderPayment)
+                    updatedOrderPayment.new_id
+                }
 
                 val order = dao.getOrderByNo(orderPayment.orderNO)
                 val payment = paymentDao.getPaymentById(orderPayment.idPayment)
                 if (order != null && payment != null) {
                     val newOrderPayment = OrderPayment(
-                        id = updatedOrderPayment.new_id,
+                        id = uuid,
                         order = order.new_id,
                         payment = payment.new_id,
                         pay = orderPayment.pay,
@@ -174,16 +183,19 @@ class OrdersRepositoryImpl(
 
         db.withTransaction {
             for (orderPromo in orderPromos) {
-                val updatedOrderPromo = orderPromo.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateOrderPromo(updatedOrderPromo)
+                val uuid = orderPromo.new_id.ifEmpty {
+                    val updatedOrderPromo = orderPromo.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateOrderPromo(updatedOrderPromo)
+                    updatedOrderPromo.new_id
+                }
 
                 val order = dao.getOrderByNo(orderPromo.orderNO)
                 val promo = promosDao.getPromoById(orderPromo.idPromo)
                 if (order != null && promo != null) {
                     val newOrderPromo = OrderPromo(
-                        id = updatedOrderPromo.new_id,
+                        id = uuid,
                         order = order.new_id,
                         promo = promo.new_id,
                         totalPromo = orderPromo.totalPromo,
@@ -196,20 +208,23 @@ class OrdersRepositoryImpl(
 
         db.withTransaction {
             for (orderProductVariant in orderProductVariants) {
-                val updatedOrderProductVariant = orderProductVariant.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateOrderProductVariant(updatedOrderProductVariant)
+                val uuid = orderProductVariant.new_id.ifEmpty {
+                    val updatedOrderProductVariant = orderProductVariant.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateOrderProductVariant(updatedOrderProductVariant)
+                    updatedOrderProductVariant.new_id
+                }
 
                 val orderDetail = dao.getOrderDetailById(orderProductVariant.idOrderDetail)
                 val variantOption =
                     variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
                 if (orderDetail != null && variantOption != null) {
                     val newOrderProductVariant = NewOrderProductVariant(
-                        id = updatedOrderProductVariant.new_id,
+                        id = uuid,
                         variantOption = variantOption.new_id,
                         orderDetail = orderDetail.new_id,
-                        isUpload = updatedOrderProductVariant.isUpload
+                        isUpload = orderProductVariant.isUpload
                     )
                     dao.insertNewOrderProductVariant(newOrderProductVariant)
                 }

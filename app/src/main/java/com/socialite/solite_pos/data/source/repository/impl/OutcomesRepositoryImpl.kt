@@ -64,15 +64,18 @@ class OutcomesRepositoryImpl(
         val outcomes = dao.getOutcomes()
         db.withTransaction {
             for (outcome in outcomes) {
-                val updatedOutcome = outcome.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateOutcome(updatedOutcome)
+                val uuid = outcome.new_id.ifEmpty {
+                    val updatedOutcome = outcome.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateOutcome(updatedOutcome)
+                    updatedOutcome.new_id
+                }
 
                 val store = storesDao.getStore(outcome.store)
                 if (store != null) {
                     val newOutcome = NewOutcome(
-                        id = updatedOutcome.new_id,
+                        id = uuid,
                         name = outcome.name,
                         desc = outcome.desc,
                         price = outcome.price,

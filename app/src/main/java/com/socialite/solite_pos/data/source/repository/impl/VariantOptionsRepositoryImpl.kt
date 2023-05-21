@@ -66,15 +66,18 @@ class VariantOptionsRepositoryImpl(
         val variantOptions = dao.getVariantOptions()
         db.withTransaction {
             for (variantOption in variantOptions) {
-                val updatedVariantOption = variantOption.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateVariantOption(updatedVariantOption)
+                val uuid = variantOption.new_id.ifEmpty {
+                    val updatedVariantOption = variantOption.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateVariantOption(updatedVariantOption)
+                    updatedVariantOption.new_id
+                }
 
                 val variant = variantsDao.getVariantById(variantOption.idVariant)
                 if (variant != null) {
                     val newVariantOption = NewVariantOption(
-                        id = updatedVariantOption.new_id,
+                        id = uuid,
                         variant = variant.new_id,
                         name = variantOption.name,
                         desc = variantOption.desc,

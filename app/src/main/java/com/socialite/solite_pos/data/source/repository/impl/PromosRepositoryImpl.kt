@@ -44,13 +44,16 @@ class PromosRepositoryImpl(
         if (!promos.isNullOrEmpty()) {
             db.withTransaction {
                 for (promo in promos) {
-                    val updatedPromo = promo.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updatePromo(updatedPromo)
+                    val uuid = promo.new_id.ifEmpty {
+                        val updatedPromo = promo.copy(
+                            new_id = UUID.randomUUID().toString()
+                        )
+                        dao.updatePromo(updatedPromo)
+                        updatedPromo.new_id
+                    }
 
                     val newPromo = NewPromo(
-                        id = updatedPromo.new_id,
+                        id = uuid,
                         name = promo.name,
                         desc = promo.desc,
                         isCash = promo.isCash,

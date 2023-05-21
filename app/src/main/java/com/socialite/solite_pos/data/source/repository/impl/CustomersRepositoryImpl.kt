@@ -41,13 +41,16 @@ class CustomersRepositoryImpl(
         if (!customers.isNullOrEmpty()) {
             db.withTransaction {
                 for (customer in customers) {
-                    val updatedCustomer = customer.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updateCustomer(updatedCustomer)
+                    val uuid = customer.new_id.ifEmpty {
+                        val updatedCustomer = customer.copy(
+                            new_id = UUID.randomUUID().toString()
+                        )
+                        dao.updateCustomer(updatedCustomer)
+                        updatedCustomer.new_id
+                    }
 
                     val newCustomer = NewCustomer(
-                        id = updatedCustomer.new_id,
+                        id = uuid,
                         name = customer.name,
                         isUploaded = customer.isUploaded
                     )

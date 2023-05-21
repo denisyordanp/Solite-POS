@@ -48,13 +48,16 @@ class PaymentsRepositoryImpl(
         if (!payments.isNullOrEmpty()) {
             db.withTransaction {
                 for (payment in payments) {
-                    val updatedPayment = payment.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updatePayment(updatedPayment)
+                    val uuid = payment.new_id.ifEmpty {
+                        val updatedPayment = payment.copy(
+                            new_id = UUID.randomUUID().toString()
+                        )
+                        dao.updatePayment(updatedPayment)
+                        updatedPayment.new_id
+                    }
 
                     val newPayment = NewPayment(
-                        id = updatedPayment.new_id,
+                        id = uuid,
                         name = payment.name,
                         desc = payment.desc,
                         tax = payment.tax,

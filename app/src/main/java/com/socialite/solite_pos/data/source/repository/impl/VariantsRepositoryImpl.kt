@@ -47,14 +47,17 @@ class VariantsRepositoryImpl(
         if (!variants.isNullOrEmpty()) {
             db.withTransaction {
                 for (variant in variants) {
-                    val updatedVariant = variant.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    updatedVariant.id = variant.id
-                    dao.updateVariant(updatedVariant)
+                    val uuid = variant.new_id.ifEmpty {
+                        val updatedVariant = variant.copy(
+                            new_id = UUID.randomUUID().toString()
+                        )
+                        updatedVariant.id = variant.id
+                        dao.updateVariant(updatedVariant)
+                        updatedVariant.new_id
+                    }
 
                     val newVariant = NewVariant(
-                        id = updatedVariant.new_id,
+                        id = uuid,
                         name = variant.name,
                         type = variant.type,
                         isMust = variant.isMust,

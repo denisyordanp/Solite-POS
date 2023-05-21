@@ -48,15 +48,18 @@ class ProductsRepositoryImpl(
         val products = dao.getProducts()
         db.withTransaction {
             for (product in products) {
-                val updatedProduct = product.copy(
-                    new_id = UUID.randomUUID().toString()
-                )
-                dao.updateProduct(updatedProduct)
+                val uuid = product.new_id.ifEmpty {
+                    val updatedProduct = product.copy(
+                        new_id = UUID.randomUUID().toString()
+                    )
+                    dao.updateProduct(updatedProduct)
+                    updatedProduct.new_id
+                }
 
                 val category = categoryDao.getCategoryById(product.category)
                 if (category != null) {
                     val newProduct = NewProduct(
-                        id = updatedProduct.new_id,
+                        id = uuid,
                         name = product.name,
                         category = category.new_id,
                         image = product.image,
