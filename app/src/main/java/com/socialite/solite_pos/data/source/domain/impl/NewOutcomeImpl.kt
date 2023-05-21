@@ -11,7 +11,7 @@ class NewOutcomeImpl(
     private val outcomesRepository: OutcomesRepository
 ) : NewOutcome {
     override suspend fun invoke(outcome: Outcome) {
-        val store = settingRepository.getSelectedStore().first()
+        val store = settingRepository.getNewSelectedStore().first()
         outcomesRepository.insertOutcome(outcome.copy(
             store = store
         ))

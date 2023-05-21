@@ -25,7 +25,7 @@ class NewOrderImpl(
         products: List<ProductOrderDetail>,
         currentTime: String
     ) {
-        val selectedStore = settingRepository.getSelectedStore().first()
+        val selectedStore = settingRepository.getNewSelectedStore().first()
         val orderData = generateOrder(customer, isTakeAway, currentTime, selectedStore)
         val orderWithProducts = OrderWithProduct(
             order = orderData,

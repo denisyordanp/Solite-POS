@@ -49,7 +49,7 @@ class OutcomesRepositoryImpl(
 
     @FlowPreview
     override fun getOutcomes(parameters: ReportsParameter) = if (parameters.isTodayOnly()) {
-        settingRepository.getSelectedStore().flatMapConcat {
+        settingRepository.getNewSelectedStore().flatMapConcat {
             dao.getOutcome(parameters.start, parameters.end, it)
         }
     } else {

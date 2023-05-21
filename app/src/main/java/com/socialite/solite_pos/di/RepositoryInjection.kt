@@ -130,7 +130,12 @@ object RepositoryInjection {
 
     fun provideStoreRepository(context: Context): StoreRepository {
         val database = getInstance(context)
-        return StoreRepositoryImpl.getInstance(database.storeDao(), database)
+        val settingRepository = provideSettingRepository(context)
+        return StoreRepositoryImpl.getInstance(
+            dao = database.storeDao(),
+            settingRepository = settingRepository,
+            db = database
+        )
     }
 
     fun provideSettingRepository(context: Context): SettingRepository {

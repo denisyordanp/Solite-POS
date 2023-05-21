@@ -78,7 +78,7 @@ class OrdersRepositoryImpl(
     @FlowPreview
     override fun getOrderList(status: Int, parameters: ReportsParameter): Flow<List<OrderData>> {
         return if (parameters.isTodayOnly()) {
-            settingRepository.getSelectedStore().flatMapConcat {
+            settingRepository.getNewSelectedStore().flatMapConcat {
                 dao.getOrdersByStatus(status, parameters.start, parameters.end, it)
             }
         } else {
@@ -126,7 +126,9 @@ class OrdersRepositoryImpl(
                     dao.insertNewOrder(newOrder)
                 }
             }
+        }
 
+        db.withTransaction {
             for (orderDetail in orderDetails) {
                 val updatedOrderDetail = orderDetail.copy(
                     new_id = UUID.randomUUID().toString()
@@ -146,7 +148,9 @@ class OrdersRepositoryImpl(
                     dao.insertNewOrderDetail(newOrderDetail)
                 }
             }
+        }
 
+        db.withTransaction {
             for (orderPayment in orderPayments) {
                 val updatedOrderPayment = orderPayment.copy(
                     new_id = UUID.randomUUID().toString()
@@ -166,7 +170,9 @@ class OrdersRepositoryImpl(
                     dao.insertNewOrderPayment(newOrderPayment)
                 }
             }
+        }
 
+        db.withTransaction {
             for (orderPromo in orderPromos) {
                 val updatedOrderPromo = orderPromo.copy(
                     new_id = UUID.randomUUID().toString()
@@ -186,7 +192,9 @@ class OrdersRepositoryImpl(
                     dao.insertNewOrderPromo(newOrderPromo)
                 }
             }
+        }
 
+        db.withTransaction {
             for (orderProductVariant in orderProductVariants) {
                 val updatedOrderProductVariant = orderProductVariant.copy(
                     new_id = UUID.randomUUID().toString()

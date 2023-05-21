@@ -143,7 +143,7 @@ class MainViewModel(
     fun getStores() = storeRepository.getStores()
 
     suspend fun getStore(): Store? {
-        val selected = settingRepository.getSelectedStore().first()
+        val selected = settingRepository.getNewSelectedStore().first()
         return storeRepository.getStore(selected)
     }
 
@@ -159,11 +159,11 @@ class MainViewModel(
         }
     }
 
-    val selectedStore = settingRepository.getSelectedStore()
+    val selectedStore = settingRepository.getNewSelectedStore()
 
     fun selectStore(id: String) {
         viewModelScope.launch {
-            settingRepository.selectStore(id)
+            settingRepository.selectNewStore(id)
         }
     }
 
