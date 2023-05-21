@@ -74,7 +74,7 @@ fun OrderItems(
     parameters: ReportsParameter,
     defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
-    onOrderClicked: (orderNo: String) -> Unit,
+    onOrderClicked: (orderId: String) -> Unit,
     onBackClicked: () -> Unit
 ) {
 
@@ -180,7 +180,7 @@ private fun OrderList(
     viewModel: OrderViewModel,
     parameters: ReportsParameter,
     defaultTabPage: Int,
-    onOrderClicked: (orderNo: String) -> Unit,
+    onOrderClicked: (orderId: String) -> Unit,
     onScrollProgress: ((Boolean) -> Unit)? = null
 ) {
     Column {
@@ -263,7 +263,7 @@ private fun OrderContent(
     menu: OrderMenus,
     parameters: ReportsParameter,
     viewModel: OrderViewModel,
-    onOrderClicked: (orderNo: String) -> Unit,
+    onOrderClicked: (orderId: String) -> Unit,
     onScrollProgress: ((Boolean) -> Unit)?
 ) {
 
@@ -340,7 +340,7 @@ private fun EmptyOrders(
 private fun OrderItem(
     orderData: OrderData,
     viewModel: OrderViewModel,
-    onOrderClicked: (orderNo: String) -> Unit
+    onOrderClicked: (orderId: String) -> Unit
 ) {
 
     var orderProducts by remember {
@@ -352,7 +352,7 @@ private fun OrderItem(
     }
 
     LaunchedEffect(key1 = orderData) {
-        viewModel.getProductOrder(orderData.order.orderNo)
+        viewModel.getProductOrder(orderData.order.id)
             .collectLatest {
                 orderProducts = orderProducts.copy(
                     products = it
@@ -365,7 +365,7 @@ private fun OrderItem(
             .fillMaxWidth()
             .padding(bottom = 4.dp)
             .clickable {
-                onOrderClicked(orderProducts.order.order.orderNo)
+                onOrderClicked(orderProducts.order.order.id)
             }
             .background(
                 color = MaterialTheme.colors.surface

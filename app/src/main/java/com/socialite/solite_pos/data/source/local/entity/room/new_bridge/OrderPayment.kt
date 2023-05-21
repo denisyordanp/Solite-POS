@@ -3,7 +3,6 @@ package com.socialite.solite_pos.data.source.local.entity.room.new_bridge
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
@@ -56,16 +55,17 @@ data class OrderPayment(
         const val PAY = "pay"
 
         const val DB_NAME = "new_order_payment"
-    }
 
-    @Ignore
-    constructor(order: String, payment: String, pay: Long) : this(
-        id = UUID.randomUUID().toString(),
-        order = order,
-        payment = payment,
-        pay = pay,
-        isUpload = false
-    )
+        fun createNew(
+            order: String, payment: String, pay: Long
+        ) = OrderPayment(
+            id = UUID.randomUUID().toString(),
+            order = order,
+            payment = payment,
+            pay = pay,
+            isUpload = false
+        )
+    }
 
     fun inReturn(total: Long): Long {
         return pay - total

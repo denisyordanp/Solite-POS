@@ -111,16 +111,16 @@ class OrdersActivity : SoliteActivity() {
                         )
                     }
 
-                    val orderNoArgument = navArgument(name = OrderDetailDestinations.ORDER_NO) {
+                    val orderIdArgument = navArgument(name = OrderDetailDestinations.ORDER_ID) {
                         type = NavType.StringType
                     }
                     composable(
                         route = OrderDetailDestinations.ORDER_DETAIL,
-                        arguments = listOf(orderNoArgument)
+                        arguments = listOf(orderIdArgument)
                     ) {
-                        it.arguments?.getString(OrderDetailDestinations.ORDER_NO)?.let { orderNo ->
+                        it.arguments?.getString(OrderDetailDestinations.ORDER_ID)?.let { orderId ->
                             OrderDetailView(
-                                orderNo = orderNo,
+                                orderId = orderId,
                                 orderViewModel = orderViewModel,
                                 onBackClicked = {
                                     navController.popBackStack()
@@ -157,7 +157,7 @@ class OrdersActivity : SoliteActivity() {
                                         OrderButtonType.PAYMENT -> {
                                             navController.navigate(
                                                 OrderDetailDestinations.orderPayment(
-                                                    orderNo
+                                                    orderId
                                                 )
                                             )
                                         }
@@ -193,7 +193,7 @@ class OrdersActivity : SoliteActivity() {
                                 onProductsClicked = {
                                     isInitialBucket = false
                                     navController.navigate(
-                                        OrderDetailDestinations.orderEditProducts(orderNo)
+                                        OrderDetailDestinations.orderEditProducts(orderId)
                                     )
                                 }
                             )
@@ -201,14 +201,14 @@ class OrdersActivity : SoliteActivity() {
                     }
                     composable(
                         route = OrderDetailDestinations.ORDER_PAYMENT,
-                        arguments = listOf(orderNoArgument)
+                        arguments = listOf(orderIdArgument)
                     ) {
-                        it.arguments?.getString(OrderDetailDestinations.ORDER_NO)?.let { orderNo ->
+                        it.arguments?.getString(OrderDetailDestinations.ORDER_ID)?.let { orderId ->
                             ProvideWindowInsets(
                                 windowInsetsAnimationsEnabled = true
                             ) {
                                 OrderPaymentView(
-                                    orderNo = orderNo,
+                                    orderId = orderId,
                                     orderViewModel = orderViewModel,
                                     mainViewModel = mainViewModel,
                                     onBackClicked = {
@@ -237,12 +237,12 @@ class OrdersActivity : SoliteActivity() {
                     }
                     composable(
                         route = OrderDetailDestinations.ORDER_EDIT_PRODUCTS,
-                        arguments = listOf(orderNoArgument)
+                        arguments = listOf(orderIdArgument)
                     ) {
-                        it.arguments?.getString(OrderDetailDestinations.ORDER_NO)?.let { orderNo ->
+                        it.arguments?.getString(OrderDetailDestinations.ORDER_ID)?.let { orderId ->
 
                             if (!isInitialBucket) {
-                                orderViewModel.createBucketForEdit(orderNo)
+                                orderViewModel.createBucketForEdit(orderId)
                                 isInitialBucket = true
                             }
 
@@ -271,7 +271,7 @@ class OrdersActivity : SoliteActivity() {
                                     }
                                 },
                                 onClickOrder = {
-                                    orderViewModel.updateOrderProducts(orderNo)
+                                    orderViewModel.updateOrderProducts(orderId)
                                     navController.popBackStack()
                                 },
                                 onBackClicked = {
@@ -282,13 +282,13 @@ class OrdersActivity : SoliteActivity() {
                     }
                     val productIdArgument =
                         navArgument(name = OrderDetailDestinations.PRODUCT_ID) {
-                            type = NavType.LongType
+                            type = NavType.StringType
                         }
                     composable(
                         route = OrderDetailDestinations.ORDER_SELECT_VARIANTS,
                         arguments = listOf(productIdArgument)
                     ) {
-                        it.arguments?.getLong(OrderDetailDestinations.PRODUCT_ID)?.let { id ->
+                        it.arguments?.getString(OrderDetailDestinations.PRODUCT_ID)?.let { id ->
                             OrderSelectVariants(
                                 productId = id,
                                 viewModel = productViewModel,

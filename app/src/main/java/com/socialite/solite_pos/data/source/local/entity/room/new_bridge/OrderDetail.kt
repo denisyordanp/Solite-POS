@@ -56,6 +56,18 @@ data class OrderDetail(
         const val AMOUNT = "amount"
 
         const val DB_NAME = "new_order_detail"
+
+        fun createNewOrderDetail(
+            orderId: String,
+            idProduct: String,
+            amount: Int
+        ) = OrderDetail(
+            id = UUID.randomUUID().toString(),
+            order = orderId,
+            product = idProduct,
+            amount = amount,
+            isUpload = false
+        )
     }
 
     @Ignore

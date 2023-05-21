@@ -57,12 +57,12 @@ data class OrderPromo(
         const val DB_NAME = "new_order_promo"
 
         fun newPromo(
-            orderNo: String,
+            orderId: String,
             promo: String,
             totalPromo: Long
         ) = OrderPromo(
             id = UUID.randomUUID().toString(),
-            order = orderNo,
+            order = orderId,
             promo = promo,
             totalPromo = totalPromo,
             isUpload = false

@@ -11,12 +11,12 @@ import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
@@ -68,9 +68,9 @@ class OrderViewModel(
     fun getMenuBadge(date: String) = getOrdersGeneralMenuBadge(date)
 
     suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderDetail(orderNo)
-    fun getOrderData(orderNo: String) = orderRepository.getOrderData(orderNo)
+    fun getOrderData(orderId: String) = orderRepository.getOrderData(orderId)
 
-    fun getProductOrder(orderNo: String) = getProductOrder.invoke(orderNo)
+    fun getProductOrder(orderId: String) = getProductOrder.invoke(orderId)
 
     fun getIncomes(parameters: ReportsParameter) = getRecapData(parameters)
 
@@ -138,17 +138,17 @@ class OrderViewModel(
         viewModelScope.launch {
             val newPromo = if (promo != null && totalPromo != null) {
                 OrderPromo.newPromo(
-                    orderNo = order.orderNo,
-                    promo = promo,
+                    orderId = order.id,
+                    promo = promo.id,
                     totalPromo = totalPromo
                 )
             } else null
 
             payOrder.invoke(
                 order = order,
-                payment = OrderPayment(
-                    orderNo = order.orderNo,
-                    idPayment = payment.id,
+                payment = OrderPayment.createNew(
+                    order = order.id,
+                    payment = payment.id,
                     pay = pay
                 ),
                 promo = newPromo
@@ -250,8 +250,7 @@ class OrderViewModel(
     private fun List<ProductOrderDetail>.findExisting(compare: ProductOrderDetail): ProductOrderDetail? {
         return this.find {
             it.product == compare.product &&
-                    it.variants == compare.variants &&
-                    it.mixProducts == compare.mixProducts
+                    it.variants == compare.variants
         }
     }
 }

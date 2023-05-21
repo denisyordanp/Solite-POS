@@ -3,7 +3,6 @@ package com.socialite.solite_pos.data.source.local.entity.room.new_master
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -69,37 +68,24 @@ data class Order(
         const val NEED_PAY = 1
         const val CANCEL = 2
         const val DONE = 3
+
+        fun createNew(
+            orderNo: String,
+            customer: String,
+            orderTime: String,
+            store: String,
+            isTakeAway: Boolean
+        ) = Order(
+            id = UUID.randomUUID().toString(),
+            orderNo = orderNo,
+            customer = customer,
+            orderTime = orderTime,
+            isTakeAway = isTakeAway,
+            status = ON_PROCESS,
+            store = store,
+            isUploaded = false
+        )
     }
-
-    @Ignore
-    constructor(orderNo: String, customer: String, orderTime: String) : this(
-        id = UUID.randomUUID().toString(),
-        orderNo = orderNo,
-        customer = customer,
-        orderTime = orderTime,
-        isTakeAway = false,
-        status = ON_PROCESS,
-        store = Store.ID_ADD,
-        isUploaded = false
-    )
-
-    @Ignore
-    constructor(
-        orderNo: String,
-        customer: String,
-        orderTime: String,
-        store: String,
-        isTakeAway: Boolean
-    ) : this(
-        id = UUID.randomUUID().toString(),
-        orderNo = orderNo,
-        customer = customer,
-        orderTime = orderTime,
-        isTakeAway = isTakeAway,
-        status = ON_PROCESS,
-        store = store,
-        isUploaded = false
-    )
 
     fun isEditable() = status == ON_PROCESS || status == NEED_PAY
 

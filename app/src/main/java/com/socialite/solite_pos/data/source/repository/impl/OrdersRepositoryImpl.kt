@@ -1,15 +1,10 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
@@ -25,6 +20,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import java.util.UUID
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
 
 class OrdersRepositoryImpl(
     private val dao: OrdersDao,
@@ -75,7 +72,7 @@ class OrdersRepositoryImpl(
     }
 
     override fun getOrderList(status: Int, date: String) = dao.getOrdersByStatus(status, date)
-    override fun getOrderList(status: Int, date: String, store: Long) =
+    override fun getOrderList(status: Int, date: String, store: String) =
         dao.getOrdersByStatus(status, date, store)
 
     @FlowPreview
@@ -89,22 +86,16 @@ class OrdersRepositoryImpl(
         }
     }
 
-    override fun getOrderData(orderNo: String) = dao.getOrderData(orderNo)
+    override fun getOrderData(orderId: String) = dao.getOrderData(orderId)
 
-    override suspend fun getOrderDetail(orderNo: String): OrderData? = dao.getOrderDataByNo(orderNo)
+    override suspend fun getOrderDetail(orderId: String): OrderData? = dao.getOrderDataById(orderId)
 
-    override suspend fun updateOrder(order: Order) = dao.updateOrder(order)
-
-    override suspend fun insertPaymentOrder(payment: OrderPayment): OrderPayment {
-        val id = dao.insertPaymentOrder(payment)
-        payment.id = id
-        return payment
-    }
+    override suspend fun updateOrder(order: Order) = dao.updateNewOrder(order)
 
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
-        dao.insertNewPaymentOrder(payment)
+        dao.insertNewOrderPayment(payment)
 
-    override suspend fun insertNewPromoOrder(promo: OrderPromo) = dao.insertNewPromoOrder(promo)
+    override suspend fun insertNewPromoOrder(promo: OrderPromo) = dao.insertNewOrderPromo(promo)
     override suspend fun migrateToUUID() {
         val orders = dao.getOrders()
         val orderDetails = dao.getOrderDetails()
@@ -122,7 +113,7 @@ class OrdersRepositoryImpl(
                 val customer = customersDao.getCustomerById(order.customer)
                 val store = storesDao.getStore(order.store)
                 if (customer != null && store != null) {
-                    val newOrder = NewOrder(
+                    val newOrder = Order(
                         id = updatedOrder.new_id,
                         orderNo = order.orderNo,
                         customer = customer.new_id,
@@ -165,7 +156,7 @@ class OrdersRepositoryImpl(
                 val order = dao.getOrderByNo(orderPayment.orderNO)
                 val payment = paymentDao.getPaymentById(orderPayment.idPayment)
                 if (order != null && payment != null) {
-                    val newOrderPayment = NewOrderPayment(
+                    val newOrderPayment = OrderPayment(
                         id = updatedOrderPayment.new_id,
                         order = order.new_id,
                         payment = payment.new_id,
@@ -185,7 +176,7 @@ class OrdersRepositoryImpl(
                 val order = dao.getOrderByNo(orderPromo.orderNO)
                 val promo = promosDao.getPromoById(orderPromo.idPromo)
                 if (order != null && promo != null) {
-                    val newOrderPromo = NewOrderPromo(
+                    val newOrderPromo = OrderPromo(
                         id = updatedOrderPromo.new_id,
                         order = order.new_id,
                         promo = promo.new_id,
@@ -203,7 +194,8 @@ class OrdersRepositoryImpl(
                 dao.updateOrderProductVariant(updatedOrderProductVariant)
 
                 val orderDetail = dao.getOrderDetailById(orderProductVariant.idOrderDetail)
-                val variantOption = variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
+                val variantOption =
+                    variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
                 if (orderDetail != null && variantOption != null) {
                     val newOrderProductVariant = NewOrderProductVariant(
                         id = updatedOrderProductVariant.new_id,
@@ -215,5 +207,13 @@ class OrdersRepositoryImpl(
                 }
             }
         }
+    }
+
+    override suspend fun deleteAllOldOrders() {
+        dao.deleteAllOldOrders()
+        dao.deleteAllOldOrderDetails()
+        dao.deleteAllOldOrderPayments()
+        dao.deleteAllOldOrderPromos()
+        dao.deleteAllOldOrderProductVariants()
     }
 }

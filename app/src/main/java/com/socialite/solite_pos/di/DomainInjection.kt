@@ -34,7 +34,6 @@ object DomainInjection {
         return NewOrderImpl(
             dao = database.ordersDao(),
 //            productDao = database.productsDao(),
-            soliteDao = database.soliteDao(),
             orderPref = OrderPref(context),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context)
         )
@@ -79,7 +78,6 @@ object DomainInjection {
         val database = getInstance(context)
         return UpdateOrderProductsImpl(
             database.ordersDao(),
-            database.soliteDao()
         )
     }
 

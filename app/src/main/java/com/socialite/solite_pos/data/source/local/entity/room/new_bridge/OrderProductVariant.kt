@@ -3,7 +3,6 @@ package com.socialite.solite_pos.data.source.local.entity.room.new_bridge
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
@@ -51,13 +50,14 @@ data class OrderProductVariant(
         const val ID = "id_order_product_variant"
 
         const val DB_NAME = "new_order_product_variant"
-    }
 
-    @Ignore
-    constructor(orderDetail: String, variantOption: String) : this(
-        id = UUID.randomUUID().toString(),
-        orderDetail = orderDetail,
-        variantOption = variantOption,
-        isUpload = false
-    )
+        fun createNewOrderVariant(
+            orderDetail: String, variantOption: String
+        ) = OrderProductVariant(
+            id = UUID.randomUUID().toString(),
+            orderDetail = orderDetail,
+            variantOption = variantOption,
+            isUpload = false
+        )
+    }
 }

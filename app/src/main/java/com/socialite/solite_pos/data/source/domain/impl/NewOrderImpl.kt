@@ -3,24 +3,19 @@ package com.socialite.solite_pos.data.source.domain.impl
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderMixProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
-import com.socialite.solite_pos.data.source.local.room.SoliteDao
+import com.socialite.solite_pos.data.source.preference.OrderPref
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.data.source.preference.OrderPref
 import kotlinx.coroutines.flow.first
 
 class NewOrderImpl(
     private val dao: OrdersDao,
-//    private val productDao: ProductsDao,
-    private val soliteDao: SoliteDao,
     private val orderPref: OrderPref,
     private val settingRepository: SettingRepository
 ) : NewOrder {
@@ -36,7 +31,7 @@ class NewOrderImpl(
             order = orderData,
             products = products
         )
-        dao.insertOrder(orderWithProducts.order.order)
+        dao.insertNewOrder(orderWithProducts.order.order)
         insertOrderProduct(orderWithProducts)
         increaseOrderQueue()
     }
@@ -45,9 +40,9 @@ class NewOrderImpl(
         customer: Customer,
         isTakeAway: Boolean,
         currentTime: String,
-        store: Long
+        store: String
     ): OrderData {
-        val order = Order(
+        val order = Order.createNew(
             orderNo = generateOrderNo(currentTime),
             customer = customer.id,
             orderTime = currentTime,
@@ -96,36 +91,18 @@ class NewOrderImpl(
         for (item in order.products) {
             if (item.product != null) {
 
-                val detail = OrderDetail(order.order.order.orderNo, item.product.id, item.amount)
-                detail.id = dao.insertDetailOrder(detail)
+                val detail = OrderDetail.createNewOrderDetail(
+                    order.order.order.id,
+                    item.product.id,
+                    item.amount
+                )
+                dao.insertNewOrderDetail(detail)
 
-                if (item.product.isMix) {
-                    for (p in item.mixProducts) {
-
-                        // TODO: No stock needed for now
-                        // productDao.decreaseProductStock(p.product.id, p.amount)
-
-                        val variantMix = OrderProductVariantMix(detail.id, p.product.id, p.amount)
-                        variantMix.id = soliteDao.insertVariantMixOrder(variantMix)
-
-                        for (variant in p.variants) {
-                            val mixVariant = OrderMixProductVariant(variantMix.id, variant.id)
-                            mixVariant.id =
-                                soliteDao.insertMixVariantOrder(mixVariant)
-                        }
-                    }
-                } else {
-
-                    // TODO: No stock needed for now
-                    // productDao.decreaseProductStock(
-                    //    item.product!!.id,
-                    //    (item.amount * item.product!!.portion)
-                    //)
-
-                    for (variant in item.variants) {
-                        val orderVariant = OrderProductVariant(detail.id, variant.id)
-                        dao.insertVariantOrder(orderVariant)
-                    }
+                for (variant in item.variants) {
+                    val orderVariant = OrderProductVariant.createNewOrderVariant(
+                        detail.id, variant.id
+                    )
+                    dao.insertNewOrderProductVariant(orderVariant)
                 }
             }
         }

@@ -4,8 +4,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import java.io.Serializable
 
 data class OrderWithProduct(
-		var order: OrderData,
-		var products: List<ProductOrderDetail>
+		val order: OrderData,
+		val products: List<ProductOrderDetail>
 ): Serializable {
 
 	constructor(order: OrderData): this(order, emptyList())

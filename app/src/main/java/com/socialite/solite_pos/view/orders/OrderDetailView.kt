@@ -42,7 +42,7 @@ import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
@@ -51,7 +51,7 @@ import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 @Composable
 fun OrderDetailView(
-    orderNo: String,
+    orderId: String,
     orderViewModel: OrderViewModel,
     timePicker: MaterialTimePicker.Builder,
     datePicker: MaterialDatePicker.Builder<Long>,
@@ -61,8 +61,8 @@ fun OrderDetailView(
     onProductsClicked: () -> Unit
 ) {
 
-    val order = orderViewModel.getOrderData(orderNo).collectAsState(initial = null)
-    val products = orderViewModel.getProductOrder(orderNo).collectAsState(initial = emptyList())
+    val order = orderViewModel.getOrderData(orderId).collectAsState(initial = null)
+    val products = orderViewModel.getProductOrder(orderId).collectAsState(initial = emptyList())
     val orderWithProducts = order.value?.run {
         OrderWithProduct(
             order = this,

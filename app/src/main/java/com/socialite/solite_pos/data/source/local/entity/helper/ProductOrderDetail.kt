@@ -7,7 +7,6 @@ import java.io.Serializable
 data class ProductOrderDetail(
     val product: Product?,
     val variants: List<VariantOption>,
-    val mixProducts: List<ProductMixOrderDetail>,
     val amount: Int
 ) : Serializable {
 
@@ -59,28 +58,18 @@ data class ProductOrderDetail(
             variants: List<VariantOption>,
             amount: Int
         ): ProductOrderDetail {
-            return ProductOrderDetail(product, variants, listOf(), amount)
-        }
-
-        fun createMix(
-            product: Product?,
-            mixes: List<ProductMixOrderDetail>,
-            amount: Int
-        ): ProductOrderDetail {
-            return ProductOrderDetail(product, listOf(), mixes, amount)
+            return ProductOrderDetail(product, variants, amount)
         }
 
         fun productNoVariant(product: Product) = ProductOrderDetail(
             product = product,
             variants = listOf(),
-            mixProducts = listOf(),
             amount = 1,
         )
 
         fun empty() = ProductOrderDetail(
             product = null,
             variants = listOf(),
-            mixProducts = listOf(),
             amount = 0
         )
     }
