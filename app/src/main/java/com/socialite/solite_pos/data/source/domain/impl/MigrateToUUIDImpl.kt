@@ -45,6 +45,14 @@ class MigrateToUUIDImpl(
             customersRepository.deleteAllOldCustomers()
             storeRepository.deleteAllOldStores()
             categoriesRepository.deleteAllOldCategories()
+            promosRepository.deleteAllOldCustomers()
+            paymentsRepository.deleteAllOldCustomers()
+            ordersRepository.deleteAllOldOrders()
+            outcomesRepository.deleteAllOldOutcomes()
+            productsRepository.deleteAllOldProducts()
+            variantsRepository.deleteAllOldVariants()
+            variantOptionsRepository.deleteAllOldVariantOptions()
+            productVariantsRepository.deleteAllOldProductVariants()
 
             settingRepository.setMigration(true)
         }
