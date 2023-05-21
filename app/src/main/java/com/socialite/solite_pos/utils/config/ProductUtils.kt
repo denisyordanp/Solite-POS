@@ -12,8 +12,6 @@ class ProductUtils {
                         isEqual(v.product, detail?.product)
                         &&
                         isEqual(v.variants, detail?.variants)
-                        &&
-                        isEqual(v.mixProducts, detail?.mixProducts)
                 ) {
                     return i
                 }

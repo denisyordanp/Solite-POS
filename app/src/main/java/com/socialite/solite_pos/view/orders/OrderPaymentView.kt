@@ -44,9 +44,9 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 import com.socialite.solite_pos.view.viewModel.MainViewModel
@@ -58,7 +58,7 @@ import kotlinx.coroutines.flow.first
 @ExperimentalCoroutinesApi
 @ExperimentalComposeUiApi
 fun OrderPaymentView(
-    orderNo: String,
+    orderId: String,
     mainViewModel: MainViewModel,
     orderViewModel: OrderViewModel,
     onBackClicked: () -> Unit,
@@ -69,9 +69,9 @@ fun OrderPaymentView(
         mutableStateOf<OrderWithProduct?>(null)
     }
 
-    LaunchedEffect(key1 = orderNo) {
-        orderViewModel.getOrderDetail(orderNo)?.let {
-            val products = orderViewModel.getProductOrder(orderNo).first()
+    LaunchedEffect(key1 = orderId) {
+        orderViewModel.getOrderDetail(orderId)?.let {
+            val products = orderViewModel.getProductOrder(orderId).first()
             orderWithProducts = OrderWithProduct(
                 order = it,
                 products = products

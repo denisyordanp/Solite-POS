@@ -53,10 +53,10 @@ import com.socialite.solite_pos.compose.BasicRadioButton
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
@@ -66,11 +66,11 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi
 fun VariantView(
     productViewModel: ProductViewModel,
-    idProduct: Long? = null,
+    idProduct: String? = "",
     onBackClicked: () -> Unit
 ) {
 
-    if (idProduct != null) {
+    if (!idProduct.isNullOrEmpty()) {
         VariantProductView(
             productViewModel = productViewModel,
             idProduct = idProduct,
@@ -84,7 +84,7 @@ fun VariantView(
 @Composable
 private fun VariantProductView(
     productViewModel: ProductViewModel,
-    idProduct: Long,
+    idProduct: String,
     onBackClicked: () -> Unit
 ) {
     val product = productViewModel.getProduct(idProduct).collectAsState(initial = null)
@@ -308,8 +308,7 @@ private fun VariantDetail(
                 ) ?: Variant(
                     name = name,
                     type = if (isSingleOption) Variant.ONE_OPTION else Variant.MULTIPLE_OPTION,
-                    isMust = isMust,
-                    isMix = false
+                    isMust = isMust
                 )
                 onVariantSubmitted(newVariant)
                 name = ""
@@ -363,10 +362,9 @@ private fun VariantOptionDetail(
                 val newOption = option?.copy(
                     name = name
                 ) ?: VariantOption(
-                    idVariant = variant?.id ?: 0L,
+                    idVariant = variant?.id ?: "",
                     name = name,
                     desc = "",
-                    isCount = false,
                     isActive = true
                 )
                 onOptionSubmitted(newOption)
@@ -389,7 +387,7 @@ private fun VariantsContent(
 
     val isProductVariants = product != null
 
-    val selectedProductOptions = productViewModel.getVariantsProductById(product?.id ?: 0L)
+    val selectedProductOptions = productViewModel.getVariantsProductById(product?.id ?: "")
         .collectAsState(initial = emptyList())
     val variants = productViewModel.variants.collectAsState(initial = emptyList())
 
@@ -417,7 +415,7 @@ private fun VariantsContent(
                     variant = it,
                     options = options.value,
                     selectedProductOptions = selectedProductOptions.value.filter { variantProduct ->
-                        variantProduct.idVariant == it.id
+                        variantProduct.variant == it.id
                     },
                     isExpanded = expandedItem == it,
                     onVariantClicked = {
@@ -437,9 +435,9 @@ private fun VariantsContent(
                             productViewModel.removeVariantProduct(variantProduct)
                         } else {
                             val newVariantProduct = VariantProduct(
-                                idVariant = option.idVariant,
-                                idVariantOption = option.id,
-                                idProduct = product?.id ?: 0L
+                                variant = option.variant,
+                                variantOption = option.id,
+                                product = product?.id ?: ""
                             )
                             productViewModel.insertVariantProduct(newVariantProduct)
                         }
@@ -580,7 +578,7 @@ private fun VariantItem(
         options.forEach {
 
             val variantProduct = selectedProductOptions.find { variantProduct ->
-                variantProduct.idVariantOption == it.id
+                variantProduct.variantOption == it.id
             }
 
             OptionItem(

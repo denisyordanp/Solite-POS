@@ -2,9 +2,9 @@ package com.socialite.solite_pos.data.source.local.entity.room.helper
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import java.io.Serializable
 
 data class VariantProductWithOption(

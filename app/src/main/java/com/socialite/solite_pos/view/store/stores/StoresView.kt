@@ -48,7 +48,7 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.room.master.Store
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -128,10 +128,10 @@ private fun StoresContent(
     onStoreClicked: (Store) -> Unit
 ) {
 
-    var alertSelectStore by remember { mutableStateOf<Long?>(null) }
+    var alertSelectStore by remember { mutableStateOf<String?>(null) }
 
     val stores = mainViewModel.getStores().collectAsState(initial = emptyList())
-    val selected = mainViewModel.selectedStore.collectAsState(initial = 0L)
+    val selected = mainViewModel.selectedStore.collectAsState(initial = "")
 
     Box(
         modifier = modifier
@@ -195,7 +195,7 @@ private fun StoresContent(
 @Composable
 private fun StoreItem(
     store: Store,
-    selected: Long,
+    selected: String,
     onStoreClicked: (Store) -> Unit,
     onStoreSwitched: (Boolean) -> Unit
 ) {
@@ -283,7 +283,7 @@ private fun StoreDetail(
                         store?.copy(
                             name = name,
                             address = address
-                        ) ?: Store(
+                        ) ?: Store.add(
                             name = name,
                             address = address
                         )

@@ -48,7 +48,7 @@ import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicEmptyList
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter

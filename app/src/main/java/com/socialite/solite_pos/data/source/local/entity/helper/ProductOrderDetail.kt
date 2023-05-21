@@ -1,13 +1,12 @@
 package com.socialite.solite_pos.data.source.local.entity.helper
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import java.io.Serializable
 
 data class ProductOrderDetail(
     val product: Product?,
     val variants: List<VariantOption>,
-    val mixProducts: List<ProductMixOrderDetail>,
     val amount: Int
 ) : Serializable {
 
@@ -36,7 +35,7 @@ data class ProductOrderDetail(
         }
     }
 
-    fun totalPrice() = (product?.sellPrice ?: 0) * amount
+    fun totalPrice() = (product?.price ?: 0) * amount
 
     fun isAllMustVariantSelected(baseVariants: List<VariantWithOptions>): Boolean {
         val mustVariants = baseVariants.filter { it.variant.isMust == true && it.isOptionAvailable() }
@@ -59,28 +58,18 @@ data class ProductOrderDetail(
             variants: List<VariantOption>,
             amount: Int
         ): ProductOrderDetail {
-            return ProductOrderDetail(product, variants, listOf(), amount)
-        }
-
-        fun createMix(
-            product: Product?,
-            mixes: List<ProductMixOrderDetail>,
-            amount: Int
-        ): ProductOrderDetail {
-            return ProductOrderDetail(product, listOf(), mixes, amount)
+            return ProductOrderDetail(product, variants, amount)
         }
 
         fun productNoVariant(product: Product) = ProductOrderDetail(
             product = product,
             variants = listOf(),
-            mixProducts = listOf(),
             amount = 1,
         )
 
         fun empty() = ProductOrderDetail(
             product = null,
             variants = listOf(),
-            mixProducts = listOf(),
             amount = 0
         )
     }

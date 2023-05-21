@@ -7,11 +7,11 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
-import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
@@ -37,8 +37,8 @@ class ProductViewModel(
         }
     }
 
-    fun getProduct(idProduct: Long) = productsRepository.getProductById(idProduct)
-    fun getProductWithCategory(idProduct: Long) =
+    fun getProduct(idProduct: String) = productsRepository.getProductById(idProduct)
+    fun getProductWithCategory(idProduct: String) =
         productsRepository.getProductWithCategory(idProduct)
 
     fun getAllProducts() = productsRepository
@@ -48,26 +48,26 @@ class ProductViewModel(
                 .filterKeys { category -> category.isActive }
         }
 
-    suspend fun isProductHasVariant(idProduct: Long) = productVariantsRepository
+    suspend fun isProductHasVariant(idProduct: String) = productVariantsRepository
         .isProductHasVariants(idProduct)
 
-    fun getProductVariantOptions(idProduct: Long) = getProductVariantOptions.invoke(idProduct)
+    fun getProductVariantOptions(idProduct: String) = getProductVariantOptions.invoke(idProduct)
 
-    fun getProductVariantCount(idProduct: Long) = getProductVariantOptions.invoke(idProduct).map {
+    fun getProductVariantCount(idProduct: String) = getProductVariantOptions.invoke(idProduct).map {
         it?.sumOf { variant ->
             variant.options.size
         } ?: 0
     }
 
     fun getVariantProduct(
-        idProduct: Long,
-        idVariantOption: Long
+        idProduct: String,
+        idVariantOption: String
     ) = productVariantsRepository.getVariantProduct(idProduct, idVariantOption)
 
-    fun getVariantsProductById(idProduct: Long) =
+    fun getVariantsProductById(idProduct: String) =
         productVariantsRepository.getVariantsProductById(idProduct)
 
-    fun getVariantProductById(idProduct: Long) =
+    fun getVariantProductById(idProduct: String) =
         productVariantsRepository.getVariantProductById(idProduct)
 
     fun insertVariantProduct(data: VariantProduct) {
@@ -102,7 +102,7 @@ class ProductViewModel(
         }
     }
 
-    fun getProductWithCategories(category: Long) =
+    fun getProductWithCategories(category: String) =
         productsRepository.getProductWithCategories(category)
 
     suspend fun insertProduct(data: Product) = productsRepository.insertProduct(data)
@@ -117,7 +117,7 @@ class ProductViewModel(
 
     fun insertCategory(data: Category) {
         viewModelScope.launch {
-            categoriesRepository.insertCategory(data)
+            categoriesRepository.insertCategory(data.asNewCategory())
         }
     }
 

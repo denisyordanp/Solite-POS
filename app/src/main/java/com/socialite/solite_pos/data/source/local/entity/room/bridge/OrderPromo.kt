@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
+import java.util.UUID
 
 @Entity(
     tableName = OrderPromo.DB_NAME,
@@ -36,6 +37,9 @@ data class OrderPromo(
     @ColumnInfo(name = ID)
     var id: Long,
 
+    @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+    val new_id: String,
+
     @ColumnInfo(name = Order.NO)
     var orderNO: String,
 
@@ -61,6 +65,7 @@ data class OrderPromo(
             totalPromo: Long
         ) = OrderPromo(
             id = 0L,
+            UUID.randomUUID().toString(),
             orderNO = orderNo,
             idPromo = promo.id,
             totalPromo = totalPromo,

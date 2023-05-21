@@ -4,8 +4,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import java.io.Serializable
 
 data class OrderWithProduct(
-		var order: OrderData,
-		var products: List<ProductOrderDetail>
+		val order: OrderData,
+		val products: List<ProductOrderDetail>
 ): Serializable {
 
 	constructor(order: OrderData): this(order, emptyList())
@@ -14,7 +14,7 @@ data class OrderWithProduct(
 		get() {
 			return products.sumOf {
 				it.product?.let { pr ->
-					pr.sellPrice * it.amount
+					pr.price * it.amount
 				} ?: 0
 			}
 		}

@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.toIDR
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
@@ -85,7 +85,7 @@ fun ProductCustomerItemView(
                     start.linkTo(parent.start, margin = 16.dp)
                     linkTo(top = subTitle.bottom, bottom = parent.bottom)
                 },
-            text = product.sellPrice.toIDR(),
+            text = product.price.toIDR(),
             style = MaterialTheme.typography.body1.copy(
                 fontWeight = FontWeight.Bold
             )

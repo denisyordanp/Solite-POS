@@ -52,12 +52,12 @@ class VariantMasterMixOptionActivity : SoliteActivity() {
                 .collect {
                     if (it.isNotEmpty()) {
                         val fragments: ArrayList<FragmentWithTitle> = ArrayList()
-                        for (ctg in it) {
-                            if (ctg.isStock) {
-                                val fragment = ProductMasterMixVariantFragment(variant, ctg)
-                                fragments.add(FragmentWithTitle(ctg.name, fragment))
-                            }
-                        }
+//                        for (ctg in it) {
+//                            if (ctg.isStock) {
+//                                val fragment = ProductMasterMixVariantFragment(variant, ctg)
+//                                fragments.add(FragmentWithTitle(ctg.name, fragment))
+//                            }
+//                        }
                         setData(fragments)
                     }
                 }

@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 @Composable
@@ -65,15 +65,12 @@ fun OrderCustomerName(
         .collectAsState(initial = emptyList())
 
     fun selectedCustomer(customer: Customer) {
-        if (customer.isAdd()) {
-            mainViewModel.insertCustomers(
-                customer,
-                onSaved = { id ->
-                    selectedId = id
-                }
-            )
+        selectedId = if (customer.isAdd()) {
+            val newCustomer = Customer.createNew(customer.name)
+            mainViewModel.insertCustomers(newCustomer)
+            newCustomer.id
         } else {
-            selectedId = if (customer.id == selectedId)
+            if (customer.id == selectedId)
                 Customer.ID_ADD
             else
                 customer.id
@@ -153,7 +150,7 @@ private fun NameSearchBar(
 private fun CustomerNames(
     modifier: Modifier,
     customers: List<Customer>,
-    selectedId: Long,
+    selectedId: String,
     keyword: String,
     onClickName: (Customer) -> Unit,
     onChooseDine: (isTakeAway: Boolean) -> Unit
@@ -207,7 +204,7 @@ private fun List<Customer>.isAnyMatches(keyword: String): Boolean {
 @Composable
 private fun CustomerItem(
     keyword: String,
-    selectedId: Long,
+    selectedId: String,
     customer: Customer? = null,
     onCLickName: (Customer) -> Unit
 ) {

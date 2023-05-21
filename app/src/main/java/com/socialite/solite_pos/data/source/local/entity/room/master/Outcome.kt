@@ -5,9 +5,11 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.utils.config.DateUtils
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
 		tableName = Outcome.DB_NAME,
@@ -20,6 +22,9 @@ data class Outcome(
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
 		var id: Long,
+
+		@ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+		val new_id: String,
 
 		@ColumnInfo(name = NAME)
 		var name: String,
@@ -83,13 +88,13 @@ data class Outcome(
 	}
 
 	@Ignore
-	constructor(id: Long, name: String, desc: String, price: Long, amount: Int, date: String): this(id, name, desc, price, amount, date, 0L, false)
+	constructor(id: Long, name: String, desc: String, price: Long, amount: Int, date: String): this(id, UUID.randomUUID().toString(), name, desc, price, amount, date, 0L, false)
 
 	@Ignore
-	constructor(name: String, desc: String, price: Long, amount: Int, date: String): this(0, name, desc, price, amount, date, 0L, false)
+	constructor(name: String, desc: String, price: Long, amount: Int, date: String): this(0, UUID.randomUUID().toString(), name, desc, price, amount, date, 0L, false)
 
 	@Ignore
-	constructor(name: String, desc: String, price: Long, date: String): this(0, name, desc, price, 1, date, 0L, false)
+	constructor(name: String, desc: String, price: Long, date: String): this(0, UUID.randomUUID().toString(), name, desc, price, 1, date, 0L, false)
 
 	fun dateString() = DateUtils.convertDateFromDb(date, DateUtils.DATE_WITH_DAY_WITHOUT_YEAR_FORMAT)
 

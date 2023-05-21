@@ -1,9 +1,9 @@
 package com.socialite.solite_pos.data.source.domain.impl
 
 import com.socialite.solite_pos.data.source.domain.PayOrder
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 
 class PayOrderImpl(

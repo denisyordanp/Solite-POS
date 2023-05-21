@@ -5,6 +5,7 @@ import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
@@ -13,6 +14,7 @@ import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadg
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
+import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOutcomeImpl
 import com.socialite.solite_pos.data.source.domain.impl.PayOrderImpl
@@ -32,7 +34,6 @@ object DomainInjection {
         return NewOrderImpl(
             dao = database.ordersDao(),
 //            productDao = database.productsDao(),
-            soliteDao = database.soliteDao(),
             orderPref = OrderPref(context),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context)
         )
@@ -77,7 +78,35 @@ object DomainInjection {
         val database = getInstance(context)
         return UpdateOrderProductsImpl(
             database.ordersDao(),
-            database.soliteDao()
+        )
+    }
+
+    fun provideMigrateToUUID(context: Context): MigrateToUUID {
+        val customerRepository = RepositoryInjection.provideCustomersRepository(context)
+        val storeRepository = RepositoryInjection.provideStoreRepository(context)
+        val categoriesRepository = RepositoryInjection.provideCategoriesRepository(context)
+        val promosRepository = RepositoryInjection.providePromosRepository(context)
+        val paymentsRepository = RepositoryInjection.providePaymentsRepository(context)
+        val ordersRepository = RepositoryInjection.provideOrdersRepository(context)
+        val outcomesRepository = RepositoryInjection.provideOutcomesRepository(context)
+        val productsRepository = RepositoryInjection.provideProductsRepository(context)
+        val variantsRepository = RepositoryInjection.provideVariantsRepository(context)
+        val variantOptionsRepository = RepositoryInjection.provideVariantOptionsRepository(context)
+        val productVariantsRepository = RepositoryInjection.provideProductVariantsRepository(context)
+        val settingRepository = RepositoryInjection.provideSettingRepository(context)
+        return MigrateToUUIDImpl(
+            customersRepository = customerRepository,
+            storeRepository = storeRepository,
+            categoriesRepository = categoriesRepository,
+            promosRepository = promosRepository,
+            paymentsRepository = paymentsRepository,
+            ordersRepository = ordersRepository,
+            outcomesRepository = outcomesRepository,
+            productsRepository = productsRepository,
+            variantsRepository = variantsRepository,
+            variantOptionsRepository = variantOptionsRepository,
+            productVariantsRepository = productVariantsRepository,
+            settingRepository = settingRepository
         )
     }
 }

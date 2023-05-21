@@ -4,12 +4,13 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOutcome
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
-import com.socialite.solite_pos.data.source.local.entity.room.master.Store
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
@@ -37,7 +38,8 @@ class MainViewModel(
     private val storeRepository: StoreRepository,
     private val settingRepository: SettingRepository,
     private val promosRepository: PromosRepository,
-    private val newOutcome: NewOutcome
+    private val newOutcome: NewOutcome,
+    private val migrateToUUID: MigrateToUUID
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -82,10 +84,9 @@ class MainViewModel(
         else -> customers
     }
 
-    fun insertCustomers(data: Customer, onSaved: (id: Long) -> Unit) {
+    fun insertCustomers(data: Customer) {
         viewModelScope.launch {
-            val id = customersRepository.insertCustomer(data)
-            onSaved(id)
+            customersRepository.insertCustomer(data)
         }
     }
 
@@ -105,7 +106,7 @@ class MainViewModel(
 
     fun insertPayment(data: Payment) {
         viewModelScope.launch {
-            paymentRepository.insertPayment(data)
+            paymentRepository.insertPayment(data.asNewPayment())
         }
     }
 
@@ -121,7 +122,7 @@ class MainViewModel(
 
     fun insertPromo(data: Promo) {
         viewModelScope.launch {
-            promosRepository.insertPromo(data)
+            promosRepository.insertPromo(data.asNewPromo())
         }
     }
 
@@ -142,13 +143,13 @@ class MainViewModel(
     fun getStores() = storeRepository.getStores()
 
     suspend fun getStore(): Store? {
-        val selected = settingRepository.getSelectedStore().first()
+        val selected = settingRepository.getNewSelectedStore().first()
         return storeRepository.getStore(selected)
     }
 
     fun insertStore(store: Store) {
         viewModelScope.launch {
-            storeRepository.insertStore(store)
+            storeRepository.insertStore(store.asNewStore())
         }
     }
 
@@ -158,11 +159,11 @@ class MainViewModel(
         }
     }
 
-    val selectedStore = settingRepository.getSelectedStore()
+    val selectedStore = settingRepository.getNewSelectedStore()
 
-    fun selectStore(id: Long) {
+    fun selectStore(id: String) {
         viewModelScope.launch {
-            settingRepository.selectStore(id)
+            settingRepository.selectNewStore(id)
         }
     }
 
@@ -171,6 +172,12 @@ class MainViewModel(
     fun setDarkMode(isActive: Boolean) {
         viewModelScope.launch {
             settingRepository.setDarkMode(isActive)
+        }
+    }
+
+    fun beginMigratingToUUID() {
+        viewModelScope.launch {
+            migrateToUUID()
         }
     }
 }

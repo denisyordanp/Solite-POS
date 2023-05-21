@@ -43,7 +43,7 @@ object RepositoryInjection {
 
     fun providePaymentsRepository(context: Context): PaymentsRepository {
         val database = getInstance(context)
-        return PaymentsRepositoryImpl.getInstance(database.paymentsDao())
+        return PaymentsRepositoryImpl.getInstance(database.paymentsDao(), database)
     }
 
     fun provideSupplierRepository(context: Context): SuppliersRepository {
@@ -53,47 +53,73 @@ object RepositoryInjection {
 
     fun provideCustomersRepository(context: Context): CustomersRepository {
         val database = getInstance(context)
-        return CustomersRepositoryImpl.getInstance(database.customersDao())
+        return CustomersRepositoryImpl.getInstance(
+            database.customersDao(),
+            database
+        )
     }
 
     fun provideVariantsRepository(context: Context): VariantsRepository {
         val database = getInstance(context)
-        return VariantsRepositoryImpl.getInstance(database.variantsDao())
+        return VariantsRepositoryImpl.getInstance(database.variantsDao(), database)
     }
 
     fun provideVariantOptionsRepository(context: Context): VariantOptionsRepository {
         val database = getInstance(context)
-        return VariantOptionsRepositoryImpl.getInstance(database.variantOptionsDao())
+        return VariantOptionsRepositoryImpl.getInstance(
+            dao = database.variantOptionsDao(),
+            variantsDao = database.variantsDao(),
+            db = database
+        )
     }
 
     fun provideCategoriesRepository(context: Context): CategoriesRepository {
         val database = getInstance(context)
-        return CategoriesRepositoryImpl.getInstance(database.categoriesDao())
+        return CategoriesRepositoryImpl.getInstance(database.categoriesDao(), database)
     }
 
     fun provideOutcomesRepository(context: Context): OutcomesRepository {
         val database = getInstance(context)
         return OutcomesRepositoryImpl.getInstance(
-            database.outcomesDao(),
-            SettingRepositoryImpl.getDataStoreInstance(context)
+            dao = database.outcomesDao(),
+            storesDao = database.storeDao(),
+            settingRepository = SettingRepositoryImpl.getDataStoreInstance(context),
+            db = database
         )
     }
 
     fun provideProductsRepository(context: Context): ProductsRepository {
         val database = getInstance(context)
-        return ProductsRepositoryImpl.getInstance(database.productsDao())
+        return ProductsRepositoryImpl.getInstance(
+            dao = database.productsDao(),
+            categoryDao = database.categoriesDao(),
+            db = database
+        )
     }
 
     fun provideProductVariantsRepository(context: Context): ProductVariantsRepository {
         val database = getInstance(context)
-        return ProductVariantsRepositoryImpl.getInstance(database.productVariantsDao())
+        return ProductVariantsRepositoryImpl.getInstance(
+            dao = database.productVariantsDao(),
+            variantsDao = database.variantsDao(),
+            variantOptionsDao = database.variantOptionsDao(),
+            productsDao = database.productsDao(),
+            db = database
+        )
     }
 
     fun provideOrdersRepository(context: Context): OrdersRepository {
         val database = getInstance(context)
         return OrdersRepositoryImpl.getInstance(
-            database.ordersDao(),
-            SettingRepositoryImpl.getDataStoreInstance(context)
+            dao = database.ordersDao(),
+            customersDao = database.customersDao(),
+            storesDao = database.storeDao(),
+            productsDao = database.productsDao(),
+            paymentDao = database.paymentsDao(),
+            promosDao = database.promoDao(),
+            variantOptionsDao = database.variantOptionsDao(),
+            settingRepository = SettingRepositoryImpl.getDataStoreInstance(context),
+            db = database
         )
     }
 
@@ -104,7 +130,12 @@ object RepositoryInjection {
 
     fun provideStoreRepository(context: Context): StoreRepository {
         val database = getInstance(context)
-        return StoreRepositoryImpl.getInstance(database.storeDao())
+        val settingRepository = provideSettingRepository(context)
+        return StoreRepositoryImpl.getInstance(
+            dao = database.storeDao(),
+            settingRepository = settingRepository,
+            db = database
+        )
     }
 
     fun provideSettingRepository(context: Context): SettingRepository {
@@ -113,6 +144,6 @@ object RepositoryInjection {
 
     fun providePromosRepository(context: Context): PromosRepository {
         val database = getInstance(context)
-        return PromosRepositoryImpl.getInstance(dao = database.promoDao())
+        return PromosRepositoryImpl.getInstance(dao = database.promoDao(), database)
     }
 }

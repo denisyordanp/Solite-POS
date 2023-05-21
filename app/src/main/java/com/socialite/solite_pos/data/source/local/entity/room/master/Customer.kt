@@ -1,10 +1,12 @@
 package com.socialite.solite_pos.data.source.local.entity.room.master
 
 import androidx.room.*
+import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.REPLACED_UUID
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
 	tableName = Customer.DB_NAME,
@@ -17,8 +19,11 @@ data class Customer(
 	@ColumnInfo(name = ID)
 	var id: Long,
 
-	@ColumnInfo(name = NAME)
-	var name: String,
+    @ColumnInfo(name = REPLACED_UUID, defaultValue = "")
+    val new_id: String,
+
+    @ColumnInfo(name = NAME)
+    var name: String,
 
 	@ColumnInfo(name = UPLOAD)
 	var isUploaded: Boolean
@@ -36,6 +41,7 @@ data class Customer(
 			for (document in result){
 				val customer = Customer(
 						document.data[ID] as Long,
+					document.data[REPLACED_UUID] as String,
 						document.data[NAME] as String,
 						document.data[UPLOAD] as Boolean
 				)
@@ -52,11 +58,13 @@ data class Customer(
 			)
 		}
 
-		fun add(name: String) = Customer(ID_ADD, name, isUploaded = false)
+        fun add(name: String) = Customer(
+            id = ID_ADD,
+            new_id = UUID.randomUUID().toString(),
+            name = name,
+            isUploaded = false
+        )
 	}
-
-	@Ignore
-	constructor(name: String): this(ID_ADD, name, false)
 
 	fun isAdd() = id == ID_ADD
 }

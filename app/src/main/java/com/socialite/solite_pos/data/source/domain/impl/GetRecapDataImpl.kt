@@ -22,7 +22,7 @@ class GetRecapDataImpl(
 
         return flow {
             val incomes = repository.getOrderList(Order.DONE, parameters).first().map {
-                val products = getProductOrder.invoke(it.order.orderNo).first()
+                val products = getProductOrder.invoke(it.order.id).first()
                 val orderWithProduct = OrderWithProduct(it, products)
 
                 Income(

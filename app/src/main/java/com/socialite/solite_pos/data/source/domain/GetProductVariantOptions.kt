@@ -4,5 +4,5 @@ import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptio
 import kotlinx.coroutines.flow.Flow
 
 interface GetProductVariantOptions {
-    operator fun invoke(idProduct: Long): Flow<List<VariantWithOptions>?>
+    operator fun invoke(idProduct: String): Flow<List<VariantWithOptions>?>
 }

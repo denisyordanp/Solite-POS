@@ -3,12 +3,12 @@ package com.socialite.solite_pos.data.source.local.entity.room.helper
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import java.io.Serializable
 
 data class OrderData(
@@ -18,30 +18,30 @@ data class OrderData(
     @Relation(parentColumn = Customer.ID, entityColumn = Customer.ID)
     val customer: Customer,
 
-    @Relation(parentColumn = Order.NO, entityColumn = Order.NO)
+    @Relation(parentColumn = Order.ID, entityColumn = Order.ID)
     val orderPayment: OrderPayment?,
 
     @Relation(
-        parentColumn = Order.NO,
+        parentColumn = Order.ID,
         entity = Payment::class,
         entityColumn = Payment.ID,
         associateBy = Junction(
             value = OrderPayment::class,
-            parentColumn = Order.NO,
+            parentColumn = Order.ID,
             entityColumn = Payment.ID
         )
     ) val payment: Payment?,
 
-    @Relation(parentColumn = Order.NO, entityColumn = Order.NO)
+    @Relation(parentColumn = Order.ID, entityColumn = Order.ID)
     val orderPromo: OrderPromo?,
 
     @Relation(
-        parentColumn = Order.NO,
+        parentColumn = Order.ID,
         entity = Promo::class,
         entityColumn = Promo.ID,
         associateBy = Junction(
             value = OrderPromo::class,
-            parentColumn = Order.NO,
+            parentColumn = Order.ID,
             entityColumn = Promo.ID
         )
     ) val promo: Promo?,

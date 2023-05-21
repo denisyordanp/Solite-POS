@@ -4,6 +4,7 @@ import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
@@ -32,6 +33,9 @@ import java.util.*
 		@PrimaryKey(autoGenerate = true)
 		@ColumnInfo(name = ID)
 		var id: Long,
+
+		@ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+		val new_id: String,
 
 		@ColumnInfo(name = Order.NO)
 		var orderNO: String,
@@ -67,6 +71,7 @@ import java.util.*
 				val payment = OrderPayment(
 						document.data[ID] as Long,
 						document.data[Order.NO] as String,
+						document.data[AppDatabase.REPLACED_UUID] as String,
 						document.data[Payment.ID] as Long,
 						document.data[PAY] as Long,
 						document.data[UPLOAD] as Boolean
@@ -78,7 +83,7 @@ import java.util.*
 	}
 
 	@Ignore
-	constructor(orderNo: String, idPayment: Long, pay: Long): this(0, orderNo, idPayment, pay, false)
+	constructor(orderNo: String, idPayment: Long, pay: Long): this(0, UUID.randomUUID().toString(), orderNo, idPayment, pay, false)
 
 	fun inReturn(total: Long): Long{
 		return pay - total

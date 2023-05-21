@@ -31,7 +31,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
-import com.socialite.solite_pos.data.source.local.entity.room.master.Store
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
@@ -106,7 +106,7 @@ private fun RecapContent(
     val parameters = ReportsParameter(
         start = selectedDate.first,
         end = selectedDate.second,
-        storeId = selectedStore?.id ?: 0L
+        storeId = selectedStore?.id ?: ""
     )
     val recap = orderViewModel.getIncomes(parameters)
         .collectAsState(initial = RecapData.empty())

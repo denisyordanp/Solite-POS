@@ -2,17 +2,24 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "c85cb42c099c5960c7c03498d19c785e",
+    "identityHash": "a046cbca0210a5435d0b3384b394c8aa",
     "entities": [
       {
         "tableName": "category",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_category` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `stock` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_category` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `stock` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_category",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -66,13 +73,20 @@
       },
       {
         "tableName": "customer",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_customer` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `upload` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_customer` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `upload` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_customer",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -108,13 +122,20 @@
       },
       {
         "tableName": "order",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`order_no` TEXT NOT NULL, `id_customer` INTEGER NOT NULL, `order_date` TEXT NOT NULL, `cook_time` TEXT, `take_away` INTEGER NOT NULL, `status` INTEGER NOT NULL, `store` INTEGER NOT NULL, `upload` INTEGER NOT NULL, PRIMARY KEY(`order_no`), FOREIGN KEY(`id_customer`) REFERENCES `customer`(`id_customer`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`order_no` TEXT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `id_customer` INTEGER NOT NULL, `order_date` TEXT NOT NULL, `cook_time` TEXT, `take_away` INTEGER NOT NULL, `status` INTEGER NOT NULL, `store` INTEGER NOT NULL, `upload` INTEGER NOT NULL, PRIMARY KEY(`order_no`), FOREIGN KEY(`id_customer`) REFERENCES `customer`(`id_customer`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "orderNo",
             "columnName": "order_no",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "customer",
@@ -335,13 +356,20 @@
       },
       {
         "tableName": "payment",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_payment` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `tax` REAL NOT NULL, `cash` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_payment` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `tax` REAL NOT NULL, `cash` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_payment",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -401,13 +429,20 @@
       },
       {
         "tableName": "product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_product` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_category` INTEGER NOT NULL, `image` TEXT NOT NULL, `desc` TEXT NOT NULL, `sell_price` INTEGER NOT NULL, `buy_price` INTEGER NOT NULL, `portion` INTEGER NOT NULL, `stock` INTEGER NOT NULL, `mix` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_category`) REFERENCES `category`(`id_category`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_product` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `id_category` INTEGER NOT NULL, `image` TEXT NOT NULL, `desc` TEXT NOT NULL, `sell_price` INTEGER NOT NULL, `buy_price` INTEGER NOT NULL, `portion` INTEGER NOT NULL, `stock` INTEGER NOT NULL, `mix` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_category`) REFERENCES `category`(`id_category`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_product",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -518,8 +553,15 @@
       },
       {
         "tableName": "variant",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `type` INTEGER NOT NULL, `must` INTEGER, `mix` INTEGER NOT NULL, `upload` INTEGER NOT NULL, `id_variant` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `type` INTEGER NOT NULL, `must` INTEGER, `mix` INTEGER NOT NULL, `upload` INTEGER NOT NULL, `id_variant` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
           {
             "fieldPath": "name",
             "columnName": "name",
@@ -578,13 +620,20 @@
       },
       {
         "tableName": "outcome",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_outcome` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `price` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL, `store` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_outcome` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `price` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL, `store` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_outcome",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -758,13 +807,20 @@
       },
       {
         "tableName": "order_detail",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_detail` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order_no` TEXT NOT NULL, `id_product` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_detail` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `order_no` TEXT NOT NULL, `id_product` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_order_detail",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "orderNo",
@@ -853,13 +909,20 @@
       },
       {
         "tableName": "order_payment",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_payment` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order_no` TEXT NOT NULL, `id_payment` INTEGER NOT NULL, `pay` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_payment`) REFERENCES `payment`(`id_payment`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_payment` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `order_no` TEXT NOT NULL, `id_payment` INTEGER NOT NULL, `pay` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_payment`) REFERENCES `payment`(`id_payment`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_order_payment",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "orderNO",
@@ -948,13 +1011,20 @@
       },
       {
         "tableName": "order_product_variant",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_product_variant` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_order_detail` INTEGER NOT NULL, `id_variant_option` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_order_detail`) REFERENCES `order_detail`(`id_order_detail`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_variant_option`) REFERENCES `variant_option`(`id_variant_option`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_product_variant` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `id_order_detail` INTEGER NOT NULL, `id_variant_option` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_order_detail`) REFERENCES `order_detail`(`id_order_detail`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_variant_option`) REFERENCES `variant_option`(`id_variant_option`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_order_product_variant",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "idOrderDetail",
@@ -1310,13 +1380,20 @@
       },
       {
         "tableName": "variant_product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_variant_product` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_variant` INTEGER NOT NULL, `id_variant_option` INTEGER NOT NULL, `id_product` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_variant_option`) REFERENCES `variant_option`(`id_variant_option`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_variant`) REFERENCES `variant`(`id_variant`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_variant_product` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `id_variant` INTEGER NOT NULL, `id_variant_option` INTEGER NOT NULL, `id_product` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_variant_option`) REFERENCES `variant_option`(`id_variant_option`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_variant`) REFERENCES `variant`(`id_variant`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_variant_product",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "idVariant",
@@ -1425,13 +1502,20 @@
       },
       {
         "tableName": "variant_option",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_variant_option` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_variant` INTEGER NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `count` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_variant`) REFERENCES `variant`(`id_variant`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_variant_option` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `id_variant` INTEGER NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `count` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_variant`) REFERENCES `variant`(`id_variant`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_variant_option",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "idVariant",
@@ -1512,13 +1596,20 @@
       },
       {
         "tableName": "store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_store` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_store` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `address` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_store",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -1554,13 +1645,20 @@
       },
       {
         "tableName": "promo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_promo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `cash` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_promo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `cash` INTEGER NOT NULL, `value` INTEGER, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id_promo",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "name",
@@ -1579,6 +1677,12 @@
             "columnName": "cash",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "isActive",
@@ -1611,12 +1715,114 @@
           }
         ],
         "foreignKeys": []
+      },
+      {
+        "tableName": "order_promo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_promo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `replaced_uuid` TEXT NOT NULL DEFAULT '', `order_no` TEXT NOT NULL, `id_promo` INTEGER NOT NULL, `total_promo` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_promo`) REFERENCES `promo`(`id_promo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_order_promo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "new_id",
+            "columnName": "replaced_uuid",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "orderNO",
+            "columnName": "order_no",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idPromo",
+            "columnName": "id_promo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalPromo",
+            "columnName": "total_promo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUpload",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_order_promo"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_order_promo_id_order_promo",
+            "unique": false,
+            "columnNames": [
+              "id_order_promo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_promo_id_order_promo` ON `${TABLE_NAME}` (`id_order_promo`)"
+          },
+          {
+            "name": "index_order_promo_order_no",
+            "unique": false,
+            "columnNames": [
+              "order_no"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_promo_order_no` ON `${TABLE_NAME}` (`order_no`)"
+          },
+          {
+            "name": "index_order_promo_id_promo",
+            "unique": false,
+            "columnNames": [
+              "id_promo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_promo_id_promo` ON `${TABLE_NAME}` (`id_promo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "order",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "order_no"
+            ],
+            "referencedColumns": [
+              "order_no"
+            ]
+          },
+          {
+            "table": "promo",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_promo"
+            ],
+            "referencedColumns": [
+              "id_promo"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c85cb42c099c5960c7c03498d19c785e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a046cbca0210a5435d0b3384b394c8aa')"
     ]
   }
 }

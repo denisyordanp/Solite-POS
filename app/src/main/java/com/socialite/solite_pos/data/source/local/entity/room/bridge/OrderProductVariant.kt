@@ -3,6 +3,7 @@ package com.socialite.solite_pos.data.source.local.entity.room.bridge
 import androidx.room.*
 import com.google.firebase.firestore.QuerySnapshot
 import com.socialite.solite_pos.data.source.local.entity.room.master.VariantOption
+import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
@@ -33,6 +34,9 @@ data class OrderProductVariant(
 		@ColumnInfo(name = ID)
 		var id: Long,
 
+		@ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+		val new_id: String,
+
 		@ColumnInfo(name = OrderDetail.ID)
 		var idOrderDetail: Long,
 
@@ -61,6 +65,7 @@ data class OrderProductVariant(
 			for (document in result){
 				val variant = OrderProductVariant(
 						document.data[ID] as Long,
+						document.data[AppDatabase.REPLACED_UUID] as String,
 						document.data[OrderDetail.ID] as Long,
 						document.data[VariantOption.ID] as Long,
 						document.data[UPLOAD] as Boolean
@@ -72,5 +77,5 @@ data class OrderProductVariant(
 	}
 
 	@Ignore
-	constructor(idOrderDetail: Long, idVariantOption: Long): this(0, idOrderDetail, idVariantOption, false)
+	constructor(idOrderDetail: Long, idVariantOption: Long): this(0, UUID.randomUUID().toString(), idOrderDetail, idVariantOption, false)
 }

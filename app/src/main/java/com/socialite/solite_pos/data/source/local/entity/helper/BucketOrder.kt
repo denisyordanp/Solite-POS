@@ -8,7 +8,7 @@ data class BucketOrder(
     fun isIdle() = this == idle()
 
     fun getTotal() = products?.sumOf {
-        val sellPrice = it.product?.sellPrice ?: 0L
+        val sellPrice = it.product?.price ?: 0L
         sellPrice * it.amount.toLong()
     } ?: 0
 
@@ -20,7 +20,7 @@ data class BucketOrder(
 
     fun totalItems() = products?.sumOf { it.amount } ?: 0
 
-    fun getProductAmount(idProduct: Long): Int? {
+    fun getProductAmount(idProduct: String): Int? {
         return products?.find {
             it.product?.id == idProduct
         }?.amount
