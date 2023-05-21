@@ -42,11 +42,11 @@ class DoneCookService(private var context: Context?) : BroadcastReceiver() {
 
 	fun set(order: OrderData) {
 		if (context != null){
-			val time = order.order.getFinishCook(context!!).time
-			val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-			val calendar = Calendar.getInstance()
-			calendar.time = time
-			alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, getPendingIntent(order.order.orderNo.toInt(), order.customer.name))
+//			val time = order.order.getFinishCook(context!!).time
+//			val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//			val calendar = Calendar.getInstance()
+//			calendar.time = time
+//			alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, getPendingIntent(order.order.orderNo.toInt(), order.customer.name))
 		}
 	}
 

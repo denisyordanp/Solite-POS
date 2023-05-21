@@ -41,7 +41,7 @@ class ProductMixVariantAdapter(
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.setDataToView(products[position].product)
+//        holder.setDataToView(products[position].product)
 
     }
 

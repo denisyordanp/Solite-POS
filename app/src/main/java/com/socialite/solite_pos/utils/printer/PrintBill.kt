@@ -143,29 +143,34 @@ class PrintBill(private var activity: FragmentActivity) {
 				if (item.product != null){
 					printCustom("${i+1}. ${item.product!!.name}", 0, 0)
 
-					if (item.product!!.isMix){
-						if (!item.mixProducts.isNullOrEmpty()) {
-							printNewLine(1)
-							for (mix in item.mixProducts) {
-								printCustom("  - ${mix.product.name}", 0, 0)
-								for (variant in mix.variants) {
-									printCustom(" ${variant.name}", 1, 0)
-								}
-								printCustom(" x${mix.amount}", 0, 0)
-								printNewLine(1)
-							}
-						}
-					}else {
-						for (variant in item.variants) {
-							printCustom(" ${variant.name}", 1, 0)
-						}
-						printNewLine(1)
+//					if (item.product!!.isMix){
+//						if (!item.mixProducts.isNullOrEmpty()) {
+//							printNewLine(1)
+//							for (mix in item.mixProducts) {
+//								printCustom("  - ${mix.product.name}", 0, 0)
+//								for (variant in mix.variants) {
+//									printCustom(" ${variant.name}", 1, 0)
+//								}
+//								printCustom(" x${mix.amount}", 0, 0)
+//								printNewLine(1)
+//							}
+//						}
+//					}else {
+//						for (variant in item.variants) {
+//							printCustom(" ${variant.name}", 1, 0)
+//						}
+//						printNewLine(1)
+//					}
+
+					for (variant in item.variants) {
+						printCustom(" ${variant.name}", 1, 0)
 					}
+					printNewLine(1)
 
 					printCustom(
 						withSpace(
-							"  ${item.amount} x ${toRupiah(item.product!!.sellPrice)}",
-							"= ${toRupiah(item.amount * item.product!!.sellPrice)}",
+							"  ${item.amount} x ${toRupiah(item.product!!.price)}",
+							"= ${toRupiah(item.amount * item.product!!.price)}",
 							32
 						), 0, 0
 					)
@@ -216,24 +221,28 @@ class PrintBill(private var activity: FragmentActivity) {
 				if (item.product != null){
 					printCustom("${i+1}. ${item.product!!.name} x${item.amount}", 0, 0)
 
-					if (item.product!!.isMix){
-						if (!item.mixProducts.isNullOrEmpty()) {
-							printNewLine(1)
-							for (mix in item.mixProducts) {
-								printCustom("  - ${mix.product.name}", 0, 0)
-								for (variant in mix.variants) {
-									printCustom(" ${variant.name}", 1, 0)
-								}
-								printCustom(" x${mix.amount}", 0, 0)
-								printNewLine(1)
-							}
-						}
-					}else {
-						for (variant in item.variants) {
-							printCustom(" ${variant.name}", 1, 0)
-						}
-						printNewLine(1)
+//					if (item.product!!.isMix){
+//						if (!item.mixProducts.isNullOrEmpty()) {
+//							printNewLine(1)
+//							for (mix in item.mixProducts) {
+//								printCustom("  - ${mix.product.name}", 0, 0)
+//								for (variant in mix.variants) {
+//									printCustom(" ${variant.name}", 1, 0)
+//								}
+//								printCustom(" x${mix.amount}", 0, 0)
+//								printNewLine(1)
+//							}
+//						}
+//					}else {
+//						for (variant in item.variants) {
+//							printCustom(" ${variant.name}", 1, 0)
+//						}
+//						printNewLine(1)
+//					}
+					for (variant in item.variants) {
+						printCustom(" ${variant.name}", 1, 0)
 					}
+					printNewLine(1)
 					printNewLine(1)
 				}
 			}

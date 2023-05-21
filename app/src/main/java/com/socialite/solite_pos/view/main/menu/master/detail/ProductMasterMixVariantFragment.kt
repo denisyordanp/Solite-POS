@@ -54,10 +54,10 @@ class ProductMasterMixVariantFragment(
     private fun getProduct() {
         lifecycleScope.launch {
             category?.let {
-                viewModel.getProductWithCategories(category.id)
-                    .collect {
-                        adapter.setProducts(ArrayList(it))
-                    }
+//                viewModel.getProductWithCategories(category.id)
+//                    .collect {
+//                        adapter.setProducts(ArrayList(it))
+//                    }
             }
         }
     }
