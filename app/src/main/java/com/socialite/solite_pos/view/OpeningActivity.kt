@@ -11,16 +11,19 @@ import com.socialite.solite_pos.BuildConfig
 import com.socialite.solite_pos.databinding.ActivityOpeningBinding
 import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
+import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 class OpeningActivity : SoliteActivity() {
 
 	private lateinit var auth: FirebaseAuth
+	private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val binding = ActivityOpeningBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 
+		mainViewModel = MainViewModel.getMainViewModel(this)
 		auth = Firebase.auth
 
 		try {
@@ -31,7 +34,8 @@ class OpeningActivity : SoliteActivity() {
 			e.printStackTrace()
 		}
 
-		Handler(Looper.getMainLooper()).postDelayed({checkUser()}, 2000)
+		mainViewModel.beginMigratingToUUID()
+		Handler(Looper.getMainLooper()).postDelayed({checkUser()}, 1000)
 
     }
 
