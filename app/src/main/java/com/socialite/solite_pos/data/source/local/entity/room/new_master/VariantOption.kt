@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = VariantOption.DB_NAME,
@@ -47,6 +48,10 @@ data class VariantOption(
 ) : Serializable {
 
     fun isAdd() = id == ID_ADD
+
+    fun asNewVariantOption() = this.copy(
+        id = UUID.randomUUID().toString()
+    )
 
     companion object {
         const val ID = "id_variant_option"

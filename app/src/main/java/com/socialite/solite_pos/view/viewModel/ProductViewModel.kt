@@ -131,7 +131,7 @@ class ProductViewModel(
 
     fun insertVariant(data: Variant) {
         viewModelScope.launch {
-            variantsRepository.insertVariant(data)
+            variantsRepository.insertVariant(data.asNewVariant())
         }
     }
 
@@ -146,7 +146,7 @@ class ProductViewModel(
 
     fun insertVariantOption(data: VariantOption) {
         viewModelScope.launch {
-            variantOptionsRepository.insertVariantOption(data)
+            variantOptionsRepository.insertVariantOption(data.asNewVariantOption())
         }
     }
 
