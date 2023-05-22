@@ -43,11 +43,13 @@ class OpeningActivity : SoliteActivity() {
 		if (BuildConfig.DEBUG) {
 			toMain()
 		} else {
-			if (auth.currentUser != null) {
-				toMain()
-			} else {
-				toLogin()
-			}
+			// Note: Disable login for now
+			toMain()
+//			if (auth.currentUser != null) {
+//				toMain()
+//			} else {
+//				toLogin()
+//			}
 		}
 	}
 
