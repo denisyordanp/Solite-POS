@@ -14,5 +14,4 @@ interface OutcomesRepository {
     suspend fun deleteAllOldOutcomes()
     suspend fun deleteAllNewOutcomes()
     suspend fun insertOutcomes(list: List<Outcome>)
-    suspend fun updateOutcome(data: Outcome)
 }

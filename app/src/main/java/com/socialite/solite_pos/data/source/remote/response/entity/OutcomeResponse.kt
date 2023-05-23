@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Outcome
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 
 data class OutcomeResponse(
     val amount: Int,
@@ -10,18 +10,18 @@ data class OutcomeResponse(
     val isUploaded: Boolean,
     val name: String,
     val price: Int,
-    val store: Int
+    val store: String
 ) {
 
     fun toEntity(): Outcome {
         return Outcome(
-            id = id.toLong(),
+            id = id,
             name = name,
             desc = desc,
             price = price.toLong(),
             amount = amount,
             date = date,
-            store = store.toLong(),
+            store = store,
             isUploaded = isUploaded
         )
     }
