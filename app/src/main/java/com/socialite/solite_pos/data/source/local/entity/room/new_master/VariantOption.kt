@@ -3,11 +3,11 @@ package com.socialite.solite_pos.data.source.local.entity.room.new_master
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.VariantOptionResponse
 import java.io.Serializable
 import java.util.UUID
 
@@ -50,8 +50,19 @@ data class VariantOption(
     fun isAdd() = id == ID_ADD
 
     fun asNewVariantOption() = this.copy(
-        id = UUID.randomUUID().toString()
+            id = UUID.randomUUID().toString()
     )
+
+    fun toResponse(): VariantOptionResponse {
+        return VariantOptionResponse(
+                id = id,
+                name = name,
+                desc = desc,
+                variant = variant,
+                isActive = isActive,
+                isUploaded = true
+        )
+    }
 
     companion object {
         const val ID = "id_variant_option"
@@ -79,20 +90,19 @@ data class VariantOption(
             }
             return SimpleSQLiteQuery(query.toString())
         }
-    }
 
-    @Ignore
-    constructor(
-        idVariant: String,
-        name: String,
-        desc: String,
-        isActive: Boolean
-    ) : this(
-        id = ID_ADD,
-        variant = idVariant,
-        name = name,
-        desc = desc,
-        isActive = isActive,
-        isUploaded = false
-    )
+        fun createNew(
+                variant: String,
+                name: String,
+                desc: String,
+                isActive: Boolean
+        ) = VariantOption(
+                id = ID_ADD,
+                variant = variant,
+                name = name,
+                desc = desc,
+                isActive = isActive,
+                isUploaded = false
+        )
+    }
 }

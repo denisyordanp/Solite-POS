@@ -2,6 +2,7 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
@@ -9,7 +10,6 @@ import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import kotlinx.coroutines.flow.map
 import java.util.UUID
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption as NewVariantOption
 
 class VariantOptionsRepositoryImpl(
     private val dao: VariantOptionsDao,
@@ -56,13 +56,13 @@ class VariantOptionsRepositoryImpl(
 
     override suspend fun getNeedUploadVariantOptions() = dao.getNeedUploadVariantOptions()
 
-    override suspend fun insertVariantOption(data: NewVariantOption) {
+    override suspend fun insertVariantOption(data: VariantOption) {
         dao.insertNewVariantOption(data)
     }
     override suspend fun insertVariantOptions(list: List<VariantOption>) {
         dao.insertVariantOptions(list)
     }
-    override suspend fun updateVariantOption(data: NewVariantOption) {
+    override suspend fun updateVariantOption(data: VariantOption) {
         dao.updateNewVariantOption(data)
     }
 
@@ -80,7 +80,7 @@ class VariantOptionsRepositoryImpl(
 
                 val variant = variantsDao.getVariantById(variantOption.idVariant)
                 if (variant != null) {
-                    val newVariantOption = NewVariantOption(
+                    val newVariantOption = VariantOption(
                         id = uuid,
                         variant = variant.new_id,
                         name = variantOption.name,
