@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 
 data class PromoResponse(
     val desc: String,
@@ -14,7 +14,7 @@ data class PromoResponse(
 
     fun toEntity(): Promo {
         return Promo(
-            id = id.toLong(),
+            id = id,
             name = name,
             desc = desc,
             isCash = isCash,
