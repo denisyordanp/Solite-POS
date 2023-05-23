@@ -39,7 +39,7 @@ class CategoriesRepositoryImpl(
     override suspend fun insertCategory(data: NewCategory) {
         dao.insertNewCategory(data)
     }
-    override suspend fun insertCategories(list: List<Category>) {
+    override suspend fun insertCategories(list: List<NewCategory>) {
         dao.insertCategories(list)
     }
     override suspend fun updateCategory(data: NewCategory) {
