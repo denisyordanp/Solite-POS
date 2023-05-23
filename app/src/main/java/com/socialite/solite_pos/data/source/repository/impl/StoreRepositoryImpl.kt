@@ -8,7 +8,7 @@ import com.socialite.solite_pos.data.source.repository.StoreRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store as NewStore
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 
 class StoreRepositoryImpl(
     private val dao: StoreDao,
@@ -43,14 +43,14 @@ class StoreRepositoryImpl(
     override fun getStores() = dao.getNewStores()
     override suspend fun getNeedUploadStores() = dao.getNeedUploadStores()
     override suspend fun getStore(id: String) = dao.getNewStore(id)
-    override suspend fun insertStore(store: NewStore) {
+    override suspend fun insertStore(store: Store) {
         dao.insertStore(store)
         if (settingRepository.getNewSelectedStore().first().isEmpty()) {
             settingRepository.selectNewStore(store.id)
         }
     }
     override suspend fun insertStores(list: List<Store>) = dao.insertStores(list)
-    override suspend fun updateStore(store: NewStore) = dao.updateNewStore(store)
+    override suspend fun updateStore(store: Store) = dao.updateNewStore(store)
     override suspend fun migrateToUUID() {
         val stores = dao.getStores().firstOrNull()
         val activeStore = settingRepository.getSelectedStore().first()
@@ -70,7 +70,7 @@ class StoreRepositoryImpl(
                         updatedStore.new_id
                     }
 
-                    val newStore = NewStore(
+                    val newStore = Store(
                         id = uuid,
                         name = store.name,
                         address = store.address,

@@ -5,36 +5,46 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
+import com.socialite.solite_pos.data.source.remote.response.entity.StoreResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 import java.util.UUID
 
 @Entity(
-    tableName = Store.DB_NAME,
-    indices = [
-        Index(value = [Store.ID])
-    ]
+        tableName = Store.DB_NAME,
+        indices = [
+            Index(value = [Store.ID])
+        ]
 )
 data class Store(
-    @PrimaryKey
-    @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+        @PrimaryKey
+        @ColumnInfo(name = ID, defaultValue = "")
+        val id: String,
 
-    @ColumnInfo(name = NAME)
-    override var name: String,
+        @ColumnInfo(name = NAME)
+        override var name: String,
 
-    @ColumnInfo(name = ADDRESS)
-    var address: String,
+        @ColumnInfo(name = ADDRESS)
+        var address: String,
 
-    @ColumnInfo(name = AppDatabase.UPLOAD)
-    var isUploaded: Boolean
+        @ColumnInfo(name = AppDatabase.UPLOAD)
+        var isUploaded: Boolean
 ) : Serializable, DropdownItem {
 
     fun isNewStore() = id == ID_ADD
 
     fun asNewStore() = this.copy(
-        id = UUID.randomUUID().toString()
+            id = UUID.randomUUID().toString()
     )
+
+    fun toResponse(): StoreResponse {
+        return StoreResponse(
+                id = id,
+                name = name,
+                address = address,
+                isUploaded = true
+        )
+    }
 
     companion object {
         const val ID = "id_store"
@@ -46,10 +56,10 @@ data class Store(
 
         fun add(name: String, address: String): Store {
             return Store(
-                id = ID_ADD,
-                name = name,
-                address = address,
-                isUploaded = false
+                    id = ID_ADD,
+                    name = name,
+                    address = address,
+                    isUploaded = false
             )
         }
     }

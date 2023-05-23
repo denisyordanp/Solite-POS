@@ -18,8 +18,8 @@ interface StoreDao {
     @Query("SELECT * FROM ${NewStore.DB_NAME}")
     fun getNewStores(): Flow<List<NewStore>>
 
-    @Query("SELECT * FROM ${Store.DB_NAME}  WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadStores(): List<Store>
+    @Query("SELECT * FROM ${NewStore.DB_NAME}  WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadStores(): List<NewStore>
 
     @Query("SELECT * FROM ${Store.DB_NAME} WHERE ${Store.ID} = :id LIMIT 1")
     suspend fun getStore(id: Long): Store?
@@ -34,7 +34,7 @@ interface StoreDao {
     suspend fun insertNewStore(store: NewStore)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStores(list: List<Store>)
+    suspend fun insertStores(list: List<NewStore>)
 
     @Update
     suspend fun updateStore(store: Store)
