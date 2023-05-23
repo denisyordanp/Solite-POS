@@ -2,10 +2,10 @@ package com.socialite.solite_pos.data.source.local.entity.room.new_master
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.VariantResponse
 import java.io.Serializable
 import java.util.UUID
 
@@ -41,6 +41,16 @@ data class Variant(
             id = UUID.randomUUID().toString()
     )
 
+    fun toResponse(): VariantResponse {
+        return VariantResponse(
+                id = id,
+                name = name,
+                type = type,
+                isMust = isMust ?: false,
+                isUploaded = true
+        )
+    }
+
     companion object {
         const val ID = "id_variant"
         const val NAME = "name"
@@ -52,23 +62,15 @@ data class Variant(
 
         const val ONE_OPTION = 1
         const val MULTIPLE_OPTION = 2
+
+        fun createNew(
+                name: String, type: Int, isMust: Boolean
+        ) = Variant(
+                id = ID_ADD,
+                name = name,
+                type = type,
+                isMust = isMust,
+                isUploaded = false
+        )
     }
-
-    @Ignore
-    constructor(id: String, name: String, type: Int, isMust: Boolean) : this(
-        id = id,
-        name = name,
-        type = type,
-        isMust = isMust,
-        isUploaded = false
-    )
-
-    @Ignore
-    constructor(name: String, type: Int, isMust: Boolean) : this(
-        id = ID_ADD,
-        name = name,
-        type = type,
-        isMust = isMust,
-        isUploaded = false
-    )
 }

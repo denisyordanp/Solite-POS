@@ -1,10 +1,9 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 
 data class VariantResponse(
     val id: String,
-    val isMix: Boolean,
     val isMust: Boolean,
     val isUploaded: Boolean,
     val name: String,
@@ -12,11 +11,10 @@ data class VariantResponse(
 ) {
     fun toEntity(): Variant {
         return Variant(
-            idVariant = id.toLong(),
+            id = id,
             name = name,
             type = type,
             isMust = isMust,
-            isMix = isMix,
             isUploaded = isUploaded
         )
     }
