@@ -7,6 +7,7 @@ import androidx.room.ForeignKey.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.ProductResponse
 import java.io.Serializable
 import java.util.UUID
 
@@ -50,6 +51,19 @@ data class Product(
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
 ) : Serializable {
+
+    fun toResponse(): ProductResponse {
+        return ProductResponse(
+                id = id,
+                name = name,
+                desc = desc,
+                category = category,
+                image = image,
+                price = price.toInt(),
+                isActive = isActive,
+                isUploaded = true
+        )
+    }
     companion object {
         const val PRICE = "price"
         const val ID = "id_product"
