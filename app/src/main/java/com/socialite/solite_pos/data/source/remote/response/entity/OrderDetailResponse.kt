@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
 
 data class OrderDetailResponse(
     val amount: Int,
@@ -11,9 +11,9 @@ data class OrderDetailResponse(
 ) {
     fun toEntity(): OrderDetail {
         return OrderDetail(
-            id = id.toLong(),
-            orderNo = order,
-            idProduct = product.toLong(),
+            id = id,
+            order = order,
+            product = product,
             amount = amount,
             isUpload = isUploaded
         )

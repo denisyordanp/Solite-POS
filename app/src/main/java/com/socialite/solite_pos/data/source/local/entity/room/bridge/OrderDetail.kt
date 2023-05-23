@@ -1,102 +1,60 @@
 package com.socialite.solite_pos.data.source.local.entity.room.bridge
 
-import androidx.room.*
-import com.google.firebase.firestore.QuerySnapshot
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.remote.response.entity.OrderDetailResponse
-import com.socialite.solite_pos.data.source.remote.response.helper.RemoteClassUtils
 import java.io.Serializable
-import java.util.*
 
 @Entity(
-	tableName = OrderDetail.DB_NAME,
-	foreignKeys = [
-		ForeignKey(
-			entity = Order::class,
-			parentColumns = [Order.NO],
-			childColumns = [Order.NO],
-			onDelete = ForeignKey.CASCADE),
-		ForeignKey(
-			entity = Product::class,
-			parentColumns = [Product.ID],
-			childColumns = [Product.ID],
-			onDelete = ForeignKey.CASCADE)
-	],
-	indices = [
-		Index(value = [OrderDetail.ID]),
-		Index(value = [Order.NO]),
-		Index(value = [Product.ID])
-	]
+        tableName = OrderDetail.DB_NAME,
+        foreignKeys = [
+            ForeignKey(
+                    entity = Order::class,
+                    parentColumns = [Order.NO],
+                    childColumns = [Order.NO],
+                    onDelete = ForeignKey.CASCADE),
+            ForeignKey(
+                    entity = Product::class,
+                    parentColumns = [Product.ID],
+                    childColumns = [Product.ID],
+                    onDelete = ForeignKey.CASCADE)
+        ],
+        indices = [
+            Index(value = [OrderDetail.ID]),
+            Index(value = [Order.NO]),
+            Index(value = [Product.ID])
+        ]
 )
 data class OrderDetail(
-		@PrimaryKey(autoGenerate = true)
-		@ColumnInfo(name = ID)
-		var id: Long,
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = ID)
+        var id: Long,
 
-		@ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
-		val new_id: String,
+        @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+        val new_id: String,
 
-		@ColumnInfo(name = Order.NO)
-		var orderNo: String,
+        @ColumnInfo(name = Order.NO)
+        var orderNo: String,
 
-		@ColumnInfo(name = Product.ID)
-		var idProduct: Long,
+        @ColumnInfo(name = Product.ID)
+        var idProduct: Long,
 
-		@ColumnInfo(name = AMOUNT)
-		var amount: Int,
+        @ColumnInfo(name = AMOUNT)
+        var amount: Int,
 
-		@ColumnInfo(name = UPLOAD)
-		var isUpload: Boolean
-): Serializable{
-	companion object: RemoteClassUtils<OrderDetail> {
-		const val ID = "id_order_detail"
-		const val AMOUNT = "amount"
+        @ColumnInfo(name = UPLOAD)
+        var isUpload: Boolean
+) : Serializable {
+    companion object {
+        const val ID = "id_order_detail"
+        const val AMOUNT = "amount"
 
-		const val DB_NAME = "order_detail"
-
-		override fun toHashMap(data: OrderDetail): HashMap<String, Any?> {
-			return hashMapOf(
-					ID to data.id,
-					Order.NO to data.orderNo,
-					Product.ID to data.idProduct,
-					AMOUNT to data.amount,
-					UPLOAD to data.isUpload
-			)
-		}
-
-		override fun toListClass(result: QuerySnapshot): List<OrderDetail> {
-			val array: ArrayList<OrderDetail> = ArrayList()
-			for (document in result){
-				val detail = OrderDetail(
-						document.data[ID] as Long,
-						document.data[Order.NO] as String,
-						document.data[AppDatabase.REPLACED_UUID] as String,
-						document.data[Product.ID] as Long,
-						(document.data[AMOUNT] as Long).toInt(),
-						document.data[UPLOAD] as Boolean
-				)
-				array.add(detail)
-			}
-			return array
-		}
-	}
-
-	@Ignore
-	constructor(orderNo: String, idProduct: Long, amount: Int): this(0, UUID.randomUUID().toString(), orderNo, idProduct, amount, false)
-
-	@Ignore
-	constructor(): this(0, UUID.randomUUID().toString(), "", 0, 0, false)
-
-	fun toResponse(): OrderDetailResponse {
-		return OrderDetailResponse(
-			id = id.toString(),
-			amount = amount,
-			order = orderNo,
-			product = idProduct.toString(),
-			isUploaded = true
-		)
-	}
+        const val DB_NAME = "order_detail"
+    }
 }

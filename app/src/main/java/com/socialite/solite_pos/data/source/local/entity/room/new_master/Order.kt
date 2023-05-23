@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderResponse
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_TIME_FORMAT
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -54,6 +55,32 @@ data class Order(
     var isUploaded: Boolean
 ) : Serializable {
 
+    fun isEditable() = status == ON_PROCESS || status == NEED_PAY
+
+    fun getQueueNumber(): String {
+        return orderNo.substring(orderNo.length - 3, orderNo.length)
+    }
+
+    val timeString: String
+        get() {
+            return convertDateFromDb(orderTime, DATE_WITH_TIME_FORMAT)
+        }
+
+    fun statusToOrderMenu() = OrderMenus.values().find { it.status == status }
+
+    fun toResponse(): OrderResponse {
+        return OrderResponse(
+                id = id,
+                orderNo = orderNo,
+                customer = customer,
+                orderTime = orderTime,
+                status = status,
+                store = store,
+                isTakeAway = isTakeAway,
+                isUploaded = true
+        )
+    }
+
     companion object {
 
         const val ORDER_DATE = "order_date"
@@ -86,17 +113,4 @@ data class Order(
             isUploaded = false
         )
     }
-
-    fun isEditable() = status == ON_PROCESS || status == NEED_PAY
-
-    fun getQueueNumber(): String {
-        return orderNo.substring(orderNo.length - 3, orderNo.length)
-    }
-
-    val timeString: String
-        get() {
-            return convertDateFromDb(orderTime, DATE_WITH_TIME_FORMAT)
-        }
-
-    fun statusToOrderMenu() = OrderMenus.values().find { it.status == status }
 }

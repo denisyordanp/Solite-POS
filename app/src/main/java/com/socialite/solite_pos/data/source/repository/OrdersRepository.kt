@@ -14,7 +14,6 @@ interface OrdersRepository {
     fun getOrderList(status: Int, date: String): Flow<List<OrderData>>
     fun getOrderList(status: Int, date: String, store: String): Flow<List<OrderData>>
     suspend fun getNeedUploadOrders(): List<Order>
-    fun getOrderList(status: Int, date: String, store: Long): Flow<List<OrderData>>
     fun getOrderList(status: Int, parameters: ReportsParameter): Flow<List<OrderData>>
     fun getOrderData(orderId: String): Flow<OrderData?>
     suspend fun getOrderDetail(orderId: String): OrderData?

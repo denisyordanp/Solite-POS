@@ -34,8 +34,8 @@ interface OrdersDao {
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :store")
     fun getOrdersByStatus(status: Int, date: String, store: String): Flow<List<OrderData>>
 
-    @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadOrders(): List<Order>
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrders(): List<NewOrder>
 
     @Transaction
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
@@ -57,17 +57,17 @@ interface OrdersDao {
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId")
     fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
 
-    @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadOrderDetails(): List<OrderDetail>
+    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrderDetails(): List<NewOrderDetail>
 
-    @Query("SELECT * FROM ${OrderPayment.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadOrderPayments(): List<OrderPayment>
+    @Query("SELECT * FROM ${NewOrderPayment.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrderPayments(): List<NewOrderPayment>
 
-    @Query("SELECT * FROM ${OrderPromo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadOrderPromos(): List<OrderPromo>
+    @Query("SELECT * FROM ${NewOrderPromo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrderPromos(): List<NewOrderPromo>
 
-    @Query("SELECT * FROM ${OrderProductVariant.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedOrderProductVariants(): List<OrderProductVariant>
+    @Query("SELECT * FROM ${NewOrderProductVariant.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedOrderProductVariants(): List<NewOrderProductVariant>
 
     @Transaction
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.ID} = :idDetail")
@@ -109,7 +109,7 @@ interface OrdersDao {
     suspend fun insertNewOrder(order: NewOrder)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrders(list: List<Order>)
+    suspend fun insertOrders(list: List<NewOrder>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDetailOrder(detail: OrderDetail): Long
@@ -127,13 +127,13 @@ interface OrdersDao {
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderPayments(list: List<OrderPayment>)
+    suspend fun insertOrderPayments(list: List<NewOrderPayment>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderDetails(list: List<OrderDetail>)
+    suspend fun insertOrderDetails(list: List<NewOrderDetail>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderPromos(list: List<OrderPromo>)
+    suspend fun insertOrderPromos(list: List<NewOrderPromo>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderPayment(payment: NewOrderPayment)
@@ -148,7 +148,7 @@ interface OrdersDao {
     suspend fun insertNewOrderProductVariant(orderProductVariant: NewOrderProductVariant)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderProductVariants(list: List<OrderProductVariant>)
+    suspend fun insertOrderProductVariants(list: List<NewOrderProductVariant>)
 
     @Update
     suspend fun updateOrder(order: Order)

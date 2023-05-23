@@ -7,6 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderProductVariantResponse
 import java.io.Serializable
 import java.util.UUID
 
@@ -46,6 +47,16 @@ data class OrderProductVariant(
     @ColumnInfo(name = UPLOAD)
     var isUpload: Boolean
 ) : Serializable {
+
+    fun toResponse(): OrderProductVariantResponse {
+        return OrderProductVariantResponse(
+                id = id,
+                orderDetail = orderDetail,
+                variantOption = variantOption,
+                isUploaded = true
+        )
+    }
+
     companion object {
         const val ID = "id_order_product_variant"
 

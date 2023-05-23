@@ -1,6 +1,8 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
@@ -20,8 +22,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import java.util.UUID
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
 
 class OrdersRepositoryImpl(
     private val dao: OrdersDao,
@@ -163,7 +163,7 @@ class OrdersRepositoryImpl(
                 val order = dao.getOrderByNo(orderDetail.orderNo)
                 val product = productsDao.getProductById(orderDetail.idProduct)
                 if (order != null && product != null) {
-                    val newOrderDetail = NewOrderDetail(
+                    val newOrderDetail = OrderDetail(
                         id = uuid,
                         order = order.new_id,
                         product = product.new_id,
@@ -239,7 +239,7 @@ class OrdersRepositoryImpl(
                 val variantOption =
                     variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
                 if (orderDetail != null && variantOption != null) {
-                    val newOrderProductVariant = NewOrderProductVariant(
+                    val newOrderProductVariant = OrderProductVariant(
                         id = uuid,
                         variantOption = variantOption.new_id,
                         orderDetail = orderDetail.new_id,

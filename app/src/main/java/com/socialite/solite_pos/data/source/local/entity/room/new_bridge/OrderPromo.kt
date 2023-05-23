@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderPromoResponse
 import java.util.UUID
 
 @Entity(
@@ -49,6 +50,16 @@ data class OrderPromo(
     @ColumnInfo(name = AppDatabase.UPLOAD)
     var isUpload: Boolean
 ) {
+
+    fun toResponse(): OrderPromoResponse {
+        return OrderPromoResponse(
+                id = id,
+                order = order,
+                promo = promo,
+                totalPromo = totalPromo.toInt(),
+                isUploaded = true
+        )
+    }
 
     companion object {
         const val ID = "id_order_promo"
