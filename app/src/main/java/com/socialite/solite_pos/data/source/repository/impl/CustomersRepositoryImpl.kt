@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer as NewCustomer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
@@ -32,11 +32,11 @@ class CustomersRepositoryImpl(
         }
     }
 
-    override fun getCustomers() = dao.getCustomers()
+    override fun getCustomers() = dao.getNewCustomers()
     override suspend fun getNeedUploadCustomers() = dao.getNeedUploadCustomers()
 
-    override suspend fun insertCustomer(data: NewCustomer) = dao.insertNewCustomer(data)
-    override suspend fun insertCustomers(datas: List<Customer>) = dao.insertCustomers(datas)
+    override suspend fun insertCustomer(data: Customer) = dao.insertNewCustomer(data)
+    override suspend fun insertCustomers(customers: List<Customer>) = dao.insertCustomers(customers)
 
     override suspend fun migrateToUUID() {
         val customers = dao.getCustomers().firstOrNull()
@@ -51,7 +51,7 @@ class CustomersRepositoryImpl(
                         updatedCustomer.new_id
                     }
 
-                    val newCustomer = NewCustomer(
+                    val newCustomer = Customer(
                         id = uuid,
                         name = customer.name,
                         isUploaded = customer.isUploaded

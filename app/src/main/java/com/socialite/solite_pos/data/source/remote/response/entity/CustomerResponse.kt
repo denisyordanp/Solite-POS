@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 
 data class CustomerResponse(
     val id: String,
@@ -10,7 +10,7 @@ data class CustomerResponse(
 
     fun toEntity(): Customer {
         return Customer(
-            id = id.toLong(),
+            id = id,
             name = name,
             isUploaded = isUploaded
         )
