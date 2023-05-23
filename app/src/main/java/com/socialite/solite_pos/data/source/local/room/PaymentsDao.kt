@@ -20,8 +20,8 @@ interface PaymentsDao {
     @RawQuery(observedEntities = [NewPayment::class])
     fun getNewPayments(query: SupportSQLiteQuery): Flow<List<NewPayment>>
 
-    @Query("SELECT * FROM ${Payment.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadPayments(): List<Payment>
+    @Query("SELECT * FROM ${NewPayment.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadPayments(): List<NewPayment>
 
     @Query("SELECT * FROM '${Payment.DB_NAME}' WHERE ${Payment.ID} = :paymentId LIMIT 1")
     suspend fun getPaymentById(paymentId: Long): Payment?
@@ -33,7 +33,7 @@ interface PaymentsDao {
     fun insertNewPayment(data: NewPayment)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPayments(list: List<Payment>)
+    suspend fun insertPayments(list: List<NewPayment>)
 
     @Update
     suspend fun updatePayment(data: Payment)

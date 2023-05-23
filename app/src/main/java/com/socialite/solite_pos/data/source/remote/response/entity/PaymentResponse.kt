@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 
 data class PaymentResponse(
     val desc: String,
@@ -14,7 +14,7 @@ data class PaymentResponse(
 
     fun toEntity(): Payment {
         return Payment(
-            id = id.toLong(),
+            id = id,
             name = name,
             desc = desc,
             tax = tax,

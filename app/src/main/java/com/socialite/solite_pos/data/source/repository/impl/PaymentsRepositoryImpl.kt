@@ -41,7 +41,7 @@ class PaymentsRepositoryImpl(
     override suspend fun updatePayment(data: NewPayment) {
         dao.updateNewPayment(data)
     }
-    override suspend fun insertPayments(list: List<Payment>) {
+    override suspend fun insertPayments(list: List<NewPayment>) {
         dao.insertPayments(list)
     }
 
