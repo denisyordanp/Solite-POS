@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.ProductVariantsDao
 import com.socialite.solite_pos.data.source.local.room.ProductsDao
@@ -8,7 +9,6 @@ import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import java.util.UUID
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
 
 class ProductVariantsRepositoryImpl(
     private val dao: ProductVariantsDao,
@@ -49,7 +49,7 @@ class ProductVariantsRepositoryImpl(
     override fun getVariantProduct(idProduct: String, idVariantOption: String) =
         dao.getVariantProduct(idProduct, idVariantOption)
 
-    override suspend fun getNeedUploadVariantProducts(): List<VariantProduct> = dao.getNeedUploadVariantProducts()
+    override suspend fun getNeedUploadVariantProducts() = dao.getNeedUploadVariantProducts()
 
     override suspend fun isProductHasVariants(idProduct: String) =
         !dao.getProductVariants(idProduct).isNullOrEmpty()
@@ -59,13 +59,13 @@ class ProductVariantsRepositoryImpl(
     override fun getVariantProductById(idProduct: String) =
         dao.getVariantProductById(idProduct)
 
-    override suspend fun insertVariantProduct(data: NewVariantProduct) {
+    override suspend fun insertVariantProduct(data: VariantProduct) {
         dao.insertNewVariantProduct(data)
     }
     override suspend fun insertVariantProducts(list: List<VariantProduct>) {
         dao.insertVariantProducts(list)
     }
-    override suspend fun removeVariantProduct(data: NewVariantProduct) {
+    override suspend fun removeVariantProduct(data: VariantProduct) {
         dao.removeVariantProduct(data.variantOption, data.product)
     }
 
@@ -85,7 +85,7 @@ class ProductVariantsRepositoryImpl(
                 val variantOption = variantOptionsDao.getVariantOptionById(productVariant.idVariantOption)
                 val product = productsDao.getProductById(productVariant.idProduct)
                 if (variant != null && variantOption != null && product != null) {
-                    val newProductVariant = NewVariantProduct(
+                    val newProductVariant = VariantProduct(
                         id = uuid,
                         variant = variant.new_id,
                         variantOption = variantOption.new_id,

@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
 
 data class VariantProductResponse(
     val id: String,
@@ -11,10 +11,10 @@ data class VariantProductResponse(
 ) {
     fun toEntity(): VariantProduct {
         return VariantProduct(
-            id = id.toLong(),
-            idVariant = variant.toLong(),
-            idVariantOption = variantOption.toLong(),
-            idProduct = product.toLong(),
+            id = id,
+            variant = variant,
+            variantOption = variantOption,
+            product = product,
             isUploaded = isUploaded
         )
     }
