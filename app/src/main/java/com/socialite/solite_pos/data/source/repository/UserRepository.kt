@@ -13,7 +13,7 @@ interface UserRepository {
         storeName: String
     ): String
 
-    suspend fun insertToken(token: String)
+    fun insertToken(token: String)
 
-    suspend fun getToken(): String?
+    fun getToken(): String
 }

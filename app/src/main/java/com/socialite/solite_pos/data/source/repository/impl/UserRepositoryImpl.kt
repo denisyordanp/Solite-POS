@@ -42,9 +42,9 @@ class UserRepositoryImpl(
         return token
     }
 
-    override suspend fun insertToken(token: String) {
+    override fun insertToken(token: String) {
         userPreference.setUserToken(token)
     }
 
-    override suspend fun getToken(): String? = userPreference.getUserToken()
+    override fun getToken(): String = userPreference.getUserToken()
 }

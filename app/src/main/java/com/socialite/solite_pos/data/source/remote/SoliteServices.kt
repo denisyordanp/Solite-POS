@@ -26,7 +26,7 @@ interface SoliteServices {
         @Field("store") storeName: String
     ): ApiResponse<TokenResponse>
 
-    @POST
+    @POST("v1/synchronize")
     suspend fun synchronize(
         @Body synchronize: SynchronizeResponse
     ): ApiResponse<SynchronizeResponse>

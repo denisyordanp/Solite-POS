@@ -11,11 +11,11 @@ import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
-import com.socialite.solite_pos.data.source.repository.SynchronizationRepository
+import com.socialite.solite_pos.data.source.repository.Synchronize
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 
-class SynchronizationRepositoryImpl(
+class SynchronizeImpl(
     private val customersRepository: CustomersRepository,
     private val storeRepository: StoreRepository,
     private val categoriesRepository: CategoriesRepository,
@@ -28,8 +28,8 @@ class SynchronizationRepositoryImpl(
     private val variantOptionsRepository: VariantOptionsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val service: SoliteServices
-) : SynchronizationRepository {
-    override suspend fun synchronize(): Boolean {
+) : Synchronize {
+    override suspend fun invoke(): Boolean {
         // Get all un uploaded data
         val needUploadCustomers =
             customersRepository.getNeedUploadCustomers().map { it.toResponse() }

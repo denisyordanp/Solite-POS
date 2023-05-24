@@ -1,41 +1,31 @@
 package com.socialite.solite_pos.data.source.preference.impl
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import android.content.SharedPreferences
 import com.socialite.solite_pos.data.source.preference.UserPreferences
-import kotlinx.coroutines.flow.first
-
-private const val USER_DATASTORE_PREFERENCES =
-    "user_data_store_preferences"
-private val Context.userDataStorePreferences by preferencesDataStore(
-    USER_DATASTORE_PREFERENCES
-)
 
 class UserPreferencesImpl(
-    private val dataStore: DataStore<Preferences>,
+    context: Context
 ) : UserPreferences {
 
     companion object {
-        fun getDataStoreInstance(context: Context): UserPreferencesImpl {
-            val dataStore = context.userDataStorePreferences
-            return UserPreferencesImpl(dataStore)
+        fun getInstance(context: Context): UserPreferencesImpl {
+            return UserPreferencesImpl(context)
         }
+
+        private const val USER_PREFERENCES = "user_preferences"
+        private const val USER_TOKEN = "user_token"
     }
 
-    private object PreferencesKeys {
-        val USER_TOKEN = stringPreferencesKey("user_token_preference")
+    private var preferences: SharedPreferences =
+        context.getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
+    private var editor: SharedPreferences.Editor = preferences.edit()
+
+    override fun setUserToken(token: String) {
+        editor.putString(USER_TOKEN, token)
+        editor.apply()
     }
 
-    override suspend fun setUserToken(token: String) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.USER_TOKEN] = token
-        }
-    }
-
-    override suspend fun getUserToken(): String? =
-        dataStore.data.first()[PreferencesKeys.USER_TOKEN]
+    override fun getUserToken(): String =
+        preferences.getString(USER_TOKEN, "") ?: ""
 }

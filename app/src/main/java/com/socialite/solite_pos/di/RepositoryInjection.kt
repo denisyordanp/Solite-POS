@@ -143,8 +143,8 @@ object RepositoryInjection {
     }
 
     fun provideUserRepository(context: Context): UserRepository {
-        val service = NetworkInjector.provideSoliteServices()
-        val userPreferences = UserPreferencesImpl.getDataStoreInstance(context)
+        val userPreferences = UserPreferencesImpl.getInstance(context)
+        val service = NetworkInjector.provideSoliteServices(userPreferences)
         return UserRepositoryImpl(service, userPreferences)
     }
 }

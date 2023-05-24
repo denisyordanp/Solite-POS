@@ -31,8 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
+import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.SettingMenus
@@ -120,6 +122,7 @@ fun SettingsMenus(
                 when (it) {
                     SettingMenus.THEME -> ThemeSettingMenu(mainViewModel, onDarkModeChange)
                     SettingMenus.DEVELOPER -> DeveloperSettingMenu(onDeveloperClicked = onDeveloperClicked)
+                    SettingMenus.SYNCHRONIZE -> SynchronizationMenu(mainViewModel)
                 }
             }
         }
@@ -194,4 +197,19 @@ fun DeveloperSettingMenu(
         )
     }
     Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+private fun SynchronizationMenu(
+    mainViewModel: MainViewModel,
+) {
+    Spacer(modifier = Modifier.height(8.dp))
+    PrimaryButtonView(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth(),
+        buttonText = stringResource(id = R.string.synchronize)
+    ) {
+        mainViewModel.beginSynchronize()
+    }
 }

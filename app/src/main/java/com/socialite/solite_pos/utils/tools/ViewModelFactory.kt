@@ -25,6 +25,7 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.Synchronize
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -38,6 +39,7 @@ import com.socialite.solite_pos.di.DomainInjection.provideNewOrder
 import com.socialite.solite_pos.di.DomainInjection.provideNewOutcome
 import com.socialite.solite_pos.di.DomainInjection.providePayOrder
 import com.socialite.solite_pos.di.DomainInjection.provideRegisterUser
+import com.socialite.solite_pos.di.DomainInjection.provideSynchronize
 import com.socialite.solite_pos.di.DomainInjection.provideUpdateOrderProducts
 import com.socialite.solite_pos.di.RepositoryInjection.provideCategoriesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideCustomersRepository
@@ -84,6 +86,7 @@ class ViewModelFactory private constructor(
     private val migrateToUUID: MigrateToUUID,
     private val loginUser: LoginUser,
     private val registerUser: RegisterUser,
+    private val synchronize: Synchronize
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -118,7 +121,8 @@ class ViewModelFactory private constructor(
                             promosRepository = providePromosRepository(context),
                             migrateToUUID = provideMigrateToUUID(context),
                             loginUser = provideLoginUser(context),
-                            registerUser = provideRegisterUser(context)
+                            registerUser = provideRegisterUser(context),
+                            synchronize = provideSynchronize(context)
                         )
                     }
                 }
@@ -140,7 +144,8 @@ class ViewModelFactory private constructor(
                     settingRepository = settingRepository,
                     newOutcome = newOutcome,
                     promosRepository = promosRepository,
-                    migrateToUUID = migrateToUUID
+                    migrateToUUID = migrateToUUID,
+                    synchronize = synchronize
                 ) as T
             }
 
