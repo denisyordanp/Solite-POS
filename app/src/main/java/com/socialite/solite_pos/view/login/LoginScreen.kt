@@ -49,6 +49,7 @@ fun LoginScreen(
         ) {
             var email by remember { mutableStateOf("") }
             var password by remember { mutableStateOf("") }
+            var passwordVisible by remember { mutableStateOf(false) }
 
             Image(
                 modifier = Modifier
@@ -89,10 +90,14 @@ fun LoginScreen(
             BasicEditText(
                 value = password,
                 keyboardType = KeyboardType.Password,
+                passwordVisible = passwordVisible,
                 visualTransformation = PasswordVisualTransformation(),
                 placeHolder = stringResource(R.string.enter_password),
                 onValueChange = {
                     password = it
+                },
+                onPasswordVisibility = {
+                    passwordVisible = !passwordVisible
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))

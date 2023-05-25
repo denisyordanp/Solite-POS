@@ -44,11 +44,13 @@ fun BasicEditText(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    passwordVisible: Boolean = false,
     value: String,
     placeHolder: String,
     isEnabled: Boolean = true,
     onValueChange: (String) -> Unit,
-    onAction: (() -> Unit)? = null
+    onAction: (() -> Unit)? = null,
+    onPasswordVisibility: (() -> Unit)? = null,
 ) {
     val shape = RoundedCornerShape(8.dp)
     Surface(
@@ -81,7 +83,8 @@ fun BasicEditText(
             ) {
                 if (isEnabled) {
                     EnabledContent(
-                        visualTransformation = visualTransformation,
+                        visualTransformation = if (passwordVisible)
+                            VisualTransformation.None else visualTransformation,
                         keyboardType = keyboardType,
                         imeAction = imeAction,
                         value = value,
@@ -94,17 +97,34 @@ fun BasicEditText(
                 }
             }
             if (isEnabled && value.isNotEmpty()) {
-                Icon(
-                    modifier = Modifier
-                        .size(16.dp)
-                        .align(Alignment.CenterVertically)
-                        .clickable {
-                            onValueChange("")
-                        },
-                    painter = painterResource(id = R.drawable.ic_close),
-                    tint = MaterialTheme.colors.onSurface,
-                    contentDescription = null
-                )
+                if (keyboardType == KeyboardType.Password) {
+                    Icon(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .align(Alignment.CenterVertically)
+                            .clickable {
+                                onPasswordVisibility?.invoke()
+                            },
+                        painter = painterResource(
+                            id = if (passwordVisible)
+                                R.drawable.ic_visibility_on else R.drawable.ic_visibility_off
+                        ),
+                        tint = MaterialTheme.colors.onSurface,
+                        contentDescription = null
+                    )
+                } else {
+                    Icon(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .align(Alignment.CenterVertically)
+                            .clickable {
+                                onValueChange("")
+                            },
+                        painter = painterResource(id = R.drawable.ic_close),
+                        tint = MaterialTheme.colors.onSurface,
+                        contentDescription = null
+                    )
+                }
                 Spacer(modifier = Modifier.width(8.dp))
             }
         }

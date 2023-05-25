@@ -127,6 +127,9 @@ fun RegisterScreen(
                     }
                 }
 
+                var passwordVisibility by remember { mutableStateOf(false) }
+                var confirmPasswordVisibility by remember { mutableStateOf(false) }
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -168,9 +171,13 @@ fun RegisterScreen(
                         value = password,
                         keyboardType = KeyboardType.Password,
                         visualTransformation = PasswordVisualTransformation(),
+                        passwordVisible = passwordVisibility,
                         placeHolder = stringResource(R.string.enter_password),
                         onValueChange = {
                             password = it
+                        },
+                        onPasswordVisibility = {
+                            passwordVisibility = !passwordVisibility
                         }
                     )
                     Spacer(modifier = Modifier.height(4.dp))
@@ -185,9 +192,13 @@ fun RegisterScreen(
                         value = confirmPassword,
                         keyboardType = KeyboardType.Password,
                         visualTransformation = PasswordVisualTransformation(),
+                        passwordVisible = confirmPasswordVisibility,
                         placeHolder = stringResource(R.string.enter_confirm_password),
                         onValueChange = {
                             confirmPassword = it
+                        },
+                        onPasswordVisibility = {
+                            confirmPasswordVisibility = !confirmPasswordVisibility
                         }
                     )
                     Spacer(modifier = Modifier.height(4.dp))
