@@ -26,6 +26,7 @@ import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.Synchronize
+import com.socialite.solite_pos.data.source.repository.UserRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -52,6 +53,7 @@ import com.socialite.solite_pos.di.RepositoryInjection.providePromosRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSettingRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideStoreRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSupplierRepository
+import com.socialite.solite_pos.di.RepositoryInjection.provideUserRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantMixesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantsRepository
@@ -86,7 +88,8 @@ class ViewModelFactory private constructor(
     private val migrateToUUID: MigrateToUUID,
     private val loginUser: LoginUser,
     private val registerUser: RegisterUser,
-    private val synchronize: Synchronize
+    private val synchronize: Synchronize,
+    private val userRepository: UserRepository
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -122,7 +125,8 @@ class ViewModelFactory private constructor(
                             migrateToUUID = provideMigrateToUUID(context),
                             loginUser = provideLoginUser(context),
                             registerUser = provideRegisterUser(context),
-                            synchronize = provideSynchronize(context)
+                            synchronize = provideSynchronize(context),
+                            userRepository = provideUserRepository(context)
                         )
                     }
                 }
@@ -145,7 +149,8 @@ class ViewModelFactory private constructor(
                     newOutcome = newOutcome,
                     promosRepository = promosRepository,
                     migrateToUUID = migrateToUUID,
-                    synchronize = synchronize
+                    synchronize = synchronize,
+                    userRepository = userRepository
                 ) as T
             }
 

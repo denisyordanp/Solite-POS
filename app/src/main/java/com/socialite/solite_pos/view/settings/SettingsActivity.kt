@@ -14,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.view.OpeningActivity
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
@@ -68,10 +69,21 @@ class SettingsActivity : SoliteActivity() {
                     },
                     onDeveloperClicked = {
                         exportDatabase()
+                    },
+                    onLogout = {
+                        mainViewModel.logout()
+                        goToOpening()
                     }
                 )
             }
         }
+    }
+
+    private fun goToOpening() {
+        val intent = Intent(this, OpeningActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     private fun goToOrderCustomerActivity() {
