@@ -36,16 +36,19 @@ import java.util.UUID
 data class OrderProductVariant(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    var id: String,
+    val id: String,
 
     @ColumnInfo(name = OrderDetail.ID)
-    var orderDetail: String,
+    val orderDetail: String,
 
     @ColumnInfo(name = VariantOption.ID)
-    var variantOption: String,
+    val variantOption: String,
 
     @ColumnInfo(name = UPLOAD)
-    var isUpload: Boolean
+    val isUpload: Boolean,
+
+    @ColumnInfo(name = DELETED, defaultValue = "0")
+    val isDeleted: Boolean
 ) : Serializable {
 
     fun toResponse(): OrderProductVariantResponse {
@@ -59,6 +62,7 @@ data class OrderProductVariant(
 
     companion object {
         const val ID = "id_order_product_variant"
+        const val DELETED = "deleted"
 
         const val DB_NAME = "new_order_product_variant"
 
@@ -68,7 +72,8 @@ data class OrderProductVariant(
             id = UUID.randomUUID().toString(),
             orderDetail = orderDetail,
             variantOption = variantOption,
-            isUpload = false
+            isUpload = false,
+                isDeleted = false
         )
     }
 }

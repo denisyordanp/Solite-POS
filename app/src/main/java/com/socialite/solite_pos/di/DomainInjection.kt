@@ -81,10 +81,8 @@ object DomainInjection {
     }
 
     fun provideUpdateOrderProducts(context: Context): UpdateOrderProducts {
-        val database = getInstance(context)
-        return UpdateOrderProductsImpl(
-            database.ordersDao(),
-        )
+        val ordersRepository = RepositoryInjection.provideOrdersRepository(context)
+        return UpdateOrderProductsImpl(ordersRepository)
     }
 
     fun provideMigrateToUUID(context: Context): MigrateToUUID {

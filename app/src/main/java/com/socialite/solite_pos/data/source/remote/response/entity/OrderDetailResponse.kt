@@ -15,7 +15,8 @@ data class OrderDetailResponse(
             order = order,
             product = product,
             amount = amount,
-            isUpload = isUploaded
+            isUpload = isUploaded,
+                isDeleted = false
         )
     }
 }

@@ -57,7 +57,10 @@ data class VariantProduct(
         var product: String,
 
         @ColumnInfo(name = UPLOAD)
-        var isUploaded: Boolean
+        var isUploaded: Boolean,
+
+        @ColumnInfo(name = OrderDetail.DELETED, defaultValue = "0")
+        var isDeleted: Boolean
 ) : Serializable {
 
     fun toResponse(): VariantProductResponse {
@@ -72,6 +75,7 @@ data class VariantProduct(
 
     companion object {
         const val ID = "id_variant_product"
+        const val DELETED = "deleted"
 
         const val DB_NAME = "new_variant_product"
 
@@ -83,7 +87,8 @@ data class VariantProduct(
                 variant = variant,
                 variantOption = variantOption,
                 product = product,
-                isUploaded = false
+                isUploaded = false,
+                isDeleted = false
         )
     }
 }

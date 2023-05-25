@@ -107,12 +107,32 @@ class OrdersRepositoryImpl(
     override suspend fun insertOrderDetails(list: List<OrderDetail>) {
         dao.insertOrderDetails(list)
     }
+
+    override suspend fun insertOrderDetail(orderDetail: OrderDetail) {
+        dao.insertNewOrderDetail(orderDetail)
+    }
+
+    override suspend fun getDeletedOrderDetailIds() = dao.getDeletedOrderDetailIds()
+
+    override suspend fun deleteOrderDetailAndRelated(orderId: String) {
+        val orderDetails = dao.getNewOrderDetailsByOrderId(orderId)
+        orderDetails.forEach {
+            dao.updateNewOrderDetail(it.copy(
+                    isDeleted = true
+            ))
+            dao.updateOrderProductVariantsByDetailId(it.id)
+        }
+    }
+
     override suspend fun insertOrderPromos(list: List<OrderPromo>) {
         dao.insertOrderPromos(list)
     }
     override suspend fun insertOrderProductVariants(list: List<OrderProductVariant>) {
         dao.insertOrderProductVariants(list)
     }
+
+    override suspend fun getDeletedOrderProductVariantIds() = dao.getDeletedOrderProductVariantIds()
+
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
         dao.insertNewOrderPayment(payment)
 
@@ -170,7 +190,8 @@ class OrdersRepositoryImpl(
                         order = order.new_id,
                         product = product.new_id,
                         amount = orderDetail.amount,
-                        isUpload = orderDetail.isUpload
+                        isUpload = orderDetail.isUpload,
+                            isDeleted = false
                     )
                     dao.insertNewOrderDetail(newOrderDetail)
                 }
@@ -245,7 +266,8 @@ class OrdersRepositoryImpl(
                         id = uuid,
                         variantOption = variantOption.new_id,
                         orderDetail = orderDetail.new_id,
-                        isUpload = orderProductVariant.isUpload
+                        isUpload = orderProductVariant.isUpload,
+                            isDeleted = false
                     )
                     dao.insertNewOrderProductVariant(newOrderProductVariant)
                 }

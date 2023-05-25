@@ -65,8 +65,13 @@ class ProductVariantsRepositoryImpl(
     override suspend fun insertVariantProducts(list: List<VariantProduct>) {
         dao.insertVariantProducts(list)
     }
+
+    override suspend fun getProductVariantIds() = dao.getProductVariantIds()
+
     override suspend fun removeVariantProduct(data: VariantProduct) {
-        dao.removeVariantProduct(data.variantOption, data.product)
+        dao.updateNewVariantProduct(data.copy(
+                isDeleted = true
+        ))
     }
 
     override suspend fun migrateToUUID() {
@@ -90,7 +95,8 @@ class ProductVariantsRepositoryImpl(
                         variant = variant.new_id,
                         variantOption = variantOption.new_id,
                         product = product.new_id,
-                        isUploaded = productVariant.isUploaded
+                        isUploaded = productVariant.isUploaded,
+                            isDeleted = false
                     )
                     dao.insertNewVariantProduct(newProductVariant)
                 }

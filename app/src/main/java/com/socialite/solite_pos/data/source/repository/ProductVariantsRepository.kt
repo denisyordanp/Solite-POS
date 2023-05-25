@@ -15,6 +15,7 @@ interface ProductVariantsRepository {
     fun getVariantProductById(idProduct: String): Flow<VariantProduct?>
     suspend fun insertVariantProduct(data: VariantProduct)
     suspend fun insertVariantProducts(list: List<VariantProduct>)
+    suspend fun getProductVariantIds(): List<String>
     suspend fun removeVariantProduct(data: VariantProduct)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldProductVariants()

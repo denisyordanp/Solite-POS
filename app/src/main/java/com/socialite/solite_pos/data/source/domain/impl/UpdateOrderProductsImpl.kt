@@ -4,13 +4,13 @@ import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.room.OrdersDao
+import com.socialite.solite_pos.data.source.repository.OrdersRepository
 
 class UpdateOrderProductsImpl(
-    private val dao: OrdersDao
+        private val ordersRepository: OrdersRepository
 ) : UpdateOrderProducts {
     override suspend fun invoke(orderId: String, products: List<ProductOrderDetail>) {
-        dao.deleteDetailOrders(orderId)
+        ordersRepository.deleteOrderDetailAndRelated(orderId)
         insertOrderProduct(orderId, products)
     }
 
@@ -19,13 +19,13 @@ class UpdateOrderProductsImpl(
             if (item.product != null) {
 
                 val detail = OrderDetail.createNewOrderDetail(orderId, item.product.id, item.amount)
-                dao.insertNewOrderDetail(detail)
+                ordersRepository.insertOrderDetail(detail)
 
-                for (variant in item.variants) {
-                    val orderVariant =
-                        OrderProductVariant.createNewOrderVariant(detail.id, variant.id)
-                    dao.insertNewOrderProductVariant(orderVariant)
+                val orderProductVariants = item.variants.map {
+                    OrderProductVariant.createNewOrderVariant(detail.id, it.id)
                 }
+
+                ordersRepository.insertOrderProductVariants(orderProductVariants)
             }
         }
     }

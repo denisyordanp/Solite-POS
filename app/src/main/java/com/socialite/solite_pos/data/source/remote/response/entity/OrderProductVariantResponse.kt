@@ -13,7 +13,8 @@ data class OrderProductVariantResponse(
             id = id,
             orderDetail = orderDetail,
             variantOption = variantOption,
-            isUpload = isUploaded
+            isUpload = isUploaded,
+                isDeleted = false
         )
     }
 }

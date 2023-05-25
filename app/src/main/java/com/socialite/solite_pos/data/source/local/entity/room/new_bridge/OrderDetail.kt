@@ -49,7 +49,10 @@ data class OrderDetail(
         var amount: Int,
 
         @ColumnInfo(name = UPLOAD)
-        var isUpload: Boolean
+        var isUpload: Boolean,
+
+        @ColumnInfo(name = DELETED, defaultValue = "0")
+        var isDeleted: Boolean
 ) : Serializable {
 
     fun toResponse(): OrderDetailResponse {
@@ -65,6 +68,7 @@ data class OrderDetail(
     companion object {
         const val ID = "id_order_detail"
         const val AMOUNT = "amount"
+        const val DELETED = "deleted"
 
         const val DB_NAME = "new_order_detail"
 
@@ -77,7 +81,8 @@ data class OrderDetail(
                 order = orderId,
                 product = idProduct,
                 amount = amount,
-                isUpload = false
+                isUpload = false,
+                isDeleted = false
         )
     }
 }

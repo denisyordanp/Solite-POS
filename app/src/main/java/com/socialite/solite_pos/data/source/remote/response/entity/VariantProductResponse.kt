@@ -15,7 +15,8 @@ data class VariantProductResponse(
             variant = variant,
             variantOption = variantOption,
             product = product,
-            isUploaded = isUploaded
+            isUploaded = isUploaded,
+                isDeleted = false
         )
     }
 }

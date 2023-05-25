@@ -6,12 +6,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import kotlinx.coroutines.flow.Flow
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
 
 @Dao
 interface ProductVariantsDao {
@@ -23,7 +23,7 @@ interface ProductVariantsDao {
     @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct AND ${VariantOption.ID} = :idVariantOption")
     fun getVariantProduct(idProduct: String, idVariantOption: String): Flow<NewVariantProduct?>
 
-    @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
+    @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct AND ${NewVariantProduct.DELETED} = 0")
     fun getProductVariantsById(idProduct: String): Flow<List<NewVariantProduct>>
 
     @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct")
@@ -35,11 +35,14 @@ interface ProductVariantsDao {
     @Query("SELECT * FROM ${VariantProduct.DB_NAME}")
     suspend fun getVariantProducts(): List<VariantProduct>
 
-    @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0 AND ${NewVariantProduct.DELETED} = 0")
     suspend fun getNeedUploadVariantProducts(): List<NewVariantProduct>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVariantProduct(data: VariantProduct): Long
+
+    @Query("SELECT ${NewVariantProduct.ID} FROM '${NewVariantProduct.DB_NAME}' WHERE ${NewVariantProduct.DELETED} = 1")
+    suspend fun getProductVariantIds(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVariantProducts(list: List<NewVariantProduct>)
@@ -52,6 +55,9 @@ interface ProductVariantsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateProductVariant(data: VariantProduct)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateNewVariantProduct(data: NewVariantProduct)
 
     @Query("DELETE FROM ${VariantProduct.DB_NAME}")
     suspend fun deleteAllOldProductVariants()
