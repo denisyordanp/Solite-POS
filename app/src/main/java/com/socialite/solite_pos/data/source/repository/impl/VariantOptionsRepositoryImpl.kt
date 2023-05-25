@@ -63,7 +63,9 @@ class VariantOptionsRepositoryImpl(
         dao.insertVariantOptions(list)
     }
     override suspend fun updateVariantOption(data: VariantOption) {
-        dao.updateNewVariantOption(data)
+        dao.updateNewVariantOption(data.copy(
+            isUploaded = false
+        ))
     }
 
     override suspend fun migrateToUUID() {

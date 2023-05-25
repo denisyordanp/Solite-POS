@@ -36,7 +36,9 @@ class PromosRepositoryImpl(
 
     override suspend fun insertPromo(data: NewPromo) = dao.insertNewPromo(data)
     override suspend fun insertPromos(list: List<NewPromo>)  = dao.insertPromos(list)
-    override suspend fun updatePromo(data: NewPromo) = dao.updateNewPromo(data)
+    override suspend fun updatePromo(data: NewPromo) = dao.updateNewPromo(data.copy(
+        isUploaded = false
+    ))
     override suspend fun getNeedUploadPromos() = dao.getNeedUploadPromos()
     override fun getPromos(query: SupportSQLiteQuery) = dao.getNewPromos(query)
     override suspend fun migrateToUUID() {

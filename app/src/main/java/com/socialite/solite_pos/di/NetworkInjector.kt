@@ -57,13 +57,14 @@ object NetworkInjector {
 
     fun provideSoliteServices(userPreferences: UserPreferences): SoliteServices {
         val config = NetworkConfig
+        val token = userPreferences.getUserToken()
         return provideRetrofit(
             config = config,
             gsonConverter = provideGsonConverter(),
             okHttpBuilder = provideOkHttp(
                 config = config,
                 loggingInterceptor = provideLoggingInterceptor(),
-                userToken = userPreferences.getUserToken()
+                userToken = token
             )
         ).create(SoliteServices::class.java)
     }

@@ -43,7 +43,9 @@ class ProductsRepositoryImpl(
     override suspend fun insertProduct(data: Product) = dao.insertNewProduct(data)
     override suspend fun insertProducts(list: List<Product>) = dao.insertProducts(list)
     override suspend fun updateProduct(data: Product) {
-        dao.updateNewProduct(data)
+        dao.updateNewProduct(data.copy(
+            isUploaded = false
+        ))
     }
 
     override suspend fun migrateToUUID() {

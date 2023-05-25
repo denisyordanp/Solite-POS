@@ -43,7 +43,9 @@ class CategoriesRepositoryImpl(
         dao.insertCategories(list)
     }
     override suspend fun updateCategory(data: NewCategory) {
-        dao.updateNewCategory(data)
+        dao.updateNewCategory(data.copy(
+            isUploaded = false
+        ))
     }
 
     override suspend fun migrateToUUID() {
