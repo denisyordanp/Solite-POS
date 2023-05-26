@@ -190,7 +190,16 @@ class SynchronizeImpl(
             productVariantsRepository.insertVariantProducts(missingVariantProduct.map { it.toEntity() })
         }
 
-        // TODO: Delete the deleted items
+        // Delete the deleted items
+        if (needUploadOrderDetails.deletedItems.isNotEmpty()) {
+            ordersRepository.deleteAllDeletedOrderDetails()
+        }
+        if (needUploadOrderProductVariants.deletedItems.isNotEmpty()) {
+            ordersRepository.deleteAllDeletedOrderProductVariants()
+        }
+        if (needUploadOrderProductVariants.deletedItems.isNotEmpty()) {
+            productVariantsRepository.deleteAllDeletedProductVariants()
+        }
 
         return true
     }

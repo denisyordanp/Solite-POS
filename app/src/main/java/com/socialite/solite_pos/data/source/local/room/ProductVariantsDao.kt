@@ -64,4 +64,7 @@ interface ProductVariantsDao {
 
     @Query("DELETE FROM ${NewVariantProduct.DB_NAME}")
     suspend fun deleteAllNewProductVariants()
+
+    @Query("DELETE FROM ${NewVariantProduct.DB_NAME} WHERE ${NewVariantProduct.DELETED} = 1")
+    suspend fun deleteAllDeletedProductVariants()
 }

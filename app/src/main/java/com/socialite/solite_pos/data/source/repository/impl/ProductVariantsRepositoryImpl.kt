@@ -111,4 +111,8 @@ class ProductVariantsRepositoryImpl(
     override suspend fun deleteAllNewProductVariants() {
         dao.deleteAllNewProductVariants()
     }
+
+    override suspend fun deleteAllDeletedProductVariants() {
+        dao.deleteAllDeletedProductVariants()
+    }
 }

@@ -36,4 +36,6 @@ interface OrdersRepository {
     suspend fun insertOrderPromos(list: List<OrderPromo>)
     suspend fun insertOrderProductVariants(list: List<OrderProductVariant>)
     suspend fun getDeletedOrderProductVariantIds(): List<String>
+    suspend fun deleteAllDeletedOrderDetails()
+    suspend fun deleteAllDeletedOrderProductVariants()
 }

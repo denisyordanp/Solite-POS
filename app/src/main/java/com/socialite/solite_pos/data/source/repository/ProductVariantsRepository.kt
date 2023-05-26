@@ -20,4 +20,5 @@ interface ProductVariantsRepository {
     suspend fun migrateToUUID()
     suspend fun deleteAllOldProductVariants()
     suspend fun deleteAllNewProductVariants()
+    suspend fun deleteAllDeletedProductVariants()
 }

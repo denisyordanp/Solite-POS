@@ -132,6 +132,13 @@ class OrdersRepositoryImpl(
     }
 
     override suspend fun getDeletedOrderProductVariantIds() = dao.getDeletedOrderProductVariantIds()
+    override suspend fun deleteAllDeletedOrderDetails() {
+        dao.deleteAllDeletedOrderDetails()
+    }
+
+    override suspend fun deleteAllDeletedOrderProductVariants() {
+        dao.deleteAllDeletedOrderProductVariants()
+    }
 
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
         dao.insertNewOrderPayment(payment)
