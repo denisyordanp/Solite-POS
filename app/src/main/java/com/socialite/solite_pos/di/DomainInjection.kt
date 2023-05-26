@@ -137,7 +137,7 @@ object DomainInjection {
         val variantOptionsRepository = RepositoryInjection.provideVariantOptionsRepository(context)
         val productVariantsRepository = RepositoryInjection.provideProductVariantsRepository(context)
         val userPreferences = UserPreferencesImpl.getInstance(context)
-        val service = NetworkInjector.provideSoliteServices(userPreferences)
+        val service = NetworkLoggedInInjector.provideSoliteServices(userPreferences)
         return SynchronizeImpl(
             customersRepository = customerRepository,
             storeRepository = storeRepository,

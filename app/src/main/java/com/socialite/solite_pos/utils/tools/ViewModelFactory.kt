@@ -26,7 +26,7 @@ import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.Synchronize
-import com.socialite.solite_pos.data.source.repository.UserRepository
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -89,7 +89,7 @@ class ViewModelFactory private constructor(
     private val loginUser: LoginUser,
     private val registerUser: RegisterUser,
     private val synchronize: Synchronize,
-    private val userRepository: UserRepository
+    private val accountRepository: AccountRepository
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -126,7 +126,7 @@ class ViewModelFactory private constructor(
                             loginUser = provideLoginUser(context),
                             registerUser = provideRegisterUser(context),
                             synchronize = provideSynchronize(context),
-                            userRepository = provideUserRepository(context)
+                            accountRepository = provideUserRepository(context)
                         )
                     }
                 }
@@ -150,7 +150,7 @@ class ViewModelFactory private constructor(
                     promosRepository = promosRepository,
                     migrateToUUID = migrateToUUID,
                     synchronize = synchronize,
-                    userRepository = userRepository
+                    accountRepository = accountRepository
                 ) as T
             }
 

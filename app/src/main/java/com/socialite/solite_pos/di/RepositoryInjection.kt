@@ -14,7 +14,7 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
-import com.socialite.solite_pos.data.source.repository.UserRepository
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -29,7 +29,7 @@ import com.socialite.solite_pos.data.source.repository.impl.PromosRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
-import com.socialite.solite_pos.data.source.repository.impl.UserRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.AccountRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantMixesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantsRepositoryImpl
@@ -142,9 +142,9 @@ object RepositoryInjection {
         return PromosRepositoryImpl.getInstance(dao = database.promoDao(), database)
     }
 
-    fun provideUserRepository(context: Context): UserRepository {
+    fun provideUserRepository(context: Context): AccountRepository {
         val userPreferences = UserPreferencesImpl.getInstance(context)
-        val service = NetworkInjector.provideSoliteServices(userPreferences)
-        return UserRepositoryImpl(service, userPreferences)
+        val service = NetworkInjector.provideSoliteServices()
+        return AccountRepositoryImpl(service, userPreferences)
     }
 }

@@ -21,7 +21,7 @@ import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.repository.Synchronize
-import com.socialite.solite_pos.data.source.repository.UserRepository
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -44,7 +44,7 @@ class MainViewModel(
     private val newOutcome: NewOutcome,
     private val migrateToUUID: MigrateToUUID,
     private val synchronize: Synchronize,
-    private val userRepository: UserRepository
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -195,10 +195,10 @@ class MainViewModel(
     }
 
     fun isLoggedIn(): Boolean {
-        return userRepository.getToken().isNotEmpty()
+        return accountRepository.getToken().isNotEmpty()
     }
 
     fun logout() {
-        userRepository.insertToken("")
+        accountRepository.insertToken("")
     }
 }

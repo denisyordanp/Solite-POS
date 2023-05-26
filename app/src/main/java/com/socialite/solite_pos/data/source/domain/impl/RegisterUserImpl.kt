@@ -1,10 +1,10 @@
 package com.socialite.solite_pos.data.source.domain.impl
 
 import com.socialite.solite_pos.data.source.domain.RegisterUser
-import com.socialite.solite_pos.data.source.repository.UserRepository
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 
 class RegisterUserImpl(
-    private val repository: UserRepository
+    private val repository: AccountRepository
 ) : RegisterUser {
     override suspend fun invoke(
         name: String,

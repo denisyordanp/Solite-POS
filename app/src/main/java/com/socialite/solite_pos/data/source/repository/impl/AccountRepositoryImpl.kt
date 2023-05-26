@@ -3,12 +3,12 @@ package com.socialite.solite_pos.data.source.repository.impl
 import com.socialite.solite_pos.data.source.preference.UserPreferences
 import com.socialite.solite_pos.data.source.remote.SoliteServices
 import com.socialite.solite_pos.data.source.remote.response.helper.ResponseHandler.handleErrorMessage
-import com.socialite.solite_pos.data.source.repository.UserRepository
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 
-class UserRepositoryImpl(
+class AccountRepositoryImpl(
     private val service: SoliteServices,
     private val userPreference: UserPreferences
-) : UserRepository {
+) : AccountRepository {
     override suspend fun login(email: String, password: String): String {
         val response = handleErrorMessage {
             service.login(email, password)
