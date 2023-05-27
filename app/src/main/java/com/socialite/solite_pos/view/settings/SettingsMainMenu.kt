@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.view.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,7 +47,8 @@ fun SettingsMainMenu(
     mainViewModel: MainViewModel,
     currentDate: String,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
-    onDarkModeChange: (Boolean) -> Unit
+    onDarkModeChange: (Boolean) -> Unit,
+    onDeveloperClicked: () -> Unit,
 ) {
     var modalContent by remember {
         mutableStateOf(ModalContent.GENERAL_MENUS)
@@ -90,7 +92,8 @@ fun SettingsMainMenu(
                         modalState.show()
                     }
                 },
-                onDarkModeChange = onDarkModeChange
+                onDarkModeChange = onDarkModeChange,
+                onDeveloperClicked = onDeveloperClicked
             )
         }
     )
@@ -100,6 +103,7 @@ fun SettingsMainMenu(
 fun SettingsMenus(
     mainViewModel: MainViewModel,
     onGeneralMenuClicked: () -> Unit,
+    onDeveloperClicked: () -> Unit,
     onDarkModeChange: (Boolean) -> Unit
 ) {
     Box(
@@ -115,6 +119,7 @@ fun SettingsMenus(
             items(SettingMenus.values()) {
                 when (it) {
                     SettingMenus.THEME -> ThemeSettingMenu(mainViewModel, onDarkModeChange)
+                    SettingMenus.DEVELOPER -> DeveloperSettingMenu(onDeveloperClicked = onDeveloperClicked)
                 }
             }
         }
@@ -158,6 +163,34 @@ fun ThemeSettingMenu(
                 mainViewModel.setDarkMode(it)
                 onDarkModeChange(it)
             }
+        )
+    }
+    Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+fun DeveloperSettingMenu(
+    onDeveloperClicked: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colors.surface
+            )
+            .clickable {
+                onDeveloperClicked()
+            }
+    ) {
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(16.dp),
+            text = stringResource(id = SettingMenus.DEVELOPER.title),
+            style = MaterialTheme.typography.body2.copy(
+                fontWeight = FontWeight.Bold
+            ),
+            color = MaterialTheme.colors.onSurface
         )
     }
     Spacer(modifier = Modifier.height(4.dp))
