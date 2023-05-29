@@ -32,4 +32,7 @@ interface CustomersDao {
 
     @Query("DELETE FROM ${Customer.DB_NAME}")
     suspend fun deleteAllOldCustomers()
+
+    @Query("DELETE FROM ${NewCustomer.DB_NAME}")
+    suspend fun deleteAllNewCustomers()
 }

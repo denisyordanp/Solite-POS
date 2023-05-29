@@ -9,5 +9,6 @@ interface PaymentsRepository {
     suspend fun updatePayment(data: Payment)
     fun getPayments(query: SupportSQLiteQuery) : Flow<List<Payment>>
     suspend fun migrateToUUID()
-    suspend fun deleteAllOldCustomers()
+    suspend fun deleteAllOldPayments()
+    suspend fun deleteAllNewPayments()
 }

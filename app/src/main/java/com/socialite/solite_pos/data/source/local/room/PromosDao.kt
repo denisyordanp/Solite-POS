@@ -37,4 +37,7 @@ interface PromosDao {
 
     @Query("DELETE FROM '${Promo.DB_NAME}'")
     suspend fun deleteAllOldPromos()
+
+    @Query("DELETE FROM '${NewPromo.DB_NAME}'")
+    suspend fun deleteAllNewPromos()
 }

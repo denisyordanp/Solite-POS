@@ -10,5 +10,7 @@ interface SettingRepository {
     suspend fun selectStore(storeId: Long)
     suspend fun setDarkMode(isActive: Boolean)
     suspend fun isMigrated(): Boolean
+    suspend fun isMigratedPhase2(): Boolean
     suspend fun setMigration(isMigrate: Boolean)
+    suspend fun setMigrationPhase2(isMigrate: Boolean)
 }

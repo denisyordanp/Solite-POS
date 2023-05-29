@@ -93,4 +93,8 @@ class VariantOptionsRepositoryImpl(
     override suspend fun deleteAllOldVariantOptions() {
         dao.deleteAllOldVariantOptions()
     }
+
+    override suspend fun deleteAllNewVariantOptions() {
+        dao.deleteAllNewVariantOptions()
+    }
 }

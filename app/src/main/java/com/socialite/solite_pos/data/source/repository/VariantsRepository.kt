@@ -10,4 +10,5 @@ interface VariantsRepository {
     suspend fun updateVariant(data: Variant)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldVariants()
+    suspend fun deleteAllNewVariants()
 }

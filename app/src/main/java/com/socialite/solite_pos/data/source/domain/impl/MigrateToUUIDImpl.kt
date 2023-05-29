@@ -29,6 +29,22 @@ class MigrateToUUIDImpl(
     private val settingRepository: SettingRepository
 ) : MigrateToUUID {
     override suspend fun invoke() {
+        if (settingRepository.isMigrated() && settingRepository.isMigratedPhase2().not()) {
+            customersRepository.deleteAllNewCustomers()
+            storeRepository.deleteAllNewStores()
+            categoriesRepository.deleteAllNewCategories()
+            promosRepository.deleteAllNewCustomers()
+            paymentsRepository.deleteAllNewPayments()
+            outcomesRepository.deleteAllNewOutcomes()
+            productsRepository.deleteAllNewProducts()
+            variantsRepository.deleteAllNewVariants()
+            variantOptionsRepository.deleteAllNewVariantOptions()
+            productVariantsRepository.deleteAllNewProductVariants()
+            ordersRepository.deleteAllNewOrders()
+
+            settingRepository.setMigration(false)
+            settingRepository.setMigrationPhase2(true)
+        }
         if (settingRepository.isMigrated().not()) {
             customersRepository.migrateToUUID()
             storeRepository.migrateToUUID()

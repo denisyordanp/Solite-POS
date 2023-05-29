@@ -37,4 +37,7 @@ interface PaymentsDao {
 
     @Query("DELETE FROM '${Payment.DB_NAME}'")
     suspend fun deleteAllOldPayments()
+
+    @Query("DELETE FROM '${NewPayment.DB_NAME}'")
+    suspend fun deleteAllNewPayments()
 }

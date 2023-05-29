@@ -11,4 +11,5 @@ interface CategoriesRepository {
     suspend fun updateCategory(data: Category)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldCategories()
+    suspend fun deleteAllNewCategories()
 }

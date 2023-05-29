@@ -35,4 +35,7 @@ interface VariantsDao {
 
     @Query("DELETE FROM ${Variant.DB_NAME}")
     suspend fun deleteAllOldVariants()
+
+    @Query("DELETE FROM ${NewVariant.DB_NAME}")
+    suspend fun deleteAllNewVariants()
 }

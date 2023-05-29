@@ -63,4 +63,8 @@ class CustomersRepositoryImpl(
     override suspend fun deleteAllOldCustomers() {
         dao.deleteAllOldCustomers()
     }
+
+    override suspend fun deleteAllNewCustomers() {
+        dao.deleteAllNewCustomers()
+    }
 }

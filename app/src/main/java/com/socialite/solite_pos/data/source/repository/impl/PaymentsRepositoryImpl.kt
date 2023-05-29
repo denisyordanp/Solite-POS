@@ -71,7 +71,11 @@ class PaymentsRepositoryImpl(
         }
     }
 
-    override suspend fun deleteAllOldCustomers() {
+    override suspend fun deleteAllOldPayments() {
         dao.deleteAllOldPayments()
+    }
+
+    override suspend fun deleteAllNewPayments() {
+        dao.deleteAllNewPayments()
     }
 }

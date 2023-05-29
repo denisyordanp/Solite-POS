@@ -49,4 +49,7 @@ interface ProductVariantsDao {
 
     @Query("DELETE FROM ${VariantProduct.DB_NAME}")
     suspend fun deleteAllOldProductVariants()
+
+    @Query("DELETE FROM ${NewVariantProduct.DB_NAME}")
+    suspend fun deleteAllNewProductVariants()
 }

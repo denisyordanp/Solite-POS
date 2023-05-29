@@ -10,4 +10,5 @@ interface PromosRepository {
     fun getPromos(query: SupportSQLiteQuery): Flow<List<Promo>>
     suspend fun migrateToUUID()
     suspend fun deleteAllOldCustomers()
+    suspend fun deleteAllNewCustomers()
 }
