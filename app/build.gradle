@@ -13,8 +13,8 @@ android {
         applicationId "com.socialite.solite_pos"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 31
-        versionName "3.0.4"
+        versionCode 32
+        versionName "3.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
