@@ -122,8 +122,12 @@ fun SettingsMenus(
             items(SettingMenus.values()) {
                 when (it) {
                     SettingMenus.THEME -> ThemeSettingMenu(mainViewModel, onDarkModeChange)
-                    SettingMenus.SYNCHRONIZE -> SynchronizationMenu(mainViewModel)
-                    SettingMenus.LOGOUT -> LogoutMenu(onLogout)
+//                    SettingMenus.SYNCHRONIZE -> SynchronizationMenu(mainViewModel)
+//                    SettingMenus.LOGOUT -> LogoutMenu(onLogout)
+                    else -> {
+                        // TODO: Disabled synchronize and logout for now
+                        // Do nothing
+                    }
                 }
             }
         }

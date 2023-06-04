@@ -14,6 +14,7 @@ import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
+// TODO: Disabled login for now
 class OpeningActivity : SoliteActivity() {
 
 	private lateinit var auth: FirebaseAuth
@@ -36,7 +37,7 @@ class OpeningActivity : SoliteActivity() {
 		}
 
 		lifecycleScope.launch {
-			mainViewModel.beginMigratingToUUID()
+//			mainViewModel.beginMigratingToUUID()
 			Handler(Looper.getMainLooper()).postDelayed({checkUser()}, 1000)
 		}
     }
@@ -45,7 +46,8 @@ class OpeningActivity : SoliteActivity() {
 		if (mainViewModel.isLoggedIn()) {
 			toMain()
 		} else {
-			toLogin()
+//			toLogin()
+			toMain()
 		}
 	}
 
