@@ -70,4 +70,8 @@ class PromosRepositoryImpl(
     override suspend fun deleteAllOldCustomers() {
         dao.deleteAllOldPromos()
     }
+
+    override suspend fun deleteAllNewCustomers() {
+        dao.deleteAllNewPromos()
+    }
 }

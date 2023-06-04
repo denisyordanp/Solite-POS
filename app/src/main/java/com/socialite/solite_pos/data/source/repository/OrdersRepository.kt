@@ -19,4 +19,5 @@ interface OrdersRepository {
     suspend fun insertNewPromoOrder(promo: OrderPromo)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldOrders()
+    suspend fun deleteAllNewOrders()
 }

@@ -32,6 +32,7 @@ class SettingRepositoryImpl(
         val NEW_SELECTED_STORE = stringPreferencesKey("new_selected_store")
         val IS_DARK_MODE = booleanPreferencesKey("is_dark_mode")
         val IS_MIGRATE = booleanPreferencesKey("is_migrate")
+        val IS_MIGRATE_PHASE_2 = booleanPreferencesKey("is_migrate_phase_2")
     }
 
     override fun getSelectedStore() = dataStore.data.map {
@@ -68,9 +69,19 @@ class SettingRepositoryImpl(
         it[PreferencesKeys.IS_MIGRATE] ?: false
     }.first()
 
+    override suspend fun isMigratedPhase2() = dataStore.data.map {
+        it[PreferencesKeys.IS_MIGRATE_PHASE_2] ?: false
+    }.first()
+
     override suspend fun setMigration(isMigrate: Boolean) {
         dataStore.edit {
             it[PreferencesKeys.IS_MIGRATE] = isMigrate
+        }
+    }
+
+    override suspend fun setMigrationPhase2(isMigrate: Boolean) {
+        dataStore.edit {
+            it[PreferencesKeys.IS_MIGRATE_PHASE_2] = isMigrate
         }
     }
 }

@@ -73,4 +73,8 @@ class CategoriesRepositoryImpl(
     override suspend fun deleteAllOldCategories() {
         dao.deleteAllOldCategories()
     }
+
+    override suspend fun deleteAllNewCategories() {
+        dao.deleteAllNewCategories()
+    }
 }

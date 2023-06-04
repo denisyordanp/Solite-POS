@@ -59,4 +59,7 @@ interface ProductsDao {
 
     @Query("DELETE FROM '${Product.DB_NAME}'")
     suspend fun deleteAllOldProducts()
+
+    @Query("DELETE FROM '${NewProduct.DB_NAME}'")
+    suspend fun deleteAllNewProducts()
 }

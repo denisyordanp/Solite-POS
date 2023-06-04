@@ -11,4 +11,5 @@ interface StoreRepository {
     suspend fun updateStore(store: Store)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldStores()
+    suspend fun deleteAllNewStores()
 }

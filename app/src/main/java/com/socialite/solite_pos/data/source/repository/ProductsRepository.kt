@@ -14,4 +14,5 @@ interface ProductsRepository {
     suspend fun updateProduct(data: Product)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldProducts()
+    suspend fun deleteAllNewProducts()
 }

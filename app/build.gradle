@@ -13,8 +13,8 @@ android {
         applicationId "com.socialite.solite_pos"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 29
-        versionName "3.0.3"
+        versionCode 32
+        versionName "3.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -97,6 +97,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
     // Test
     testImplementation 'junit:junit:4.13.2'

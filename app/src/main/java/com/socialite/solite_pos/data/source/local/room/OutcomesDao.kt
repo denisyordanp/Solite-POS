@@ -33,4 +33,7 @@ interface OutcomesDao {
 
     @Query("DELETE FROM ${Outcome.DB_NAME}")
     suspend fun deleteAllOldOutcomes()
+
+    @Query("DELETE FROM ${NewOutcome.DB_NAME}")
+    suspend fun deleteAllNewOutcomes()
 }

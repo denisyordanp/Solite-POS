@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -12,6 +13,7 @@ import com.socialite.solite_pos.databinding.ActivityOpeningBinding
 import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.viewModel.MainViewModel
+import kotlinx.coroutines.launch
 
 class OpeningActivity : SoliteActivity() {
 
@@ -34,9 +36,10 @@ class OpeningActivity : SoliteActivity() {
 			e.printStackTrace()
 		}
 
-		mainViewModel.beginMigratingToUUID()
-		Handler(Looper.getMainLooper()).postDelayed({checkUser()}, 1000)
-
+		lifecycleScope.launch {
+			mainViewModel.beginMigratingToUUID()
+			Handler(Looper.getMainLooper()).postDelayed({checkUser()}, 1000)
+		}
     }
 
 	private fun checkUser() {

@@ -37,4 +37,7 @@ interface CategoriesDao {
 
     @Query("DELETE FROM ${Category.DB_NAME}")
     suspend fun deleteAllOldCategories()
+
+    @Query("DELETE FROM ${NewCategory.DB_NAME}")
+    suspend fun deleteAllNewCategories()
 }

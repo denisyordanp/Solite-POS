@@ -77,4 +77,8 @@ class ProductsRepositoryImpl(
     override suspend fun deleteAllOldProducts() {
         dao.deleteAllOldProducts()
     }
+
+    override suspend fun deleteAllNewProducts() {
+        dao.deleteAllNewProducts()
+    }
 }

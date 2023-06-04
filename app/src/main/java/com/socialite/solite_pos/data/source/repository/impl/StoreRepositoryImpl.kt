@@ -83,4 +83,8 @@ class StoreRepositoryImpl(
     override suspend fun deleteAllOldStores() {
         dao.deleteAllOldStore()
     }
+
+    override suspend fun deleteAllNewStores() {
+        dao.deleteAllNewStore()
+    }
 }

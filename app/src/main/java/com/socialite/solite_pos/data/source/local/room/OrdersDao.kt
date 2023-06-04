@@ -152,4 +152,19 @@ interface OrdersDao {
 
     @Query("DELETE FROM '${OrderProductVariant.DB_NAME}'")
     suspend fun deleteAllOldOrderProductVariants()
+
+    @Query("DELETE FROM '${NewOrder.DB_NAME}'")
+    suspend fun deleteAllNewOrders()
+
+    @Query("DELETE FROM '${NewOrderDetail.DB_NAME}'")
+    suspend fun deleteAllNewOrderDetails()
+
+    @Query("DELETE FROM '${NewOrderPayment.DB_NAME}'")
+    suspend fun deleteAllNewOrderPayments()
+
+    @Query("DELETE FROM '${NewOrderPromo.DB_NAME}'")
+    suspend fun deleteAllNewOrderPromos()
+
+    @Query("DELETE FROM '${NewOrderProductVariant.DB_NAME}'")
+    suspend fun deleteAllNewOrderProductVariants()
 }

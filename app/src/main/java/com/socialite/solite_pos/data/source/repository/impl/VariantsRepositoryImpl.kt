@@ -72,4 +72,8 @@ class VariantsRepositoryImpl(
     override suspend fun deleteAllOldVariants() {
         dao.deleteAllOldVariants()
     }
+
+    override suspend fun deleteAllNewVariants() {
+        dao.deleteAllNewVariants()
+    }
 }

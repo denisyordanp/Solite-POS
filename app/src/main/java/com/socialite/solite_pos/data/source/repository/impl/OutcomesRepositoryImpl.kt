@@ -93,4 +93,8 @@ class OutcomesRepositoryImpl(
     override suspend fun deleteAllOldOutcomes() {
         dao.deleteAllOldOutcomes()
     }
+
+    override suspend fun deleteAllNewOutcomes() {
+        dao.deleteAllNewOutcomes()
+    }
 }

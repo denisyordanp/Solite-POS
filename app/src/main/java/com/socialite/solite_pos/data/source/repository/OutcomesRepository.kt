@@ -11,4 +11,5 @@ interface OutcomesRepository {
     suspend fun insertOutcome(data: Outcome)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldOutcomes()
+    suspend fun deleteAllNewOutcomes()
 }

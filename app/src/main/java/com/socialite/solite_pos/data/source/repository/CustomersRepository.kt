@@ -9,4 +9,5 @@ interface CustomersRepository {
     suspend fun insertCustomer(data: Customer)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldCustomers()
+    suspend fun deleteAllNewCustomers()
 }

@@ -41,5 +41,6 @@ enum class MasterMenus(@StringRes val title: Int) {
 }
 
 enum class SettingMenus(@StringRes val title: Int) {
-    THEME(R.string.theme)
+    THEME(R.string.theme),
+    DEVELOPER(R.string.developer)
 }

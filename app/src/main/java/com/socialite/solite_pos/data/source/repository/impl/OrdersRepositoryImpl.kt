@@ -239,4 +239,12 @@ class OrdersRepositoryImpl(
         dao.deleteAllOldOrderPromos()
         dao.deleteAllOldOrderProductVariants()
     }
+
+    override suspend fun deleteAllNewOrders() {
+        dao.deleteAllNewOrders()
+        dao.deleteAllNewOrderDetails()
+        dao.deleteAllNewOrderPayments()
+        dao.deleteAllNewOrderPromos()
+        dao.deleteAllNewOrderProductVariants()
+    }
 }

@@ -38,4 +38,7 @@ interface StoreDao {
 
     @Query("DELETE FROM ${Store.DB_NAME}")
     suspend fun deleteAllOldStore()
+
+    @Query("DELETE FROM ${NewStore.DB_NAME}")
+    suspend fun deleteAllNewStore()
 }
