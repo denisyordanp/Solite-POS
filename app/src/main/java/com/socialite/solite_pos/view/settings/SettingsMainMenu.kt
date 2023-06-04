@@ -1,7 +1,6 @@
 package com.socialite.solite_pos.view.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -47,13 +46,12 @@ import kotlinx.coroutines.launch
 @Composable
 @ExperimentalMaterialApi
 fun SettingsMainMenu(
-    orderViewModel: OrderViewModel,
-    mainViewModel: MainViewModel,
-    currentDate: String,
-    onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
-    onDarkModeChange: (Boolean) -> Unit,
-    onDeveloperClicked: () -> Unit,
-    onLogout: () -> Unit
+        orderViewModel: OrderViewModel,
+        mainViewModel: MainViewModel,
+        currentDate: String,
+        onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
+        onDarkModeChange: (Boolean) -> Unit,
+        onLogout: () -> Unit
 ) {
     var modalContent by remember {
         mutableStateOf(ModalContent.GENERAL_MENUS)
@@ -62,144 +60,117 @@ fun SettingsMainMenu(
     val scope = rememberCoroutineScope()
 
     ModalBottomSheetLayout(
-        sheetState = modalState,
-        sheetShape = RoundedCornerShape(
-            topStart = 8.dp,
-            topEnd = 8.dp
-        ),
-        sheetContent = {
-            when (modalContent) {
-                ModalContent.GENERAL_MENUS -> GeneralMenusView(
-                    orderViewModel = orderViewModel,
-                    date = currentDate,
-                    onClicked = {
-                        if (it == GeneralMenus.SETTING) {
-                            scope.launch {
-                                modalState.hide()
+            sheetState = modalState,
+            sheetShape = RoundedCornerShape(
+                    topStart = 8.dp,
+                    topEnd = 8.dp
+            ),
+            sheetContent = {
+                when (modalContent) {
+                    ModalContent.GENERAL_MENUS -> GeneralMenusView(
+                            orderViewModel = orderViewModel,
+                            date = currentDate,
+                            onClicked = {
+                                if (it == GeneralMenus.SETTING) {
+                                    scope.launch {
+                                        modalState.hide()
+                                    }
+                                } else {
+                                    onGeneralMenuClicked(it)
+                                }
                             }
-                        } else {
-                            onGeneralMenuClicked(it)
-                        }
-                    }
-                )
+                    )
 
-                else -> {
-                    // Do nothing
-                }
-            }
-        },
-        content = {
-            SettingsMenus(
-                mainViewModel = mainViewModel,
-                onGeneralMenuClicked = {
-                    scope.launch {
-                        modalContent = ModalContent.GENERAL_MENUS
-                        modalState.show()
+                    else -> {
+                        // Do nothing
                     }
-                },
-                onDarkModeChange = onDarkModeChange,
-                onDeveloperClicked = onDeveloperClicked,
-                onLogout = onLogout
-            )
-        }
+                }
+            },
+            content = {
+                SettingsMenus(
+                        mainViewModel = mainViewModel,
+                        onGeneralMenuClicked = {
+                            scope.launch {
+                                modalContent = ModalContent.GENERAL_MENUS
+                                modalState.show()
+                            }
+                        },
+                        onDarkModeChange = onDarkModeChange,
+                        onLogout = onLogout
+                )
+            }
     )
 }
 
 @Composable
 fun SettingsMenus(
-    mainViewModel: MainViewModel,
-    onGeneralMenuClicked: () -> Unit,
-    onDeveloperClicked: () -> Unit,
-    onDarkModeChange: (Boolean) -> Unit,
-    onLogout: () -> Unit
+        mainViewModel: MainViewModel,
+        onGeneralMenuClicked: () -> Unit,
+        onDarkModeChange: (Boolean) -> Unit,
+        onLogout: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.background)
+            modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.background)
     ) {
         LazyColumn(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxWidth()
+                modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth()
         ) {
             items(SettingMenus.values()) {
                 when (it) {
                     SettingMenus.THEME -> ThemeSettingMenu(mainViewModel, onDarkModeChange)
-                    SettingMenus.DEVELOPER -> DeveloperSettingMenu(onDeveloperClicked = onDeveloperClicked)
-                    SettingMenus.SYNCHRONIZE -> SynchronizationMenu(mainViewModel)
-                    SettingMenus.LOGOUT -> LogoutMenu(onLogout)
+//                    SettingMenus.SYNCHRONIZE -> SynchronizationMenu(mainViewModel)
+//                    SettingMenus.LOGOUT -> LogoutMenu(onLogout)
+                    else -> {
+                        // TODO: Disabled synchronize and logout for now
+                        // Do nothing
+                    }
                 }
             }
         }
         GeneralMenuButtonView(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp),
-            onMenuClicked = onGeneralMenuClicked
+                modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(24.dp),
+                onMenuClicked = onGeneralMenuClicked
         )
     }
 }
 
 @Composable
 fun ThemeSettingMenu(
-    mainViewModel: MainViewModel,
-    onDarkModeChange: (Boolean) -> Unit
+        mainViewModel: MainViewModel,
+        onDarkModeChange: (Boolean) -> Unit
 ) {
 
     val isDarkMode = mainViewModel.isDarkModeActive.collectAsState(initial = false)
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colors.surface
-            )
+            modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                            color = MaterialTheme.colors.surface
+                    )
     ) {
         Text(
-            modifier = Modifier
-                .weight(1f)
-                .padding(16.dp),
-            text = stringResource(id = SettingMenus.THEME.title),
-            style = MaterialTheme.typography.body2.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            color = MaterialTheme.colors.onSurface
+                modifier = Modifier
+                        .weight(1f)
+                        .padding(16.dp),
+                text = stringResource(id = SettingMenus.THEME.title),
+                style = MaterialTheme.typography.body2.copy(
+                        fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colors.onSurface
         )
         Switch(
-            checked = isDarkMode.value,
-            onCheckedChange = {
-                mainViewModel.setDarkMode(it)
-                onDarkModeChange(it)
-            }
-        )
-    }
-    Spacer(modifier = Modifier.height(4.dp))
-}
-
-@Composable
-fun DeveloperSettingMenu(
-    onDeveloperClicked: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colors.surface
-            )
-            .clickable {
-                onDeveloperClicked()
-            }
-    ) {
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .padding(16.dp),
-            text = stringResource(id = SettingMenus.DEVELOPER.title),
-            style = MaterialTheme.typography.body2.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            color = MaterialTheme.colors.onSurface
+                checked = isDarkMode.value,
+                onCheckedChange = {
+                    mainViewModel.setDarkMode(it)
+                    onDarkModeChange(it)
+                }
         )
     }
     Spacer(modifier = Modifier.height(4.dp))
@@ -207,14 +178,14 @@ fun DeveloperSettingMenu(
 
 @Composable
 private fun SynchronizationMenu(
-    mainViewModel: MainViewModel,
+        mainViewModel: MainViewModel,
 ) {
     Spacer(modifier = Modifier.height(8.dp))
     PrimaryButtonView(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth(),
-        buttonText = stringResource(id = R.string.synchronize)
+            modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+            buttonText = stringResource(id = R.string.synchronize)
     ) {
         mainViewModel.beginSynchronize()
     }
@@ -222,16 +193,16 @@ private fun SynchronizationMenu(
 
 @Composable
 private fun LogoutMenu(
-    onLogout: () -> Unit
+        onLogout: () -> Unit
 ) {
     Spacer(modifier = Modifier.height(8.dp))
     PrimaryButtonView(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth(),
-        buttonText = stringResource(id = R.string.logout),
-        textColor = GrayLight,
-        backgroundColor = RedLogout,
-        onClick = onLogout
+            modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+            buttonText = stringResource(id = R.string.logout),
+            textColor = GrayLight,
+            backgroundColor = RedLogout,
+            onClick = onLogout
     )
 }
