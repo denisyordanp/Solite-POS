@@ -15,8 +15,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ProductsDao {
 
+    @Query("SELECT * FROM ${NewProduct.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadProducts(): List<NewProduct>
+
     @Query("SELECT * FROM ${NewProduct.DB_NAME} WHERE ${NewProduct.ID} = :idProduct LIMIT 1")
     suspend fun getProduct(idProduct: String): NewProduct
+
+    @Query("SELECT * FROM ${Product.DB_NAME}")
+    suspend fun getProducts(): List<Product>
 
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct LIMIT 1")
     suspend fun getProductById(idProduct: Long): Product?
@@ -36,9 +42,6 @@ interface ProductsDao {
     @Query("SELECT * FROM ${NewProduct.DB_NAME}")
     fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
 
-    @Query("SELECT * FROM '${Product.DB_NAME}'")
-    suspend fun getProducts(): List<Product>
-
     @Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
     fun increaseProductStock(idProduct: Long, amount: Int)
 
@@ -50,6 +53,9 @@ interface ProductsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewProduct(data: NewProduct)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProducts(list: List<NewProduct>)
 
     @Update
     suspend fun updateProduct(data: Product)

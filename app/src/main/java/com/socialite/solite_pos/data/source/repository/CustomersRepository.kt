@@ -10,4 +10,6 @@ interface CustomersRepository {
     suspend fun migrateToUUID()
     suspend fun deleteAllOldCustomers()
     suspend fun deleteAllNewCustomers()
+    suspend fun getNeedUploadCustomers(): List<Customer>
+    suspend fun insertCustomers(customers: List<Customer>)
 }

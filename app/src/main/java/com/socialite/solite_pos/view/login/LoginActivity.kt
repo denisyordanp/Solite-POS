@@ -2,85 +2,85 @@ package com.socialite.solite_pos.view.login
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.socialite.solite_pos.compose.LoadingView
-import com.socialite.solite_pos.compose.rememberLoadingState
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : ComponentActivity() {
 
-    private lateinit var auth: FirebaseAuth
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = LoginViewModel.getOrderViewModel(this)
+
         setContent {
-
-            auth = FirebaseAuth.getInstance()
-
-            val loadingState = rememberLoadingState()
-
             SolitePOSTheme {
+                MainContent()
+            }
+        }
+    }
 
-                LoadingView(
-                    state = loadingState
+    @Composable
+    fun MainContent() {
+
+        val state = viewModel.viewState.collectAsState().value
+
+        if (state.isSuccessLogin) toMain()
+
+        LoadingView(
+            isLoading = state.isLoading
+        ) {
+
+            val navController = rememberNavController()
+
+            NavHost(
+                navController = navController,
+                startDestination = LoginDestinations.LOGIN,
+            ) {
+                composable(
+                    route = LoginDestinations.LOGIN
                 ) {
-
-                    val navController = rememberNavController()
-
-                    NavHost(
-                        navController = navController,
-                        startDestination = LoginDestinations.LOGIN,
-                    ) {
-                        composable(
-                            route = LoginDestinations.LOGIN
-                        ) {
-                            var isError by remember { mutableStateOf(false) }
-                            LoginScreen(
-                                isError = isError,
-                                onLogin = { email, password ->
-                                    loadingState.loading = true
-                                    auth.signInWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener { task ->
-                                            if (task.isSuccessful) {
-                                                isError = false
-                                                toMain()
-                                            } else {
-                                                isError = true
-                                            }
-                                            loadingState.loading = false
-                                        }
-                                },
-                                onRegister = {
-                                    navController.navigate(LoginDestinations.REGISTER)
-                                }
-                            )
+                    LoginScreen(
+                        errorMessage = state.errorMessage,
+                        onLogin = { email, password ->
+                            viewModel.login(email, password)
+                        },
+                        onRegister = {
+                            navController.navigate(LoginDestinations.REGISTER)
                         }
-                        composable(
-                            route = LoginDestinations.REGISTER
-                        ) {
-                            RegisterScreen(
-                                onBackClick = {
-                                    navController.navigateUp()
-                                },
-                                onRegister = { email, password, store ->
-                                    auth.createUserWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener {
-
-                                        }
-                                }
-                            )
-                        }
+                    )
+                }
+                composable(
+                    route = LoginDestinations.REGISTER
+                ) {
+                    LaunchedEffect(key1 = Unit) {
+                        viewModel.resetState()
                     }
+
+                    RegisterScreen(
+                        errorMessage = state.errorMessage,
+                        onBackClick = {
+                            navController.navigateUp()
+                        },
+                        onRegister = { name, email, password, store ->
+                            viewModel.register(
+                                name = name,
+                                email = email,
+                                password = password,
+                                storeName = store
+                            )
+                        }
+                    )
                 }
             }
         }

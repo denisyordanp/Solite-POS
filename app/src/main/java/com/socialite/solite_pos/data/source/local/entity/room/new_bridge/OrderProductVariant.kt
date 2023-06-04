@@ -7,6 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderProductVariantResponse
 import java.io.Serializable
 import java.util.UUID
 
@@ -35,19 +36,33 @@ import java.util.UUID
 data class OrderProductVariant(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    var id: String,
+    val id: String,
 
     @ColumnInfo(name = OrderDetail.ID)
-    var orderDetail: String,
+    val orderDetail: String,
 
     @ColumnInfo(name = VariantOption.ID)
-    var variantOption: String,
+    val variantOption: String,
 
     @ColumnInfo(name = UPLOAD)
-    var isUpload: Boolean
+    val isUpload: Boolean,
+
+    @ColumnInfo(name = DELETED, defaultValue = "0")
+    val isDeleted: Boolean
 ) : Serializable {
+
+    fun toResponse(): OrderProductVariantResponse {
+        return OrderProductVariantResponse(
+                id = id,
+                orderDetail = orderDetail,
+                variantOption = variantOption,
+                isUploaded = true
+        )
+    }
+
     companion object {
         const val ID = "id_order_product_variant"
+        const val DELETED = "deleted"
 
         const val DB_NAME = "new_order_product_variant"
 
@@ -57,7 +72,8 @@ data class OrderProductVariant(
             id = UUID.randomUUID().toString(),
             orderDetail = orderDetail,
             variantOption = variantOption,
-            isUpload = false
+            isUpload = false,
+                isDeleted = false
         )
     }
 }

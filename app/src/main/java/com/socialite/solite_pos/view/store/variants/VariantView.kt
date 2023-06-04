@@ -305,7 +305,7 @@ private fun VariantDetail(
                     name = name,
                     type = if (isSingleOption) Variant.ONE_OPTION else Variant.MULTIPLE_OPTION,
                     isMust = isMust,
-                ) ?: Variant(
+                ) ?: Variant.createNew(
                     name = name,
                     type = if (isSingleOption) Variant.ONE_OPTION else Variant.MULTIPLE_OPTION,
                     isMust = isMust
@@ -361,8 +361,8 @@ private fun VariantOptionDetail(
             onClick = {
                 val newOption = option?.copy(
                     name = name
-                ) ?: VariantOption(
-                    idVariant = variant?.id ?: "",
+                ) ?: VariantOption.createNew(
+                    variant = variant?.id ?: "",
                     name = name,
                     desc = "",
                     isActive = true
@@ -434,7 +434,7 @@ private fun VariantsContent(
                         if (variantProduct != null) {
                             productViewModel.removeVariantProduct(variantProduct)
                         } else {
-                            val newVariantProduct = VariantProduct(
+                            val newVariantProduct = VariantProduct.createNewVariantProduct(
                                 variant = option.variant,
                                 variantOption = option.id,
                                 product = product?.id ?: ""

@@ -62,7 +62,7 @@ fun OutcomeDetail(
                 desc = desc,
                 price = total,
                 date = currentDate
-            ) ?: Outcome(
+            ) ?: Outcome.createNewOutcome(
                 name = name,
                 desc = desc,
                 price = total,

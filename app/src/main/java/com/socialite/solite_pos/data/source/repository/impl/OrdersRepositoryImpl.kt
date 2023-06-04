@@ -1,6 +1,8 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
@@ -20,8 +22,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import java.util.UUID
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
 
 class OrdersRepositoryImpl(
     private val dao: OrdersDao,
@@ -87,10 +87,58 @@ class OrdersRepositoryImpl(
     }
 
     override fun getOrderData(orderId: String) = dao.getOrderData(orderId)
+    override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
 
     override suspend fun getOrderDetail(orderId: String): OrderData? = dao.getOrderDataById(orderId)
 
-    override suspend fun updateOrder(order: Order) = dao.updateNewOrder(order)
+    override suspend fun getNeedUploadOrderDetails() = dao.getNeedUploadOrderDetails()
+    override suspend fun getNeedUploadOrderPayments() = dao.getNeedUploadOrderPayments()
+    override suspend fun getNeedUploadOrderPromos() = dao.getNeedUploadOrderPromos()
+    override suspend fun getNeedUploadOrderProductVariants() = dao.getNeedOrderProductVariants()
+    override suspend fun updateOrder(order: Order) = dao.updateNewOrder(order.copy(
+        isUploaded = false
+    ))
+    override suspend fun insertOrders(list: List<Order>) {
+        dao.insertOrders(list)
+    }
+    override suspend fun insertOrderPayments(list: List<OrderPayment>) {
+        dao.insertOrderPayments(list)
+    }
+    override suspend fun insertOrderDetails(list: List<OrderDetail>) {
+        dao.insertOrderDetails(list)
+    }
+
+    override suspend fun insertOrderDetail(orderDetail: OrderDetail) {
+        dao.insertNewOrderDetail(orderDetail)
+    }
+
+    override suspend fun getDeletedOrderDetailIds() = dao.getDeletedOrderDetailIds()
+
+    override suspend fun deleteOrderDetailAndRelated(orderId: String) {
+        val orderDetails = dao.getNewOrderDetailsByOrderId(orderId)
+        orderDetails.forEach {
+            dao.updateNewOrderDetail(it.copy(
+                    isDeleted = true
+            ))
+            dao.updateOrderProductVariantsByDetailId(it.id)
+        }
+    }
+
+    override suspend fun insertOrderPromos(list: List<OrderPromo>) {
+        dao.insertOrderPromos(list)
+    }
+    override suspend fun insertOrderProductVariants(list: List<OrderProductVariant>) {
+        dao.insertOrderProductVariants(list)
+    }
+
+    override suspend fun getDeletedOrderProductVariantIds() = dao.getDeletedOrderProductVariantIds()
+    override suspend fun deleteAllDeletedOrderDetails() {
+        dao.deleteAllDeletedOrderDetails()
+    }
+
+    override suspend fun deleteAllDeletedOrderProductVariants() {
+        dao.deleteAllDeletedOrderProductVariants()
+    }
 
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
         dao.insertNewOrderPayment(payment)
@@ -144,12 +192,13 @@ class OrdersRepositoryImpl(
                 val order = dao.getOrderByNo(orderDetail.orderNo)
                 val product = productsDao.getProductById(orderDetail.idProduct)
                 if (order != null && product != null) {
-                    val newOrderDetail = NewOrderDetail(
+                    val newOrderDetail = OrderDetail(
                         id = uuid,
                         order = order.new_id,
                         product = product.new_id,
                         amount = orderDetail.amount,
-                        isUpload = orderDetail.isUpload
+                        isUpload = orderDetail.isUpload,
+                            isDeleted = false
                     )
                     dao.insertNewOrderDetail(newOrderDetail)
                 }
@@ -220,11 +269,12 @@ class OrdersRepositoryImpl(
                 val variantOption =
                     variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
                 if (orderDetail != null && variantOption != null) {
-                    val newOrderProductVariant = NewOrderProductVariant(
+                    val newOrderProductVariant = OrderProductVariant(
                         id = uuid,
                         variantOption = variantOption.new_id,
                         orderDetail = orderDetail.new_id,
-                        isUpload = orderProductVariant.isUpload
+                        isUpload = orderProductVariant.isUpload,
+                            isDeleted = false
                     )
                     dao.insertNewOrderProductVariant(newOrderProductVariant)
                 }

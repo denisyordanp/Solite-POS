@@ -1,12 +1,12 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CategoriesDao
 import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import java.util.UUID
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product as NewProduct
 
 class ProductsRepositoryImpl(
     private val dao: ProductsDao,
@@ -39,9 +39,13 @@ class ProductsRepositoryImpl(
     override fun getAllProductWithCategories() = dao.getAllProductWithCategories()
     override fun getProductWithCategory(productId: String) = dao.getProductWithCategory(productId)
     override fun getProductById(productId: String) = dao.getProductAsFlow(productId)
-    override suspend fun insertProduct(data: NewProduct) = dao.insertNewProduct(data)
-    override suspend fun updateProduct(data: NewProduct) {
-        dao.updateNewProduct(data)
+    override suspend fun getNeedUploadProducts() = dao.getNeedUploadProducts()
+    override suspend fun insertProduct(data: Product) = dao.insertNewProduct(data)
+    override suspend fun insertProducts(list: List<Product>) = dao.insertProducts(list)
+    override suspend fun updateProduct(data: Product) {
+        dao.updateNewProduct(data.copy(
+            isUploaded = false
+        ))
     }
 
     override suspend fun migrateToUUID() {
@@ -58,7 +62,7 @@ class ProductsRepositoryImpl(
 
                 val category = categoryDao.getCategoryById(product.category)
                 if (category != null) {
-                    val newProduct = NewProduct(
+                    val newProduct = Product(
                         id = uuid,
                         name = product.name,
                         category = category.new_id,

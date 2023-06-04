@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.viewModel
 
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,8 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.Synchronize
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,7 +42,9 @@ class MainViewModel(
     private val settingRepository: SettingRepository,
     private val promosRepository: PromosRepository,
     private val newOutcome: NewOutcome,
-    private val migrateToUUID: MigrateToUUID
+    private val migrateToUUID: MigrateToUUID,
+    private val synchronize: Synchronize,
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -177,5 +182,23 @@ class MainViewModel(
 
     suspend fun beginMigratingToUUID() {
         migrateToUUID()
+    }
+
+    fun beginSynchronize() {
+        viewModelScope.launch {
+            try {
+                synchronize()
+            } catch (e:Exception) {
+                Log.d("TESTING", "message: ${e.message}")
+            }
+        }
+    }
+
+    fun isLoggedIn(): Boolean {
+        return accountRepository.getToken().isNotEmpty()
+    }
+
+    fun logout() {
+        accountRepository.insertToken("")
     }
 }

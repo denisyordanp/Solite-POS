@@ -1,15 +1,27 @@
 package com.socialite.solite_pos.data.source.remote.response.entity
 
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 
 data class OrderResponse(
-        var order: List<Order>,
-        var payments: List<Payment>,
-        var orderPayment: List<OrderPayment>,
-        var customer: List<Customer>
-){
-    constructor(): this(emptyList(), emptyList(), emptyList(), emptyList())
+        val id: String,
+        val customer: String,
+        val isTakeAway: Boolean,
+        val isUploaded: Boolean,
+        val orderNo: String,
+        val orderTime: String,
+        val status: Int,
+        val store: String
+) {
+    fun toEntity(): Order {
+        return Order(
+                id = id,
+                orderNo = orderNo,
+                customer = customer,
+                orderTime = orderTime,
+                isTakeAway = isTakeAway,
+                status = status,
+                store = store,
+                isUploaded = isUploaded
+        )
+    }
 }

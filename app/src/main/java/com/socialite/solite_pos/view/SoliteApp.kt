@@ -21,15 +21,14 @@ class SoliteApp : Application() {
         setupViewModel()
         setupTheme()
         setupLocale()
-
-        Firebase.crashlytics.setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        setupFirebase()
     }
 
     private fun setupViewModel() {
         val settingRepository = SettingRepositoryImpl.getDataStoreInstance(applicationContext)
         viewModel = ApplicationViewModel(this, settingRepository)
     }
-    
+
     private fun setupTheme() {
         viewModel.getDarkMode {
             val delegate = if (it) {
@@ -48,5 +47,9 @@ class SoliteApp : Application() {
         Locale.setDefault(DateUtils.locale)
         val res = applicationContext.resources
         res.updateConfiguration(config, res.displayMetrics)
+    }
+
+    private fun setupFirebase() {
+        Firebase.crashlytics.setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }
 }

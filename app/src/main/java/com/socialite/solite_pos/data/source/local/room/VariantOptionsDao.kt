@@ -25,15 +25,21 @@ interface VariantOptionsDao {
     @Query("SELECT * FROM '${VariantOption.DB_NAME}' WHERE ${VariantOption.ID} = :variantOptionId LIMIT 1")
     suspend fun getVariantOptionById(variantOptionId: Long): VariantOption?
 
+    @Query("SELECT * FROM ${NewVariantOption.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadVariantOptions(): List<NewVariantOption>
+
     @Transaction
     @Query("SELECT * FROM ${NewVariantOption.DB_NAME}")
     fun getVariantWithOptions(): Flow<List<VariantWithOption>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertVariantOption(data: VariantOption)
+    suspend fun insertVariantOption(data: VariantOption)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewVariantOption(data: NewVariantOption)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertVariantOptions(list: List<NewVariantOption>)
 
     @Update
     suspend fun updateVariantOption(data: VariantOption)

@@ -65,15 +65,15 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
         NewOrderPayment::class,
         NewOrderDetail::class,
     ],
-    version = 8,
+    version = 9,
     autoMigrations = [
         AutoMigration(from = 5, to = 6),
         AutoMigration(from = 6, to = 7),
         AutoMigration(from = 7, to = 8),
+        AutoMigration(from = 8, to = 9),
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun soliteDao(): SoliteDao
     abstract fun paymentsDao(): PaymentsDao
     abstract fun suppliersDao(): SuppliersDao
     abstract fun customersDao(): CustomersDao
@@ -94,7 +94,6 @@ abstract class AppDatabase : RoomDatabase() {
         const val DB_NAME = "solite_db"
         const val UPLOAD = "upload"
         const val REPLACED_UUID = "replaced_uuid"
-        const val MAIN = "main"
 
         private var INSTANCE: AppDatabase? = null
 

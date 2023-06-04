@@ -31,11 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
+import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.SettingMenus
+import com.socialite.solite_pos.view.ui.theme.GrayLight
+import com.socialite.solite_pos.view.ui.theme.RedLogout
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.launch
@@ -49,6 +53,7 @@ fun SettingsMainMenu(
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onDarkModeChange: (Boolean) -> Unit,
     onDeveloperClicked: () -> Unit,
+    onLogout: () -> Unit
 ) {
     var modalContent by remember {
         mutableStateOf(ModalContent.GENERAL_MENUS)
@@ -93,7 +98,8 @@ fun SettingsMainMenu(
                     }
                 },
                 onDarkModeChange = onDarkModeChange,
-                onDeveloperClicked = onDeveloperClicked
+                onDeveloperClicked = onDeveloperClicked,
+                onLogout = onLogout
             )
         }
     )
@@ -104,7 +110,8 @@ fun SettingsMenus(
     mainViewModel: MainViewModel,
     onGeneralMenuClicked: () -> Unit,
     onDeveloperClicked: () -> Unit,
-    onDarkModeChange: (Boolean) -> Unit
+    onDarkModeChange: (Boolean) -> Unit,
+    onLogout: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -120,6 +127,8 @@ fun SettingsMenus(
                 when (it) {
                     SettingMenus.THEME -> ThemeSettingMenu(mainViewModel, onDarkModeChange)
                     SettingMenus.DEVELOPER -> DeveloperSettingMenu(onDeveloperClicked = onDeveloperClicked)
+                    SettingMenus.SYNCHRONIZE -> SynchronizationMenu(mainViewModel)
+                    SettingMenus.LOGOUT -> LogoutMenu(onLogout)
                 }
             }
         }
@@ -194,4 +203,35 @@ fun DeveloperSettingMenu(
         )
     }
     Spacer(modifier = Modifier.height(4.dp))
+}
+
+@Composable
+private fun SynchronizationMenu(
+    mainViewModel: MainViewModel,
+) {
+    Spacer(modifier = Modifier.height(8.dp))
+    PrimaryButtonView(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth(),
+        buttonText = stringResource(id = R.string.synchronize)
+    ) {
+        mainViewModel.beginSynchronize()
+    }
+}
+
+@Composable
+private fun LogoutMenu(
+    onLogout: () -> Unit
+) {
+    Spacer(modifier = Modifier.height(8.dp))
+    PrimaryButtonView(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth(),
+        buttonText = stringResource(id = R.string.logout),
+        textColor = GrayLight,
+        backgroundColor = RedLogout,
+        onClick = onLogout
+    )
 }

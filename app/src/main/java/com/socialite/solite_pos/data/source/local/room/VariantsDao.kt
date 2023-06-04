@@ -21,11 +21,17 @@ interface VariantsDao {
     @Query("SELECT * FROM ${Variant.DB_NAME} WHERE ${Variant.ID} = :variantId")
     suspend fun getVariantById(variantId: Long): Variant?
 
+    @Query("SELECT * FROM ${NewVariant.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadVariants(): List<NewVariant>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertVariant(data: Variant): Long
+    suspend fun insertVariant(data: Variant): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewVariant(data: NewVariant)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertVariants(list: List<NewVariant>)
 
     @Update
     suspend fun updateVariant(data: Variant)

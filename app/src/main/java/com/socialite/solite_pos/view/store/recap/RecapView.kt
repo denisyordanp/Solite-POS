@@ -161,7 +161,7 @@ private fun RecapContent(
             }
         }
 
-        if (recap.value.incomes.isNotEmpty()) {
+        if (recap.value.incomes.isNotEmpty() && selectedStore != null) {
             item {
                 Column(
                     modifier = Modifier

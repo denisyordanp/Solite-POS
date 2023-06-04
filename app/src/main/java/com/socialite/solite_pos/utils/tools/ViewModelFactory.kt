@@ -7,10 +7,12 @@ import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.source.domain.LoginUser
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
+import com.socialite.solite_pos.data.source.domain.RegisterUser
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
@@ -21,9 +23,10 @@ import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.Synchronize
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -32,9 +35,12 @@ import com.socialite.solite_pos.di.DomainInjection.provideGetOrdersGeneralMenuBa
 import com.socialite.solite_pos.di.DomainInjection.provideGetProductOrder
 import com.socialite.solite_pos.di.DomainInjection.provideGetProductVariantOptions
 import com.socialite.solite_pos.di.DomainInjection.provideMigrateToUUID
+import com.socialite.solite_pos.di.DomainInjection.provideLoginUser
 import com.socialite.solite_pos.di.DomainInjection.provideNewOrder
 import com.socialite.solite_pos.di.DomainInjection.provideNewOutcome
 import com.socialite.solite_pos.di.DomainInjection.providePayOrder
+import com.socialite.solite_pos.di.DomainInjection.provideRegisterUser
+import com.socialite.solite_pos.di.DomainInjection.provideSynchronize
 import com.socialite.solite_pos.di.DomainInjection.provideUpdateOrderProducts
 import com.socialite.solite_pos.di.RepositoryInjection.provideCategoriesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideCustomersRepository
@@ -45,19 +51,18 @@ import com.socialite.solite_pos.di.RepositoryInjection.provideProductVariantsRep
 import com.socialite.solite_pos.di.RepositoryInjection.provideProductsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.providePromosRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSettingRepository
-import com.socialite.solite_pos.di.RepositoryInjection.provideSoliteRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideStoreRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSupplierRepository
+import com.socialite.solite_pos.di.RepositoryInjection.provideUserRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantMixesRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantsRepository
+import com.socialite.solite_pos.view.login.LoginViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import com.socialite.solite_pos.view.viewModel.UserViewModel
 
 class ViewModelFactory private constructor(
-    private val repository: SoliteRepository,
     private val paymentsRepository: PaymentsRepository,
     private val supplierRepository: SuppliersRepository,
     private val customersRepository: CustomersRepository,
@@ -80,7 +85,11 @@ class ViewModelFactory private constructor(
     private val newOutcome: NewOutcome,
     private val updateOrderProducts: UpdateOrderProducts,
     private val promosRepository: PromosRepository,
-    private val migrateToUUID: MigrateToUUID
+    private val migrateToUUID: MigrateToUUID,
+    private val loginUser: LoginUser,
+    private val registerUser: RegisterUser,
+    private val synchronize: Synchronize,
+    private val accountRepository: AccountRepository
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -91,7 +100,6 @@ class ViewModelFactory private constructor(
                 synchronized(ViewModelFactory::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = ViewModelFactory(
-                            repository = provideSoliteRepository(context),
                             paymentsRepository = providePaymentsRepository(context),
                             supplierRepository = provideSupplierRepository(context),
                             customersRepository = provideCustomersRepository(context),
@@ -114,7 +122,11 @@ class ViewModelFactory private constructor(
                             newOutcome = provideNewOutcome(context),
                             updateOrderProducts = provideUpdateOrderProducts(context),
                             promosRepository = providePromosRepository(context),
-                            migrateToUUID = provideMigrateToUUID(context)
+                            migrateToUUID = provideMigrateToUUID(context),
+                            loginUser = provideLoginUser(context),
+                            registerUser = provideRegisterUser(context),
+                            synchronize = provideSynchronize(context),
+                            accountRepository = provideUserRepository(context)
                         )
                     }
                 }
@@ -136,7 +148,9 @@ class ViewModelFactory private constructor(
                     settingRepository = settingRepository,
                     newOutcome = newOutcome,
                     promosRepository = promosRepository,
-                    migrateToUUID = migrateToUUID
+                    migrateToUUID = migrateToUUID,
+                    synchronize = synchronize,
+                    accountRepository = accountRepository
                 ) as T
             }
 
@@ -152,10 +166,6 @@ class ViewModelFactory private constructor(
                 ) as T
             }
 
-            modelClass.isAssignableFrom(UserViewModel::class.java) -> {
-                UserViewModel(repository) as T
-            }
-
             modelClass.isAssignableFrom(ProductViewModel::class.java) -> {
                 ProductViewModel(
                     variantsRepository = variantsRepository,
@@ -165,6 +175,13 @@ class ViewModelFactory private constructor(
                     productVariantsRepository = productVariantsRepository,
                     getProductVariantOptions = getProductVariantOptions,
                     variantMixesRepository = variantMixesRepository
+                ) as T
+            }
+
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(
+                    loginUser = loginUser,
+                    registerUser = registerUser
                 ) as T
             }
 

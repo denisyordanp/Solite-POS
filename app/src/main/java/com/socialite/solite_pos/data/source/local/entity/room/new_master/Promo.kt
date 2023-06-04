@@ -6,6 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.PromoResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 import java.util.UUID
@@ -59,6 +60,18 @@ data class Promo(
     fun asNewPromo() = this.copy(
         id = UUID.randomUUID().toString()
     )
+
+    fun toResponse(): PromoResponse {
+        return PromoResponse(
+                id = id,
+                name = name,
+                desc = desc,
+                value = value,
+                isCash = isCash,
+                isActive = isActive,
+                isUploaded = true
+        )
+    }
 
     companion object {
         const val ID = "id_promo"

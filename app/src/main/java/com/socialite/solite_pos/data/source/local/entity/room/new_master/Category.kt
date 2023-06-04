@@ -2,45 +2,55 @@ package com.socialite.solite_pos.data.source.local.entity.room.new_master
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.CategoryResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 import java.util.UUID
 
 @Entity(
-    tableName = Category.DB_NAME,
-    indices = [
-        Index(value = [Category.ID])
-    ]
+        tableName = Category.DB_NAME,
+        indices = [
+            Index(value = [Category.ID])
+        ]
 )
 data class Category(
 
-    @PrimaryKey
-    @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+        @PrimaryKey
+        @ColumnInfo(name = ID, defaultValue = "")
+        val id: String,
 
-    @ColumnInfo(name = NAME)
-    override var name: String,
+        @ColumnInfo(name = NAME)
+        override var name: String,
 
-    @ColumnInfo(name = DESC)
-    var desc: String,
+        @ColumnInfo(name = DESC)
+        var desc: String,
 
-    @ColumnInfo(name = STATUS)
-    var isActive: Boolean,
+        @ColumnInfo(name = STATUS)
+        var isActive: Boolean,
 
-    @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+        @ColumnInfo(name = UPLOAD)
+        var isUploaded: Boolean
 ) : Serializable, DropdownItem {
 
     fun isNewCategory() = id == ID_ADD
 
     fun asNewCategory() = this.copy(
-        id = UUID.randomUUID().toString()
+            id = UUID.randomUUID().toString()
     )
+
+    fun toResponse(): CategoryResponse {
+        return CategoryResponse(
+                id = id,
+                name = name,
+                desc = desc,
+                isActive = isActive,
+                isUploaded = true
+        )
+    }
 
     companion object {
         const val ID = "id_category"
@@ -60,35 +70,22 @@ data class Category(
             when (state) {
                 ACTIVE -> {
                     query.append(" WHERE ")
-                        .append(STATUS)
-                        .append(" = ").append(ACTIVE)
+                            .append(STATUS)
+                            .append(" = ").append(ACTIVE)
                 }
             }
             return SimpleSQLiteQuery(query.toString())
         }
 
         fun createNewCategory(
-            name: String,
-            desc: String
+                name: String,
+                desc: String
         ) = Category(
-            id = ID_ADD,
-            name = name,
-            desc = desc,
-            isActive = true
+                id = ID_ADD,
+                name = name,
+                desc = desc,
+                isActive = true,
+                isUploaded = false
         )
     }
-
-    @Ignore
-    constructor(
-        id: String,
-        name: String,
-        desc: String,
-        isActive: Boolean
-    ) : this(
-        id = id,
-        name = name,
-        desc = desc,
-        isActive = isActive,
-        isUploaded = false
-    )
 }

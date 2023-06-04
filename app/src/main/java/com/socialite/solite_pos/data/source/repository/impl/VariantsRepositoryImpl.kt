@@ -1,12 +1,12 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant as NewVariant
 
 class VariantsRepositoryImpl(
     private val dao: VariantsDao,
@@ -33,13 +33,17 @@ class VariantsRepositoryImpl(
     }
 
     override fun getVariants() = dao.getNewVariants()
-
-    override suspend fun insertVariant(data: NewVariant) {
+    override suspend fun getNeedUploadVariants() = dao.getNeedUploadVariants()
+    override suspend fun insertVariant(data: Variant) {
         dao.insertNewVariant(data)
     }
-
-    override suspend fun updateVariant(data: NewVariant) {
-        dao.updateNewVariant(data)
+    override suspend fun insertVariants(list: List<Variant>) {
+        dao.insertVariants(list)
+    }
+    override suspend fun updateVariant(data: Variant) {
+        dao.updateNewVariant(data.copy(
+            isUploaded = false
+        ))
     }
 
     override suspend fun migrateToUUID() {
@@ -56,7 +60,7 @@ class VariantsRepositoryImpl(
                         updatedVariant.new_id
                     }
 
-                    val newVariant = NewVariant(
+                    val newVariant = Variant(
                         id = uuid,
                         name = variant.name,
                         type = variant.type,

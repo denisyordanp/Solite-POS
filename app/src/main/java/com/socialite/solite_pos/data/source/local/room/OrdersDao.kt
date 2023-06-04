@@ -34,6 +34,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :store")
     fun getOrdersByStatus(status: Int, date: String, store: String): Flow<List<OrderData>>
 
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrders(): List<NewOrder>
+
     @Transaction
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
     fun getOrdersByStatus(
@@ -51,8 +54,20 @@ interface OrdersDao {
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.ID} = :orderId")
     fun getOrderData(orderId: String): Flow<OrderData?>
 
-    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId")
+    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
     fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
+
+    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0 AND ${NewOrderDetail.DELETED} = 0")
+    suspend fun getNeedUploadOrderDetails(): List<NewOrderDetail>
+
+    @Query("SELECT * FROM ${NewOrderPayment.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrderPayments(): List<NewOrderPayment>
+
+    @Query("SELECT * FROM ${NewOrderPromo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
+    suspend fun getNeedUploadOrderPromos(): List<NewOrderPromo>
+
+    @Query("SELECT * FROM ${NewOrderProductVariant.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0 AND ${NewOrderDetail.DELETED} = 0")
+    suspend fun getNeedOrderProductVariants(): List<NewOrderProductVariant>
 
     @Transaction
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.ID} = :idDetail")
@@ -78,6 +93,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}' WHERE ${OrderDetail.ID} = :orderDetailId LIMIT 1")
     suspend fun getOrderDetailById(orderDetailId: Long): OrderDetail?
 
+    @Query("SELECT * FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
+    suspend fun getNewOrderDetailsByOrderId(orderId: String): List<NewOrderDetail>
+
     @Query("SELECT * FROM '${OrderPayment.DB_NAME}'")
     suspend fun getOrderPayments(): List<OrderPayment>
 
@@ -87,26 +105,41 @@ interface OrdersDao {
     @Query("SELECT * FROM '${OrderProductVariant.DB_NAME}'")
     suspend fun getOrderProductVariants(): List<OrderProductVariant>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Query("SELECT ${NewOrderDetail.ID} FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrderDetail.DELETED} = 1")
+    suspend fun getDeletedOrderDetailIds(): List<String>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: Order): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrder(order: NewOrder)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrders(list: List<NewOrder>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDetailOrder(detail: OrderDetail): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderDetail(detail: NewOrderDetail)
 
-    @Query("DELETE FROM ${OrderDetail.DB_NAME} WHERE ${Order.NO} = :orderNo")
-    suspend fun deleteDetailOrders(orderNo: String)
+    @Query("DELETE FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId")
+    suspend fun deleteDetailOrder(orderId: String)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVariantOrder(variants: OrderProductVariant): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPaymentOrder(payment: OrderPayment)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderPayments(list: List<NewOrderPayment>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderDetails(list: List<NewOrderDetail>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderPromos(list: List<NewOrderPromo>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderPayment(payment: NewOrderPayment)
@@ -120,6 +153,12 @@ interface OrdersDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderProductVariant(orderProductVariant: NewOrderProductVariant)
 
+    @Query("SELECT ${NewOrderProductVariant.ID} FROM '${NewOrderProductVariant.DB_NAME}' WHERE ${NewOrderProductVariant.DELETED} = 1")
+    suspend fun getDeletedOrderProductVariantIds(): List<String>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderProductVariants(list: List<NewOrderProductVariant>)
+
     @Update
     suspend fun updateOrder(order: Order)
 
@@ -130,6 +169,9 @@ interface OrdersDao {
     suspend fun updateOrderDetail(orderDetail: OrderDetail)
 
     @Update
+    suspend fun updateNewOrderDetail(orderDetail: NewOrderDetail)
+
+    @Update
     suspend fun updateOrderPayment(orderPayment: OrderPayment)
 
     @Update
@@ -137,6 +179,9 @@ interface OrdersDao {
 
     @Update
     suspend fun updateOrderProductVariant(orderProductVariant: OrderProductVariant)
+
+    @Query("UPDATE '${NewOrderProductVariant.DB_NAME}' SET ${NewOrderProductVariant.DELETED} = 1 WHERE ${NewOrderDetail.ID} = :orderDetailId")
+    suspend fun updateOrderProductVariantsByDetailId(orderDetailId: String)
 
     @Query("DELETE FROM '${Order.DB_NAME}'")
     suspend fun deleteAllOldOrders()
@@ -167,4 +212,10 @@ interface OrdersDao {
 
     @Query("DELETE FROM '${NewOrderProductVariant.DB_NAME}'")
     suspend fun deleteAllNewOrderProductVariants()
+
+    @Query("DELETE FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrderDetail.DELETED} = 1")
+    suspend fun deleteAllDeletedOrderDetails()
+
+    @Query("DELETE FROM '${NewOrderProductVariant.DB_NAME}' WHERE ${NewOrderProductVariant.DELETED} = 1")
+    suspend fun deleteAllDeletedOrderProductVariants()
 }

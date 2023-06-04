@@ -9,7 +9,9 @@ interface VariantOptionsRepository {
 
     fun getVariantOptions(query: SupportSQLiteQuery): Flow<List<VariantOption>>
     fun getVariantsWithOptions(): Flow<List<VariantWithOptions>>
+    suspend fun getNeedUploadVariantOptions(): List<VariantOption>
     suspend fun insertVariantOption(data: VariantOption)
+    suspend fun insertVariantOptions(list: List<VariantOption>)
     suspend fun updateVariantOption(data: VariantOption)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldVariantOptions()

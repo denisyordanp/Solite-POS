@@ -31,7 +31,6 @@ enum class StoreMenus(@StringRes val title: Int) {
     PROMO(R.string.promo),
     MASTERS(R.string.products),
     STORE(R.string.stores),
-    LOGOUT(R.string.logout)
 }
 
 enum class MasterMenus(@StringRes val title: Int) {
@@ -42,5 +41,7 @@ enum class MasterMenus(@StringRes val title: Int) {
 
 enum class SettingMenus(@StringRes val title: Int) {
     THEME(R.string.theme),
-    DEVELOPER(R.string.developer)
+    DEVELOPER(R.string.developer),
+    SYNCHRONIZE(R.string.synchronize),
+    LOGOUT(R.string.logout)
 }

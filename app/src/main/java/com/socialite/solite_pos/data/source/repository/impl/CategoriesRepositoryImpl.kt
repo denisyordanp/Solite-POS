@@ -35,13 +35,17 @@ class CategoriesRepositoryImpl(
     }
 
     override fun getCategories(query: SimpleSQLiteQuery) = dao.getNewCategories(query)
-
+    override suspend fun getNeedUploadCategories() = dao.getNeedUploadCategories()
     override suspend fun insertCategory(data: NewCategory) {
         dao.insertNewCategory(data)
     }
-
+    override suspend fun insertCategories(list: List<NewCategory>) {
+        dao.insertCategories(list)
+    }
     override suspend fun updateCategory(data: NewCategory) {
-        dao.updateNewCategory(data)
+        dao.updateNewCategory(data.copy(
+            isUploaded = false
+        ))
     }
 
     override suspend fun migrateToUUID() {

@@ -75,6 +75,7 @@
     <string name="payed_orders">Pesanan sudah bayar</string>
     <string name="theme">Tema</string>
     <string name="developer">Developer</string>
+    <string name="synchronize">Sinkronisasi</string>
     <string name="product_list">Daftar produk</string>
     <string name="select_category">Pilih kategori</string>
     <string name="save">Simpan</string>
@@ -116,9 +117,12 @@
     <string name="total_cash_promo">Jumlah promo tunai</string>
     <string name="manual_input">Input manual</string>
     <string name="enter_email">Masukan email</string>
+    <string name="enter_your_name">Masukan nama anda</string>
     <string name="field_can_not_emtpy">Kolom tidak boleh kosong</string>
     <string name="fill_with_email_correct_format">Masukan format email yang benar</string>
-    <string name="password_must_more_than_8_character">Password harus lebih dari 8 karakter</string>
+    <string name="password_must_between_8_15_character">Password harus antara 8–15 karakter</string>
+    <string name="password_must_contains_upper_lower_case">Password harus mengandung huruf kecil dan huruf kapital</string>
+    <string name="password_must_contains_symbol">Password harus mengandung karakter simbol</string>
     <string name="confirm_password_must_match_with_password">Konfirmasi password harus sama dengan password</string>
     <string name="login">Masuk</string>
     <string name="logout">Keluar</string>

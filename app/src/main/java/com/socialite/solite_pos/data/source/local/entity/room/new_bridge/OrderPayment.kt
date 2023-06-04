@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.source.remote.response.entity.OrderPaymentResponse
 import java.io.Serializable
 import java.util.UUID
 
@@ -50,6 +51,21 @@ data class OrderPayment(
     @ColumnInfo(name = UPLOAD)
     var isUpload: Boolean
 ) : Serializable {
+
+    fun inReturn(total: Long): Long {
+        return pay - total
+    }
+
+    fun toResponse(): OrderPaymentResponse {
+        return OrderPaymentResponse(
+                id = id,
+                pay = pay.toInt(),
+                order = order,
+                payment = payment,
+                isUploaded = true
+        )
+    }
+
     companion object {
         const val ID = "id_order_payment"
         const val PAY = "pay"
@@ -65,9 +81,5 @@ data class OrderPayment(
             pay = pay,
             isUpload = false
         )
-    }
-
-    fun inReturn(total: Long): Long {
-        return pay - total
     }
 }

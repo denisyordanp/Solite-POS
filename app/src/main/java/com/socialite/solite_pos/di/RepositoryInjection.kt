@@ -2,6 +2,7 @@ package com.socialite.solite_pos.di
 
 import android.content.Context
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
+import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -11,9 +12,9 @@ import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.data.source.repository.SoliteRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -28,18 +29,12 @@ import com.socialite.solite_pos.data.source.repository.impl.PromosRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.AccountRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantMixesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantsRepositoryImpl
-import com.socialite.solite_pos.utils.database.AppExecutors
 
 object RepositoryInjection {
-
-    fun provideSoliteRepository(context: Context): SoliteRepository {
-        val database = getInstance(context)
-        val appExecutors = AppExecutors(context)
-        return SoliteRepository.getInstance(appExecutors, database.soliteDao())
-    }
 
     fun providePaymentsRepository(context: Context): PaymentsRepository {
         val database = getInstance(context)
@@ -145,5 +140,11 @@ object RepositoryInjection {
     fun providePromosRepository(context: Context): PromosRepository {
         val database = getInstance(context)
         return PromosRepositoryImpl.getInstance(dao = database.promoDao(), database)
+    }
+
+    fun provideUserRepository(context: Context): AccountRepository {
+        val userPreferences = UserPreferencesImpl.getInstance(context)
+        val service = NetworkInjector.provideSoliteServices()
+        return AccountRepositoryImpl(service, userPreferences)
     }
 }

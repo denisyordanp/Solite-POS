@@ -9,12 +9,16 @@ interface ProductVariantsRepository {
         idProduct: String,
         idVariantOption: String
     ): Flow<VariantProduct?>
+    suspend fun getNeedUploadVariantProducts(): List<VariantProduct>
     suspend fun isProductHasVariants(idProduct: String): Boolean
     fun getVariantsProductById(idProduct: String): Flow<List<VariantProduct>>
     fun getVariantProductById(idProduct: String): Flow<VariantProduct?>
     suspend fun insertVariantProduct(data: VariantProduct)
+    suspend fun insertVariantProducts(list: List<VariantProduct>)
+    suspend fun getProductVariantIds(): List<String>
     suspend fun removeVariantProduct(data: VariantProduct)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldProductVariants()
     suspend fun deleteAllNewProductVariants()
+    suspend fun deleteAllDeletedProductVariants()
 }

@@ -8,21 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingView(
-    state: LoadingState,
+    isLoading: Boolean,
     content: @Composable () -> Unit
 ) {
     content()
-    if (state.loading) {
+    if (isLoading) {
         Box(
             modifier = Modifier
                 .background(
@@ -46,11 +43,3 @@ fun LoadingView(
         }
     }
 }
-
-class LoadingState(isLoading: Boolean) {
-    var loading by mutableStateOf(isLoading)
-}
-
-@Composable
-fun rememberLoadingState(): LoadingState =
-    remember { LoadingState(false) }
