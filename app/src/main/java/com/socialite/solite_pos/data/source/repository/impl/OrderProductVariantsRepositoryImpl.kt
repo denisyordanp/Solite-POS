@@ -1,12 +1,15 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.OrderDetailsDao
 import com.socialite.solite_pos.data.source.local.room.OrderProductVariantsDao
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import java.util.UUID
 
 class OrderProductVariantsRepositoryImpl(
@@ -56,6 +59,24 @@ class OrderProductVariantsRepositoryImpl(
 
     override suspend fun deleteAllDeletedOrderProductVariants() {
         dao.deleteAllDeletedOrderProductVariants()
+    }
+
+    override suspend fun getItems(): List<OrderProductVariant> {
+        return dao.getNewOrderProductVariants()
+    }
+
+    override suspend fun updateItems(items: List<OrderProductVariant>) {
+        dao.updateOrderProductVariants(items)
+    }
+
+    override suspend fun insertItems(items: List<OrderProductVariant>) {
+        dao.insertOrderProductVariants(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<OrderProductVariant>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
     }
 
     override suspend fun migrateToUUID() {

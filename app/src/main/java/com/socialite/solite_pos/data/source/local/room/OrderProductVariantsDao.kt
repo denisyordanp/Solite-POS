@@ -18,6 +18,9 @@ interface OrderProductVariantsDao {
     @Query("SELECT * FROM '${OrderProductVariant.DB_NAME}'")
     suspend fun getOrderProductVariants(): List<OrderProductVariant>
 
+    @Query("SELECT * FROM '${NewOrderProductVariant.DB_NAME}'")
+    suspend fun getNewOrderProductVariants(): List<NewOrderProductVariant>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderProductVariant(orderProductVariant: NewOrderProductVariant)
 
@@ -29,6 +32,9 @@ interface OrderProductVariantsDao {
 
     @Update
     suspend fun updateOrderProductVariant(orderProductVariant: OrderProductVariant)
+
+    @Update
+    suspend fun updateOrderProductVariants(orderProductVariant: List<NewOrderProductVariant>)
 
     @Query("UPDATE '${NewOrderProductVariant.DB_NAME}' SET ${NewOrderProductVariant.DELETED} = 1 WHERE ${NewOrderDetail.ID} = :orderDetailId")
     suspend fun updateOrderProductVariantsByDetailId(orderDetailId: String)
