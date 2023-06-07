@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
@@ -35,6 +36,9 @@ interface ProductVariantsDao {
     @Query("SELECT * FROM ${VariantProduct.DB_NAME}")
     suspend fun getVariantProducts(): List<VariantProduct>
 
+    @Query("SELECT * FROM ${NewVariantProduct.DB_NAME}")
+    suspend fun getNewVariantProducts(): List<NewVariantProduct>
+
     @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0 AND ${NewVariantProduct.DELETED} = 0")
     suspend fun getNeedUploadVariantProducts(): List<NewVariantProduct>
 
@@ -58,6 +62,9 @@ interface ProductVariantsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateNewVariantProduct(data: NewVariantProduct)
+
+    @Update
+    suspend fun updateVariantProducts(data: List<NewVariantProduct>)
 
     @Query("DELETE FROM ${VariantProduct.DB_NAME}")
     suspend fun deleteAllOldProductVariants()

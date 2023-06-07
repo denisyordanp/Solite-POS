@@ -3,7 +3,7 @@ package com.socialite.solite_pos.data.source.repository
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
 import kotlinx.coroutines.flow.Flow
 
-interface ProductVariantsRepository {
+interface ProductVariantsRepository : SyncRepository<VariantProduct> {
 
     fun getVariantProduct(
         idProduct: String,
