@@ -2,10 +2,14 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Payment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment as NewPayment
@@ -49,6 +53,28 @@ class PaymentsRepositoryImpl(
 
     override fun getPayments(query: SupportSQLiteQuery) = dao.getNewPayments(query)
     override suspend fun getNeedUploadPayments() = dao.getNeedUploadPayments()
+    override suspend fun updatePayments(payments: List<NewPayment>) {
+        dao.updatePayments(payments)
+    }
+
+    override suspend fun getItems(): List<NewPayment> {
+        return dao.getNewPayments(NewPayment.filter(NewPayment.ALL)).first()
+    }
+
+    override suspend fun updateItems(items: List<NewPayment>) {
+        dao.updatePayments(items)
+    }
+
+    override suspend fun insertItems(items: List<NewPayment>) {
+        dao.insertPayments(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<NewPayment>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
+    }
+
     override suspend fun migrateToUUID() {
         val payments = dao.getPayments(Payment.filter(Payment.ALL)).firstOrNull()
         if (!payments.isNullOrEmpty()) {

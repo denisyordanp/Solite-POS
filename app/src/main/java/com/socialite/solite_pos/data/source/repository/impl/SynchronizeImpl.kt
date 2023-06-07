@@ -97,7 +97,7 @@ class SynchronizeImpl(
             promosRepository.updateItems(needUploadPromo.map { it.toEntity() })
         }
         if (needUploadPayments.isNotEmpty()) {
-            paymentsRepository.insertPayments(needUploadPayments.map { it.toEntity() })
+            paymentsRepository.updatePayments(needUploadPayments.map { it.toEntity() })
         }
         if (needUploadOrders.isNotEmpty()) {
             ordersRepository.insertOrders(needUploadOrders.map { it.toEntity() })
@@ -131,15 +131,13 @@ class SynchronizeImpl(
         }
 
         // Insert all missing data that given by server
-        customersRepository.updateSynchronization(response.data?.customer?.map { it.toEntity() })
-        storeRepository.updateSynchronization(response.data?.store?.map { it.toEntity() })
-        categoriesRepository.updateSynchronization(response.data?.category?.map { it.toEntity() })
-        promosRepository.updateSynchronization(response.data?.promo?.map { it.toEntity() })
+        val data = response.data
+        customersRepository.updateSynchronization(data?.customer?.map { it.toEntity() })
+        storeRepository.updateSynchronization(data?.store?.map { it.toEntity() })
+        categoriesRepository.updateSynchronization(data?.category?.map { it.toEntity() })
+        promosRepository.updateSynchronization(data?.promo?.map { it.toEntity() })
+        paymentsRepository.updateSynchronization(data?.payment?.map { it.toEntity() })
 
-        val missingPayment = response.data?.payment
-        if (!missingPayment.isNullOrEmpty()) {
-            paymentsRepository.insertPayments(missingPayment.map { it.toEntity() })
-        }
         val missingOrder = response.data?.order
         if (!missingOrder.isNullOrEmpty()) {
             ordersRepository.insertOrders(missingOrder.map { it.toEntity() })
