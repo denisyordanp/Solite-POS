@@ -4,8 +4,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
+import kotlinx.coroutines.flow.Flow
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
 
@@ -21,11 +24,21 @@ interface OrderDetailsDao {
     @Query("SELECT * FROM '${NewOrderDetail.DB_NAME}'")
     suspend fun getNewOrderDetails(): List<NewOrderDetail>
 
+    @Query("SELECT * FROM '${OrderDetail.DB_NAME}' WHERE ${OrderDetail.ID} = :orderDetailId LIMIT 1")
+    suspend fun getOrderDetailById(orderDetailId: Long): OrderDetail?
+
     @Query("SELECT * FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
     suspend fun getNewOrderDetailsByOrderId(orderId: String): List<NewOrderDetail>
 
     @Query("SELECT ${NewOrderDetail.ID} FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrderDetail.DELETED} = 1")
     suspend fun getDeletedOrderDetailIds(): List<String>
+
+    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
+    fun getOrderDetailByIdOrder(orderId: String): Flow<List<NewOrderDetail>>
+
+    @Transaction
+    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.ID} = :idDetail")
+    suspend fun getOrderDetailWithVariants(idDetail: String): DetailWithVariantOption
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderDetail(detail: NewOrderDetail)

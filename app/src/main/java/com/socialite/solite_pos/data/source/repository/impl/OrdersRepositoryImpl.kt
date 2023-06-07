@@ -3,13 +3,11 @@ package com.socialite.solite_pos.data.source.repository.impl
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.local.room.StoreDao
-import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SyncRepository
@@ -24,7 +22,6 @@ class OrdersRepositoryImpl(
     private val dao: OrdersDao,
     private val customersDao: CustomersDao,
     private val storesDao: StoreDao,
-    private val variantOptionsDao: VariantOptionsDao,
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
 ) : OrdersRepository {
@@ -37,7 +34,6 @@ class OrdersRepositoryImpl(
             dao: OrdersDao,
             customersDao: CustomersDao,
             storesDao: StoreDao,
-            variantOptionsDao: VariantOptionsDao,
             settingRepository: SettingRepository,
             db: AppDatabase
         ): OrdersRepositoryImpl {
@@ -48,7 +44,6 @@ class OrdersRepositoryImpl(
                             dao = dao,
                             customersDao = customersDao,
                             storesDao = storesDao,
-                            variantOptionsDao = variantOptionsDao,
                             settingRepository = settingRepository,
                             db = db
                         )
@@ -77,7 +72,6 @@ class OrdersRepositoryImpl(
     override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
     override suspend fun getOrderData(orderId: String): OrderData? = dao.getOrderDataById(orderId)
-    override suspend fun getNeedUploadOrderProductVariants() = dao.getNeedOrderProductVariants()
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
         order.copy(
             isUploaded = false
@@ -86,20 +80,6 @@ class OrdersRepositoryImpl(
 
     override suspend fun insertOrder(order: Order) {
         dao.insertNewOrder(order)
-    }
-
-    override suspend fun insertOrderProductVariants(list: List<OrderProductVariant>) {
-        dao.insertOrderProductVariants(list)
-    }
-
-    override suspend fun insertOrderProductVariant(data: OrderProductVariant) {
-        dao.insertNewOrderProductVariant(data)
-    }
-
-    override suspend fun getDeletedOrderProductVariantIds() = dao.getDeletedOrderProductVariantIds()
-
-    override suspend fun deleteAllDeletedOrderProductVariants() {
-        dao.deleteAllDeletedOrderProductVariants()
     }
 
     override suspend fun getItems(): List<Order> {
@@ -122,8 +102,6 @@ class OrdersRepositoryImpl(
 
     override suspend fun migrateToUUID() {
         val orders = dao.getOrders()
-        val orderProductVariants = dao.getOrderProductVariants()
-
         db.withTransaction {
             for (order in orders) {
                 val uuid = order.new_id.ifEmpty {
@@ -148,32 +126,6 @@ class OrdersRepositoryImpl(
                         isUploaded = order.isUploaded
                     )
                     dao.insertNewOrder(newOrder)
-                }
-            }
-        }
-
-        db.withTransaction {
-            for (orderProductVariant in orderProductVariants) {
-                val uuid = orderProductVariant.new_id.ifEmpty {
-                    val updatedOrderProductVariant = orderProductVariant.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updateOrderProductVariant(updatedOrderProductVariant)
-                    updatedOrderProductVariant.new_id
-                }
-
-                val orderDetail = dao.getOrderDetailById(orderProductVariant.idOrderDetail)
-                val variantOption =
-                    variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
-                if (orderDetail != null && variantOption != null) {
-                    val newOrderProductVariant = OrderProductVariant(
-                        id = uuid,
-                        variantOption = variantOption.new_id,
-                        orderDetail = orderDetail.new_id,
-                        isUpload = orderProductVariant.isUpload,
-                        isDeleted = false
-                    )
-                    dao.insertNewOrderProductVariant(newOrderProductVariant)
                 }
             }
         }

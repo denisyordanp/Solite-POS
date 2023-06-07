@@ -7,22 +7,18 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailProductMixWithVariantOption
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantMixOption
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
 import kotlinx.coroutines.flow.Flow
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
 
 @Dao
 interface OrdersDao {
@@ -54,24 +50,6 @@ interface OrdersDao {
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.ID} = :orderId")
     fun getOrderData(orderId: String): Flow<OrderData?>
 
-    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
-    fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
-
-    @Query("SELECT * FROM ${NewOrderProductVariant.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0 AND ${NewOrderDetail.DELETED} = 0")
-    suspend fun getNeedOrderProductVariants(): List<NewOrderProductVariant>
-
-    @Transaction
-    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.ID} = :idDetail")
-    suspend fun getOrderVariants(idDetail: String): DetailWithVariantOption
-
-    @Transaction
-    @Query("SELECT * FROM ${OrderProductVariantMix.DB_NAME} WHERE ${OrderProductVariantMix.ID} = :idMix")
-    suspend fun getOrderMixVariantsOption(idMix: Long): DetailProductMixWithVariantOption
-
-    @Transaction
-    @Query("SELECT * FROM ${OrderDetail.DB_NAME} WHERE ${OrderDetail.ID} = :idDetail")
-    suspend fun getOrderVariantsMix(idDetail: Long): DetailWithVariantMixOption
-
     @Query("SELECT * FROM '${Order.DB_NAME}'")
     suspend fun getOrders(): List<Order>
 
@@ -80,12 +58,6 @@ interface OrdersDao {
 
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo LIMIT 1")
     suspend fun getOrderByNo(orderNo: String): Order?
-
-    @Query("SELECT * FROM '${OrderDetail.DB_NAME}' WHERE ${OrderDetail.ID} = :orderDetailId LIMIT 1")
-    suspend fun getOrderDetailById(orderDetailId: Long): OrderDetail?
-
-    @Query("SELECT * FROM '${OrderProductVariant.DB_NAME}'")
-    suspend fun getOrderProductVariants(): List<OrderProductVariant>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: Order): Long
@@ -96,39 +68,6 @@ interface OrdersDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrders(list: List<NewOrder>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDetailOrder(detail: OrderDetail): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNewOrderDetail(detail: NewOrderDetail)
-
-    @Query("DELETE FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId")
-    suspend fun deleteDetailOrder(orderId: String)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertVariantOrder(variants: OrderProductVariant): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNewPaymentOrder(payment: OrderPayment)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderPayments(list: List<NewOrderPayment>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderDetails(list: List<NewOrderDetail>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNewOrderPayment(payment: NewOrderPayment)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNewOrderProductVariant(orderProductVariant: NewOrderProductVariant)
-
-    @Query("SELECT ${NewOrderProductVariant.ID} FROM '${NewOrderProductVariant.DB_NAME}' WHERE ${NewOrderProductVariant.DELETED} = 1")
-    suspend fun getDeletedOrderProductVariantIds(): List<String>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderProductVariants(list: List<NewOrderProductVariant>)
-
     @Update
     suspend fun updateOrder(order: Order)
 
@@ -137,21 +76,6 @@ interface OrdersDao {
 
     @Update
     suspend fun updateOrders(order: List<NewOrder>)
-
-    @Update
-    suspend fun updateOrderDetail(orderDetail: OrderDetail)
-
-    @Update
-    suspend fun updateNewOrderDetail(orderDetail: NewOrderDetail)
-
-    @Update
-    suspend fun updateOrderPayment(orderPayment: OrderPayment)
-
-    @Update
-    suspend fun updateOrderProductVariant(orderProductVariant: OrderProductVariant)
-
-    @Query("UPDATE '${NewOrderProductVariant.DB_NAME}' SET ${NewOrderProductVariant.DELETED} = 1 WHERE ${NewOrderDetail.ID} = :orderDetailId")
-    suspend fun updateOrderProductVariantsByDetailId(orderDetailId: String)
 
     @Query("DELETE FROM '${Order.DB_NAME}'")
     suspend fun deleteAllOldOrders()
@@ -182,10 +106,4 @@ interface OrdersDao {
 
     @Query("DELETE FROM '${NewOrderProductVariant.DB_NAME}'")
     suspend fun deleteAllNewOrderProductVariants()
-
-    @Query("DELETE FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrderDetail.DELETED} = 1")
-    suspend fun deleteAllDeletedOrderDetails()
-
-    @Query("DELETE FROM '${NewOrderProductVariant.DB_NAME}' WHERE ${NewOrderProductVariant.DELETED} = 1")
-    suspend fun deleteAllDeletedOrderProductVariants()
 }

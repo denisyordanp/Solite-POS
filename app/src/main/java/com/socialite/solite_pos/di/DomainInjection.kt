@@ -46,10 +46,9 @@ object DomainInjection {
     }
 
     fun provideGetProductOrder(context: Context): GetProductOrder {
-        val database = getInstance(context)
         return GetProductOrderImpl(
-            dao = database.ordersDao(),
-            productsDao = database.productsDao()
+            orderDetailRepository = RepositoryInjection.provideOrderDetailsRepository(context),
+            productsRepository = RepositoryInjection.provideProductsRepository(context)
         )
     }
 
@@ -140,6 +139,7 @@ object DomainInjection {
         val orderPaymentsRepository = RepositoryInjection.provideOrderPaymentsRepository(context)
         val orderPromosRepository = RepositoryInjection.provideOrderPromosRepository(context)
         val variantOptionsRepository = RepositoryInjection.provideVariantOptionsRepository(context)
+        val orderProductVariantsRepository = RepositoryInjection.provideOrderProductVariantsRepository(context)
         val productVariantsRepository = RepositoryInjection.provideProductVariantsRepository(context)
         val userPreferences = UserPreferencesImpl.getInstance(context)
         val service = NetworkLoggedInInjector.provideSoliteServices(userPreferences)
@@ -158,6 +158,7 @@ object DomainInjection {
             orderDetailsRepository = orderDetailsRepository,
             orderPaymentsRepository = orderPaymentsRepository,
             orderPromosRepository = orderPromosRepository,
+            orderProductVariantsRepository = orderProductVariantsRepository,
             productVariantsRepository = productVariantsRepository,
             service = service
         )

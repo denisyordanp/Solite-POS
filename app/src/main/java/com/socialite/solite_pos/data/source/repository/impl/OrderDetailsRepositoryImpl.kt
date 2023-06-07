@@ -5,6 +5,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.OrderDetailsDao
+import com.socialite.solite_pos.data.source.local.room.OrderProductVariantsDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
@@ -15,6 +16,7 @@ import java.util.UUID
 class OrderDetailsRepositoryImpl(
     private val dao: OrderDetailsDao,
     private val ordersDao: OrdersDao,
+    private val orderProductVariantsDao: OrderProductVariantsDao,
     private val productsDao: ProductsDao,
     private val db: AppDatabase
 ) : OrderDetailsRepository {
@@ -26,6 +28,7 @@ class OrderDetailsRepositoryImpl(
         fun getInstance(
             dao: OrderDetailsDao,
             ordersDao: OrdersDao,
+            orderProductVariantsDao: OrderProductVariantsDao,
             productsDao: ProductsDao,
             db: AppDatabase
         ): OrderDetailsRepositoryImpl {
@@ -35,6 +38,7 @@ class OrderDetailsRepositoryImpl(
                         INSTANCE = OrderDetailsRepositoryImpl(
                             dao = dao,
                             ordersDao = ordersDao,
+                            orderProductVariantsDao = orderProductVariantsDao,
                             productsDao = productsDao,
                             db = db
                         )
@@ -55,6 +59,9 @@ class OrderDetailsRepositoryImpl(
     }
 
     override suspend fun getDeletedOrderDetailIds() = dao.getDeletedOrderDetailIds()
+    override fun getOrderDetailByIdOrder(orderId: String) = dao.getOrderDetailByIdOrder(orderId)
+    override suspend fun getOrderDetailWithVariants(idDetail: String) =
+        dao.getOrderDetailWithVariants(idDetail)
 
     override suspend fun deleteOrderDetailAndRelated(orderId: String) {
         val orderDetails = dao.getNewOrderDetailsByOrderId(orderId)
@@ -64,7 +71,7 @@ class OrderDetailsRepositoryImpl(
                     isDeleted = true
                 )
             )
-            ordersDao.updateOrderProductVariantsByDetailId(it.id)
+            orderProductVariantsDao.updateOrderProductVariantsByDetailId(it.id)
         }
     }
 

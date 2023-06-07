@@ -15,6 +15,7 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.domain.Synchronize
+import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.OrderPromosRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -33,6 +34,7 @@ class SynchronizeImpl(
     private val orderPaymentsRepository: OrderPaymentsRepository,
     private val orderPromosRepository: OrderPromosRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
+    private val orderProductVariantsRepository: OrderProductVariantsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val service: SoliteServices
 ) : Synchronize {
@@ -60,8 +62,8 @@ class SynchronizeImpl(
         val needUploadVariantOptions =
             variantOptionsRepository.getNeedUploadVariantOptions().map { it.toResponse() }
         val needUploadOrderProductVariants = SynchronizeParamItem(
-                deletedItems = ordersRepository.getDeletedOrderProductVariantIds(),
-                items = ordersRepository.getNeedUploadOrderProductVariants().map { it.toResponse() }
+                deletedItems = orderProductVariantsRepository.getDeletedOrderProductVariantIds(),
+                items = orderProductVariantsRepository.getNeedUploadOrderProductVariants().map { it.toResponse() }
         )
         val needUploadVariantProducts = SynchronizeParamItem(
                 deletedItems = productVariantsRepository.getProductVariantIds(),
@@ -130,7 +132,7 @@ class SynchronizeImpl(
             variantOptionsRepository.updateItems(needUploadVariantOptions.map { it.toEntity() })
         }
         if (needUploadOrderProductVariants.items.isNotEmpty()) {
-            ordersRepository.insertOrderProductVariants(needUploadOrderProductVariants.items.map { it.toEntity() })
+            orderProductVariantsRepository.insertOrderProductVariants(needUploadOrderProductVariants.items.map { it.toEntity() })
         }
         if (needUploadVariantProducts.items.isNotEmpty()) {
             productVariantsRepository.insertVariantProducts(needUploadVariantProducts.items.map { it.toEntity() })
@@ -154,7 +156,7 @@ class SynchronizeImpl(
 
         val missingOrderProductVariant = response.data?.orderProductVariant
         if (!missingOrderProductVariant.isNullOrEmpty()) {
-            ordersRepository.insertOrderProductVariants(missingOrderProductVariant.map { it.toEntity() })
+            orderProductVariantsRepository.insertOrderProductVariants(missingOrderProductVariant.map { it.toEntity() })
         }
         val missingVariantProduct = response.data?.variantProduct
         if (!missingVariantProduct.isNullOrEmpty()) {
@@ -166,7 +168,7 @@ class SynchronizeImpl(
             orderDetailsRepository.deleteAllDeletedOrderDetails()
         }
         if (needUploadOrderProductVariants.deletedItems.isNotEmpty()) {
-            ordersRepository.deleteAllDeletedOrderProductVariants()
+            orderProductVariantsRepository.deleteAllDeletedOrderProductVariants()
         }
         if (needUploadOrderProductVariants.deletedItems.isNotEmpty()) {
             productVariantsRepository.deleteAllDeletedProductVariants()

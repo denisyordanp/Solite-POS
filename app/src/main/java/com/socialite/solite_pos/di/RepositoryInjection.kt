@@ -8,6 +8,7 @@ import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.OrderPaymentsRepository
+import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.OrderPromosRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
@@ -26,6 +27,7 @@ import com.socialite.solite_pos.data.source.repository.impl.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrderDetailsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrderPaymentsRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.OrderProductVariantsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrderPromosRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrdersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OutcomesRepositoryImpl
@@ -74,6 +76,16 @@ object RepositoryInjection {
         )
     }
 
+    fun provideOrderProductVariantsRepository(context: Context): OrderProductVariantsRepository {
+        val database = getInstance(context)
+        return OrderProductVariantsRepositoryImpl.getInstance(
+            dao = database.orderProductVariantsDao(),
+            orderDetailsDao = database.orderDetailsDao(),
+            variantOptionsDao = database.variantOptionsDao(),
+            db = database
+        )
+    }
+
     fun provideCategoriesRepository(context: Context): CategoriesRepository {
         val database = getInstance(context)
         return CategoriesRepositoryImpl.getInstance(database.categoriesDao(), database)
@@ -115,7 +127,6 @@ object RepositoryInjection {
             dao = database.ordersDao(),
             customersDao = database.customersDao(),
             storesDao = database.storeDao(),
-            variantOptionsDao = database.variantOptionsDao(),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context),
             db = database
         )
@@ -127,6 +138,7 @@ object RepositoryInjection {
             dao = database.orderDetailsDao(),
             ordersDao = database.ordersDao(),
             productsDao = database.productsDao(),
+            orderProductVariantsDao = database.orderProductVariantsDao(),
             db = database
         )
     }
