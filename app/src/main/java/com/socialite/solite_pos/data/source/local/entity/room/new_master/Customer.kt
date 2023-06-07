@@ -30,7 +30,7 @@ data class Customer(
 ) : Serializable, EntityData {
     fun isAdd() = id == ID_ADD
 
-    override fun toResponse(): CustomerResponse {
+    fun toResponse(): CustomerResponse {
         return CustomerResponse(
                 id = id,
                 name = name,

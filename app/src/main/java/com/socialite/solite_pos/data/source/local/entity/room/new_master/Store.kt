@@ -38,7 +38,7 @@ data class Store(
             id = UUID.randomUUID().toString()
     )
 
-    override fun toResponse(): StoreResponse {
+    fun toResponse(): StoreResponse {
         return StoreResponse(
                 id = id,
                 name = name,

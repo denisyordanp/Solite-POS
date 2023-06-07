@@ -53,9 +53,6 @@ class PaymentsRepositoryImpl(
 
     override fun getPayments(query: SupportSQLiteQuery) = dao.getNewPayments(query)
     override suspend fun getNeedUploadPayments() = dao.getNeedUploadPayments()
-    override suspend fun updatePayments(payments: List<NewPayment>) {
-        dao.updatePayments(payments)
-    }
 
     override suspend fun getItems(): List<NewPayment> {
         return dao.getNewPayments(NewPayment.filter(NewPayment.ALL)).first()

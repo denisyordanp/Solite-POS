@@ -62,7 +62,7 @@ data class Promo(
         id = UUID.randomUUID().toString()
     )
 
-    override fun toResponse(): PromoResponse {
+    fun toResponse(): PromoResponse {
         return PromoResponse(
                 id = id,
                 name = name,

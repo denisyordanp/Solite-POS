@@ -49,7 +49,7 @@ data class Payment(
         id = UUID.randomUUID().toString()
     )
 
-    override fun toResponse(): PaymentResponse {
+    fun toResponse(): PaymentResponse {
         return PaymentResponse(
                 id = id,
                 name = name,

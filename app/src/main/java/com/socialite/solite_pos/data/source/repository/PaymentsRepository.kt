@@ -13,5 +13,4 @@ interface PaymentsRepository : SyncRepository<Payment> {
     suspend fun deleteAllOldPayments()
     suspend fun deleteAllNewPayments()
     suspend fun getNeedUploadPayments() : List<Payment>
-    suspend fun updatePayments(payments: List<Payment>)
 }

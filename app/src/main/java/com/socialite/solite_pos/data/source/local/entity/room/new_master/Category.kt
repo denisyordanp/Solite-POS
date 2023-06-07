@@ -43,7 +43,7 @@ data class Category(
             id = UUID.randomUUID().toString()
     )
 
-    override fun toResponse(): CategoryResponse {
+    fun toResponse(): CategoryResponse {
         return CategoryResponse(
                 id = id,
                 name = name,
