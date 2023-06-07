@@ -67,8 +67,8 @@ class OrderViewModel(
 
     fun getMenuBadge(date: String) = getOrdersGeneralMenuBadge(date)
 
-    suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderDetail(orderNo)
-    fun getOrderData(orderId: String) = orderRepository.getOrderData(orderId)
+    suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderData(orderNo)
+    fun getOrderData(orderId: String) = orderRepository.getOrderDataAsFlow(orderId)
 
     fun getProductOrder(orderId: String) = getProductOrder.invoke(orderId)
 

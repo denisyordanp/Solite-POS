@@ -89,12 +89,9 @@ class OrdersRepositoryImpl(
         }
     }
 
-    override fun getOrderData(orderId: String) = dao.getOrderData(orderId)
+    override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
-
-    override suspend fun getOrderDetail(orderId: String): OrderData? = dao.getOrderDataById(orderId)
-
-    override suspend fun getNeedUploadOrderDetails() = dao.getNeedUploadOrderDetails()
+    override suspend fun getOrderData(orderId: String): OrderData? = dao.getOrderDataById(orderId)
     override suspend fun getNeedUploadOrderPayments() = dao.getNeedUploadOrderPayments()
     override suspend fun getNeedUploadOrderPromos() = dao.getNeedUploadOrderPromos()
     override suspend fun getNeedUploadOrderProductVariants() = dao.getNeedOrderProductVariants()
@@ -107,26 +104,6 @@ class OrdersRepositoryImpl(
     override suspend fun insertOrderPayments(list: List<OrderPayment>) {
         dao.insertOrderPayments(list)
     }
-    override suspend fun insertOrderDetails(list: List<OrderDetail>) {
-        dao.insertOrderDetails(list)
-    }
-
-    override suspend fun insertOrderDetail(orderDetail: OrderDetail) {
-        dao.insertNewOrderDetail(orderDetail)
-    }
-
-    override suspend fun getDeletedOrderDetailIds() = dao.getDeletedOrderDetailIds()
-
-    override suspend fun deleteOrderDetailAndRelated(orderId: String) {
-        val orderDetails = dao.getNewOrderDetailsByOrderId(orderId)
-        orderDetails.forEach {
-            dao.updateNewOrderDetail(it.copy(
-                    isDeleted = true
-            ))
-            dao.updateOrderProductVariantsByDetailId(it.id)
-        }
-    }
-
     override suspend fun insertOrderPromos(list: List<OrderPromo>) {
         dao.insertOrderPromos(list)
     }
@@ -135,9 +112,6 @@ class OrdersRepositoryImpl(
     }
 
     override suspend fun getDeletedOrderProductVariantIds() = dao.getDeletedOrderProductVariantIds()
-    override suspend fun deleteAllDeletedOrderDetails() {
-        dao.deleteAllDeletedOrderDetails()
-    }
 
     override suspend fun deleteAllDeletedOrderProductVariants() {
         dao.deleteAllDeletedOrderProductVariants()

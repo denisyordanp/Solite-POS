@@ -134,10 +134,12 @@ object DomainInjection {
         val outcomesRepository = RepositoryInjection.provideOutcomesRepository(context)
         val productsRepository = RepositoryInjection.provideProductsRepository(context)
         val variantsRepository = RepositoryInjection.provideVariantsRepository(context)
+        val orderDetailsRepository = RepositoryInjection.provideOrderDetailsRepository(context)
         val variantOptionsRepository = RepositoryInjection.provideVariantOptionsRepository(context)
         val productVariantsRepository = RepositoryInjection.provideProductVariantsRepository(context)
         val userPreferences = UserPreferencesImpl.getInstance(context)
         val service = NetworkLoggedInInjector.provideSoliteServices(userPreferences)
+
         return SynchronizeImpl(
             customersRepository = customerRepository,
             storeRepository = storeRepository,
@@ -149,6 +151,7 @@ object DomainInjection {
             productsRepository = productsRepository,
             variantsRepository = variantsRepository,
             variantOptionsRepository = variantOptionsRepository,
+            orderDetailsRepository = orderDetailsRepository,
             productVariantsRepository = productVariantsRepository,
             service = service
         )

@@ -5,6 +5,7 @@ import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizePa
 import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeParams
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
+import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
@@ -26,6 +27,7 @@ class SynchronizeImpl(
     private val outcomesRepository: OutcomesRepository,
     private val productsRepository: ProductsRepository,
     private val variantsRepository: VariantsRepository,
+    private val orderDetailsRepository: OrderDetailsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val service: SoliteServices
@@ -44,8 +46,8 @@ class SynchronizeImpl(
         val needUploadProducts = productsRepository.getNeedUploadProducts().map { it.toResponse() }
         val needUploadVariants = variantsRepository.getNeedUploadVariants().map { it.toResponse() }
         val needUploadOrderDetails = SynchronizeParamItem(
-                deletedItems = ordersRepository.getDeletedOrderDetailIds(),
-                items = ordersRepository.getNeedUploadOrderDetails().map { it.toResponse() }
+                deletedItems = orderDetailsRepository.getDeletedOrderDetailIds(),
+                items = orderDetailsRepository.getNeedUploadOrderDetails().map { it.toResponse() }
         )
         val needUploadOrderPayments =
             ordersRepository.getNeedUploadOrderPayments().map { it.toResponse() }
@@ -112,7 +114,7 @@ class SynchronizeImpl(
             variantsRepository.updateItems(needUploadVariants.map { it.toEntity() })
         }
         if (needUploadOrderDetails.items.isNotEmpty()) {
-            ordersRepository.insertOrderDetails(needUploadOrderDetails.items.map { it.toEntity() })
+            orderDetailsRepository.insertOrderDetails(needUploadOrderDetails.items.map { it.toEntity() })
         }
         if (needUploadOrderPayments.isNotEmpty()) {
             ordersRepository.insertOrderPayments(needUploadOrderPayments.map { it.toEntity() })
@@ -144,7 +146,7 @@ class SynchronizeImpl(
 
         val missingOrderDetail = response.data?.orderDetail
         if (!missingOrderDetail.isNullOrEmpty()) {
-            ordersRepository.insertOrderDetails(missingOrderDetail.map { it.toEntity() })
+            orderDetailsRepository.insertOrderDetails(missingOrderDetail.map { it.toEntity() })
         }
         val missingOrderPayment = response.data?.orderPayment
         if (!missingOrderPayment.isNullOrEmpty()) {
@@ -169,7 +171,7 @@ class SynchronizeImpl(
 
         // Delete the deleted items
         if (needUploadOrderDetails.deletedItems.isNotEmpty()) {
-            ordersRepository.deleteAllDeletedOrderDetails()
+            orderDetailsRepository.deleteAllDeletedOrderDetails()
         }
         if (needUploadOrderProductVariants.deletedItems.isNotEmpty()) {
             ordersRepository.deleteAllDeletedOrderProductVariants()

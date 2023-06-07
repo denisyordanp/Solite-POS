@@ -57,9 +57,6 @@ interface OrdersDao {
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
     fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
 
-    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0 AND ${NewOrderDetail.DELETED} = 0")
-    suspend fun getNeedUploadOrderDetails(): List<NewOrderDetail>
-
     @Query("SELECT * FROM ${NewOrderPayment.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadOrderPayments(): List<NewOrderPayment>
 
@@ -96,9 +93,6 @@ interface OrdersDao {
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}' WHERE ${OrderDetail.ID} = :orderDetailId LIMIT 1")
     suspend fun getOrderDetailById(orderDetailId: Long): OrderDetail?
 
-    @Query("SELECT * FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
-    suspend fun getNewOrderDetailsByOrderId(orderId: String): List<NewOrderDetail>
-
     @Query("SELECT * FROM '${OrderPayment.DB_NAME}'")
     suspend fun getOrderPayments(): List<OrderPayment>
 
@@ -107,9 +101,6 @@ interface OrdersDao {
 
     @Query("SELECT * FROM '${OrderProductVariant.DB_NAME}'")
     suspend fun getOrderProductVariants(): List<OrderProductVariant>
-
-    @Query("SELECT ${NewOrderDetail.ID} FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrderDetail.DELETED} = 1")
-    suspend fun getDeletedOrderDetailIds(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: Order): Long
