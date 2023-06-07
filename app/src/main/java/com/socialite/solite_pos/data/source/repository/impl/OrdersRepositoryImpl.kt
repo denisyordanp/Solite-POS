@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
@@ -17,6 +18,8 @@ import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -138,6 +141,24 @@ class OrdersRepositoryImpl(
 
     override suspend fun deleteAllDeletedOrderProductVariants() {
         dao.deleteAllDeletedOrderProductVariants()
+    }
+
+    override suspend fun getItems(): List<Order> {
+        return dao.getNewOrders()
+    }
+
+    override suspend fun updateItems(items: List<Order>) {
+        dao.updateOrders(items)
+    }
+
+    override suspend fun insertItems(items: List<Order>) {
+        dao.insertOrders(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<Order>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
     }
 
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =

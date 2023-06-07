@@ -9,7 +9,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.flow.Flow
 
-interface OrdersRepository {
+interface OrdersRepository : SyncRepository<Order> {
 
     fun getOrderList(status: Int, date: String): Flow<List<OrderData>>
     fun getOrderList(status: Int, date: String, store: String): Flow<List<OrderData>>

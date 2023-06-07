@@ -84,6 +84,9 @@ interface OrdersDao {
     @Query("SELECT * FROM '${Order.DB_NAME}'")
     suspend fun getOrders(): List<Order>
 
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}'")
+    suspend fun getNewOrders(): List<NewOrder>
+
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo LIMIT 1")
     suspend fun getOrderByNo(orderNo: String): Order?
 
@@ -164,6 +167,9 @@ interface OrdersDao {
 
     @Update
     suspend fun updateNewOrder(order: NewOrder)
+
+    @Update
+    suspend fun updateOrders(order: List<NewOrder>)
 
     @Update
     suspend fun updateOrderDetail(orderDetail: OrderDetail)

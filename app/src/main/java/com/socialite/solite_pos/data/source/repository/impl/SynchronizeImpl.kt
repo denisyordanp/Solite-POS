@@ -97,10 +97,10 @@ class SynchronizeImpl(
             promosRepository.updateItems(needUploadPromo.map { it.toEntity() })
         }
         if (needUploadPayments.isNotEmpty()) {
-            paymentsRepository.updatePayments(needUploadPayments.map { it.toEntity() })
+            paymentsRepository.updateItems(needUploadPayments.map { it.toEntity() })
         }
         if (needUploadOrders.isNotEmpty()) {
-            ordersRepository.insertOrders(needUploadOrders.map { it.toEntity() })
+            ordersRepository.updateItems(needUploadOrders.map { it.toEntity() })
         }
         if (needUploadOutcomes.isNotEmpty()) {
             outcomesRepository.insertOutcomes(needUploadOutcomes.map { it.toEntity() })
@@ -137,11 +137,8 @@ class SynchronizeImpl(
         categoriesRepository.updateSynchronization(data?.category?.map { it.toEntity() })
         promosRepository.updateSynchronization(data?.promo?.map { it.toEntity() })
         paymentsRepository.updateSynchronization(data?.payment?.map { it.toEntity() })
+        ordersRepository.updateSynchronization(data?.order?.map { it.toEntity() })
 
-        val missingOrder = response.data?.order
-        if (!missingOrder.isNullOrEmpty()) {
-            ordersRepository.insertOrders(missingOrder.map { it.toEntity() })
-        }
         val missingOutcome = response.data?.outcome
         if (!missingOutcome.isNullOrEmpty()) {
             outcomesRepository.insertOutcomes(missingOutcome.map { it.toEntity() })
