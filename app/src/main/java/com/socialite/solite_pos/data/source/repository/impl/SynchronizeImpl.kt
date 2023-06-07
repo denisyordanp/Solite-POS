@@ -83,16 +83,18 @@ class SynchronizeImpl(
 
         // Update all un uploaded data that already uploaded
         if (needUploadCustomers.isNotEmpty()) {
-            customersRepository.insertCustomers(needUploadCustomers.map { it.toEntity() })
+            customersRepository.updateItems(
+                needUploadCustomers.map { it.toEntity() }
+            )
         }
         if (needUploadStores.isNotEmpty()) {
-            storeRepository.insertStores(needUploadStores.map { it.toEntity() })
+            storeRepository.updateItems(needUploadStores.map { it.toEntity() })
         }
         if (needUploadCategories.isNotEmpty()) {
-            categoriesRepository.insertCategories(needUploadCategories.map { it.toEntity() })
+            categoriesRepository.updateItems(needUploadCategories.map { it.toEntity() })
         }
         if (needUploadPromo.isNotEmpty()) {
-            promosRepository.insertPromos(needUploadPromo.map { it.toEntity() })
+            promosRepository.updateItems(needUploadPromo.map { it.toEntity() })
         }
         if (needUploadPayments.isNotEmpty()) {
             paymentsRepository.insertPayments(needUploadPayments.map { it.toEntity() })
@@ -129,22 +131,11 @@ class SynchronizeImpl(
         }
 
         // Insert all missing data that given by server
-        val missingCustomer = response.data?.customer
-        if (!missingCustomer.isNullOrEmpty()) {
-            customersRepository.insertCustomers(missingCustomer.map { it.toEntity() })
-        }
-        val missingStore = response.data?.store
-        if (!missingStore.isNullOrEmpty()) {
-            storeRepository.insertStores(missingStore.map { it.toEntity() })
-        }
-        val missingCategories = response.data?.category
-        if (!missingCategories.isNullOrEmpty()) {
-            categoriesRepository.insertCategories(missingCategories.map { it.toEntity() })
-        }
-        val missingPromo = response.data?.promo
-        if (!missingPromo.isNullOrEmpty()) {
-            promosRepository.insertPromos(missingPromo.map { it.toEntity() })
-        }
+        customersRepository.updateSynchronization(response.data?.customer?.map { it.toEntity() })
+        storeRepository.updateSynchronization(response.data?.store?.map { it.toEntity() })
+        categoriesRepository.updateSynchronization(response.data?.category?.map { it.toEntity() })
+        promosRepository.updateSynchronization(response.data?.promo?.map { it.toEntity() })
+
         val missingPayment = response.data?.payment
         if (!missingPayment.isNullOrEmpty()) {
             paymentsRepository.insertPayments(missingPayment.map { it.toEntity() })
