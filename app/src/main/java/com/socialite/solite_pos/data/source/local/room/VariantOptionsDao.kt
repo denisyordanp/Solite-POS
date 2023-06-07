@@ -22,6 +22,9 @@ interface VariantOptionsDao {
     @Query("SELECT * FROM '${VariantOption.DB_NAME}'")
     suspend fun getVariantOptions(): List<VariantOption>
 
+    @Query("SELECT * FROM '${NewVariantOption.DB_NAME}'")
+    suspend fun getNewVariantOptions(): List<NewVariantOption>
+
     @Query("SELECT * FROM '${VariantOption.DB_NAME}' WHERE ${VariantOption.ID} = :variantOptionId LIMIT 1")
     suspend fun getVariantOptionById(variantOptionId: Long): VariantOption?
 
@@ -46,6 +49,9 @@ interface VariantOptionsDao {
 
     @Update
     suspend fun updateNewVariantOption(data: NewVariantOption)
+
+    @Update
+    suspend fun updateVariantOptions(data: List<NewVariantOption>)
 
     @Query("DELETE FROM ${VariantOption.DB_NAME}")
     suspend fun deleteAllOldVariantOptions()

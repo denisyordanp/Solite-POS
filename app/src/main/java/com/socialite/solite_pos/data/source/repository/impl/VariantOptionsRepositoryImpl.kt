@@ -2,12 +2,15 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
+import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import kotlinx.coroutines.flow.map
 import java.util.UUID
 
@@ -102,5 +105,23 @@ class VariantOptionsRepositoryImpl(
 
     override suspend fun deleteAllNewVariantOptions() {
         dao.deleteAllNewVariantOptions()
+    }
+
+    override suspend fun getItems(): List<VariantOption> {
+        return dao.getNewVariantOptions()
+    }
+
+    override suspend fun updateItems(items: List<VariantOption>) {
+        dao.updateVariantOptions(items)
+    }
+
+    override suspend fun insertItems(items: List<VariantOption>) {
+        dao.insertVariantOptions(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<VariantOption>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
     }
 }

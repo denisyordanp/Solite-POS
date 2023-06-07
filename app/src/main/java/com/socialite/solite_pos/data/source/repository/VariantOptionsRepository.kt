@@ -5,7 +5,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptio
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import kotlinx.coroutines.flow.Flow
 
-interface VariantOptionsRepository {
+interface VariantOptionsRepository : SyncRepository<VariantOption> {
 
     fun getVariantOptions(query: SupportSQLiteQuery): Flow<List<VariantOption>>
     fun getVariantsWithOptions(): Flow<List<VariantWithOptions>>

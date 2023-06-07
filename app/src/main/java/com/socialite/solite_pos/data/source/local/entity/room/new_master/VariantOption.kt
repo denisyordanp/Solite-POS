@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.entity.VariantOptionResponse
 import java.io.Serializable
@@ -29,7 +30,7 @@ import java.util.UUID
 data class VariantOption(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+    override val id: String,
 
     @ColumnInfo(name = Variant.ID)
     var variant: String,
@@ -45,7 +46,7 @@ data class VariantOption(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable {
+) : Serializable, EntityData {
 
     fun isAdd() = id == ID_ADD
 

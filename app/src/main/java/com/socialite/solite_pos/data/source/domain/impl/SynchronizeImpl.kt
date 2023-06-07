@@ -127,7 +127,7 @@ class SynchronizeImpl(
             orderPromosRepository.updateItems(needUploadOrderPromos.map { it.toEntity() })
         }
         if (needUploadVariantOptions.isNotEmpty()) {
-            variantOptionsRepository.insertVariantOptions(needUploadVariantOptions.map { it.toEntity() })
+            variantOptionsRepository.updateItems(needUploadVariantOptions.map { it.toEntity() })
         }
         if (needUploadOrderProductVariants.items.isNotEmpty()) {
             ordersRepository.insertOrderProductVariants(needUploadOrderProductVariants.items.map { it.toEntity() })
@@ -150,11 +150,8 @@ class SynchronizeImpl(
         orderDetailsRepository.updateSynchronization(data?.orderDetail?.map { it.toEntity() })
         orderPaymentsRepository.updateSynchronization(data?.orderPayment?.map { it.toEntity() })
         orderPromosRepository.updateSynchronization(data?.orderPromo?.map { it.toEntity() })
+        variantOptionsRepository.updateSynchronization(data?.variantOption?.map { it.toEntity() })
 
-        val missingVariantOption = response.data?.variantOption
-        if (!missingVariantOption.isNullOrEmpty()) {
-            variantOptionsRepository.insertVariantOptions(missingVariantOption.map { it.toEntity() })
-        }
         val missingOrderProductVariant = response.data?.orderProductVariant
         if (!missingOrderProductVariant.isNullOrEmpty()) {
             ordersRepository.insertOrderProductVariants(missingOrderProductVariant.map { it.toEntity() })
