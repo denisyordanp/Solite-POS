@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.source.repository.OrderPaymentsRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
@@ -23,6 +24,7 @@ import com.socialite.solite_pos.data.source.repository.impl.AccountRepositoryImp
 import com.socialite.solite_pos.data.source.repository.impl.CategoriesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrderDetailsRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.OrderPaymentsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrdersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OutcomesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryImpl
@@ -111,8 +113,6 @@ object RepositoryInjection {
             dao = database.ordersDao(),
             customersDao = database.customersDao(),
             storesDao = database.storeDao(),
-            productsDao = database.productsDao(),
-            paymentDao = database.paymentsDao(),
             promosDao = database.promoDao(),
             variantOptionsDao = database.variantOptionsDao(),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context),
@@ -126,6 +126,16 @@ object RepositoryInjection {
             dao = database.orderDetailsDao(),
             ordersDao = database.ordersDao(),
             productsDao = database.productsDao(),
+            db = database
+        )
+    }
+
+    fun provideOrderPaymentsRepository(context: Context): OrderPaymentsRepository {
+        val database = getInstance(context)
+        return OrderPaymentsRepositoryImpl.getInstance(
+            dao = database.orderPaymentsDao(),
+            ordersDao = database.ordersDao(),
+            paymentDao = database.paymentsDao(),
             db = database
         )
     }

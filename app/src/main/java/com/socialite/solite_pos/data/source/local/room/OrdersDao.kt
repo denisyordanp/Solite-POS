@@ -57,9 +57,6 @@ interface OrdersDao {
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
     fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
 
-    @Query("SELECT * FROM ${NewOrderPayment.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadOrderPayments(): List<NewOrderPayment>
-
     @Query("SELECT * FROM ${NewOrderPromo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadOrderPromos(): List<NewOrderPromo>
 
@@ -87,14 +84,8 @@ interface OrdersDao {
     @Query("SELECT * FROM '${Order.DB_NAME}' WHERE ${Order.NO} = :orderNo LIMIT 1")
     suspend fun getOrderByNo(orderNo: String): Order?
 
-    @Query("SELECT * FROM '${OrderDetail.DB_NAME}'")
-    suspend fun getOrderDetails(): List<OrderDetail>
-
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}' WHERE ${OrderDetail.ID} = :orderDetailId LIMIT 1")
     suspend fun getOrderDetailById(orderDetailId: Long): OrderDetail?
-
-    @Query("SELECT * FROM '${OrderPayment.DB_NAME}'")
-    suspend fun getOrderPayments(): List<OrderPayment>
 
     @Query("SELECT * FROM '${OrderPromo.DB_NAME}'")
     suspend fun getOrderPromos(): List<OrderPromo>

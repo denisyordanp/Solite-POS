@@ -6,6 +6,7 @@ import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizePa
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.source.repository.OrderPaymentsRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
@@ -28,6 +29,7 @@ class SynchronizeImpl(
     private val productsRepository: ProductsRepository,
     private val variantsRepository: VariantsRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
+    private val orderPaymentsRepository: OrderPaymentsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val service: SoliteServices
@@ -50,7 +52,7 @@ class SynchronizeImpl(
                 items = orderDetailsRepository.getNeedUploadOrderDetails().map { it.toResponse() }
         )
         val needUploadOrderPayments =
-            ordersRepository.getNeedUploadOrderPayments().map { it.toResponse() }
+            orderPaymentsRepository.getNeedUploadOrderPayments().map { it.toResponse() }
         val needUploadOrderPromos =
             ordersRepository.getNeedUploadOrderPromos().map { it.toResponse() }
         val needUploadVariantOptions =
@@ -117,7 +119,7 @@ class SynchronizeImpl(
             orderDetailsRepository.updateItems(needUploadOrderDetails.items.map { it.toEntity() })
         }
         if (needUploadOrderPayments.isNotEmpty()) {
-            ordersRepository.insertOrderPayments(needUploadOrderPayments.map { it.toEntity() })
+            orderPaymentsRepository.insertOrderPayments(needUploadOrderPayments.map { it.toEntity() })
         }
         if (needUploadOrderPromos.isNotEmpty()) {
             ordersRepository.insertOrderPromos(needUploadOrderPromos.map { it.toEntity() })
@@ -147,7 +149,7 @@ class SynchronizeImpl(
 
         val missingOrderPayment = response.data?.orderPayment
         if (!missingOrderPayment.isNullOrEmpty()) {
-            ordersRepository.insertOrderPayments(missingOrderPayment.map { it.toEntity() })
+            orderPaymentsRepository.insertOrderPayments(missingOrderPayment.map { it.toEntity() })
         }
         val missingOrderPromo = response.data?.orderPromo
         if (!missingOrderPromo.isNullOrEmpty()) {

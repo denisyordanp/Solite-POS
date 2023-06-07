@@ -37,10 +37,10 @@ object DomainInjection {
     }
 
     fun provideNewOrder(context: Context): NewOrder {
-        val database = getInstance(context)
         return NewOrderImpl(
-            dao = database.ordersDao(),
             orderPref = OrderPref(context),
+            ordersRepository = RepositoryInjection.provideOrdersRepository(context),
+            orderDetailsRepository = RepositoryInjection.provideOrderDetailsRepository(context),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context)
         )
     }
@@ -63,7 +63,8 @@ object DomainInjection {
 
     fun providePayOrder(context: Context): PayOrder {
         return PayOrderImpl(
-            RepositoryInjection.provideOrdersRepository(context)
+            ordersRepository = RepositoryInjection.provideOrdersRepository(context),
+            orderPaymentsRepository = RepositoryInjection.provideOrderPaymentsRepository(context)
         )
     }
 
@@ -135,6 +136,7 @@ object DomainInjection {
         val productsRepository = RepositoryInjection.provideProductsRepository(context)
         val variantsRepository = RepositoryInjection.provideVariantsRepository(context)
         val orderDetailsRepository = RepositoryInjection.provideOrderDetailsRepository(context)
+        val orderPaymentsRepository = RepositoryInjection.provideOrderPaymentsRepository(context)
         val variantOptionsRepository = RepositoryInjection.provideVariantOptionsRepository(context)
         val productVariantsRepository = RepositoryInjection.provideProductVariantsRepository(context)
         val userPreferences = UserPreferencesImpl.getInstance(context)
@@ -152,6 +154,7 @@ object DomainInjection {
             variantsRepository = variantsRepository,
             variantOptionsRepository = variantOptionsRepository,
             orderDetailsRepository = orderDetailsRepository,
+            orderPaymentsRepository = orderPaymentsRepository,
             productVariantsRepository = productVariantsRepository,
             service = service
         )

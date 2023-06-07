@@ -2,17 +2,13 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
+import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
-import com.socialite.solite_pos.data.source.local.room.PaymentsDao
-import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
@@ -30,8 +26,6 @@ class OrdersRepositoryImpl(
     private val dao: OrdersDao,
     private val customersDao: CustomersDao,
     private val storesDao: StoreDao,
-    private val productsDao: ProductsDao,
-    private val paymentDao: PaymentsDao,
     private val promosDao: PromosDao,
     private val variantOptionsDao: VariantOptionsDao,
     private val settingRepository: SettingRepository,
@@ -46,8 +40,6 @@ class OrdersRepositoryImpl(
             dao: OrdersDao,
             customersDao: CustomersDao,
             storesDao: StoreDao,
-            productsDao: ProductsDao,
-            paymentDao: PaymentsDao,
             promosDao: PromosDao,
             variantOptionsDao: VariantOptionsDao,
             settingRepository: SettingRepository,
@@ -60,8 +52,6 @@ class OrdersRepositoryImpl(
                             dao = dao,
                             customersDao = customersDao,
                             storesDao = storesDao,
-                            productsDao = productsDao,
-                            paymentDao = paymentDao,
                             promosDao = promosDao,
                             variantOptionsDao = variantOptionsDao,
                             settingRepository = settingRepository,
@@ -92,23 +82,28 @@ class OrdersRepositoryImpl(
     override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
     override suspend fun getOrderData(orderId: String): OrderData? = dao.getOrderDataById(orderId)
-    override suspend fun getNeedUploadOrderPayments() = dao.getNeedUploadOrderPayments()
     override suspend fun getNeedUploadOrderPromos() = dao.getNeedUploadOrderPromos()
     override suspend fun getNeedUploadOrderProductVariants() = dao.getNeedOrderProductVariants()
-    override suspend fun updateOrder(order: Order) = dao.updateNewOrder(order.copy(
-        isUploaded = false
-    ))
-    override suspend fun insertOrders(list: List<Order>) {
-        dao.insertOrders(list)
+    override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
+        order.copy(
+            isUploaded = false
+        )
+    )
+
+    override suspend fun insertOrder(order: Order) {
+        dao.insertNewOrder(order)
     }
-    override suspend fun insertOrderPayments(list: List<OrderPayment>) {
-        dao.insertOrderPayments(list)
-    }
+
     override suspend fun insertOrderPromos(list: List<OrderPromo>) {
         dao.insertOrderPromos(list)
     }
+
     override suspend fun insertOrderProductVariants(list: List<OrderProductVariant>) {
         dao.insertOrderProductVariants(list)
+    }
+
+    override suspend fun insertOrderProductVariant(data: OrderProductVariant) {
+        dao.insertNewOrderProductVariant(data)
     }
 
     override suspend fun getDeletedOrderProductVariantIds() = dao.getDeletedOrderProductVariantIds()
@@ -135,14 +130,9 @@ class OrdersRepositoryImpl(
         update.updates(missingItems)
     }
 
-    override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
-        dao.insertNewOrderPayment(payment)
-
     override suspend fun insertNewPromoOrder(promo: OrderPromo) = dao.insertNewOrderPromo(promo)
     override suspend fun migrateToUUID() {
         val orders = dao.getOrders()
-        val orderDetails = dao.getOrderDetails()
-        val orderPayments = dao.getOrderPayments()
         val orderPromos = dao.getOrderPromos()
         val orderProductVariants = dao.getOrderProductVariants()
 
@@ -170,57 +160,6 @@ class OrdersRepositoryImpl(
                         isUploaded = order.isUploaded
                     )
                     dao.insertNewOrder(newOrder)
-                }
-            }
-        }
-
-        db.withTransaction {
-            for (orderDetail in orderDetails) {
-                val uuid = orderDetail.new_id.ifEmpty {
-                    val updatedOrderDetail = orderDetail.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updateOrderDetail(updatedOrderDetail)
-                    updatedOrderDetail.new_id
-                }
-
-                val order = dao.getOrderByNo(orderDetail.orderNo)
-                val product = productsDao.getProductById(orderDetail.idProduct)
-                if (order != null && product != null) {
-                    val newOrderDetail = OrderDetail(
-                        id = uuid,
-                        order = order.new_id,
-                        product = product.new_id,
-                        amount = orderDetail.amount,
-                        isUpload = orderDetail.isUpload,
-                            isDeleted = false
-                    )
-                    dao.insertNewOrderDetail(newOrderDetail)
-                }
-            }
-        }
-
-        db.withTransaction {
-            for (orderPayment in orderPayments) {
-                val uuid = orderPayment.new_id.ifEmpty {
-                    val updatedOrderPayment = orderPayment.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updateOrderPayment(updatedOrderPayment)
-                    updatedOrderPayment.new_id
-                }
-
-                val order = dao.getOrderByNo(orderPayment.orderNO)
-                val payment = paymentDao.getPaymentById(orderPayment.idPayment)
-                if (order != null && payment != null) {
-                    val newOrderPayment = OrderPayment(
-                        id = uuid,
-                        order = order.new_id,
-                        payment = payment.new_id,
-                        pay = orderPayment.pay,
-                        isUpload = orderPayment.isUpload
-                    )
-                    dao.insertNewOrderPayment(newOrderPayment)
                 }
             }
         }
@@ -269,7 +208,7 @@ class OrdersRepositoryImpl(
                         variantOption = variantOption.new_id,
                         orderDetail = orderDetail.new_id,
                         isUpload = orderProductVariant.isUpload,
-                            isDeleted = false
+                        isDeleted = false
                     )
                     dao.insertNewOrderProductVariant(newOrderProductVariant)
                 }
