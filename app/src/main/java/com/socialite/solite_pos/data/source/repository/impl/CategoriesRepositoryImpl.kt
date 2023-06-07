@@ -2,11 +2,15 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category as NewCategory
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CategoriesDao
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 
@@ -80,5 +84,21 @@ class CategoriesRepositoryImpl(
 
     override suspend fun deleteAllNewCategories() {
         dao.deleteAllNewCategories()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<NewCategory>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
+    }
+
+    override suspend fun getItems() = dao.getNewCategories(NewCategory.getFilter(NewCategory.ALL)).first()
+
+    override suspend fun insertItems(items: List<NewCategory>) {
+        dao.insertCategories(items)
+    }
+
+    override suspend fun updateItems(items: List<NewCategory>) {
+        dao.updateCategories(items)
     }
 }

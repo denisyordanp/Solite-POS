@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.entity.CategoryResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
@@ -21,7 +22,7 @@ data class Category(
 
         @PrimaryKey
         @ColumnInfo(name = ID, defaultValue = "")
-        val id: String,
+        override val id: String,
 
         @ColumnInfo(name = NAME)
         override var name: String,
@@ -34,7 +35,7 @@ data class Category(
 
         @ColumnInfo(name = UPLOAD)
         var isUploaded: Boolean
-) : Serializable, DropdownItem {
+) : Serializable, DropdownItem, EntityData {
 
     fun isNewCategory() = id == ID_ADD
 
@@ -42,7 +43,7 @@ data class Category(
             id = UUID.randomUUID().toString()
     )
 
-    fun toResponse(): CategoryResponse {
+    override fun toResponse(): CategoryResponse {
         return CategoryResponse(
                 id = id,
                 name = name,

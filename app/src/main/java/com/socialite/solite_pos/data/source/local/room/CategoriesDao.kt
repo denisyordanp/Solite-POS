@@ -36,6 +36,9 @@ interface CategoriesDao {
     suspend fun updateCategory(data: Category)
 
     @Update
+    suspend fun updateCategories(data: List<NewCategory>)
+
+    @Update
     suspend fun updateNewCategory(data: NewCategory)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
