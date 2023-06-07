@@ -18,6 +18,9 @@ interface OrderDetailsDao {
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}'")
     suspend fun getOrderDetails(): List<OrderDetail>
 
+    @Query("SELECT * FROM '${NewOrderDetail.DB_NAME}'")
+    suspend fun getNewOrderDetails(): List<NewOrderDetail>
+
     @Query("SELECT * FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
     suspend fun getNewOrderDetailsByOrderId(orderId: String): List<NewOrderDetail>
 
@@ -35,6 +38,9 @@ interface OrderDetailsDao {
 
     @Update
     suspend fun updateNewOrderDetail(orderDetail: NewOrderDetail)
+
+    @Update
+    suspend fun updateOrderDetails(orderDetail: List<NewOrderDetail>)
 
     @Query("DELETE FROM '${NewOrderDetail.DB_NAME}' WHERE ${NewOrderDetail.DELETED} = 1")
     suspend fun deleteAllDeletedOrderDetails()
