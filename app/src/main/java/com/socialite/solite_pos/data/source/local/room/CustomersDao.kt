@@ -40,5 +40,8 @@ interface CustomersDao {
     suspend fun deleteAllNewCustomers()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCustomers(datas: List<NewCustomer>)
+    suspend fun insertCustomers(list: List<NewCustomer>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateCustomers(list: List<NewCustomer>)
 }

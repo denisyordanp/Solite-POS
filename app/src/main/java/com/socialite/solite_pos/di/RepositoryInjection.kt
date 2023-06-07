@@ -3,6 +3,7 @@ package com.socialite.solite_pos.di
 import android.content.Context
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
 import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -14,10 +15,10 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
-import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import com.socialite.solite_pos.data.source.repository.impl.AccountRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.CategoriesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrdersRepositoryImpl
@@ -29,7 +30,6 @@ import com.socialite.solite_pos.data.source.repository.impl.PromosRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
-import com.socialite.solite_pos.data.source.repository.impl.AccountRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantMixesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantOptionsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.VariantsRepositoryImpl

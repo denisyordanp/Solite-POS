@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.entity.CustomerResponse
 import java.io.Serializable
@@ -19,17 +20,17 @@ data class Customer(
 
         @PrimaryKey
         @ColumnInfo(name = ID, defaultValue = "")
-        val id: String,
+        override val id: String,
 
         @ColumnInfo(name = NAME)
         var name: String,
 
         @ColumnInfo(name = UPLOAD)
         var isUploaded: Boolean
-) : Serializable {
+) : Serializable, EntityData {
     fun isAdd() = id == ID_ADD
 
-    fun toResponse(): CustomerResponse {
+    override fun toResponse(): CustomerResponse {
         return CustomerResponse(
                 id = id,
                 name = name,
