@@ -15,6 +15,7 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.domain.Synchronize
+import com.socialite.solite_pos.data.source.repository.OrderPromosRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 
@@ -30,6 +31,7 @@ class SynchronizeImpl(
     private val variantsRepository: VariantsRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val orderPaymentsRepository: OrderPaymentsRepository,
+    private val orderPromosRepository: OrderPromosRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val service: SoliteServices
@@ -54,7 +56,7 @@ class SynchronizeImpl(
         val needUploadOrderPayments =
             orderPaymentsRepository.getNeedUploadOrderPayments().map { it.toResponse() }
         val needUploadOrderPromos =
-            ordersRepository.getNeedUploadOrderPromos().map { it.toResponse() }
+            orderPromosRepository.getNeedUploadOrderPromos().map { it.toResponse() }
         val needUploadVariantOptions =
             variantOptionsRepository.getNeedUploadVariantOptions().map { it.toResponse() }
         val needUploadOrderProductVariants = SynchronizeParamItem(
@@ -122,7 +124,7 @@ class SynchronizeImpl(
             orderPaymentsRepository.updateItems(needUploadOrderPayments.map { it.toEntity() })
         }
         if (needUploadOrderPromos.isNotEmpty()) {
-            ordersRepository.insertOrderPromos(needUploadOrderPromos.map { it.toEntity() })
+            orderPromosRepository.insertOrderPromos(needUploadOrderPromos.map { it.toEntity() })
         }
         if (needUploadVariantOptions.isNotEmpty()) {
             variantOptionsRepository.insertVariantOptions(needUploadVariantOptions.map { it.toEntity() })
@@ -150,7 +152,7 @@ class SynchronizeImpl(
 
         val missingOrderPromo = response.data?.orderPromo
         if (!missingOrderPromo.isNullOrEmpty()) {
-            ordersRepository.insertOrderPromos(missingOrderPromo.map { it.toEntity() })
+            orderPromosRepository.insertOrderPromos(missingOrderPromo.map { it.toEntity() })
         }
         val missingVariantOption = response.data?.variantOption
         if (!missingVariantOption.isNullOrEmpty()) {

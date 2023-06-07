@@ -2,7 +2,6 @@ package com.socialite.solite_pos.data.source.repository
 
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.flow.Flow
@@ -15,15 +14,12 @@ interface OrdersRepository : SyncRepository<Order> {
     fun getOrderList(status: Int, parameters: ReportsParameter): Flow<List<OrderData>>
     fun getOrderDataAsFlow(orderId: String): Flow<OrderData?>
     suspend fun getOrderData(orderId: String): OrderData?
-    suspend fun getNeedUploadOrderPromos(): List<OrderPromo>
     suspend fun getNeedUploadOrderProductVariants(): List<OrderProductVariant>
     suspend fun updateOrder(order: Order)
     suspend fun insertOrder(order: Order)
-    suspend fun insertNewPromoOrder(promo: OrderPromo)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldOrders()
     suspend fun deleteAllNewOrders()
-    suspend fun insertOrderPromos(list: List<OrderPromo>)
     suspend fun insertOrderProductVariants(list: List<OrderProductVariant>)
     suspend fun insertOrderProductVariant(data: OrderProductVariant)
     suspend fun getDeletedOrderProductVariantIds(): List<String>

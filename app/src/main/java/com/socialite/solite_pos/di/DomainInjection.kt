@@ -64,7 +64,8 @@ object DomainInjection {
     fun providePayOrder(context: Context): PayOrder {
         return PayOrderImpl(
             ordersRepository = RepositoryInjection.provideOrdersRepository(context),
-            orderPaymentsRepository = RepositoryInjection.provideOrderPaymentsRepository(context)
+            orderPaymentsRepository = RepositoryInjection.provideOrderPaymentsRepository(context),
+            orderPromosRepository = RepositoryInjection.provideOrderPromosRepository(context)
         )
     }
 
@@ -137,6 +138,7 @@ object DomainInjection {
         val variantsRepository = RepositoryInjection.provideVariantsRepository(context)
         val orderDetailsRepository = RepositoryInjection.provideOrderDetailsRepository(context)
         val orderPaymentsRepository = RepositoryInjection.provideOrderPaymentsRepository(context)
+        val orderPromosRepository = RepositoryInjection.provideOrderPromosRepository(context)
         val variantOptionsRepository = RepositoryInjection.provideVariantOptionsRepository(context)
         val productVariantsRepository = RepositoryInjection.provideProductVariantsRepository(context)
         val userPreferences = UserPreferencesImpl.getInstance(context)
@@ -155,6 +157,7 @@ object DomainInjection {
             variantOptionsRepository = variantOptionsRepository,
             orderDetailsRepository = orderDetailsRepository,
             orderPaymentsRepository = orderPaymentsRepository,
+            orderPromosRepository = orderPromosRepository,
             productVariantsRepository = productVariantsRepository,
             service = service
         )

@@ -57,9 +57,6 @@ interface OrdersDao {
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
     fun getDetailOrders(orderId: String): Flow<List<NewOrderDetail>>
 
-    @Query("SELECT * FROM ${NewOrderPromo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
-    suspend fun getNeedUploadOrderPromos(): List<NewOrderPromo>
-
     @Query("SELECT * FROM ${NewOrderProductVariant.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0 AND ${NewOrderDetail.DELETED} = 0")
     suspend fun getNeedOrderProductVariants(): List<NewOrderProductVariant>
 
@@ -86,9 +83,6 @@ interface OrdersDao {
 
     @Query("SELECT * FROM '${OrderDetail.DB_NAME}' WHERE ${OrderDetail.ID} = :orderDetailId LIMIT 1")
     suspend fun getOrderDetailById(orderDetailId: Long): OrderDetail?
-
-    @Query("SELECT * FROM '${OrderPromo.DB_NAME}'")
-    suspend fun getOrderPromos(): List<OrderPromo>
 
     @Query("SELECT * FROM '${OrderProductVariant.DB_NAME}'")
     suspend fun getOrderProductVariants(): List<OrderProductVariant>
@@ -124,16 +118,7 @@ interface OrdersDao {
     suspend fun insertOrderDetails(list: List<NewOrderDetail>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrderPromos(list: List<NewOrderPromo>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderPayment(payment: NewOrderPayment)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNewPromoOrder(promo: OrderPromo)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNewOrderPromo(promo: NewOrderPromo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewOrderProductVariant(orderProductVariant: NewOrderProductVariant)
@@ -161,9 +146,6 @@ interface OrdersDao {
 
     @Update
     suspend fun updateOrderPayment(orderPayment: OrderPayment)
-
-    @Update
-    suspend fun updateOrderPromo(orderPromo: OrderPromo)
 
     @Update
     suspend fun updateOrderProductVariant(orderProductVariant: OrderProductVariant)

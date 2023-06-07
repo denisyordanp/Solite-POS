@@ -4,12 +4,10 @@ import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CustomersDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
-import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -26,7 +24,6 @@ class OrdersRepositoryImpl(
     private val dao: OrdersDao,
     private val customersDao: CustomersDao,
     private val storesDao: StoreDao,
-    private val promosDao: PromosDao,
     private val variantOptionsDao: VariantOptionsDao,
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
@@ -40,7 +37,6 @@ class OrdersRepositoryImpl(
             dao: OrdersDao,
             customersDao: CustomersDao,
             storesDao: StoreDao,
-            promosDao: PromosDao,
             variantOptionsDao: VariantOptionsDao,
             settingRepository: SettingRepository,
             db: AppDatabase
@@ -52,7 +48,6 @@ class OrdersRepositoryImpl(
                             dao = dao,
                             customersDao = customersDao,
                             storesDao = storesDao,
-                            promosDao = promosDao,
                             variantOptionsDao = variantOptionsDao,
                             settingRepository = settingRepository,
                             db = db
@@ -82,7 +77,6 @@ class OrdersRepositoryImpl(
     override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
     override suspend fun getOrderData(orderId: String): OrderData? = dao.getOrderDataById(orderId)
-    override suspend fun getNeedUploadOrderPromos() = dao.getNeedUploadOrderPromos()
     override suspend fun getNeedUploadOrderProductVariants() = dao.getNeedOrderProductVariants()
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
         order.copy(
@@ -92,10 +86,6 @@ class OrdersRepositoryImpl(
 
     override suspend fun insertOrder(order: Order) {
         dao.insertNewOrder(order)
-    }
-
-    override suspend fun insertOrderPromos(list: List<OrderPromo>) {
-        dao.insertOrderPromos(list)
     }
 
     override suspend fun insertOrderProductVariants(list: List<OrderProductVariant>) {
@@ -130,10 +120,8 @@ class OrdersRepositoryImpl(
         update.updates(missingItems)
     }
 
-    override suspend fun insertNewPromoOrder(promo: OrderPromo) = dao.insertNewOrderPromo(promo)
     override suspend fun migrateToUUID() {
         val orders = dao.getOrders()
-        val orderPromos = dao.getOrderPromos()
         val orderProductVariants = dao.getOrderProductVariants()
 
         db.withTransaction {
@@ -160,31 +148,6 @@ class OrdersRepositoryImpl(
                         isUploaded = order.isUploaded
                     )
                     dao.insertNewOrder(newOrder)
-                }
-            }
-        }
-
-        db.withTransaction {
-            for (orderPromo in orderPromos) {
-                val uuid = orderPromo.new_id.ifEmpty {
-                    val updatedOrderPromo = orderPromo.copy(
-                        new_id = UUID.randomUUID().toString()
-                    )
-                    dao.updateOrderPromo(updatedOrderPromo)
-                    updatedOrderPromo.new_id
-                }
-
-                val order = dao.getOrderByNo(orderPromo.orderNO)
-                val promo = promosDao.getPromoById(orderPromo.idPromo)
-                if (order != null && promo != null) {
-                    val newOrderPromo = OrderPromo(
-                        id = uuid,
-                        order = order.new_id,
-                        promo = promo.new_id,
-                        totalPromo = orderPromo.totalPromo,
-                        isUpload = orderPromo.isUpload
-                    )
-                    dao.insertNewOrderPromo(newOrderPromo)
                 }
             }
         }
