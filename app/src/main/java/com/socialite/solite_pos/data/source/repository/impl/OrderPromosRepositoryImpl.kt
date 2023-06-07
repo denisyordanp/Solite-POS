@@ -1,12 +1,15 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.OrderPromosDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.source.repository.OrderPromosRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import java.util.UUID
 
 class OrderPromosRepositoryImpl(
@@ -45,6 +48,24 @@ class OrderPromosRepositoryImpl(
     override suspend fun getNeedUploadOrderPromos() = dao.getNeedUploadOrderPromos()
     override suspend fun insertOrderPromos(list: List<OrderPromo>) {
         dao.insertOrderPromos(list)
+    }
+
+    override suspend fun getItems(): List<OrderPromo> {
+        return dao.getNewOrderPromos()
+    }
+
+    override suspend fun updateItems(items: List<OrderPromo>) {
+        dao.updateOrderPromos(items)
+    }
+
+    override suspend fun insertItems(items: List<OrderPromo>) {
+        dao.insertOrderPromos(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<OrderPromo>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
     }
 
     override suspend fun insertNewPromoOrder(promo: OrderPromo) = dao.insertNewOrderPromo(promo)

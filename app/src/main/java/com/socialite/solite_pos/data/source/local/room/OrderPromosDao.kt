@@ -17,6 +17,9 @@ interface OrderPromosDao {
     @Query("SELECT * FROM '${OrderPromo.DB_NAME}'")
     suspend fun getOrderPromos(): List<OrderPromo>
 
+    @Query("SELECT * FROM '${NewOrderPromo.DB_NAME}'")
+    suspend fun getNewOrderPromos(): List<NewOrderPromo>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrderPromos(list: List<NewOrderPromo>)
 
@@ -25,4 +28,7 @@ interface OrderPromosDao {
 
     @Update
     suspend fun updateOrderPromo(orderPromo: OrderPromo)
+
+    @Update
+    suspend fun updateOrderPromos(orderPromo: List<NewOrderPromo>)
 }
