@@ -1,12 +1,15 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.OrderPaymentsDao
 import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.local.room.PaymentsDao
 import com.socialite.solite_pos.data.source.repository.OrderPaymentsRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import java.util.UUID
 
 class OrderPaymentsRepositoryImpl(
@@ -76,5 +79,23 @@ class OrderPaymentsRepositoryImpl(
                 }
             }
         }
+    }
+
+    override suspend fun getItems(): List<OrderPayment> {
+        return dao.getNewOrderPayments()
+    }
+
+    override suspend fun updateItems(items: List<OrderPayment>) {
+        dao.updateNewOrderPayments(items)
+    }
+
+    override suspend fun insertItems(items: List<OrderPayment>) {
+        dao.insertOrderPayments(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<OrderPayment>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
     }
 }

@@ -37,7 +37,7 @@ class OpeningActivity : SoliteActivity() {
 		}
 
 		lifecycleScope.launch {
-//			mainViewModel.beginMigratingToUUID()
+			mainViewModel.beginMigratingToUUID()
 			Handler(Looper.getMainLooper()).postDelayed({checkUser()}, 1000)
 		}
     }
@@ -46,8 +46,7 @@ class OpeningActivity : SoliteActivity() {
 		if (mainViewModel.isLoggedIn()) {
 			toMain()
 		} else {
-//			toLogin()
-			toMain()
+			toLogin()
 		}
 	}
 

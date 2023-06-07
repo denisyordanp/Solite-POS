@@ -27,8 +27,8 @@ import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.get
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.preference.OrderPref
 import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
-import com.socialite.solite_pos.data.source.repository.Synchronize
-import com.socialite.solite_pos.data.source.repository.impl.SynchronizeImpl
+import com.socialite.solite_pos.data.source.domain.Synchronize
+import com.socialite.solite_pos.data.source.domain.impl.SynchronizeImpl
 
 object DomainInjection {
     fun provideGetProductVariantOptions(context: Context): GetProductVariantOptions {

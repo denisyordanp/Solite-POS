@@ -25,7 +25,7 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
-import com.socialite.solite_pos.data.source.repository.Synchronize
+import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository

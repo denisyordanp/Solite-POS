@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.repository.impl
+package com.socialite.solite_pos.data.source.domain.impl
 
 import com.socialite.solite_pos.data.source.remote.SoliteServices
 import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeParamItem
@@ -14,7 +14,7 @@ import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
-import com.socialite.solite_pos.data.source.repository.Synchronize
+import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 
@@ -119,7 +119,7 @@ class SynchronizeImpl(
             orderDetailsRepository.updateItems(needUploadOrderDetails.items.map { it.toEntity() })
         }
         if (needUploadOrderPayments.isNotEmpty()) {
-            orderPaymentsRepository.insertOrderPayments(needUploadOrderPayments.map { it.toEntity() })
+            orderPaymentsRepository.updateItems(needUploadOrderPayments.map { it.toEntity() })
         }
         if (needUploadOrderPromos.isNotEmpty()) {
             ordersRepository.insertOrderPromos(needUploadOrderPromos.map { it.toEntity() })
@@ -146,11 +146,8 @@ class SynchronizeImpl(
         productsRepository.updateSynchronization(data?.product?.map { it.toEntity() })
         variantsRepository.updateSynchronization(data?.variant?.map { it.toEntity() })
         orderDetailsRepository.updateSynchronization(data?.orderDetail?.map { it.toEntity() })
+        orderPaymentsRepository.updateSynchronization(data?.orderPayment?.map { it.toEntity() })
 
-        val missingOrderPayment = response.data?.orderPayment
-        if (!missingOrderPayment.isNullOrEmpty()) {
-            orderPaymentsRepository.insertOrderPayments(missingOrderPayment.map { it.toEntity() })
-        }
         val missingOrderPromo = response.data?.orderPromo
         if (!missingOrderPromo.isNullOrEmpty()) {
             ordersRepository.insertOrderPromos(missingOrderPromo.map { it.toEntity() })
