@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.remote.response.entity.StoreResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
@@ -19,7 +20,7 @@ import java.util.UUID
 data class Store(
         @PrimaryKey
         @ColumnInfo(name = ID, defaultValue = "")
-        val id: String,
+        override val id: String,
 
         @ColumnInfo(name = NAME)
         override var name: String,
@@ -29,7 +30,7 @@ data class Store(
 
         @ColumnInfo(name = AppDatabase.UPLOAD)
         var isUploaded: Boolean
-) : Serializable, DropdownItem {
+) : Serializable, DropdownItem, EntityData {
 
     fun isNewStore() = id == ID_ADD
 
@@ -37,7 +38,7 @@ data class Store(
             id = UUID.randomUUID().toString()
     )
 
-    fun toResponse(): StoreResponse {
+    override fun toResponse(): StoreResponse {
         return StoreResponse(
                 id = id,
                 name = name,
