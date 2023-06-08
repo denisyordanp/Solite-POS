@@ -10,6 +10,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Custome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.preference.OrderPref
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
@@ -19,6 +20,7 @@ class NewOrderImpl(
     private val orderPref: OrderPref,
     private val ordersRepository: OrdersRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
+    private val orderProductVariantsRepository: OrderProductVariantsRepository,
     private val settingRepository: SettingRepository
 ) : NewOrder {
     override suspend fun invoke(
@@ -104,7 +106,7 @@ class NewOrderImpl(
                     val orderVariant = OrderProductVariant.createNewOrderVariant(
                         detail.id, variant.id
                     )
-                    ordersRepository.insertOrderProductVariant(orderVariant)
+                    orderProductVariantsRepository.insertOrderProductVariant(orderVariant)
                 }
             }
         }

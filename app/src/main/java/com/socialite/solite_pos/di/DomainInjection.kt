@@ -41,6 +41,7 @@ object DomainInjection {
             orderPref = OrderPref(context),
             ordersRepository = RepositoryInjection.provideOrdersRepository(context),
             orderDetailsRepository = RepositoryInjection.provideOrderDetailsRepository(context),
+            orderProductVariantsRepository = RepositoryInjection.provideOrderProductVariantsRepository(context),
             settingRepository = SettingRepositoryImpl.getDataStoreInstance(context)
         )
     }
@@ -82,8 +83,10 @@ object DomainInjection {
     }
 
     fun provideUpdateOrderProducts(context: Context): UpdateOrderProducts {
-        val ordersRepository = RepositoryInjection.provideOrdersRepository(context)
-        return UpdateOrderProductsImpl(ordersRepository)
+        return UpdateOrderProductsImpl(
+            orderDetailsRepository = RepositoryInjection.provideOrderDetailsRepository(context),
+            orderProductVariantsRepository = RepositoryInjection.provideOrderProductVariantsRepository(context)
+        )
     }
 
     fun provideMigrateToUUID(context: Context): MigrateToUUID {
