@@ -58,6 +58,7 @@ import com.socialite.solite_pos.di.RepositoryInjection.provideVariantMixesReposi
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantsRepository
 import com.socialite.solite_pos.view.login.LoginViewModel
+import com.socialite.solite_pos.view.settings.SettingViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import com.socialite.solite_pos.view.viewModel.ProductViewModel
@@ -149,7 +150,6 @@ class ViewModelFactory private constructor(
                     newOutcome = newOutcome,
                     promosRepository = promosRepository,
                     migrateToUUID = migrateToUUID,
-                    synchronize = synchronize,
                     accountRepository = accountRepository
                 ) as T
             }
@@ -182,6 +182,14 @@ class ViewModelFactory private constructor(
                 LoginViewModel(
                     loginUser = loginUser,
                     registerUser = registerUser
+                ) as T
+            }
+
+            modelClass.isAssignableFrom(SettingViewModel::class.java) -> {
+                SettingViewModel(
+                    synchronize = synchronize,
+                    settingRepository = settingRepository,
+                    accountRepository = accountRepository
                 ) as T
             }
 

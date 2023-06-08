@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.collectAsState
+import com.socialite.solite_pos.compose.LoadingView
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.OpeningActivity
 import com.socialite.solite_pos.view.SoliteActivity
@@ -13,29 +15,30 @@ import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
-import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 class SettingsActivity : SoliteActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var settingViewModel: SettingViewModel
 
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
-        mainViewModel = MainViewModel.getMainViewModel(this)
-
-        val date = DateUtils.currentDate
+        settingViewModel = SettingViewModel.getMainViewModel(this)
 
         setContent {
-
             SolitePOSTheme {
-                SettingsMainMenu(
+                val state = settingViewModel.viewState.collectAsState().value
+
+                LoadingView(isLoading = state.isLoading) {
+                    val date = DateUtils.currentDate
+
+                    SettingsMainMenu(
                         orderViewModel = orderViewModel,
-                        mainViewModel = mainViewModel,
+                        isDarkMode = state.isDarkMode,
                         currentDate = date,
                         onGeneralMenuClicked = {
                             when (it) {
@@ -48,6 +51,7 @@ class SettingsActivity : SoliteActivity() {
                             }
                         },
                         onDarkModeChange = {
+                            settingViewModel.setDarkMode(it)
                             val delegate = if (it) {
                                 AppCompatDelegate.MODE_NIGHT_YES
                             } else {
@@ -57,11 +61,15 @@ class SettingsActivity : SoliteActivity() {
                             AppCompatDelegate.setDefaultNightMode(delegate)
                             reLaunchSettingActivity()
                         },
+                        onSynchronizeClicked = {
+                            settingViewModel.beginSynchronize()
+                        },
                         onLogout = {
-                            mainViewModel.logout()
+                            settingViewModel.logout()
                             goToOpening()
                         }
-                )
+                    )
+                }
             }
         }
     }
