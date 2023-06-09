@@ -39,7 +39,6 @@ class OpeningActivity : SoliteActivity() {
     private fun preparingApp() {
         lifecycleScope.launch {
             openingViewModel.fetchRemoteConfig()
-            openingViewModel.beginMigratingToUUID()
             Handler(Looper.getMainLooper()).postDelayed({ checkUser() }, 1000)
         }
     }

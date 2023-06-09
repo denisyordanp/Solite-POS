@@ -2,14 +2,12 @@ package com.socialite.solite_pos.view.opening
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
-import com.socialite.solite_pos.data.source.domain.MigrateToUUID
-import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.view.factory.ViewModelFromFactory
 
 class OpeningViewModel(
-    private val accountRepository: AccountRepository,
-    private val migrateToUUID: MigrateToUUID,
+    private val settingRepository: SettingRepository,
     private val remoteConfigRepository: RemoteConfigRepository
 ) : ViewModel() {
     companion object : ViewModelFromFactory<OpeningViewModel>() {
@@ -18,9 +16,7 @@ class OpeningViewModel(
         }
     }
 
-    suspend fun beginMigratingToUUID() {
-        migrateToUUID()
-    }
+
 
     suspend fun fetchRemoteConfig() {
         remoteConfigRepository.fetch()
@@ -31,6 +27,6 @@ class OpeningViewModel(
     }
 
     fun isLoggedIn(): Boolean {
-        return accountRepository.getToken().isNotEmpty()
+        return settingRepository.getToken().isNotEmpty()
     }
 }

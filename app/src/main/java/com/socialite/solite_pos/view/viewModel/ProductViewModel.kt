@@ -18,7 +18,7 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
-import com.socialite.solite_pos.view.factory.ViewModelFromFactory
+import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -32,7 +32,7 @@ class ProductViewModel(
     private val variantMixesRepository: VariantMixesRepository,
 ) : ViewModel() {
 
-    companion object : ViewModelFromFactory<ProductViewModel>() {
+    companion object : LoggedInViewModelFromFactory<ProductViewModel>() {
         fun getMainViewModel(activity: FragmentActivity): ProductViewModel {
             return buildViewModel(activity, ProductViewModel::class.java)
         }

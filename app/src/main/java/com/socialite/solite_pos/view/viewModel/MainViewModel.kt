@@ -20,7 +20,7 @@ import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
-import com.socialite.solite_pos.view.factory.ViewModelFromFactory
+import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +41,7 @@ class MainViewModel(
     private val newOutcome: NewOutcome,
 ) : ViewModel() {
 
-    companion object : ViewModelFromFactory<MainViewModel>() {
+    companion object : LoggedInViewModelFromFactory<MainViewModel>() {
         fun getMainViewModel(activity: FragmentActivity): MainViewModel {
             return buildViewModel(activity, MainViewModel::class.java)
         }

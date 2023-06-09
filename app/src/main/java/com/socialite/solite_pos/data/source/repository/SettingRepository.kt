@@ -13,4 +13,6 @@ interface SettingRepository {
     suspend fun isMigratedPhase2(): Boolean
     suspend fun setMigration(isMigrate: Boolean)
     suspend fun setMigrationPhase2(isMigrate: Boolean)
+    fun insertToken(token: String)
+    fun getToken(): String
 }

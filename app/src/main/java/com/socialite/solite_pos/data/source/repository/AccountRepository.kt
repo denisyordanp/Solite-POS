@@ -12,8 +12,4 @@ interface AccountRepository {
         password: String,
         storeName: String
     ): String
-
-    fun insertToken(token: String)
-
-    fun getToken(): String
 }

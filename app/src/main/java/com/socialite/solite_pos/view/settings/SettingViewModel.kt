@@ -3,11 +3,11 @@ package com.socialite.solite_pos.view.settings
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.Synchronize
-import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.view.factory.ViewModelFromFactory
+import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -18,12 +18,12 @@ import kotlinx.coroutines.launch
 
 class SettingViewModel(
     private val synchronize: Synchronize,
+    private val migrateToUUID: MigrateToUUID,
     private val settingRepository: SettingRepository,
-    private val accountRepository: AccountRepository,
     private val remoteConfigRepository: RemoteConfigRepository
 ) : ViewModel() {
 
-    companion object : ViewModelFromFactory<SettingViewModel>() {
+    companion object : LoggedInViewModelFromFactory<SettingViewModel>() {
         fun getMainViewModel(activity: FragmentActivity): SettingViewModel {
             return buildViewModel(activity, SettingViewModel::class.java)
         }
@@ -35,9 +35,11 @@ class SettingViewModel(
     init {
         viewModelScope.launch {
             val isServerActive = remoteConfigRepository.isServerActive()
-            _viewState.emit(_viewState.value.copy(
-                isServerActive = isServerActive
-            ))
+            _viewState.emit(
+                _viewState.value.copy(
+                    isServerActive = isServerActive
+                )
+            )
 
             settingRepository.getIsDarkModeActive()
                 .map {
@@ -60,11 +62,14 @@ class SettingViewModel(
             val currentState = _viewState.value
 
             flow {
+                migrateToUUID()
                 val isSuccess = synchronize()
-                if (isSuccess) emit(currentState.copy(
-                    isLoading = false,
-                    isSynchronizeSuccess = true
-                ))
+                if (isSuccess) emit(
+                    currentState.copy(
+                        isLoading = false,
+                        isSynchronizeSuccess = true
+                    )
+                )
             }.onStart {
                 emit(currentState.copy(isLoading = true))
             }.catch {
@@ -74,15 +79,17 @@ class SettingViewModel(
     }
 
     fun logout() {
-        accountRepository.insertToken("")
+        settingRepository.insertToken("")
     }
 
     fun resetSynchronizeStatus() {
         viewModelScope.launch {
-            _viewState.emit(_viewState.value.copy(
-                isSynchronizeSuccess = false,
-                error = null
-            ))
+            _viewState.emit(
+                _viewState.value.copy(
+                    isSynchronizeSuccess = false,
+                    error = null
+                )
+            )
         }
     }
 
