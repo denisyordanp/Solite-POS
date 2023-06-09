@@ -1,6 +1,5 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
-import android.util.Log
 import com.socialite.solite_pos.builder.RemoteConfigManager
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import kotlinx.coroutines.flow.first
@@ -22,11 +21,9 @@ class RemoteConfigRepositoryImpl(
             try {
                 it.setDefaultsAsync(default)
                 val remote = it.getBoolean(key)
-                Log.d("TESTING", "key: $key remote: $remote")
                 remote
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.d("TESTING", "exception: ${e.message}")
                 defaultValue
             }
         } ?: defaultValue
