@@ -10,6 +10,7 @@ ext {
   googleServiceVersion = '4.3.8'
   firebaseBomVersion = '26.5.0'
   crashlyticsVersion = '2.9.2'
+  googlePlayVersion = '2.1.0'
 
   // Compose
   composeBomVersion = '2022.10.00'
