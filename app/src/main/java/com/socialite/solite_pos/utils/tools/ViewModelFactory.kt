@@ -27,6 +27,7 @@ import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.repository.AccountRepository
+import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
@@ -50,6 +51,7 @@ import com.socialite.solite_pos.di.RepositoryInjection.providePaymentsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideProductVariantsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideProductsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.providePromosRepository
+import com.socialite.solite_pos.di.RepositoryInjection.provideRemoteConfigRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSettingRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideStoreRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideSupplierRepository
@@ -58,6 +60,7 @@ import com.socialite.solite_pos.di.RepositoryInjection.provideVariantMixesReposi
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.RepositoryInjection.provideVariantsRepository
 import com.socialite.solite_pos.view.login.LoginViewModel
+import com.socialite.solite_pos.view.opening.OpeningViewModel
 import com.socialite.solite_pos.view.settings.SettingViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -90,7 +93,8 @@ class ViewModelFactory private constructor(
     private val loginUser: LoginUser,
     private val registerUser: RegisterUser,
     private val synchronize: Synchronize,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val remoteConfigRepository: RemoteConfigRepository
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -127,7 +131,8 @@ class ViewModelFactory private constructor(
                             loginUser = provideLoginUser(context),
                             registerUser = provideRegisterUser(context),
                             synchronize = provideSynchronize(context),
-                            accountRepository = provideUserRepository(context)
+                            accountRepository = provideUserRepository(context),
+                            remoteConfigRepository = provideRemoteConfigRepository(context)
                         )
                     }
                 }
@@ -149,8 +154,6 @@ class ViewModelFactory private constructor(
                     settingRepository = settingRepository,
                     newOutcome = newOutcome,
                     promosRepository = promosRepository,
-                    migrateToUUID = migrateToUUID,
-                    accountRepository = accountRepository
                 ) as T
             }
 
@@ -189,7 +192,16 @@ class ViewModelFactory private constructor(
                 SettingViewModel(
                     synchronize = synchronize,
                     settingRepository = settingRepository,
-                    accountRepository = accountRepository
+                    accountRepository = accountRepository,
+                    remoteConfigRepository = remoteConfigRepository
+                ) as T
+            }
+
+            modelClass.isAssignableFrom(OpeningViewModel::class.java) -> {
+                OpeningViewModel(
+                    migrateToUUID = migrateToUUID,
+                    accountRepository = accountRepository,
+                    remoteConfigRepository = remoteConfigRepository
                 ) as T
             }
 

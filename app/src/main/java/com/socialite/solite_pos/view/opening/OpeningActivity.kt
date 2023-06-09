@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view
+package com.socialite.solite_pos.view.opening
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,23 +6,27 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.lifecycleScope
 import com.socialite.solite_pos.databinding.ActivityOpeningBinding
+import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
-import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
-// TODO: Disabled login for now
 class OpeningActivity : SoliteActivity() {
 
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var openingViewModel: OpeningViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityOpeningBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel = MainViewModel.getMainViewModel(this)
+        openingViewModel = OpeningViewModel.getMainViewModel(this)
 
+        setupVersion(binding)
+        preparingApp()
+    }
+
+    private fun setupVersion(binding: ActivityOpeningBinding) {
         try {
             binding.tvOpeningVersion.text.apply {
                 packageManager.getPackageInfo(packageName, 0).versionName
@@ -30,15 +34,23 @@ class OpeningActivity : SoliteActivity() {
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         }
+    }
 
+    private fun preparingApp() {
         lifecycleScope.launch {
-            mainViewModel.beginMigratingToUUID()
+            openingViewModel.fetchRemoteConfig()
+            openingViewModel.beginMigratingToUUID()
             Handler(Looper.getMainLooper()).postDelayed({ checkUser() }, 1000)
         }
     }
 
     private fun checkUser() {
-        if (mainViewModel.isLoggedIn()) {
+        if (openingViewModel.isServerActive().not()) {
+            toMain()
+            return
+        }
+
+        if (openingViewModel.isLoggedIn()) {
             toMain()
         } else {
             toLogin()

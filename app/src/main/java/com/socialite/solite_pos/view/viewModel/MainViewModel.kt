@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
@@ -12,7 +11,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
-import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
@@ -41,8 +39,6 @@ class MainViewModel(
     private val settingRepository: SettingRepository,
     private val promosRepository: PromosRepository,
     private val newOutcome: NewOutcome,
-    private val migrateToUUID: MigrateToUUID,
-    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<MainViewModel>() {
@@ -168,13 +164,5 @@ class MainViewModel(
         viewModelScope.launch {
             settingRepository.selectNewStore(id)
         }
-    }
-
-    suspend fun beginMigratingToUUID() {
-        migrateToUUID()
-    }
-
-    fun isLoggedIn(): Boolean {
-        return accountRepository.getToken().isNotEmpty()
     }
 }

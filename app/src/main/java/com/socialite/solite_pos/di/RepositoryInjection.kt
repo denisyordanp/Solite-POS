@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.di
 
 import android.content.Context
+import com.socialite.solite_pos.builder.RemoteConfigManager
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
 import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
 import com.socialite.solite_pos.data.source.repository.AccountRepository
@@ -16,6 +17,7 @@ import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
+import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
@@ -35,6 +37,7 @@ import com.socialite.solite_pos.data.source.repository.impl.PaymentsRepositoryIm
 import com.socialite.solite_pos.data.source.repository.impl.ProductVariantsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.ProductsRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.PromosRepositoryImpl
+import com.socialite.solite_pos.data.source.repository.impl.RemoteConfigRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.StoreRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.SuppliersRepositoryImpl
@@ -191,5 +194,9 @@ object RepositoryInjection {
         val userPreferences = UserPreferencesImpl.getInstance(context)
         val service = NetworkInjector.provideSoliteServices()
         return AccountRepositoryImpl(service, userPreferences)
+    }
+
+    fun provideRemoteConfigRepository(context: Context): RemoteConfigRepository {
+        return RemoteConfigRepositoryImpl(RemoteConfigManager.getInstance(context))
     }
 }

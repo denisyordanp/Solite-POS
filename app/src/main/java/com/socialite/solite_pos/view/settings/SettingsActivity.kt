@@ -8,7 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
 import com.socialite.solite_pos.compose.LoadingView
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.view.OpeningActivity
+import com.socialite.solite_pos.view.opening.OpeningActivity
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
@@ -39,6 +39,7 @@ class SettingsActivity : SoliteActivity() {
                     SettingsMainMenu(
                         orderViewModel = orderViewModel,
                         isDarkMode = state.isDarkMode,
+                        isServerActive = state.isServerActive,
                         currentDate = date,
                         onGeneralMenuClicked = {
                             when (it) {

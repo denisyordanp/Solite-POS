@@ -46,6 +46,7 @@ import kotlinx.coroutines.launch
 fun SettingsMainMenu(
     orderViewModel: OrderViewModel,
     isDarkMode: Boolean,
+    isServerActive: Boolean,
     currentDate: String,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onDarkModeChange: (Boolean) -> Unit,
@@ -88,6 +89,7 @@ fun SettingsMainMenu(
         content = {
             SettingsMenus(
                 isDarkMode = isDarkMode,
+                isServerActive = isServerActive,
                 onGeneralMenuClicked = {
                     scope.launch {
                         modalContent = ModalContent.GENERAL_MENUS
@@ -105,6 +107,7 @@ fun SettingsMainMenu(
 @Composable
 fun SettingsMenus(
     isDarkMode: Boolean,
+    isServerActive: Boolean,
     onGeneralMenuClicked: () -> Unit,
     onDarkModeChange: (Boolean) -> Unit,
     onSynchronizeClicked: () -> Unit,
@@ -123,8 +126,8 @@ fun SettingsMenus(
             items(SettingMenus.values()) {
                 when (it) {
                     SettingMenus.THEME -> ThemeSettingMenu(isDarkMode, onDarkModeChange)
-                    SettingMenus.SYNCHRONIZE -> SynchronizationMenu(onSynchronizeClicked = onSynchronizeClicked)
-                    SettingMenus.LOGOUT -> LogoutMenu(onLogout)
+                    SettingMenus.SYNCHRONIZE -> if (isServerActive) SynchronizationMenu(onSynchronizeClicked = onSynchronizeClicked)
+                    SettingMenus.LOGOUT -> if (isServerActive) LogoutMenu(onLogout = onLogout)
                 }
             }
         }

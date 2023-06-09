@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.repository.AccountRepository
+import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.view.factory.ViewModelFromFactory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 class SettingViewModel(
     private val synchronize: Synchronize,
     private val settingRepository: SettingRepository,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val remoteConfigRepository: RemoteConfigRepository
 ) : ViewModel() {
 
     companion object : ViewModelFromFactory<SettingViewModel>() {
@@ -32,6 +34,11 @@ class SettingViewModel(
 
     init {
         viewModelScope.launch {
+            val isServerActive = remoteConfigRepository.isServerActive()
+            _viewState.emit(_viewState.value.copy(
+                isServerActive = isServerActive
+            ))
+
             settingRepository.getIsDarkModeActive()
                 .map {
                     _viewState.value.copy(
