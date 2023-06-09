@@ -5,6 +5,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.lifecycleScope
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.socialite.solite_pos.databinding.ActivityOpeningBinding
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.login.LoginActivity
@@ -12,6 +17,10 @@ import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import kotlinx.coroutines.launch
 
 class OpeningActivity : SoliteActivity() {
+
+    companion object {
+        private const val IN_APP_UPDATE_REQUEST_CODE = 1234
+    }
 
     private lateinit var openingViewModel: OpeningViewModel
 
@@ -23,7 +32,7 @@ class OpeningActivity : SoliteActivity() {
         openingViewModel = OpeningViewModel.getMainViewModel(this)
 
         setupVersion(binding)
-        preparingApp()
+        inAppUpdate()
     }
 
     private fun setupVersion(binding: ActivityOpeningBinding) {
@@ -34,6 +43,42 @@ class OpeningActivity : SoliteActivity() {
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         }
+    }
+
+    private fun inAppUpdate() {
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask
+            .addOnSuccessListener { appUpdateInfo ->
+                if (
+                    appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
+                    appUpdateInfo.updatePriority() >= 4
+                ) {
+                    requestInAppUpdate(appUpdateManager, appUpdateInfo)
+                } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    requestInAppUpdate(appUpdateManager, appUpdateInfo)
+                } else {
+                    preparingApp()
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                preparingApp()
+            }
+    }
+
+    private fun requestInAppUpdate(
+        appUpdateManager: AppUpdateManager,
+        appUpdateInfo: AppUpdateInfo
+    ) {
+        appUpdateManager.startUpdateFlowForResult(
+            appUpdateInfo,
+            AppUpdateType.IMMEDIATE,
+            this,
+            IN_APP_UPDATE_REQUEST_CODE
+        )
     }
 
     private fun preparingApp() {

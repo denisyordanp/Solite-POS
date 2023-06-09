@@ -106,6 +106,10 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingVersion"
 
+    // Play In App Update
+    implementation "com.google.android.play:app-update:$googlePlayVersion"
+    implementation "com.google.android.play:app-update-ktx:$googlePlayVersion"
+
     // Test
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$junitExtVersion"
