@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
@@ -15,7 +14,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
-import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
@@ -29,7 +27,6 @@ class ProductViewModel(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val getProductVariantOptions: GetProductVariantOptions,
-    private val variantMixesRepository: VariantMixesRepository,
 ) : ViewModel() {
 
     companion object : LoggedInViewModelFromFactory<ProductViewModel>() {
@@ -72,23 +69,6 @@ class ProductViewModel(
     fun removeVariantProduct(data: VariantProduct) {
         viewModelScope.launch {
             productVariantsRepository.removeVariantProduct(data)
-        }
-    }
-
-    fun getVariantMixProductById(
-        idVariant: Long,
-        idProduct: Long
-    ) = variantMixesRepository.getVariantMixProductById(idVariant, idProduct)
-
-    fun insertVariantMix(data: VariantMix) {
-        viewModelScope.launch {
-            variantMixesRepository.insertVariantMix(data)
-        }
-    }
-
-    fun removeVariantMix(data: VariantMix) {
-        viewModelScope.launch {
-            variantMixesRepository.removeVariantMix(data)
         }
     }
 

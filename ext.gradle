@@ -1,23 +1,49 @@
 ext {
+  // Kotlin
   kotlinVersion = '1.7.10'
+  kotlinCoreVersion = '1.9.0'
+  kotlinCoroutineVersion = '1.6.4'
+
   gradleVersion = '7.3.0'
+
+  //Google
   googleServiceVersion = '4.3.8'
+  firebaseBomVersion = '26.5.0'
   crashlyticsVersion = '2.9.2'
 
+  // Compose
+  composeBomVersion = '2022.10.00'
   composeVersion = '1.2.1'
-  roomVersion = '2.4.3'
-  firebaseBomVersion = '26.5.0'
   activityComposeVersion = '1.6.0'
   accompanistPagerVersion = '0.23.1'
   constraintComposeVersion = '1.0.1'
   navigationComposeVersion = '2.5.2'
+
+  // Database
+  roomVersion = '2.4.3'
+  sqliteJdbc = '3.36.0.1'
+  dataStoreVersion = '1.0.0'
+
+  // Lifecycle
   lifecycleVersion = '2.5.1'
   lifecycleExtensionVersion = '2.2.0'
+  appCompatVersion = '1.5.1'
+
+  // UI
   materialVersion = '1.6.1'
+  constraintLayoutVersion = '2.0.4'
+  recycleViewVersion = '1.1.0'
+  cardViewVersion = '1.0.0'
+
+  // Utility
   easyPermissionVersion = '3.0.0'
-  dataStoreVersion = '1.0.0'
-  kotlinCoreVersion = '1.9.0'
-  kotlinCoroutineVersion = '1.6.4'
-  sqliteJdbc = '3.36.0.1'
+
+  // Network
   retrofitVersion = '2.9.0'
+  okhttpLoggingVersion = '4.9.3'
+
+  // Testing
+  junitVersion = '4.13.2'
+  junitExtVersion = '1.1.5'
+  espressoVersion = '3.5.1'
 }

@@ -3,7 +3,6 @@ package com.socialite.solite_pos.data.source.local.entity.room.bridge
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.room.master.Product
@@ -53,7 +52,4 @@ data class VariantMix(
 
         const val DB_NAME = "variant_mix"
     }
-
-    @Ignore
-    constructor(idVariant: Long, idProduct: Long) : this(0, idVariant, idProduct, false)
 }

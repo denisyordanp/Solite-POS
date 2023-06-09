@@ -141,7 +141,7 @@ class PrintBill(private var activity: FragmentActivity) {
 		if (!order?.products.isNullOrEmpty()){
 			for ((i, item) in order?.products!!.withIndex()){
 				if (item.product != null){
-					printCustom("${i+1}. ${item.product!!.name}", 0, 0)
+					printCustom("${i+1}. ${item.product.name}", 0, 0)
 
 //					if (item.product!!.isMix){
 //						if (!item.mixProducts.isNullOrEmpty()) {
@@ -169,8 +169,8 @@ class PrintBill(private var activity: FragmentActivity) {
 
 					printCustom(
 						withSpace(
-							"  ${item.amount} x ${toRupiah(item.product!!.price)}",
-							"= ${toRupiah(item.amount * item.product!!.price)}",
+							"  ${item.amount} x ${toRupiah(item.product.price)}",
+							"= ${toRupiah(item.amount * item.product.price)}",
 							32
 						), 0, 0
 					)
@@ -219,7 +219,7 @@ class PrintBill(private var activity: FragmentActivity) {
 		if (!order?.products.isNullOrEmpty()){
 			for ((i, item) in order?.products!!.withIndex()){
 				if (item.product != null){
-					printCustom("${i+1}. ${item.product!!.name} x${item.amount}", 0, 0)
+					printCustom("${i+1}. ${item.product.name} x${item.amount}", 0, 0)
 
 //					if (item.product!!.isMix){
 //						if (!item.mixProducts.isNullOrEmpty()) {

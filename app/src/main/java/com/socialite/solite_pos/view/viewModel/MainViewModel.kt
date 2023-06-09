@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.NewOutcome
-import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
@@ -17,7 +16,6 @@ import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
-import com.socialite.solite_pos.data.source.repository.SuppliersRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
@@ -32,7 +30,6 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val paymentRepository: PaymentsRepository,
-    private val supplierRepository: SuppliersRepository,
     private val customersRepository: CustomersRepository,
     private val outcomesRepository: OutcomesRepository,
     private val storeRepository: StoreRepository,
@@ -86,18 +83,6 @@ class MainViewModel(
     fun insertCustomers(data: Customer) {
         viewModelScope.launch {
             customersRepository.insertCustomer(data)
-        }
-    }
-
-    fun insertSupplier(data: Supplier) {
-        viewModelScope.launch {
-            supplierRepository.insertSupplier(data)
-        }
-    }
-
-    fun updateSupplier(data: Supplier) {
-        viewModelScope.launch {
-            supplierRepository.updateSupplier(data)
         }
     }
 
