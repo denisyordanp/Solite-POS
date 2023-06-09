@@ -1,8 +1,6 @@
 package com.socialite.solite_pos.builder
 
 import android.content.Context
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -38,19 +36,12 @@ class RemoteConfigManager(private val context: Context) {
 
     fun fetch(): Flow<Boolean> {
         return callbackFlow {
-            val callback = OnCompleteListener<Boolean> {
-                trySend(it.isSuccessful)
-                channel.close()
-            }
-            beginFetchAndActive(callback)
-            awaitClose {
-                beginFetchAndActive(callback)
-            }
+            getConfig()?.fetchAndActivate()
+                ?.addOnCompleteListener {
+                    trySend(it.isSuccessful)
+                    channel.close()
+                }
+            awaitClose()
         }
-    }
-
-    private fun beginFetchAndActive(callback: OnCompleteListener<Boolean>): Task<Boolean>? {
-        return getConfig()?.fetchAndActivate()
-            ?.addOnCompleteListener(callback)
     }
 }
