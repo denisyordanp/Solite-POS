@@ -108,7 +108,7 @@ object PrinterUtils {
 		if (hexString == null || hexString == "") {
 			return null
 		}
-		hexString = hexString.toUpperCase(Locale.getDefault())
+		hexString = hexString.uppercase(Locale.getDefault())
 		val length = hexString.length / 2
 		val hexChars = hexString.toCharArray()
 		val d = ByteArray(length)
