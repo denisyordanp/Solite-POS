@@ -1,13 +1,11 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
-import com.socialite.solite_pos.data.source.preference.UserPreferences
 import com.socialite.solite_pos.data.source.remote.SoliteServices
 import com.socialite.solite_pos.data.source.remote.response.helper.ResponseHandler.handleErrorMessage
 import com.socialite.solite_pos.data.source.repository.AccountRepository
 
 class AccountRepositoryImpl(
     private val service: SoliteServices,
-    private val userPreference: UserPreferences
 ) : AccountRepository {
     override suspend fun login(email: String, password: String): String {
         val response = handleErrorMessage {
@@ -41,10 +39,4 @@ class AccountRepositoryImpl(
 
         return token
     }
-
-    override fun insertToken(token: String) {
-        userPreference.setUserToken(token)
-    }
-
-    override fun getToken(): String = userPreference.getUserToken()
 }

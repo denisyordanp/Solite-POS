@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
@@ -37,7 +38,7 @@ import java.util.UUID
 data class OrderPayment(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    var id: String,
+    override var id: String,
 
     @ColumnInfo(name = Order.ID)
     var order: String,
@@ -50,7 +51,7 @@ data class OrderPayment(
 
     @ColumnInfo(name = UPLOAD)
     var isUpload: Boolean
-) : Serializable {
+) : Serializable, EntityData {
 
     fun inReturn(total: Long): Long {
         return pay - total

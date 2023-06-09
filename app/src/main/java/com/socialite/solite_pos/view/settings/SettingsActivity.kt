@@ -5,37 +5,44 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
+import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BasicAlertDialog
+import com.socialite.solite_pos.compose.FullScreenLoadingView
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.view.OpeningActivity
 import com.socialite.solite_pos.view.SoliteActivity
+import com.socialite.solite_pos.view.opening.OpeningActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
-import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 class SettingsActivity : SoliteActivity() {
 
     private lateinit var orderViewModel: OrderViewModel
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var settingViewModel: SettingViewModel
 
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         orderViewModel = OrderViewModel.getOrderViewModel(this)
-        mainViewModel = MainViewModel.getMainViewModel(this)
-
-        val date = DateUtils.currentDate
+        settingViewModel = SettingViewModel.getMainViewModel(this)
 
         setContent {
-
             SolitePOSTheme {
-                SettingsMainMenu(
+                val state = settingViewModel.viewState.collectAsState().value
+
+                FullScreenLoadingView(isLoading = state.isLoading) {
+                    val date = DateUtils.currentDate
+
+                    SettingsMainMenu(
                         orderViewModel = orderViewModel,
-                        mainViewModel = mainViewModel,
+                        isDarkMode = state.isDarkMode,
+                        isServerActive = state.isServerActive,
                         currentDate = date,
                         onGeneralMenuClicked = {
                             when (it) {
@@ -48,6 +55,7 @@ class SettingsActivity : SoliteActivity() {
                             }
                         },
                         onDarkModeChange = {
+                            settingViewModel.setDarkMode(it)
                             val delegate = if (it) {
                                 AppCompatDelegate.MODE_NIGHT_YES
                             } else {
@@ -57,11 +65,37 @@ class SettingsActivity : SoliteActivity() {
                             AppCompatDelegate.setDefaultNightMode(delegate)
                             reLaunchSettingActivity()
                         },
+                        onSynchronizeClicked = {
+                            settingViewModel.beginSynchronize()
+                        },
                         onLogout = {
-                            mainViewModel.logout()
+                            settingViewModel.logout()
                             goToOpening()
                         }
-                )
+                    )
+                }
+
+                if (state.isSynchronizeSuccess || state.error != null) {
+                    val title =
+                        if (state.isSynchronizeSuccess) stringResource(R.string.synchronization_success_title) else stringResource(
+                            R.string.synchronization_failed_title
+                        )
+                    val message =
+                        if (state.isSynchronizeSuccess) stringResource(R.string.synchronization_success_message) else stringResource(
+                            R.string.synchronization_failed_message, state.error?.message ?: ""
+                        )
+                    BasicAlertDialog(
+                        titleText = title,
+                        descText = message,
+                        positiveAction = {
+                            settingViewModel.resetSynchronizeStatus()
+                        },
+                        positiveText = stringResource(R.string.yes),
+                        onDismiss = {
+                            settingViewModel.resetSynchronizeStatus()
+                        }
+                    )
+                }
             }
         }
     }

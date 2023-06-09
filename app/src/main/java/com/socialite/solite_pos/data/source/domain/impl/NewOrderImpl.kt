@@ -8,15 +8,19 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDe
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
-import com.socialite.solite_pos.data.source.local.room.OrdersDao
 import com.socialite.solite_pos.data.source.preference.OrderPref
+import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
+import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import kotlinx.coroutines.flow.first
 
 class NewOrderImpl(
-    private val dao: OrdersDao,
     private val orderPref: OrderPref,
+    private val ordersRepository: OrdersRepository,
+    private val orderDetailsRepository: OrderDetailsRepository,
+    private val orderProductVariantsRepository: OrderProductVariantsRepository,
     private val settingRepository: SettingRepository
 ) : NewOrder {
     override suspend fun invoke(
@@ -31,7 +35,7 @@ class NewOrderImpl(
             order = orderData,
             products = products
         )
-        dao.insertNewOrder(orderWithProducts.order.order)
+        ordersRepository.insertOrder(orderWithProducts.order.order)
         insertOrderProduct(orderWithProducts)
         increaseOrderQueue()
     }
@@ -96,13 +100,13 @@ class NewOrderImpl(
                     item.product.id,
                     item.amount
                 )
-                dao.insertNewOrderDetail(detail)
+                orderDetailsRepository.insertOrderDetail(detail)
 
                 for (variant in item.variants) {
                     val orderVariant = OrderProductVariant.createNewOrderVariant(
                         detail.id, variant.id
                     )
-                    dao.insertNewOrderProductVariant(orderVariant)
+                    orderProductVariantsRepository.insertOrderProductVariant(orderVariant)
                 }
             }
         }

@@ -4,7 +4,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import kotlinx.coroutines.flow.Flow
 
-interface CategoriesRepository {
+interface CategoriesRepository : SyncRepository<Category> {
 
     fun getCategories(query: SimpleSQLiteQuery): Flow<List<Category>>
     suspend fun getNeedUploadCategories(): List<Category>

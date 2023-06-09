@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.entity.OutcomeResponse
 import com.socialite.solite_pos.utils.config.DateUtils
@@ -20,7 +21,7 @@ data class Outcome(
 
         @PrimaryKey
         @ColumnInfo(name = ID, defaultValue = "")
-        val id: String,
+        override val id: String,
 
         @ColumnInfo(name = NAME)
         var name: String,
@@ -42,7 +43,7 @@ data class Outcome(
 
         @ColumnInfo(name = UPLOAD)
         var isUploaded: Boolean
-) : Serializable {
+) : Serializable, EntityData {
 
 
     fun dateString() =

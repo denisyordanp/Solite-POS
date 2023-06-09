@@ -40,6 +40,9 @@ interface StoreDao {
     suspend fun updateStore(store: Store)
 
     @Update
+    suspend fun updateStores(store: List<NewStore>)
+
+    @Update
     suspend fun updateNewStore(store: NewStore)
 
     @Query("DELETE FROM ${Store.DB_NAME}")

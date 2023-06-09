@@ -4,7 +4,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.flow.Flow
 
-interface OutcomesRepository {
+interface OutcomesRepository : SyncRepository<Outcome> {
 
     fun getOutcomes(date: String): Flow<List<Outcome>>
     fun getOutcomes(parameters: ReportsParameter): Flow<List<Outcome>>

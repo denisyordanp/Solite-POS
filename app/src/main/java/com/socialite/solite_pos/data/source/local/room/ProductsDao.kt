@@ -24,6 +24,9 @@ interface ProductsDao {
     @Query("SELECT * FROM ${Product.DB_NAME}")
     suspend fun getProducts(): List<Product>
 
+    @Query("SELECT * FROM ${NewProduct.DB_NAME}")
+    suspend fun getNewProducts(): List<NewProduct>
+
     @Query("SELECT * FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct LIMIT 1")
     suspend fun getProductById(idProduct: Long): Product?
 
@@ -62,6 +65,9 @@ interface ProductsDao {
 
     @Update
     suspend fun updateNewProduct(data: NewProduct)
+
+    @Update
+    suspend fun updateProducts(data: List<NewProduct>)
 
     @Query("DELETE FROM '${Product.DB_NAME}'")
     suspend fun deleteAllOldProducts()

@@ -35,7 +35,7 @@
         <activity android:name=".view.main.menu.master.detail.VariantMasterMixOptionActivity" />
         <activity android:name=".view.bluetooth.BluetoothDeviceListActivity" />
         <activity
-            android:name=".view.OpeningActivity"
+            android:name=".view.opening.OpeningActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

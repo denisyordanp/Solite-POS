@@ -1,7 +1,8 @@
-package com.socialite.solite_pos.di
+package com.socialite.solite_pos.di.loggedin
 
 import com.socialite.solite_pos.data.source.preference.UserPreferences
 import com.socialite.solite_pos.data.source.remote.SoliteServices
+import com.socialite.solite_pos.di.NetworkInjector
 import com.socialite.solite_pos.utils.config.NetworkConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -9,7 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter.Factory
 import retrofit2.Retrofit
 
-object NetworkLoggedInInjector {
+object LoggedNetworkInInjector {
 
     private fun provideOkHttp(
         config: NetworkConfig,

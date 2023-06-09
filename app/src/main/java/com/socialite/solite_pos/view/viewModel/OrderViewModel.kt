@@ -20,6 +20,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +40,7 @@ class OrderViewModel(
     private val updateOrderProducts: UpdateOrderProducts
 ) : ViewModel() {
 
-    companion object : ViewModelFromFactory<OrderViewModel>() {
+    companion object : LoggedInViewModelFromFactory<OrderViewModel>() {
         fun getOrderViewModel(activity: FragmentActivity): OrderViewModel {
             return buildViewModel(activity, OrderViewModel::class.java)
         }
@@ -67,8 +68,8 @@ class OrderViewModel(
 
     fun getMenuBadge(date: String) = getOrdersGeneralMenuBadge(date)
 
-    suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderDetail(orderNo)
-    fun getOrderData(orderId: String) = orderRepository.getOrderData(orderId)
+    suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderData(orderNo)
+    fun getOrderData(orderId: String) = orderRepository.getOrderDataAsFlow(orderId)
 
     fun getProductOrder(orderId: String) = getProductOrder.invoke(orderId)
 

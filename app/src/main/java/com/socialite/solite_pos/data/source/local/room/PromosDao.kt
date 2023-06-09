@@ -20,6 +20,9 @@ interface PromosDao {
     @Query("SELECT * FROM ${NewPromo.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadPromos(): List<NewPromo>
 
+    @Query("SELECT * FROM ${NewPromo.DB_NAME}")
+    suspend fun getPromos(): List<NewPromo>
+
     @RawQuery(observedEntities = [NewPromo::class])
     fun getNewPromos(query: SupportSQLiteQuery): Flow<List<NewPromo>>
 
@@ -40,6 +43,9 @@ interface PromosDao {
 
     @Update
     suspend fun updateNewPromo(data: NewPromo)
+
+    @Update
+    suspend fun updateNewPromos(data: List<NewPromo>)
 
     @Query("DELETE FROM '${Promo.DB_NAME}'")
     suspend fun deleteAllOldPromos()

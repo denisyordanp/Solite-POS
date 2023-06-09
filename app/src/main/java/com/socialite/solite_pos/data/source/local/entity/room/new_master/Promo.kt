@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.entity.PromoResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
@@ -20,7 +21,7 @@ import java.util.UUID
 data class Promo(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+    override val id: String,
 
     @ColumnInfo(name = NAME)
     override var name: String,
@@ -39,7 +40,7 @@ data class Promo(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable, DropdownItem {
+) : Serializable, DropdownItem, EntityData {
 
     fun isNewPromo() = id == ID_ADD
 

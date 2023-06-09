@@ -18,6 +18,7 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,7 @@ class ProductViewModel(
     private val variantMixesRepository: VariantMixesRepository,
 ) : ViewModel() {
 
-    companion object : ViewModelFromFactory<ProductViewModel>() {
+    companion object : LoggedInViewModelFromFactory<ProductViewModel>() {
         fun getMainViewModel(activity: FragmentActivity): ProductViewModel {
             return buildViewModel(activity, ProductViewModel::class.java)
         }
@@ -59,16 +60,8 @@ class ProductViewModel(
         } ?: 0
     }
 
-    fun getVariantProduct(
-        idProduct: String,
-        idVariantOption: String
-    ) = productVariantsRepository.getVariantProduct(idProduct, idVariantOption)
-
     fun getVariantsProductById(idProduct: String) =
         productVariantsRepository.getVariantsProductById(idProduct)
-
-    fun getVariantProductById(idProduct: String) =
-        productVariantsRepository.getVariantProductById(idProduct)
 
     fun insertVariantProduct(data: VariantProduct) {
         viewModelScope.launch {
@@ -86,9 +79,6 @@ class ProductViewModel(
         idVariant: Long,
         idProduct: Long
     ) = variantMixesRepository.getVariantMixProductById(idVariant, idProduct)
-
-    fun getVariantMixProduct(idVariant: Long) =
-        variantMixesRepository.getVariantMixProduct(idVariant)
 
     fun insertVariantMix(data: VariantMix) {
         viewModelScope.launch {

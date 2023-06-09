@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingView(
+fun FullScreenLoadingView(
     isLoading: Boolean,
     content: @Composable () -> Unit
 ) {
@@ -24,7 +24,7 @@ fun LoadingView(
             modifier = Modifier
                 .background(
                     color = MaterialTheme.colors.surface.copy(
-                        0.2f
+                        0.7f
                     )
                 )
                 .fillMaxSize()
@@ -37,7 +37,7 @@ fun LoadingView(
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center),
-                color = MaterialTheme.colors.surface,
+                color = MaterialTheme.colors.primary,
                 strokeWidth = 4.dp
             )
         }

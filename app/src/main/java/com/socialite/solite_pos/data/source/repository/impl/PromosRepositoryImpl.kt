@@ -2,10 +2,13 @@ package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.source.repository.PromosRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo as NewPromo
@@ -13,7 +16,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo a
 class PromosRepositoryImpl(
     private val dao: PromosDao,
     private val db: AppDatabase
-) : PromosRepository {
+) : PromosRepository, SyncRepository<NewPromo> {
 
     companion object {
         @Volatile
@@ -39,6 +42,9 @@ class PromosRepositoryImpl(
     override suspend fun updatePromo(data: NewPromo) = dao.updateNewPromo(data.copy(
         isUploaded = false
     ))
+
+    override suspend fun updatePromos(data: List<NewPromo>) = dao.updateNewPromos(data)
+
     override suspend fun getNeedUploadPromos() = dao.getNeedUploadPromos()
     override fun getPromos(query: SupportSQLiteQuery) = dao.getNewPromos(query)
     override suspend fun migrateToUUID() {
@@ -75,5 +81,21 @@ class PromosRepositoryImpl(
 
     override suspend fun deleteAllNewCustomers() {
         dao.deleteAllNewPromos()
+    }
+
+    override suspend fun getItems() = dao.getPromos()
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<NewPromo>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
+    }
+
+    override suspend fun insertItems(items: List<NewPromo>) {
+        dao.insertPromos(items)
+    }
+
+    override suspend fun updateItems(items: List<NewPromo>) {
+        dao.updateNewPromos(items)
     }
 }

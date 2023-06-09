@@ -1,12 +1,15 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.OutcomesDao
 import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapConcat
@@ -92,6 +95,24 @@ class OutcomesRepositoryImpl(
     override suspend fun getNeedUploadOutcomes(): List<Outcome> = dao.getNeedUploadOutcomes()
     override suspend fun insertOutcomes(list: List<Outcome>) {
         dao.insertOutcomes(list)
+    }
+
+    override suspend fun getItems(): List<Outcome> {
+        return dao.getNewOutcomes()
+    }
+
+    override suspend fun updateItems(items: List<Outcome>) {
+        dao.updateOutcomes(items)
+    }
+
+    override suspend fun insertItems(items: List<Outcome>) {
+        dao.insertOutcomes(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<Outcome>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
     }
 
     override suspend fun deleteAllOldOutcomes() {

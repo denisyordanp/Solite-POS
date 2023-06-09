@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,11 +19,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
+import com.socialite.solite_pos.view.store.StoreDestinations
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import com.socialite.solite_pos.view.viewModel.MainViewModel
@@ -51,7 +56,6 @@ class OrderCustomerActivity : SoliteActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
                     val navController = rememberNavController()
 
                     NavHost(
@@ -109,21 +113,22 @@ class OrderCustomerActivity : SoliteActivity() {
                             route = OrderCustomerDestinations.SELECT_VARIANTS,
                             arguments = listOf(productIdArgument)
                         ) {
-                            it.arguments?.getString(OrderCustomerDestinations.PRODUCT_ID)?.let { id ->
-                                OrderSelectVariants(
-                                    productId = id,
-                                    viewModel = productViewModel,
-                                    onBackClicked = {
-                                        navController.popBackStack()
-                                    },
-                                    onAddToBucketClicked = {
-                                        lifecycleScope.launch {
-                                            orderViewModel.addProductToBucket(it)
+                            it.arguments?.getString(OrderCustomerDestinations.PRODUCT_ID)
+                                ?.let { id ->
+                                    OrderSelectVariants(
+                                        productId = id,
+                                        viewModel = productViewModel,
+                                        onBackClicked = {
                                             navController.popBackStack()
+                                        },
+                                        onAddToBucketClicked = {
+                                            lifecycleScope.launch {
+                                                orderViewModel.addProductToBucket(it)
+                                                navController.popBackStack()
+                                            }
                                         }
-                                    }
-                                )
-                            }
+                                    )
+                                }
                         }
                         composable(
                             OrderCustomerDestinations.SELECT_CUSTOMERS
@@ -147,9 +152,28 @@ class OrderCustomerActivity : SoliteActivity() {
                             }
                         }
                     }
+
+                    val alertUnselectStore =
+                        mainViewModel.selectedStore.collectAsState(initial = "").value.isEmpty()
+                    if (alertUnselectStore) {
+                        BasicAlertDialog(
+                            titleText = stringResource(R.string.unselect_store_title),
+                            descText = stringResource(R.string.please_select_store_first_before_do_a_transaction),
+                            positiveAction = {
+                                goToSelectStore()
+                            },
+                            positiveText = stringResource(R.string.yes),
+                        )
+                    }
                 }
             }
         }
+    }
+
+    private fun goToSelectStore() {
+        val intent =
+            StoreActivity.createInstanceWithDirectPage(this, StoreDestinations.MASTER_STORES)
+        startActivity(intent)
     }
 
     private fun goToStoreActivity() {

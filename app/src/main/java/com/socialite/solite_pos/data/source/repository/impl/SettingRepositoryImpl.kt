@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.socialite.solite_pos.data.source.preference.UserPreferences
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -18,12 +19,16 @@ private val Context.settingDataStore by preferencesDataStore(
 )
 
 class SettingRepositoryImpl(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val userPreference: UserPreferences
 ) : SettingRepository {
     companion object {
-        fun getDataStoreInstance(context: Context): SettingRepositoryImpl {
+        fun getDataStoreInstance(
+            context: Context,
+            userPreference: UserPreferences
+        ): SettingRepositoryImpl {
             val dataStore = context.settingDataStore
-            return SettingRepositoryImpl(dataStore)
+            return SettingRepositoryImpl(dataStore, userPreference)
         }
     }
 
@@ -84,4 +89,10 @@ class SettingRepositoryImpl(
             it[PreferencesKeys.IS_MIGRATE_PHASE_2] = isMigrate
         }
     }
+
+    override fun insertToken(token: String) {
+        userPreference.setUserToken(token)
+    }
+
+    override fun getToken(): String = userPreference.getUserToken()
 }

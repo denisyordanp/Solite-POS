@@ -1,11 +1,9 @@
 package com.socialite.solite_pos.view.viewModel
 
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
@@ -20,10 +18,9 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.SuppliersRepository
-import com.socialite.solite_pos.data.source.repository.Synchronize
-import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,12 +39,9 @@ class MainViewModel(
     private val settingRepository: SettingRepository,
     private val promosRepository: PromosRepository,
     private val newOutcome: NewOutcome,
-    private val migrateToUUID: MigrateToUUID,
-    private val synchronize: Synchronize,
-    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
-    companion object : ViewModelFromFactory<MainViewModel>() {
+    companion object : LoggedInViewModelFromFactory<MainViewModel>() {
         fun getMainViewModel(activity: FragmentActivity): MainViewModel {
             return buildViewModel(activity, MainViewModel::class.java)
         }
@@ -170,35 +164,5 @@ class MainViewModel(
         viewModelScope.launch {
             settingRepository.selectNewStore(id)
         }
-    }
-
-    val isDarkModeActive = settingRepository.getIsDarkModeActive()
-
-    fun setDarkMode(isActive: Boolean) {
-        viewModelScope.launch {
-            settingRepository.setDarkMode(isActive)
-        }
-    }
-
-    suspend fun beginMigratingToUUID() {
-        migrateToUUID()
-    }
-
-    fun beginSynchronize() {
-        viewModelScope.launch {
-            try {
-                synchronize()
-            } catch (e:Exception) {
-                Log.d("TESTING", "message: ${e.message}")
-            }
-        }
-    }
-
-    fun isLoggedIn(): Boolean {
-        return accountRepository.getToken().isNotEmpty()
-    }
-
-    fun logout() {
-        accountRepository.insertToken("")
     }
 }

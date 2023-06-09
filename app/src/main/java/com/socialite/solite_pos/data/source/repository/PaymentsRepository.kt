@@ -4,7 +4,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import kotlinx.coroutines.flow.Flow
 
-interface PaymentsRepository {
+interface PaymentsRepository : SyncRepository<Payment> {
     suspend fun insertPayment(data: Payment)
     suspend fun insertPayments(list: List<Payment>)
     suspend fun updatePayment(data: Payment)

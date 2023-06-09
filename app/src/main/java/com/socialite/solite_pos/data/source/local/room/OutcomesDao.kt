@@ -25,6 +25,9 @@ interface OutcomesDao {
     @Query("SELECT * FROM '${Outcome.DB_NAME}'")
     suspend fun getOutcomes(): List<Outcome>
 
+    @Query("SELECT * FROM '${NewOutcome.DB_NAME}'")
+    suspend fun getNewOutcomes(): List<NewOutcome>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewOutcome(data: NewOutcome)
 
@@ -33,6 +36,9 @@ interface OutcomesDao {
 
     @Update
     suspend fun updateOutcome(data: Outcome)
+
+    @Update
+    suspend fun updateOutcomes(data: List<NewOutcome>)
 
     @Query("DELETE FROM ${Outcome.DB_NAME}")
     suspend fun deleteAllOldOutcomes()

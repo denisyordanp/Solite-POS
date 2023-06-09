@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.StoreDao
 import com.socialite.solite_pos.data.source.repository.SettingRepository
@@ -9,6 +10,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 
 class StoreRepositoryImpl(
     private val dao: StoreDao,
@@ -88,5 +91,19 @@ class StoreRepositoryImpl(
 
     override suspend fun deleteAllNewStores() {
         dao.deleteAllNewStore()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<Store>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
+    }
+
+    override suspend fun getItems() = dao.getNewStores().first()
+    override suspend fun insertItems(items: List<Store>) {
+        dao.insertStores(items)
+    }
+    override suspend fun updateItems(items: List<Store>) {
+        dao.updateStores(items)
     }
 }

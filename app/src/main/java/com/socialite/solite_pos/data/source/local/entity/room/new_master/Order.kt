@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.entity.OrderResponse
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_TIME_FORMAT
@@ -31,7 +32,7 @@ import java.util.UUID
 data class Order(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+    override val id: String,
 
     @ColumnInfo(name = NO)
     var orderNo: String,
@@ -53,7 +54,7 @@ data class Order(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable {
+) : Serializable, EntityData {
 
     fun isEditable() = status == ON_PROCESS || status == NEED_PAY
 

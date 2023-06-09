@@ -30,7 +30,7 @@ interface CustomersDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewCustomer(data: NewCustomer)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     suspend fun updateCustomer(data: Customer)
 
     @Query("DELETE FROM ${Customer.DB_NAME}")
@@ -40,5 +40,8 @@ interface CustomersDao {
     suspend fun deleteAllNewCustomers()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCustomers(datas: List<NewCustomer>)
+    suspend fun insertCustomers(list: List<NewCustomer>)
+
+    @Update
+    suspend fun updateCustomers(list: List<NewCustomer>)
 }

@@ -41,6 +41,9 @@ interface PaymentsDao {
     @Update
     suspend fun updateNewPayment(data: NewPayment)
 
+    @Update
+    suspend fun updatePayments(data: List<NewPayment>)
+
     @Query("DELETE FROM '${Payment.DB_NAME}'")
     suspend fun deleteAllOldPayments()
 

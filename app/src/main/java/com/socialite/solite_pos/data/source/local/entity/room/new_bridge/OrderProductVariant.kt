@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.source.remote.response.entity.OrderProductVariantResponse
@@ -36,7 +37,7 @@ import java.util.UUID
 data class OrderProductVariant(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+    override val id: String,
 
     @ColumnInfo(name = OrderDetail.ID)
     val orderDetail: String,
@@ -49,7 +50,7 @@ data class OrderProductVariant(
 
     @ColumnInfo(name = DELETED, defaultValue = "0")
     val isDeleted: Boolean
-) : Serializable {
+) : Serializable, EntityData {
 
     fun toResponse(): OrderProductVariantResponse {
         return OrderProductVariantResponse(

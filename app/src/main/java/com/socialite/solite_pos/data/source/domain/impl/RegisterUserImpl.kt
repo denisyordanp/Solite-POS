@@ -2,9 +2,11 @@ package com.socialite.solite_pos.data.source.domain.impl
 
 import com.socialite.solite_pos.data.source.domain.RegisterUser
 import com.socialite.solite_pos.data.source.repository.AccountRepository
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 
 class RegisterUserImpl(
-    private val repository: AccountRepository
+    private val repository: AccountRepository,
+    private val settingRepository: SettingRepository
 ) : RegisterUser {
     override suspend fun invoke(
         name: String,
@@ -13,7 +15,7 @@ class RegisterUserImpl(
         storeName: String
     ): Boolean {
         val userToken = repository.register(name, email, password, storeName)
-        repository.insertToken(userToken)
+        settingRepository.insertToken(userToken)
         return true
     }
 }

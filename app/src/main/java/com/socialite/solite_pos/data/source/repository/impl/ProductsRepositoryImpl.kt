@@ -1,11 +1,14 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.CategoriesDao
 import com.socialite.solite_pos.data.source.local.room.ProductsDao
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
+import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import java.util.UUID
 
 class ProductsRepositoryImpl(
@@ -84,5 +87,23 @@ class ProductsRepositoryImpl(
 
     override suspend fun deleteAllNewProducts() {
         dao.deleteAllNewProducts()
+    }
+
+    override suspend fun getItems(): List<Product> {
+        return dao.getNewProducts()
+    }
+
+    override suspend fun updateItems(items: List<Product>) {
+        dao.updateProducts(items)
+    }
+
+    override suspend fun insertItems(items: List<Product>) {
+        dao.insertProducts(items)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun updateSynchronization(missingItems: List<Product>?) {
+        val update = UpdateSynchronizations(this as SyncRepository<EntityData>)
+        update.updates(missingItems)
     }
 }

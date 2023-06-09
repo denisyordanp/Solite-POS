@@ -4,7 +4,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import kotlinx.coroutines.flow.Flow
 
-interface ProductsRepository {
+interface ProductsRepository : SyncRepository<Product> {
 
     fun getProductWithCategories(category: String): Flow<List<ProductWithCategory>>
     fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
