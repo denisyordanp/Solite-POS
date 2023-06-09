@@ -24,8 +24,6 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
-import com.socialite.solite_pos.data.source.repository.SuppliersRepository
-import com.socialite.solite_pos.data.source.repository.VariantMixesRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetIncomesRecapData
@@ -49,8 +47,6 @@ import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideP
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideRemoteConfigRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideSettingRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideStoreRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideSupplierRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantMixesRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantsRepository
 import com.socialite.solite_pos.view.settings.SettingViewModel
@@ -60,7 +56,6 @@ import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 class LoggedInViewModelFactory private constructor(
     private val paymentsRepository: PaymentsRepository,
-    private val supplierRepository: SuppliersRepository,
     private val customersRepository: CustomersRepository,
     private val variantsRepository: VariantsRepository,
     private val variantOptionsRepository: VariantOptionsRepository,
@@ -73,7 +68,6 @@ class LoggedInViewModelFactory private constructor(
     private val newOrder: NewOrder,
     private val getProductOrder: GetProductOrder,
     private val getRecapData: GetRecapData,
-    private val variantMixesRepository: VariantMixesRepository,
     private val payOrder: PayOrder,
     private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
     private val storeRepository: StoreRepository,
@@ -95,7 +89,6 @@ class LoggedInViewModelFactory private constructor(
                     if (INSTANCE == null) {
                         INSTANCE = LoggedInViewModelFactory(
                             paymentsRepository = providePaymentsRepository(context),
-                            supplierRepository = provideSupplierRepository(context),
                             customersRepository = provideCustomersRepository(context),
                             variantsRepository = provideVariantsRepository(context),
                             variantOptionsRepository = provideVariantOptionsRepository(context),
@@ -108,7 +101,6 @@ class LoggedInViewModelFactory private constructor(
                             newOrder = provideNewOrder(context),
                             getProductOrder = provideGetProductOrder(context),
                             getRecapData = provideGetIncomesRecapData(context),
-                            variantMixesRepository = provideVariantMixesRepository(context),
                             payOrder = providePayOrder(context),
                             getOrdersGeneralMenuBadge = provideGetOrdersGeneralMenuBadge(context),
                             storeRepository = provideStoreRepository(context),
@@ -133,7 +125,6 @@ class LoggedInViewModelFactory private constructor(
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(
                     paymentRepository = paymentsRepository,
-                    supplierRepository = supplierRepository,
                     customersRepository = customersRepository,
                     outcomesRepository = outcomesRepository,
                     storeRepository = storeRepository,
@@ -163,7 +154,6 @@ class LoggedInViewModelFactory private constructor(
                     productsRepository = productsRepository,
                     productVariantsRepository = productVariantsRepository,
                     getProductVariantOptions = getProductVariantOptions,
-                    variantMixesRepository = variantMixesRepository
                 ) as T
             }
 
