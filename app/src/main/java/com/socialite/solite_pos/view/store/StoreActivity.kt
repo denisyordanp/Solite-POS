@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.store
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -49,6 +50,18 @@ class StoreActivity : SoliteActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var productViewModel: ProductViewModel
 
+    companion object {
+        private const val EXTRA_PAGE = "extra_page"
+        fun createInstanceWithDirectPage(
+            context: Context,
+            page: String
+        ): Intent {
+            return Intent(context, StoreActivity::class.java).apply {
+                putExtra(EXTRA_PAGE, page)
+            }
+        }
+    }
+
     @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
     @ExperimentalPagerApi
@@ -60,6 +73,7 @@ class StoreActivity : SoliteActivity() {
         productViewModel = ProductViewModel.getMainViewModel(this)
 
         val date = DateUtils.currentDate
+        val directPage = intent?.extras?.getString(EXTRA_PAGE)
 
         setContent {
             SolitePOSTheme {
@@ -68,7 +82,7 @@ class StoreActivity : SoliteActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = StoreDestinations.MAIN_STORE
+                    startDestination = if (!directPage.isNullOrEmpty()) directPage else StoreDestinations.MAIN_STORE
                 ) {
                     composable(StoreDestinations.MAIN_STORE) {
                         MainStoreMenu(
@@ -153,7 +167,8 @@ class StoreActivity : SoliteActivity() {
                         StoresView(
                             mainViewModel = mainViewModel,
                             onBackClicked = {
-                                navController.popBackStack()
+                                val pop = navController.popBackStack()
+                                if (!pop) onBackPressed()
                             }
                         )
                     }

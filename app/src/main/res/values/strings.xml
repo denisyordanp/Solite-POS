@@ -61,7 +61,9 @@
     <string name="store_name">Nama kedai</string>
     <string name="address">Alamat</string>
     <string name="select_store">Pilih kedai</string>
+    <string name="unselect_store_title">Kedai belum dipilih</string>
     <string name="are_you_sure_select_this_store_for_next_orders">Anda yakin akan memilih kedai ini untuk pesanan selanjutnya?</string>
+    <string name="please_select_store_first_before_do_a_transaction">Mohon pilih kedai terlebih dahulu sebelum memulai transaksi</string>
     <string name="out_of_stock">Habis</string>
     <string name="select_date">Pilih Tanggal</string>
     <string name="select">Pilih</string>

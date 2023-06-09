@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.socialite.solite_pos.compose.LoadingView
+import com.socialite.solite_pos.compose.FullScreenLoadingView
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 
@@ -37,7 +37,7 @@ class LoginActivity : ComponentActivity() {
 
         if (state.isSuccessLogin) toMain()
 
-        LoadingView(
+        FullScreenLoadingView(
             isLoading = state.isLoading
         ) {
 

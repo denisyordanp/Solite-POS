@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
-import com.socialite.solite_pos.compose.LoadingView
+import com.socialite.solite_pos.compose.FullScreenLoadingView
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.opening.OpeningActivity
 import com.socialite.solite_pos.view.SoliteActivity
@@ -33,7 +33,7 @@ class SettingsActivity : SoliteActivity() {
             SolitePOSTheme {
                 val state = settingViewModel.viewState.collectAsState().value
 
-                LoadingView(isLoading = state.isLoading) {
+                FullScreenLoadingView(isLoading = state.isLoading) {
                     val date = DateUtils.currentDate
 
                     SettingsMainMenu(
