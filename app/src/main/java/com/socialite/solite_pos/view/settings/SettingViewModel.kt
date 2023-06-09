@@ -61,7 +61,10 @@ class SettingViewModel(
 
             flow {
                 val isSuccess = synchronize()
-                if (isSuccess) emit(currentState.copy(isLoading = false))
+                if (isSuccess) emit(currentState.copy(
+                    isLoading = false,
+                    isSynchronizeSuccess = true
+                ))
             }.onStart {
                 emit(currentState.copy(isLoading = true))
             }.catch {
@@ -72,6 +75,15 @@ class SettingViewModel(
 
     fun logout() {
         accountRepository.insertToken("")
+    }
+
+    fun resetSynchronizeStatus() {
+        viewModelScope.launch {
+            _viewState.emit(_viewState.value.copy(
+                isSynchronizeSuccess = false,
+                error = null
+            ))
+        }
     }
 
 }

@@ -133,5 +133,9 @@
     <string name="enter_confirm_password">Masukan konfirmasi password</string>
     <string name="enter_store_name">Masukan nama toko anda</string>
     <string name="email_or_password_not_found_please_try_again">Email atau password tidak ditemukan, silahkan coba lagi</string>
+    <string name="synchronization_success_message">Silahkan periksa data terbaru</string>
+    <string name="synchronization_success_title">Sinkronisasi Berhasil</string>
+    <string name="synchronization_failed_title">Sinkronisasi Gagal</string>
+    <string name="synchronization_failed_message">"Silahkan hubungi developer. Pesan gagal: %s"</string>
 
 </resources>

@@ -4,6 +4,7 @@ data class SettingViewState(
     val isDarkMode: Boolean,
     val isLoading: Boolean,
     val isServerActive: Boolean,
+    val isSynchronizeSuccess: Boolean,
     val error: Throwable?
 ) {
     companion object {
@@ -11,6 +12,7 @@ data class SettingViewState(
             isDarkMode = false,
             isLoading = false,
             isServerActive = false,
+            isSynchronizeSuccess = false,
             error = null
         )
     }

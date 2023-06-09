@@ -6,10 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
+import com.socialite.solite_pos.R
+import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.FullScreenLoadingView
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.view.opening.OpeningActivity
 import com.socialite.solite_pos.view.SoliteActivity
+import com.socialite.solite_pos.view.opening.OpeningActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.store.StoreActivity
@@ -68,6 +71,28 @@ class SettingsActivity : SoliteActivity() {
                         onLogout = {
                             settingViewModel.logout()
                             goToOpening()
+                        }
+                    )
+                }
+
+                if (state.isSynchronizeSuccess || state.error != null) {
+                    val title =
+                        if (state.isSynchronizeSuccess) stringResource(R.string.synchronization_success_title) else stringResource(
+                            R.string.synchronization_failed_title
+                        )
+                    val message =
+                        if (state.isSynchronizeSuccess) stringResource(R.string.synchronization_success_message) else stringResource(
+                            R.string.synchronization_failed_message, state.error?.message ?: ""
+                        )
+                    BasicAlertDialog(
+                        titleText = title,
+                        descText = message,
+                        positiveAction = {
+                            settingViewModel.resetSynchronizeStatus()
+                        },
+                        positiveText = stringResource(R.string.yes),
+                        onDismiss = {
+                            settingViewModel.resetSynchronizeStatus()
                         }
                     )
                 }
