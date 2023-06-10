@@ -6,9 +6,5 @@ object NetworkConfig {
 
     fun isDebugMode(): Boolean = BuildConfig.DEBUG
 
-    fun getBaseUrl(): String = if (BuildConfig.DEBUG) {
-        "http://10.0.2.2:8000/"
-    } else {
-        "https://denisyordanp.xyz"
-    }
+    fun getBaseUrl(): String = "https://api-solite-release.denisyordanp.com/"
 }
