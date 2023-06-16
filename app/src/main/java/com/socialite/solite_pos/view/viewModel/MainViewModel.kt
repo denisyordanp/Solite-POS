@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.NewOutcome
+import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
@@ -22,6 +24,7 @@ import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -144,6 +147,13 @@ class MainViewModel(
     }
 
     val selectedStore = settingRepository.getNewSelectedStore()
+
+    fun isShouldSelectStore(products: Flow<Map<Category, List<ProductWithCategory>>>): Flow<Boolean> {
+        return settingRepository.getNewSelectedStore()
+            .combine(products) {s, p ->
+            s.isEmpty() && p.isNotEmpty()
+        }
+    }
 
     fun selectStore(id: String) {
         viewModelScope.launch {
