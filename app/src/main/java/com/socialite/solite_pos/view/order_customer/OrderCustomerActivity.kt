@@ -153,8 +153,10 @@ class OrderCustomerActivity : SoliteActivity() {
                         }
                     }
 
-                    val alertUnselectStore =
-                        mainViewModel.selectedStore.collectAsState(initial = "").value.isEmpty()
+                    val alertUnselectStore = mainViewModel.isShouldSelectStore(
+                        productViewModel.getAllProducts()
+                    ).collectAsState(initial = false).value
+
                     if (alertUnselectStore) {
                         BasicAlertDialog(
                             titleText = stringResource(R.string.unselect_store_title),
