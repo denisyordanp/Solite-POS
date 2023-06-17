@@ -21,7 +21,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,17 +37,17 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
-import com.socialite.solite_pos.view.viewModel.MainViewModel
 
 @Composable
 @ExperimentalComposeUiApi
 fun OrderCustomerName(
-    mainViewModel: MainViewModel,
+    state: OrderCustomerNameViewState,
     onBackClicked: () -> Unit,
     onNewOrder: (
         customer: Customer,
         isTakeAway: Boolean
-    ) -> Unit
+    ) -> Unit,
+    onNewCustomer: (customer: Customer) -> Unit
 ) {
 
     val keyboard = LocalSoftwareKeyboardController.current
@@ -61,13 +60,10 @@ fun OrderCustomerName(
         mutableStateOf(Customer.ID_ADD)
     }
 
-    val customers by mainViewModel.filterCustomer(searchName)
-        .collectAsState(initial = emptyList())
-
     fun selectedCustomer(customer: Customer) {
         selectedId = if (customer.isAdd()) {
             val newCustomer = Customer.createNew(customer.name)
-            mainViewModel.insertCustomers(newCustomer)
+            onNewCustomer(newCustomer)
             newCustomer.id
         } else {
             if (customer.id == selectedId)
@@ -94,14 +90,14 @@ fun OrderCustomerName(
                 .padding(padding),
             keyword = searchName,
             selectedId = selectedId,
-            customers = customers,
+            customers = state.getFilteredCustomers(),
             onClickName = {
                 searchName = ""
                 selectedCustomer(it)
                 keyboard?.hide()
             },
             onChooseDine = { isTakeAway ->
-                customers.find { it.id == selectedId }?.let { customer ->
+                state.getFilteredCustomers().find { it.id == selectedId }?.let { customer ->
                     onNewOrder(customer, isTakeAway)
                 }
             }

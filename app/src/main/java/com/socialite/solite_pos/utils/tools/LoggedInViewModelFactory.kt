@@ -51,6 +51,7 @@ import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideS
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideStoreRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantsRepository
+import com.socialite.solite_pos.view.order_customer.OrderCustomerViewModel
 import com.socialite.solite_pos.view.settings.SettingViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -141,7 +142,6 @@ class LoggedInViewModelFactory private constructor(
             modelClass.isAssignableFrom(OrderViewModel::class.java) -> {
                 OrderViewModel(
                     orderRepository = ordersRepository,
-                    newOrder = newOrder,
                     getProductOrder = getProductOrder,
                     getRecapData = getRecapData,
                     payOrder = payOrder,
@@ -168,6 +168,18 @@ class LoggedInViewModelFactory private constructor(
                     settingRepository = settingRepository,
                     remoteConfigRepository = remoteConfigRepository,
                     getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge
+                ) as T
+            }
+
+            modelClass.isAssignableFrom(OrderCustomerViewModel::class.java) -> {
+                OrderCustomerViewModel(
+                    settingRepository = settingRepository,
+                    productsRepository = productsRepository,
+                    customersRepository = customersRepository,
+                    getProductWithCategories = getProductWithCategories,
+                    getProductVariantOptions = getProductVariantOptions,
+                    getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge,
+                    newOrder = newOrder
                 ) as T
             }
 

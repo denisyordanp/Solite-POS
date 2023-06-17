@@ -17,11 +17,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,14 +26,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.utils.config.toIDR
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 @Composable
 fun ProductCustomerItemView(
-    productViewModel: ProductViewModel,
-    product: Product,
+    productWithCategory: ProductWithCategory,
     currentAmount: Int?,
     onItemClick: (isAdd: Boolean, hasVariant: Boolean) -> Unit
 ) {
@@ -62,7 +55,7 @@ fun ProductCustomerItemView(
                     )
                     top.linkTo(parent.top)
                 },
-            text = product.name,
+            text = productWithCategory.product.name,
             style = MaterialTheme.typography.h6
         )
         Text(
@@ -77,7 +70,7 @@ fun ProductCustomerItemView(
                     )
                     top.linkTo(title.bottom)
                 },
-            text = product.desc
+            text = productWithCategory.product.desc
         )
         Text(
             modifier = Modifier
@@ -85,7 +78,7 @@ fun ProductCustomerItemView(
                     start.linkTo(parent.start, margin = 16.dp)
                     linkTo(top = subTitle.bottom, bottom = parent.bottom)
                 },
-            text = product.price.toIDR(),
+            text = productWithCategory.product.price.toIDR(),
             style = MaterialTheme.typography.body1.copy(
                 fontWeight = FontWeight.Bold
             )
@@ -98,26 +91,15 @@ fun ProductCustomerItemView(
                     linkTo(top = subTitle.bottom, bottom = parent.bottom)
                 },
         ) {
-
-            if (product.isActive) {
-                var hasVariant by remember {
-                    mutableStateOf<Boolean?>(null)
-                }
-
-                LaunchedEffect(key1 = true) {
-                    hasVariant = productViewModel.isProductHasVariant(product.id)
-                }
-
-                hasVariant?.let {
-                    if (it) {
-                        SelectVariantButton(onItemClick = {
-                            onItemClick(true, true)
-                        })
-                    } else {
-                        AmountOption(currentAmount = currentAmount, onItemClick = { isAdd ->
-                            onItemClick(isAdd, false)
-                        })
-                    }
+            if (productWithCategory.product.isActive) {
+                if (productWithCategory.hasVariant) {
+                    SelectVariantButton(onItemClick = {
+                        onItemClick(true, true)
+                    })
+                } else {
+                    AmountOption(currentAmount = currentAmount, onItemClick = { isAdd ->
+                        onItemClick(isAdd, false)
+                    })
                 }
             } else {
                 Text(

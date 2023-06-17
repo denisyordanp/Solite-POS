@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
@@ -29,16 +31,11 @@ import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.store.StoreDestinations
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 class OrderCustomerActivity : SoliteActivity() {
 
-    private lateinit var productViewModel: ProductViewModel
-    private lateinit var mainViewModel: MainViewModel
-    private lateinit var orderViewModel: OrderViewModel
+    private lateinit var orderCustomerViewModel: OrderCustomerViewModel
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
@@ -46,9 +43,9 @@ class OrderCustomerActivity : SoliteActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        productViewModel = ProductViewModel.getMainViewModel(this)
-        mainViewModel = MainViewModel.getMainViewModel(this)
-        orderViewModel = OrderViewModel.getOrderViewModel(this)
+        val currentDate = DateUtils.currentDate
+        orderCustomerViewModel = OrderCustomerViewModel.getOrderCustomerViewModel(this)
+        orderCustomerViewModel.loadBadges(currentDate)
 
         setContent {
             SolitePOSTheme {
@@ -57,6 +54,7 @@ class OrderCustomerActivity : SoliteActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
+                    val state = orderCustomerViewModel.viewState.collectAsState().value
 
                     NavHost(
                         navController = navController,
@@ -66,8 +64,9 @@ class OrderCustomerActivity : SoliteActivity() {
                             OrderCustomerDestinations.SELECT_ITEMS
                         ) {
                             OrderSelectItems(
-                                productViewModel = productViewModel,
-                                orderViewModel = orderViewModel,
+                                badges = state.badges,
+                                products = state.allProducts,
+                                bucketOrderState = state.bucketOrderState,
                                 onItemClick = { product, isAdd, hasVariant ->
                                     lifecycleScope.launch {
                                         if (hasVariant) {
@@ -78,11 +77,11 @@ class OrderCustomerActivity : SoliteActivity() {
                                             )
                                         } else {
                                             if (isAdd) {
-                                                orderViewModel.addProductToBucket(
+                                                orderCustomerViewModel.addProductToBucket(
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             } else {
-                                                orderViewModel.decreaseProduct(
+                                                orderCustomerViewModel.decreaseProduct(
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             }
@@ -101,6 +100,9 @@ class OrderCustomerActivity : SoliteActivity() {
                                             // Don nothing
                                         }
                                     }
+                                },
+                                onRemoveProduct = {
+                                    orderCustomerViewModel.removeProductFromBucket(it)
                                 }
                             )
                         }
@@ -115,18 +117,32 @@ class OrderCustomerActivity : SoliteActivity() {
                         ) {
                             it.arguments?.getString(OrderCustomerDestinations.PRODUCT_ID)
                                 ?.let { id ->
+                                    LaunchedEffect(key1 = id) {
+                                        orderCustomerViewModel.loadProductForSelectingVariants(id)
+                                    }
+
                                     OrderSelectVariants(
-                                        productId = id,
-                                        viewModel = productViewModel,
+                                        state = state.orderSelectVariantsState,
                                         onBackClicked = {
+                                            orderCustomerViewModel.clearProductForSelectingVariants()
                                             navController.popBackStack()
                                         },
                                         onAddToBucketClicked = {
                                             lifecycleScope.launch {
-                                                orderViewModel.addProductToBucket(it)
+                                                orderCustomerViewModel.addProductToBucket(it)
                                                 navController.popBackStack()
                                             }
-                                        }
+                                        },
+                                        onOptionSelected = { prevOption, option, isSelected ->
+                                            orderCustomerViewModel.optionSelected(
+                                                prevOption,
+                                                option,
+                                                isSelected
+                                            )
+                                        },
+                                        onAmountClicked = { isAdd ->
+                                            orderCustomerViewModel.onAmountClicked(isAdd)
+                                        },
                                     )
                                 }
                         }
@@ -136,28 +152,31 @@ class OrderCustomerActivity : SoliteActivity() {
                             ProvideWindowInsets(
                                 windowInsetsAnimationsEnabled = true
                             ) {
+                                LaunchedEffect(key1 = Unit) {
+                                    orderCustomerViewModel.loadCustomers()
+                                }
+
                                 OrderCustomerName(
-                                    mainViewModel = mainViewModel,
+                                    state = state.orderCustomerNameState,
                                     onBackClicked = {
                                         navController.popBackStack()
                                     },
                                     onNewOrder = { customer, isTakeAway ->
-                                        orderViewModel.newOrder(
+                                        orderCustomerViewModel.newOrder(
                                             customer = customer,
                                             isTakeAway = isTakeAway
                                         )
                                         goToOrdersActivity()
-                                    }
+                                    },
+                                    onNewCustomer = {
+                                        orderCustomerViewModel.newCustomer(it)
+                                    },
                                 )
                             }
                         }
                     }
 
-                    val alertUnselectStore = mainViewModel.isShouldSelectStore(
-                        productViewModel.getAllProducts()
-                    ).collectAsState(initial = false).value
-
-                    if (alertUnselectStore) {
+                    if (state.isShouldSelectStore) {
                         BasicAlertDialog(
                             titleText = stringResource(R.string.unselect_store_title),
                             descText = stringResource(R.string.please_select_store_first_before_do_a_transaction),

@@ -1,6 +1,8 @@
-package com.socialite.solite_pos.data.source.local.entity.helper
+package com.socialite.solite_pos.view.order_customer
 
-data class BucketOrder(
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+
+data class BucketOrderState(
     val time: Long?,
     val products: List<ProductOrderDetail>?
 ) {
@@ -27,7 +29,7 @@ data class BucketOrder(
     }
 
     companion object {
-        fun idle() = BucketOrder(
+        fun idle() = BucketOrderState(
             time = null,
             products = null
         )

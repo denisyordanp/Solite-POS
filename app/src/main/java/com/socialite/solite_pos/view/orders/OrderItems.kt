@@ -92,8 +92,7 @@ fun OrderItems(
             sheetContent = {
                 when (modalContent) {
                     ModalContent.GENERAL_MENUS -> GeneralMenusView(
-                        orderViewModel = orderViewModel,
-                        date = parameters.start,
+                        badges = emptyList(),
                         onClicked = {
                             if (it == GeneralMenus.ORDERS) {
                                 scope.launch {

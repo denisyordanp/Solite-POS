@@ -179,6 +179,10 @@ object LoggedInDomainInjection {
 
     fun provideGetProductWithCategories(context: Context): GetProductWithCategories {
         val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
-        return GetProductWithCategoriesImpl(productsRepository)
+        val productVariantsRepository = LoggedInRepositoryInjection.provideProductVariantsRepository(context)
+        return GetProductWithCategoriesImpl(
+            productsRepository = productsRepository,
+            productVariantsRepository = productVariantsRepository
+        )
     }
 }

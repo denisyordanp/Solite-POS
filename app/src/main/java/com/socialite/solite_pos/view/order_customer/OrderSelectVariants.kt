@@ -26,12 +26,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,33 +46,16 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.utils.config.thousand
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 @Composable
 fun OrderSelectVariants(
-    viewModel: ProductViewModel,
-    productId: String,
+    state: OrderSelectVariantsState,
     onBackClicked: () -> Unit,
-    onAddToBucketClicked: (detail: ProductOrderDetail) -> Unit
+    onAddToBucketClicked: (detail: ProductOrderDetail) -> Unit,
+    onOptionSelected: (prevOption: VariantOption?, option: VariantOption, isSelected: Boolean) -> Unit,
+    onAmountClicked: (isAdd: Boolean) -> Unit,
 ) {
-
-    val variants = viewModel.getProductVariantOptions(productId)
-        .collectAsState(initial = null)
-    var productOrderDetail by remember {
-        mutableStateOf(ProductOrderDetail.empty())
-    }
-
-    LaunchedEffect(key1 = productId) {
-        val product = viewModel.getProduct(productId).first()
-        productOrderDetail = productOrderDetail.copy(
-            product = product,
-            amount = 1
-        )
-    }
-
-    val scope = rememberCoroutineScope()
+    val productOrderDetail = state.productOrderDetail
 
     Scaffold(
         topBar = {
@@ -90,32 +70,10 @@ fun OrderSelectVariants(
             SelectVariantsContent(
                 modifier = Modifier
                     .padding(padding),
-                variants = variants.value,
+                variants = state.selectedProductVariantOptions,
                 productOrderDetail = productOrderDetail,
-                onOptionSelected = { prevOption, option, isSelected ->
-                    scope.launch {
-                        productOrderDetail = productOrderDetail.copy(
-                            variants = if (isSelected) {
-                                productOrderDetail.addOption(option, prevOption)
-                            } else {
-                                productOrderDetail.removeOption(option)
-                            }
-                        )
-                    }
-                },
-                onAmountClicked = {
-                    val newAmount = productOrderDetail.amount.run {
-                        return@run if (it) {
-                            this + 1
-                        } else {
-                            if (this == 1) this else this - 1
-                        }
-                    }
-
-                    productOrderDetail = productOrderDetail.copy(
-                        amount = newAmount
-                    )
-                },
+                onOptionSelected = onOptionSelected,
+                onAmountClicked = onAmountClicked,
                 onAddToBucketClicked = {
                     onAddToBucketClicked(productOrderDetail)
                 }
