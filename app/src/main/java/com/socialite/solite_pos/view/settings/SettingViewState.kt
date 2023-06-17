@@ -1,10 +1,13 @@
 package com.socialite.solite_pos.view.settings
 
+import com.socialite.solite_pos.data.source.local.entity.helper.MenuBadge
+
 data class SettingViewState(
     val isDarkMode: Boolean,
     val isLoading: Boolean,
     val isServerActive: Boolean,
     val isSynchronizeSuccess: Boolean,
+    val badges: List<MenuBadge>,
     val error: Throwable?
 ) {
     companion object {
@@ -13,6 +16,7 @@ data class SettingViewState(
             isLoading = false,
             isServerActive = false,
             isSynchronizeSuccess = false,
+            badges = emptyList(),
             error = null
         )
     }

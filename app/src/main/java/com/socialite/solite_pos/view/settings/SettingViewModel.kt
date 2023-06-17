@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.settings
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
@@ -20,7 +21,8 @@ class SettingViewModel(
     private val synchronize: Synchronize,
     private val migrateToUUID: MigrateToUUID,
     private val settingRepository: SettingRepository,
-    private val remoteConfigRepository: RemoteConfigRepository
+    private val remoteConfigRepository: RemoteConfigRepository,
+    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
 ) : ViewModel() {
 
     companion object : LoggedInViewModelFromFactory<SettingViewModel>() {
@@ -45,6 +47,18 @@ class SettingViewModel(
                 .map {
                     _viewState.value.copy(
                         isDarkMode = it
+                    )
+                }
+                .collect(_viewState)
+        }
+    }
+
+    fun getBadges(date: String) {
+        viewModelScope.launch {
+            getOrdersGeneralMenuBadge(date = date)
+                .map {
+                    _viewState.value.copy(
+                        badges = it
                     )
                 }
                 .collect(_viewState)

@@ -3,7 +3,6 @@ package com.socialite.solite_pos.view.viewModel
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.NewOrder
@@ -36,7 +35,6 @@ class OrderViewModel(
     private val getProductOrder: GetProductOrder,
     private val getRecapData: GetRecapData,
     private val payOrder: PayOrder,
-    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
     private val updateOrderProducts: UpdateOrderProducts
 ) : ViewModel() {
 
@@ -65,8 +63,6 @@ class OrderViewModel(
             flowOf(null)
         }
     }
-
-    fun getMenuBadge(date: String) = getOrdersGeneralMenuBadge(date)
 
     suspend fun getOrderDetail(orderNo: String) = orderRepository.getOrderData(orderNo)
     fun getOrderData(orderId: String) = orderRepository.getOrderDataAsFlow(orderId)

@@ -145,7 +145,6 @@ class LoggedInViewModelFactory private constructor(
                     getProductOrder = getProductOrder,
                     getRecapData = getRecapData,
                     payOrder = payOrder,
-                    getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge,
                     updateOrderProducts = updateOrderProducts
                 ) as T
             }
@@ -167,7 +166,8 @@ class LoggedInViewModelFactory private constructor(
                     migrateToUUID = migrateToUUID,
                     synchronize = synchronize,
                     settingRepository = settingRepository,
-                    remoteConfigRepository = remoteConfigRepository
+                    remoteConfigRepository = remoteConfigRepository,
+                    getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge
                 ) as T
             }
 

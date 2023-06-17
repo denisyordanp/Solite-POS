@@ -18,32 +18,27 @@ import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 class SettingsActivity : SoliteActivity() {
-
-    private lateinit var orderViewModel: OrderViewModel
     private lateinit var settingViewModel: SettingViewModel
 
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        orderViewModel = OrderViewModel.getOrderViewModel(this)
         settingViewModel = SettingViewModel.getMainViewModel(this)
+        val currentDate = DateUtils.currentDate
+        settingViewModel.getBadges(currentDate)
 
         setContent {
             SolitePOSTheme {
                 val state = settingViewModel.viewState.collectAsState().value
 
                 FullScreenLoadingView(isLoading = state.isLoading) {
-                    val date = DateUtils.currentDate
-
                     SettingsMainMenu(
-                        orderViewModel = orderViewModel,
+                        badges = state.badges,
                         isDarkMode = state.isDarkMode,
                         isServerActive = state.isServerActive,
-                        currentDate = date,
                         onGeneralMenuClicked = {
                             when (it) {
                                 GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
