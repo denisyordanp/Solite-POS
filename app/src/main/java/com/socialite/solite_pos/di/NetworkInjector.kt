@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter.Factory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object NetworkInjector {
 
@@ -29,6 +30,8 @@ object NetworkInjector {
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient.Builder =
         OkHttpClient.Builder().apply {
+            readTimeout(config.timeout(), TimeUnit.SECONDS)
+            connectTimeout(config.timeout(), TimeUnit.SECONDS)
             if (config.isDebugMode()) {
                 addNetworkInterceptor(loggingInterceptor)
             }
