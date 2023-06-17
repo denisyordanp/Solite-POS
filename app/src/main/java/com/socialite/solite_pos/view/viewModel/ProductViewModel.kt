@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
@@ -27,6 +28,7 @@ class ProductViewModel(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val getProductVariantOptions: GetProductVariantOptions,
+    private val getProductWithCategories: GetProductWithCategories
 ) : ViewModel() {
 
     companion object : LoggedInViewModelFromFactory<ProductViewModel>() {
@@ -39,12 +41,7 @@ class ProductViewModel(
     fun getProductWithCategory(idProduct: String) =
         productsRepository.getProductWithCategory(idProduct)
 
-    fun getAllProducts() = productsRepository
-        .getAllProductWithCategories()
-        .map {
-            it.groupBy { product -> product.category }
-                .filterKeys { category -> category.isActive }
-        }
+    fun getAllProducts() = getProductWithCategories()
 
     suspend fun isProductHasVariant(idProduct: String) = productVariantsRepository
         .isProductHasVariants(idProduct)

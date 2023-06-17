@@ -6,7 +6,8 @@ object NetworkConfig {
 
     fun isDebugMode(): Boolean = BuildConfig.DEBUG
 
-    fun getBaseUrl(): String = "https://api-solite-release.denisyordanp.com/"
+    fun getBaseUrl(): String = if (isDebugMode())
+        "https://api-solite-develop.denisyordanp.com/" else "https://api-solite-release.denisyordanp.com/"
 
     fun timeout(): Long = 60
 }

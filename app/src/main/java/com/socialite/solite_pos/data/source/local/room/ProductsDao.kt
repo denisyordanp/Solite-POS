@@ -42,7 +42,7 @@ interface ProductsDao {
     fun getProductWithCategory(productId: String): Flow<ProductWithCategory?>
 
     @Transaction
-    @Query("SELECT * FROM ${NewProduct.DB_NAME}")
+    @Query("SELECT * FROM ${NewProduct.DB_NAME} WHERE ${NewProduct.STATUS} = 1")
     fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
 
     @Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
