@@ -4,6 +4,7 @@ import android.content.Context
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
@@ -14,6 +15,7 @@ import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductVariantOptionsImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
 import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
@@ -173,5 +175,10 @@ object LoggedInDomainInjection {
             productVariantsRepository = productVariantsRepository,
             service = service
         )
+    }
+
+    fun provideGetProductWithCategories(context: Context): GetProductWithCategories {
+        val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
+        return GetProductWithCategoriesImpl(productsRepository)
     }
 }

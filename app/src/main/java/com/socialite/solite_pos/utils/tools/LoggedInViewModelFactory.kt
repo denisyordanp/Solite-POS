@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
@@ -30,6 +31,7 @@ import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetIn
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetProductOrder
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetProductVariantOptions
+import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetProductWithCategories
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideMigrateToUUID
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideNewOrder
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideNewOutcome
@@ -77,7 +79,8 @@ class LoggedInViewModelFactory private constructor(
     private val promosRepository: PromosRepository,
     private val synchronize: Synchronize,
     private val remoteConfigRepository: RemoteConfigRepository,
-    private val migrateToUUID: MigrateToUUID
+    private val migrateToUUID: MigrateToUUID,
+    private val getProductWithCategories: GetProductWithCategories
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -110,7 +113,8 @@ class LoggedInViewModelFactory private constructor(
                             promosRepository = providePromosRepository(context),
                             synchronize = provideSynchronize(context),
                             remoteConfigRepository = provideRemoteConfigRepository(context),
-                            migrateToUUID = provideMigrateToUUID(context)
+                            migrateToUUID = provideMigrateToUUID(context),
+                            getProductWithCategories = provideGetProductWithCategories(context)
                         )
                     }
                 }
@@ -154,6 +158,7 @@ class LoggedInViewModelFactory private constructor(
                     productsRepository = productsRepository,
                     productVariantsRepository = productVariantsRepository,
                     getProductVariantOptions = getProductVariantOptions,
+                    getProductWithCategories = getProductWithCategories
                 ) as T
             }
 
