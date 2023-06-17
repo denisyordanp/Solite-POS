@@ -156,6 +156,19 @@ class OrderCustomerViewModel(
         }
     }
 
+    fun searchCustomer(keyword: String) {
+        val customerState = _viewState.value.orderCustomerNameState
+        viewModelScope.launch {
+            _viewState.emit(
+                _viewState.value.copy(
+                    orderCustomerNameState = customerState.copy(
+                        keyword = keyword
+                    )
+                )
+            )
+        }
+    }
+
     fun addProductToBucket(detail: ProductOrderDetail) {
         viewModelScope.launch {
             val bucketState = _viewState.value.bucketOrderState

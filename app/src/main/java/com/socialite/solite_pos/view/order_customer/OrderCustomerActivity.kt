@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 
 class OrderCustomerActivity : SoliteActivity() {
 
-    private lateinit var orderCustomerViewModel: OrderCustomerViewModel
+    private lateinit var viewModel: OrderCustomerViewModel
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
@@ -44,8 +44,8 @@ class OrderCustomerActivity : SoliteActivity() {
         super.onCreate(savedInstanceState)
 
         val currentDate = DateUtils.currentDate
-        orderCustomerViewModel = OrderCustomerViewModel.getOrderCustomerViewModel(this)
-        orderCustomerViewModel.loadBadges(currentDate)
+        viewModel = OrderCustomerViewModel.getOrderCustomerViewModel(this)
+        viewModel.loadBadges(currentDate)
 
         setContent {
             SolitePOSTheme {
@@ -54,7 +54,7 @@ class OrderCustomerActivity : SoliteActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
-                    val state = orderCustomerViewModel.viewState.collectAsState().value
+                    val state = viewModel.viewState.collectAsState().value
 
                     NavHost(
                         navController = navController,
@@ -77,11 +77,11 @@ class OrderCustomerActivity : SoliteActivity() {
                                             )
                                         } else {
                                             if (isAdd) {
-                                                orderCustomerViewModel.addProductToBucket(
+                                                viewModel.addProductToBucket(
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             } else {
-                                                orderCustomerViewModel.decreaseProduct(
+                                                viewModel.decreaseProduct(
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             }
@@ -102,7 +102,7 @@ class OrderCustomerActivity : SoliteActivity() {
                                     }
                                 },
                                 onRemoveProduct = {
-                                    orderCustomerViewModel.removeProductFromBucket(it)
+                                    viewModel.removeProductFromBucket(it)
                                 }
                             )
                         }
@@ -118,30 +118,30 @@ class OrderCustomerActivity : SoliteActivity() {
                             it.arguments?.getString(OrderCustomerDestinations.PRODUCT_ID)
                                 ?.let { id ->
                                     LaunchedEffect(key1 = id) {
-                                        orderCustomerViewModel.loadProductForSelectingVariants(id)
+                                        viewModel.loadProductForSelectingVariants(id)
                                     }
 
                                     OrderSelectVariants(
                                         state = state.orderSelectVariantsState,
                                         onBackClicked = {
-                                            orderCustomerViewModel.clearProductForSelectingVariants()
+                                            viewModel.clearProductForSelectingVariants()
                                             navController.popBackStack()
                                         },
                                         onAddToBucketClicked = {
                                             lifecycleScope.launch {
-                                                orderCustomerViewModel.addProductToBucket(it)
+                                                viewModel.addProductToBucket(it)
                                                 navController.popBackStack()
                                             }
                                         },
                                         onOptionSelected = { prevOption, option, isSelected ->
-                                            orderCustomerViewModel.optionSelected(
+                                            viewModel.optionSelected(
                                                 prevOption,
                                                 option,
                                                 isSelected
                                             )
                                         },
                                         onAmountClicked = { isAdd ->
-                                            orderCustomerViewModel.onAmountClicked(isAdd)
+                                            viewModel.onAmountClicked(isAdd)
                                         },
                                     )
                                 }
@@ -153,7 +153,7 @@ class OrderCustomerActivity : SoliteActivity() {
                                 windowInsetsAnimationsEnabled = true
                             ) {
                                 LaunchedEffect(key1 = Unit) {
-                                    orderCustomerViewModel.loadCustomers()
+                                    viewModel.loadCustomers()
                                 }
 
                                 OrderCustomerName(
@@ -162,15 +162,18 @@ class OrderCustomerActivity : SoliteActivity() {
                                         navController.popBackStack()
                                     },
                                     onNewOrder = { customer, isTakeAway ->
-                                        orderCustomerViewModel.newOrder(
+                                        viewModel.newOrder(
                                             customer = customer,
                                             isTakeAway = isTakeAway
                                         )
                                         goToOrdersActivity()
                                     },
                                     onNewCustomer = {
-                                        orderCustomerViewModel.newCustomer(it)
+                                        viewModel.newCustomer(it)
                                     },
+                                    onSearchCustomer = {
+                                        viewModel.searchCustomer(it)
+                                    }
                                 )
                             }
                         }

@@ -47,15 +47,13 @@ fun OrderCustomerName(
         customer: Customer,
         isTakeAway: Boolean
     ) -> Unit,
-    onNewCustomer: (customer: Customer) -> Unit
+    onNewCustomer: (customer: Customer) -> Unit,
+    onSearchCustomer: (keyword: String) -> Unit
 ) {
-
     val keyboard = LocalSoftwareKeyboardController.current
-
     var searchName by remember {
         mutableStateOf("")
     }
-
     var selectedId by remember {
         mutableStateOf(Customer.ID_ADD)
     }
@@ -80,6 +78,7 @@ fun OrderCustomerName(
                 onBackClicked = onBackClicked,
                 onSearch = {
                     searchName = it
+                    onSearchCustomer(it)
                 }
             )
         },
