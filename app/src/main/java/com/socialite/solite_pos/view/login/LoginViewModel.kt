@@ -66,6 +66,8 @@ class LoginViewModel(
     }
 
     fun resetState() {
-        _viewState.value = LoginViewState.idle()
+        viewModelScope.launch {
+            _viewState.emit(LoginViewState.idle())
+        }
     }
 }
