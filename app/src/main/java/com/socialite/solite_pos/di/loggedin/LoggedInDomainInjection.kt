@@ -3,9 +3,10 @@ package com.socialite.solite_pos.di.loggedin
 import android.content.Context
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
-import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
+import com.socialite.solite_pos.data.source.domain.GetProductWithVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.source.domain.GetVariantOptions
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
@@ -14,24 +15,25 @@ import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
-import com.socialite.solite_pos.data.source.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategoriesImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOutcomeImpl
 import com.socialite.solite_pos.data.source.domain.impl.PayOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.SynchronizeImpl
 import com.socialite.solite_pos.data.source.domain.impl.UpdateOrderProductsImpl
-import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.getInstance
 import com.socialite.solite_pos.data.source.preference.OrderPref
 import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
 import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 
 object LoggedInDomainInjection {
-    fun provideGetProductVariantOptions(context: Context): GetProductVariantOptions {
-        val database = getInstance(context)
-        return GetProductVariantOptionsImpl(database.productVariantsDao())
+    fun provideGetVariantOptions(context: Context): GetVariantOptions {
+        val productVariantRepository =
+            LoggedInRepositoryInjection.provideProductVariantsRepository(context)
+        return GetVariantOptionsImpl(productVariantRepository)
     }
 
     fun provideNewOrder(context: Context): NewOrder {
@@ -179,10 +181,21 @@ object LoggedInDomainInjection {
 
     fun provideGetProductWithCategories(context: Context): GetProductWithCategories {
         val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
-        val productVariantsRepository = LoggedInRepositoryInjection.provideProductVariantsRepository(context)
+        val productVariantsRepository =
+            LoggedInRepositoryInjection.provideProductVariantsRepository(context)
         return GetProductWithCategoriesImpl(
             productsRepository = productsRepository,
             productVariantsRepository = productVariantsRepository
+        )
+    }
+
+    fun provideGetProductWithVariantOptions(context: Context): GetProductWithVariantOptions {
+        val productVariantRepository =
+            LoggedInRepositoryInjection.provideProductVariantsRepository(context)
+        val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
+        return GetProductWithVariantOptionsImpl(
+            productVariantsRepository = productVariantRepository,
+            productsRepository = productsRepository
         )
     }
 }
