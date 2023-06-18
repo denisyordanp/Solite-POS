@@ -1,14 +1,14 @@
-package com.socialite.solite_pos.view.order_customer
+package com.socialite.solite_pos.view.order_customer.select_variant
 
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 
-data class OrderSelectVariantsState(
+data class SelectVariantsViewState(
     val selectedProductVariantOptions: List<VariantWithOptions>?,
     val productOrderDetail: ProductOrderDetail
 ) {
     companion object {
-        fun idle() = OrderSelectVariantsState(
+        fun idle() = SelectVariantsViewState(
             selectedProductVariantOptions = null,
             productOrderDetail = ProductOrderDetail.empty()
         )

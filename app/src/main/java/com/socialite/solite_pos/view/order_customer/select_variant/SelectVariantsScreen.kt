@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.order_customer
+package com.socialite.solite_pos.view.order_customer.select_variant
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +26,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,12 +35,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
@@ -48,13 +52,21 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 import com.socialite.solite_pos.utils.config.thousand
 
 @Composable
-fun OrderSelectVariants(
-    state: OrderSelectVariantsState,
+fun SelectVariantsScreen(
+    productId: String,
+    currentViewModel: SelectVariantsViewModel = viewModel(
+        factory = SelectVariantsViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit,
     onAddToBucketClicked: (detail: ProductOrderDetail) -> Unit,
-    onOptionSelected: (prevOption: VariantOption?, option: VariantOption, isSelected: Boolean) -> Unit,
-    onAmountClicked: (isAdd: Boolean) -> Unit,
 ) {
+    LaunchedEffect(key1 = productId) {
+        currentViewModel.loadProductForSelectingVariants(productId)
+    }
+
+    val state = currentViewModel.viewState.collectAsState().value
     val productOrderDetail = state.productOrderDetail
 
     Scaffold(
@@ -72,8 +84,16 @@ fun OrderSelectVariants(
                     .padding(padding),
                 variants = state.selectedProductVariantOptions,
                 productOrderDetail = productOrderDetail,
-                onOptionSelected = onOptionSelected,
-                onAmountClicked = onAmountClicked,
+                onOptionSelected = { prevOption, option, isSelected ->
+                    currentViewModel.optionSelected(
+                        prevOption,
+                        option,
+                        isSelected
+                    )
+                },
+                onAmountClicked = {
+                    currentViewModel.onAmountClicked(it)
+                },
                 onAddToBucketClicked = {
                     onAddToBucketClicked(productOrderDetail)
                 }
