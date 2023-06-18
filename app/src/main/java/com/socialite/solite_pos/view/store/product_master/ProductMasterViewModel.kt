@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetCategoryProductItemViewData
+import com.socialite.solite_pos.data.source.domain.GetCategoryProductVariantCount
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 
 class ProductMasterViewModel(
     private val productsRepository: ProductsRepository,
-    private val getCategoryProductItemViewData: GetCategoryProductItemViewData
+    private val getCategoryProductVariantCount: GetCategoryProductVariantCount,
 ) : ViewModel() {
 
-    fun getProductsWithCategory() = getCategoryProductItemViewData()
+    fun getProductsWithCategory() = getCategoryProductVariantCount()
 
     fun updateProduct(data: Product) {
         viewModelScope.launch {
@@ -32,7 +32,7 @@ class ProductMasterViewModel(
                     productsRepository = LoggedInRepositoryInjection.provideProductsRepository(
                         context
                     ),
-                    getCategoryProductItemViewData = LoggedInDomainInjection.provideGetCategoryProductItemViewData(
+                    getCategoryProductVariantCount = LoggedInDomainInjection.provideGetCategoryProductItemViewData(
                         context
                     )
                 ) as T

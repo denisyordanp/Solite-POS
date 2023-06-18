@@ -53,6 +53,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductVariantCount
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
@@ -201,7 +202,7 @@ private fun ProductHeader(
 
 @Composable
 private fun ProductItems(
-    products: List<ProductItemViewData>,
+    products: List<ProductVariantCount>,
     onItemClicked: (Product) -> Unit,
     onVariantClicked: (Product) -> Unit,
     onScrollInProgress: (Boolean) -> Unit,
@@ -228,7 +229,7 @@ private fun ProductItems(
 
 @Composable
 private fun ProductItem(
-    viewData: ProductItemViewData,
+    viewData: ProductVariantCount,
     onItemClicked: (Product) -> Unit,
     onVariantClicked: () -> Unit,
     onUpdateProduct: (product: Product) -> Unit
