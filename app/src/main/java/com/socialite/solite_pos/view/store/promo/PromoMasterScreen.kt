@@ -37,11 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicCheckBox
@@ -53,19 +55,22 @@ import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
-import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-fun PromoMasterView(
-    mainViewModel: MainViewModel,
+fun PromoMasterScreen(
+    currentViewModel: PromoMasterViewModel = viewModel(
+        factory = PromoMasterViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit
 ) {
-
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    val promos = currentViewModel.getPromos(Promo.Status.ALL).collectAsState(initial = emptyList())
     var selectedPromo by remember { mutableStateOf<Promo?>(null) }
 
     if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
@@ -84,9 +89,9 @@ fun PromoMasterView(
                 onSubmitPromo = {
                     scope.launch {
                         if (it.isNewPromo()) {
-                            mainViewModel.insertPromo(it)
+                            currentViewModel.insertPromo(it)
                         } else {
-                            mainViewModel.updatePromo(it)
+                            currentViewModel.updatePromo(it)
                         }
                         selectedPromo = null
                         modalState.hide()
@@ -106,7 +111,7 @@ fun PromoMasterView(
                     PromoContent(
                         modifier = Modifier
                             .padding(padding),
-                        mainViewModel = mainViewModel,
+                        promos = promos.value,
                         onPromoClicked = {
                             scope.launch {
                                 selectedPromo = it
@@ -118,6 +123,9 @@ fun PromoMasterView(
                                 selectedPromo = null
                                 modalState.show()
                             }
+                        },
+                        onSwitched = {
+                            currentViewModel.updatePromo(it)
                         }
                     )
                 }
@@ -259,13 +267,11 @@ private fun PromoDetail(
 @Composable
 private fun PromoContent(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel,
+    promos: List<Promo>,
     onPromoClicked: (Promo) -> Unit,
-    onAddClicked: () -> Unit
+    onAddClicked: () -> Unit,
+    onSwitched: (promo: Promo) -> Unit
 ) {
-
-    val promos = mainViewModel.getPromos(Promo.Status.ALL).collectAsState(initial = emptyList())
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -278,12 +284,12 @@ private fun PromoContent(
                 .align(Alignment.TopCenter),
             state = listState
         ) {
-            items(promos.value) {
+            items(promos) {
                 PromoItem(
                     promo = it,
                     onPromoClicked = onPromoClicked,
                     onPromoSwitched = { isActive ->
-                        mainViewModel.updatePromo(
+                        onSwitched(
                             it.copy(
                                 isActive = isActive
                             )
