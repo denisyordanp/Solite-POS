@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.store.product
+package com.socialite.solite_pos.view.store.product_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,41 +28,43 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
+import com.socialite.solite_pos.data.source.local.entity.helper.ProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 @Composable
 @ExperimentalComposeUiApi
-fun ProductDetailMaster(
-    productViewModel: ProductViewModel,
+fun ProductDetailScreen(
+    currentViewModel: ProductDetailViewModel = viewModel(
+        factory = ProductDetailViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     productId: String,
     onVariantClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCreateNewProduct: (Product) -> Unit
 ) {
-
     val isNewProduct = productId.isEmpty()
-
-    val product = productViewModel.getProductWithCategory(productId)
-        .collectAsState(initial = null)
-
+    val state = currentViewModel.viewState.collectAsState().value
     var isEditMode by remember { mutableStateOf(isNewProduct) }
     LaunchedEffect(key1 = isNewProduct) {
+        if (isNewProduct.not()) currentViewModel.loadProduct(productId)
         isEditMode = isNewProduct
     }
 
@@ -80,15 +82,16 @@ fun ProductDetailMaster(
         content = { padding ->
             DetailContent(
                 modifier = Modifier.padding(padding),
-                productViewModel = productViewModel,
-                product = product.value,
+                viewData = state.product,
+                categories = state.categories,
                 isEditMode = isEditMode,
                 onVariantClicked = onVariantClicked,
                 onSubmitEditProduct = {
                     if (isNewProduct) {
+                        currentViewModel.insertProduct(it)
                         onCreateNewProduct(it)
                     } else {
-                        productViewModel.updateProduct(it)
+                        currentViewModel.updateProduct(it)
                         isEditMode = false
                     }
                 }
@@ -101,29 +104,23 @@ fun ProductDetailMaster(
 @ExperimentalComposeUiApi
 private fun DetailContent(
     modifier: Modifier = Modifier,
-    productViewModel: ProductViewModel,
-    product: ProductWithCategory?,
+    categories: List<Category>,
+    viewData: ProductVariantOptions?,
     isEditMode: Boolean,
     onVariantClicked: () -> Unit,
     onSubmitEditProduct: (Product) -> Unit
 ) {
+    val product = viewData?.product
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
-
-        val query = Category.getFilter(Category.ALL)
-        val categories =
-            productViewModel.getCategories(query).collectAsState(initial = emptyList())
-
         var categoryExpanded by remember {
             mutableStateOf(false)
         }
-
         var selectedCategory by remember {
             mutableStateOf(product?.category)
         }
-
         var isError by remember { mutableStateOf(false) }
 
         var name by remember { mutableStateOf("") }
@@ -146,7 +143,7 @@ private fun DetailContent(
                     isExpanded = categoryExpanded,
                     title = R.string.select_category,
                     selectedItem = selectedCategory?.name,
-                    items = categories.value,
+                    items = categories,
                     isEnable = isEditMode,
                     onHeaderClicked = {
                         categoryExpanded = !categoryExpanded
@@ -175,7 +172,9 @@ private fun DetailContent(
                                 name = it
                             }
                         )
-                        if (isError && name.isEmpty()) { ErrorText() }
+                        if (isError && name.isEmpty()) {
+                            ErrorText()
+                        }
                         Spacer(modifier = Modifier.height(8.dp))
                         BasicEditText(
                             value = desc,
@@ -186,12 +185,16 @@ private fun DetailContent(
                                 desc = it
                             }
                         )
-                        if (isError && desc.isEmpty()) { ErrorText() }
+                        if (isError && desc.isEmpty()) {
+                            ErrorText()
+                        }
 
                         Spacer(modifier = Modifier.height(8.dp))
                         val priceText = if (price == 0L) "" else price.toString()
                         BasicEditText(
-                            value = if (isEditMode) priceText else "Rp. ${priceText.toLongOrNull()?.thousand()}",
+                            value = if (isEditMode) priceText else "Rp. ${
+                                priceText.toLongOrNull()?.thousand()
+                            }",
                             placeHolder = stringResource(R.string.sell_price),
                             isEnabled = isEditMode,
                             visualTransformation = ThousandAndSuggestionVisualTransformation(false),
@@ -201,19 +204,16 @@ private fun DetailContent(
                                 price = it.toLongOrNull() ?: 0L
                             }
                         )
-                        if (isError && priceText.isEmpty()) { ErrorText() }
+                        if (isError && priceText.isEmpty()) {
+                            ErrorText()
+                        }
                     }
                 }
 
                 product?.let {
                     item {
-
-                        val variants =
-                            productViewModel.getProductVariantOptions(it.product.id)
-                                .collectAsState(initial = null)
-
                         VariantSelected(
-                            variants = variants.value,
+                            variants = viewData.variants,
                             onVariantClicked = onVariantClicked
                         )
                     }
