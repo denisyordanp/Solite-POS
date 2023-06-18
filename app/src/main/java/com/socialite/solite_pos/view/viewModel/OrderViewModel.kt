@@ -16,7 +16,7 @@ import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
-import com.socialite.solite_pos.view.order_customer.BucketOrderState
+import com.socialite.solite_pos.view.order_customer.BucketOrderViewState
 import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +39,7 @@ class OrderViewModel(
         }
     }
 
-    private val _currentBucket = MutableStateFlow(BucketOrderState.idle())
+    private val _currentBucket = MutableStateFlow(BucketOrderViewState.idle())
     val currentBucket = _currentBucket.asStateFlow()
 
     fun getOrderList(status: Int, parameters: ReportsParameter) =
@@ -138,7 +138,7 @@ class OrderViewModel(
             order?.let {
                 val productsOrder = getProductOrder(orderNo).first()
 
-                val newBucket = BucketOrderState(
+                val newBucket = BucketOrderViewState(
                     time = DateUtils.strToDate(it.order.orderTime).time,
                     products = productsOrder
                 )

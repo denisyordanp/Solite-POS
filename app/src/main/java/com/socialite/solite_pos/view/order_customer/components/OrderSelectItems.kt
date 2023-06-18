@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.order_customer
+package com.socialite.solite_pos.view.order_customer.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -50,6 +50,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWith
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.toIDR
+import com.socialite.solite_pos.view.order_customer.BucketOrderViewState
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import kotlinx.coroutines.launch
@@ -59,7 +60,7 @@ import kotlinx.coroutines.launch
 fun OrderSelectItems(
     badges: List<MenuBadge>,
     products: Map<Category, List<ProductWithCategory>>,
-    bucketOrderState: BucketOrderState,
+    bucketOrderViewState: BucketOrderViewState,
     onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit,
     onClickOrder: () -> Unit,
     onGeneralMenuClicked: ((menu: GeneralMenus) -> Unit)? = null,
@@ -83,7 +84,7 @@ fun OrderSelectItems(
         sheetContent = {
             when (modalContent) {
                 ModalContent.BUCKET_VIEW -> BucketView(
-                    bucketOrderState = bucketOrderState,
+                    bucketOrderViewState = bucketOrderViewState,
                     onClickOrder = {
                         if (isEditOrder) {
                             alertEditOrder = true
@@ -134,7 +135,7 @@ fun OrderSelectItems(
                             modifier = Modifier
                                 .padding(padding),
                             categoryWithProducts = products,
-                            bucketOrderState = bucketOrderState,
+                            bucketOrderViewState = bucketOrderViewState,
                             onBucketClicked = {
                                 modalContent = ModalContent.BUCKET_VIEW
                                 scope.launch {
@@ -148,7 +149,7 @@ fun OrderSelectItems(
             } else {
                 ProductOrderList(
                     categoryWithProducts = products,
-                    bucketOrderState = bucketOrderState,
+                    bucketOrderViewState = bucketOrderViewState,
                     onBucketClicked = {
                         modalContent = ModalContent.BUCKET_VIEW
                         scope.launch {
@@ -187,7 +188,7 @@ fun OrderSelectItems(
 @Composable
 private fun ProductOrderList(
     modifier: Modifier = Modifier,
-    bucketOrderState: BucketOrderState,
+    bucketOrderViewState: BucketOrderViewState,
     categoryWithProducts: Map<Category, List<ProductWithCategory>>,
     onBucketClicked: () -> Unit,
     onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit,
@@ -216,7 +217,7 @@ private fun ProductOrderList(
                 item {
                     CategoryWithProducts(
                         categoryWithProducts = categoryWithProduct,
-                        bucketOrderState = bucketOrderState,
+                        bucketOrderViewState = bucketOrderViewState,
                         onItemClick = onItemClick
                     )
                 }
@@ -225,7 +226,7 @@ private fun ProductOrderList(
             item { SpaceForFloatingButton() }
         }
 
-        if (bucketOrderState != BucketOrderState.idle()) {
+        if (bucketOrderViewState != BucketOrderViewState.idle()) {
             ConstraintLayout(
                 modifier = Modifier
                     .constrainAs(cart) {
@@ -261,12 +262,12 @@ private fun ProductOrderList(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = "${bucketOrderState.totalItems()} item",
+                        text = "${bucketOrderViewState.totalItems()} item",
                         style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.onPrimary
                     )
                     Text(
-                        text = bucketOrderState.productAsString(),
+                        text = bucketOrderViewState.productAsString(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.overline,
@@ -279,7 +280,7 @@ private fun ProductOrderList(
                             linkTo(top = parent.top, bottom = parent.bottom)
                             end.linkTo(parent.end)
                         },
-                    text = bucketOrderState.getTotal().toIDR(),
+                    text = bucketOrderViewState.getTotal().toIDR(),
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -308,7 +309,7 @@ private fun ProductOrderList(
 @Composable
 private fun CategoryWithProducts(
     categoryWithProducts: Map.Entry<Category, List<ProductWithCategory>>,
-    bucketOrderState: BucketOrderState,
+    bucketOrderViewState: BucketOrderViewState,
     onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit
 ) {
 
@@ -345,7 +346,7 @@ private fun CategoryWithProducts(
             categoryWithProducts.value.forEach { productWithCategory ->
                 ProductCustomerItemView(
                     productWithCategory = productWithCategory,
-                    currentAmount = bucketOrderState.getProductAmount(productWithCategory.product.id),
+                    currentAmount = bucketOrderViewState.getProductAmount(productWithCategory.product.id),
                     onItemClick = { isAdd, hasVariant ->
                         onItemClick(productWithCategory.product, isAdd, hasVariant)
                     }

@@ -82,9 +82,9 @@ class OrderCustomerViewModel(
 
     fun addProductToBucket(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val bucketState = _viewState.value.bucketOrderState
+            val bucketState = _viewState.value.bucketOrderViewState
             val newBucket = if (bucketState.isIdle()) {
-                BucketOrderState(
+                BucketOrderViewState(
                     time = Calendar.getInstance().timeInMillis,
                     products = listOf(detail)
                 )
@@ -109,7 +109,7 @@ class OrderCustomerViewModel(
 
             _viewState.emit(
                 _viewState.value.copy(
-                    bucketOrderState = newBucket
+                    bucketOrderViewState = newBucket
                 )
             )
         }
@@ -117,7 +117,7 @@ class OrderCustomerViewModel(
 
     fun decreaseProduct(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val bucketState = _viewState.value.bucketOrderState
+            val bucketState = _viewState.value.bucketOrderViewState
             val currentProducts = bucketState.products?.toMutableList()
 
             val existingDetail = currentProducts?.findExisting(detail)
@@ -135,13 +135,13 @@ class OrderCustomerViewModel(
             if (currentProducts.isNullOrEmpty()) {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderState = BucketOrderState.idle()
+                        bucketOrderViewState = BucketOrderViewState.idle()
                     )
                 )
             } else {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderState = bucketState.copy(
+                        bucketOrderViewState = bucketState.copy(
                             products = currentProducts
                         )
                     )
@@ -152,7 +152,7 @@ class OrderCustomerViewModel(
 
     fun removeProductFromBucket(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val bucketState = _viewState.value.bucketOrderState
+            val bucketState = _viewState.value.bucketOrderViewState
             val currentProducts = bucketState.products?.toMutableList()
 
             val existingDetail = currentProducts?.findExisting(detail)
@@ -163,13 +163,13 @@ class OrderCustomerViewModel(
             if (currentProducts.isNullOrEmpty()) {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderState = BucketOrderState.idle()
+                        bucketOrderViewState = BucketOrderViewState.idle()
                     )
                 )
             } else {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderState = bucketState.copy(
+                        bucketOrderViewState = bucketState.copy(
                             products = currentProducts
                         )
                     )
@@ -183,7 +183,7 @@ class OrderCustomerViewModel(
         isTakeAway: Boolean,
     ) {
         viewModelScope.launch {
-            _viewState.value.bucketOrderState.products?.let {
+            _viewState.value.bucketOrderViewState.products?.let {
                 newOrder.invoke(
                     customer = customer,
                     isTakeAway = isTakeAway,

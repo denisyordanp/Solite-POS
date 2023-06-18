@@ -30,11 +30,11 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.config.timeMilliSecondToDateFormat
-import com.socialite.solite_pos.view.order_customer.BucketOrderState
+import com.socialite.solite_pos.view.order_customer.BucketOrderViewState
 
 @Composable
 fun BucketView(
-    bucketOrderState: BucketOrderState,
+    bucketOrderViewState: BucketOrderViewState,
     isEditOrder: Boolean,
     onClickOrder: () -> Unit,
     onClearBucket: () -> Unit,
@@ -47,7 +47,7 @@ fun BucketView(
     ) {
         item {
             val time =
-                bucketOrderState.time?.timeMilliSecondToDateFormat(DateUtils.DATE_WITH_DAY_AND_TIME_FORMAT)
+                bucketOrderViewState.time?.timeMilliSecondToDateFormat(DateUtils.DATE_WITH_DAY_AND_TIME_FORMAT)
                     ?.run {
                         Pair(
                             first = this.substring(0..19),
@@ -67,7 +67,7 @@ fun BucketView(
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        bucketOrderState.products?.let {
+        bucketOrderViewState.products?.let {
             items(it) { detail ->
                 BucketItem(
                     detail = detail,
@@ -83,7 +83,7 @@ fun BucketView(
 
         item {
             TotalBucket(
-                total = bucketOrderState.getTotal().thousand()
+                total = bucketOrderViewState.getTotal().thousand()
             )
             Spacer(modifier = Modifier.height(24.dp))
             PrimaryButtonView(

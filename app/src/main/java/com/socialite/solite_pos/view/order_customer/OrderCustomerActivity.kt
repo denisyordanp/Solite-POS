@@ -24,6 +24,7 @@ import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
+import com.socialite.solite_pos.view.order_customer.components.OrderSelectItems
 import com.socialite.solite_pos.view.order_customer.select_customer.SelectCustomersScreen
 import com.socialite.solite_pos.view.order_customer.select_variant.SelectVariantsScreen
 import com.socialite.solite_pos.view.orders.OrdersActivity
@@ -67,7 +68,7 @@ class OrderCustomerActivity : SoliteActivity() {
                             OrderSelectItems(
                                 badges = state.badges,
                                 products = state.allProducts,
-                                bucketOrderState = state.bucketOrderState,
+                                bucketOrderViewState = state.bucketOrderViewState,
                                 onItemClick = { product, isAdd, hasVariant ->
                                     lifecycleScope.launch {
                                         if (hasVariant) {
