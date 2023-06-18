@@ -37,10 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicCheckBox
@@ -49,19 +51,23 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
-import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-fun PaymentMasterView(
-    mainViewModel: MainViewModel,
+fun PaymentMasterScreen(
+    currentViewModel: PaymentMasterViewModel = viewModel(
+        factory = PaymentMasterViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit
 ) {
-
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    val payments = currentViewModel.getPayments(Payment.filter(Payment.ALL))
+        .collectAsState(initial = emptyList()).value
     var selectedPayment by remember { mutableStateOf<Payment?>(null) }
 
     if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
@@ -80,9 +86,9 @@ fun PaymentMasterView(
                 onSubmitPayment = {
                     scope.launch {
                         if (it.isNewPayment()) {
-                            mainViewModel.insertPayment(it)
+                            currentViewModel.insertPayment(it)
                         } else {
-                            mainViewModel.updatePayment(it)
+                            currentViewModel.updatePayment(it)
                         }
                         selectedPayment = null
                         modalState.hide()
@@ -102,7 +108,7 @@ fun PaymentMasterView(
                     PaymentContent(
                         modifier = Modifier
                             .padding(padding),
-                        mainViewModel = mainViewModel,
+                        payments = payments,
                         onPaymentClicked = {
                             scope.launch {
                                 selectedPayment = it
@@ -114,6 +120,9 @@ fun PaymentMasterView(
                                 selectedPayment = null
                                 modalState.show()
                             }
+                        },
+                        onSwitched = {
+                            currentViewModel.updatePayment(it)
                         }
                     )
                 }
@@ -197,14 +206,11 @@ private fun PaymentDetail(
 @Composable
 private fun PaymentContent(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel,
+    payments: List<Payment>,
     onPaymentClicked: (Payment) -> Unit,
-    onAddClicked: () -> Unit
+    onAddClicked: () -> Unit,
+    onSwitched: (payment: Payment) -> Unit
 ) {
-
-    val query = Payment.filter(Payment.ALL)
-    val payments = mainViewModel.getPayments(query).collectAsState(initial = emptyList())
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -217,12 +223,12 @@ private fun PaymentContent(
                 .align(Alignment.TopCenter),
             state = listState
         ) {
-            items(payments.value) {
+            items(payments) {
                 PaymentItem(
                     payment = it,
                     onPaymentClicked = onPaymentClicked,
                     onPaymentSwitched = { isActive ->
-                        mainViewModel.updatePayment(
+                        onSwitched(
                             it.copy(
                                 isActive = isActive
                             )
