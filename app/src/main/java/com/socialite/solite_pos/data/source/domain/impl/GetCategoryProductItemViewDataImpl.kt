@@ -20,7 +20,7 @@ class GetCategoryProductItemViewDataImpl(
         return productsRepository.getAllProductsWithCategory()
             .flatMapLatest {
                 flow {
-                    it.groupBy { product ->
+                    val newItem = it.groupBy { product ->
                         product.category
                     }.filterKeys { category ->
                         category.isActive
@@ -39,6 +39,7 @@ class GetCategoryProductItemViewDataImpl(
                                 }
                             )
                         }
+                    emit(newItem)
                 }
             }
     }
