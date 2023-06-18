@@ -2,19 +2,17 @@ package com.socialite.solite_pos.view.order_customer
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
-import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
-import com.socialite.solite_pos.data.source.repository.CustomersRepository
-import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
+import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -24,17 +22,33 @@ import java.util.Calendar
 
 class OrderCustomerViewModel(
     private val settingRepository: SettingRepository,
-    private val productsRepository: ProductsRepository,
-    private val customersRepository: CustomersRepository,
     private val getProductWithCategories: GetProductWithCategories,
-    private val getProductVariantOptions: GetProductVariantOptions,
     private val newOrder: NewOrder,
     private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
 ) : ViewModel() {
 
-    companion object : LoggedInViewModelFromFactory<OrderCustomerViewModel>() {
+    companion object {
         fun getOrderCustomerViewModel(activity: FragmentActivity): OrderCustomerViewModel {
-            return buildViewModel(activity, OrderCustomerViewModel::class.java)
+            return ViewModelProvider(
+                owner = activity,
+                factory = object : ViewModelProvider.Factory {
+                    @Suppress("UNCHECKED_CAST")
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        return OrderCustomerViewModel(
+                            settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
+                                activity
+                            ),
+                            getProductWithCategories = LoggedInDomainInjection.provideGetProductWithCategories(
+                                activity
+                            ),
+                            getOrdersGeneralMenuBadge = LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge(
+                                activity
+                            ),
+                            newOrder = LoggedInDomainInjection.provideNewOrder(activity)
+                        ) as T
+                    }
+                }
+            )[OrderCustomerViewModel::class.java]
         }
     }
 
@@ -63,109 +77,6 @@ class OrderCustomerViewModel(
                     )
                 }
                 .collect(_viewState)
-        }
-    }
-
-    fun loadProductForSelectingVariants(productId: String) {
-        viewModelScope.launch {
-            getProductVariantOptions(productId)
-                .combine(productsRepository.getProductById(productId)) { variants, product ->
-                    _viewState.value.copy(
-                        orderSelectVariantsState = OrderSelectVariantsState(
-                            selectedProductVariantOptions = variants,
-                            productOrderDetail = ProductOrderDetail.productNoVariant(product)
-                        )
-                    )
-                }
-                .collect(_viewState)
-        }
-    }
-
-    fun clearProductForSelectingVariants() {
-        viewModelScope.launch {
-            _viewState.emit(
-                _viewState.value.copy(
-                    orderSelectVariantsState = OrderSelectVariantsState.idle()
-                )
-            )
-        }
-    }
-
-    fun optionSelected(prevOption: VariantOption?, option: VariantOption, isSelected: Boolean) {
-        viewModelScope.launch {
-            val variantState = _viewState.value.orderSelectVariantsState
-            val productDetailState = variantState.productOrderDetail
-            _viewState.emit(
-                _viewState.value.copy(
-                    orderSelectVariantsState = variantState.copy(
-                        productOrderDetail = productDetailState.copy(
-                            variants = if (isSelected) {
-                                productDetailState.addOption(option, prevOption)
-                            } else {
-                                productDetailState.removeOption(option)
-                            }
-                        )
-                    )
-                )
-            )
-        }
-    }
-
-    fun onAmountClicked(isAdd: Boolean) {
-        viewModelScope.launch {
-            val variantState = _viewState.value.orderSelectVariantsState
-            val productDetailState = variantState.productOrderDetail
-            val newAmount = productDetailState.amount.run {
-                return@run if (isAdd) {
-                    this + 1
-                } else {
-                    if (this == 1) this else this - 1
-                }
-            }
-
-            _viewState.emit(
-                _viewState.value.copy(
-                    orderSelectVariantsState = variantState.copy(
-                        productOrderDetail = productDetailState.copy(
-                            amount = newAmount
-                        )
-                    )
-                )
-            )
-        }
-    }
-
-    fun loadCustomers() {
-        viewModelScope.launch {
-            customersRepository.getCustomers()
-                .map {
-                    val customerState = _viewState.value.orderCustomerNameState
-                    _viewState.value.copy(
-                        orderCustomerNameState = customerState.copy(
-                            customers = it
-                        )
-                    )
-                }
-                .collect(_viewState)
-        }
-    }
-
-    fun newCustomer(data: Customer) {
-        viewModelScope.launch {
-            customersRepository.insertCustomer(data)
-        }
-    }
-
-    fun searchCustomer(keyword: String) {
-        val customerState = _viewState.value.orderCustomerNameState
-        viewModelScope.launch {
-            _viewState.emit(
-                _viewState.value.copy(
-                    orderCustomerNameState = customerState.copy(
-                        keyword = keyword
-                    )
-                )
-            )
         }
     }
 

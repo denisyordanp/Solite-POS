@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
-import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.source.domain.GetVariantOptions
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
-import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.domain.Synchronize
@@ -30,10 +29,9 @@ import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetIncomesRecapData
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetProductOrder
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetProductVariantOptions
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetProductWithCategories
+import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetVariantOptions
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideMigrateToUUID
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideNewOrder
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideNewOutcome
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.providePayOrder
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideSynchronize
@@ -51,7 +49,6 @@ import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideS
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideStoreRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantOptionsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantsRepository
-import com.socialite.solite_pos.view.order_customer.OrderCustomerViewModel
 import com.socialite.solite_pos.view.settings.SettingViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
 import com.socialite.solite_pos.view.viewModel.OrderViewModel
@@ -66,9 +63,8 @@ class LoggedInViewModelFactory private constructor(
     private val outcomesRepository: OutcomesRepository,
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
-    private val getProductVariantOptions: GetProductVariantOptions,
+    private val getVariantOptions: GetVariantOptions,
     private val ordersRepository: OrdersRepository,
-    private val newOrder: NewOrder,
     private val getProductOrder: GetProductOrder,
     private val getRecapData: GetRecapData,
     private val payOrder: PayOrder,
@@ -100,9 +96,8 @@ class LoggedInViewModelFactory private constructor(
                             outcomesRepository = provideOutcomesRepository(context),
                             productsRepository = provideProductsRepository(context),
                             productVariantsRepository = provideProductVariantsRepository(context),
-                            getProductVariantOptions = provideGetProductVariantOptions(context),
+                            getVariantOptions = provideGetVariantOptions(context),
                             ordersRepository = provideOrdersRepository(context),
-                            newOrder = provideNewOrder(context),
                             getProductOrder = provideGetProductOrder(context),
                             getRecapData = provideGetIncomesRecapData(context),
                             payOrder = providePayOrder(context),
@@ -156,7 +151,7 @@ class LoggedInViewModelFactory private constructor(
                     categoriesRepository = categoriesRepository,
                     productsRepository = productsRepository,
                     productVariantsRepository = productVariantsRepository,
-                    getProductVariantOptions = getProductVariantOptions,
+                    getVariantOptions = getVariantOptions,
                     getProductWithCategories = getProductWithCategories
                 ) as T
             }
@@ -168,18 +163,6 @@ class LoggedInViewModelFactory private constructor(
                     settingRepository = settingRepository,
                     remoteConfigRepository = remoteConfigRepository,
                     getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge
-                ) as T
-            }
-
-            modelClass.isAssignableFrom(OrderCustomerViewModel::class.java) -> {
-                OrderCustomerViewModel(
-                    settingRepository = settingRepository,
-                    productsRepository = productsRepository,
-                    customersRepository = customersRepository,
-                    getProductWithCategories = getProductWithCategories,
-                    getProductVariantOptions = getProductVariantOptions,
-                    getOrdersGeneralMenuBadge = getOrdersGeneralMenuBadge,
-                    newOrder = newOrder
                 ) as T
             }
 

@@ -7,8 +7,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Categor
 data class OrderCustomerViewState(
     val isShouldSelectStore: Boolean,
     val allProducts: Map<Category, List<ProductWithCategory>>,
-    val orderSelectVariantsState: OrderSelectVariantsState,
-    val orderCustomerNameState: OrderCustomerNameViewState,
     val bucketOrderState: BucketOrderState,
     val badges: List<MenuBadge>,
 ) {
@@ -16,8 +14,6 @@ data class OrderCustomerViewState(
         fun idle() = OrderCustomerViewState(
             isShouldSelectStore = false,
             allProducts = emptyMap(),
-            orderSelectVariantsState = OrderSelectVariantsState.idle(),
-            orderCustomerNameState = OrderCustomerNameViewState.idle(),
             bucketOrderState = BucketOrderState.idle(),
             badges = emptyList()
         )

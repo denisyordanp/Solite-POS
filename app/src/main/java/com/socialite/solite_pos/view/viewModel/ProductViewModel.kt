@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
@@ -27,7 +27,7 @@ class ProductViewModel(
     private val categoriesRepository: CategoriesRepository,
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
-    private val getProductVariantOptions: GetProductVariantOptions,
+    private val getVariantOptions: GetVariantOptions,
     private val getProductWithCategories: GetProductWithCategories
 ) : ViewModel() {
 
@@ -46,9 +46,9 @@ class ProductViewModel(
     suspend fun isProductHasVariant(idProduct: String) = productVariantsRepository
         .isProductHasVariants(idProduct)
 
-    fun getProductVariantOptions(idProduct: String) = getProductVariantOptions.invoke(idProduct)
+    fun getProductVariantOptions(idProduct: String) = getVariantOptions.invoke(idProduct)
 
-    fun getProductVariantCount(idProduct: String) = getProductVariantOptions.invoke(idProduct).map {
+    fun getProductVariantCount(idProduct: String) = getVariantOptions.invoke(idProduct).map {
         it?.sumOf { variant ->
             variant.options.size
         } ?: 0

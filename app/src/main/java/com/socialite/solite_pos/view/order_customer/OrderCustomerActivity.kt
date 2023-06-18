@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -25,6 +24,8 @@ import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
+import com.socialite.solite_pos.view.order_customer.select_customer.SelectCustomersScreen
+import com.socialite.solite_pos.view.order_customer.select_variant.SelectVariantsScreen
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
@@ -117,14 +118,9 @@ class OrderCustomerActivity : SoliteActivity() {
                         ) {
                             it.arguments?.getString(OrderCustomerDestinations.PRODUCT_ID)
                                 ?.let { id ->
-                                    LaunchedEffect(key1 = id) {
-                                        viewModel.loadProductForSelectingVariants(id)
-                                    }
-
-                                    OrderSelectVariants(
-                                        state = state.orderSelectVariantsState,
+                                    SelectVariantsScreen(
+                                        productId = id,
                                         onBackClicked = {
-                                            viewModel.clearProductForSelectingVariants()
                                             navController.popBackStack()
                                         },
                                         onAddToBucketClicked = {
@@ -132,16 +128,6 @@ class OrderCustomerActivity : SoliteActivity() {
                                                 viewModel.addProductToBucket(it)
                                                 navController.popBackStack()
                                             }
-                                        },
-                                        onOptionSelected = { prevOption, option, isSelected ->
-                                            viewModel.optionSelected(
-                                                prevOption,
-                                                option,
-                                                isSelected
-                                            )
-                                        },
-                                        onAmountClicked = { isAdd ->
-                                            viewModel.onAmountClicked(isAdd)
                                         },
                                     )
                                 }
@@ -152,12 +138,7 @@ class OrderCustomerActivity : SoliteActivity() {
                             ProvideWindowInsets(
                                 windowInsetsAnimationsEnabled = true
                             ) {
-                                LaunchedEffect(key1 = Unit) {
-                                    viewModel.loadCustomers()
-                                }
-
-                                OrderCustomerName(
-                                    state = state.orderCustomerNameState,
+                                SelectCustomersScreen(
                                     onBackClicked = {
                                         navController.popBackStack()
                                     },
@@ -168,12 +149,6 @@ class OrderCustomerActivity : SoliteActivity() {
                                         )
                                         goToOrdersActivity()
                                     },
-                                    onNewCustomer = {
-                                        viewModel.newCustomer(it)
-                                    },
-                                    onSearchCustomer = {
-                                        viewModel.searchCustomer(it)
-                                    }
                                 )
                             }
                         }
