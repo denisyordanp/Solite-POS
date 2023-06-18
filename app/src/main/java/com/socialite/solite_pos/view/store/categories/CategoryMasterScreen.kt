@@ -37,10 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicEditText
@@ -48,19 +50,25 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-fun CategoryMasterView(
-    productViewModel: ProductViewModel,
+fun CategoryMasterScreen(
+    currentViewModel: CategoryMasterViewModel = viewModel(
+        factory = CategoryMasterViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit
 ) {
-
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    val categories =
+        currentViewModel.getCategories(Category.getFilter(Category.ALL)).collectAsState(
+            initial = emptyList()
+        ).value
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
 
     if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
@@ -79,9 +87,9 @@ fun CategoryMasterView(
                 onSubmitCategory = {
                     scope.launch {
                         if (it.isNewCategory()) {
-                            productViewModel.insertCategory(it)
+                            currentViewModel.insertCategory(it)
                         } else {
-                            productViewModel.updateCategory(it)
+                            currentViewModel.updateCategory(it)
                         }
                         selectedCategory = null
                         modalState.hide()
@@ -101,7 +109,7 @@ fun CategoryMasterView(
                     CategoryContent(
                         modifier = Modifier
                             .padding(padding),
-                        productViewModel = productViewModel,
+                        categories = categories,
                         onCategoryClicked = {
                             scope.launch {
                                 selectedCategory = it
@@ -113,6 +121,9 @@ fun CategoryMasterView(
                                 selectedCategory = null
                                 modalState.show()
                             }
+                        },
+                        onSwitched = {
+                            currentViewModel.updateCategory(it)
                         }
                     )
                 }
@@ -183,14 +194,11 @@ private fun CategoryDetail(
 @Composable
 private fun CategoryContent(
     modifier: Modifier = Modifier,
-    productViewModel: ProductViewModel,
+    categories: List<Category>,
     onCategoryClicked: (Category) -> Unit,
-    onAddClicked: () -> Unit
+    onAddClicked: () -> Unit,
+    onSwitched: (category: Category) -> Unit
 ) {
-
-    val query = Category.getFilter(Category.ALL)
-    val categories = productViewModel.getCategories(query).collectAsState(initial = emptyList())
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -203,12 +211,12 @@ private fun CategoryContent(
                 .align(Alignment.TopCenter),
             state = listState
         ) {
-            items(categories.value) {
+            items(categories) {
                 CategoryItem(
                     category = it,
                     onCategoryClicked = onCategoryClicked,
                     onCategorySwitched = { isActive ->
-                        productViewModel.updateCategory(
+                        onSwitched(
                             it.copy(
                                 isActive = isActive
                             )
