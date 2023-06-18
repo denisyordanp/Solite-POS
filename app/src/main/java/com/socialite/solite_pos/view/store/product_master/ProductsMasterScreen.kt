@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.store.product
+package com.socialite.solite_pos.view.store.product_master
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -37,12 +37,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -54,25 +56,28 @@ import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalPagerApi
-fun ProductsMaster(
-    productViewModel: ProductViewModel,
+fun ProductsMasterScreen(
+    currentViewModel: ProductMasterViewModel = viewModel(
+        factory = ProductMasterViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit,
     onItemClicked: (Product) -> Unit,
     onVariantClicked: (Product) -> Unit,
     onAddProductClicked: () -> Unit
 ) {
-
     val pagerState = rememberPagerState()
-    val query = Category.getFilter(Category.ALL)
-    val categories = productViewModel.getCategories(query).collectAsState(initial = emptyList())
+    val products = currentViewModel.getProductsWithCategory().collectAsState(initial = emptyList())
+    val categories = products.value.map {
+        it.first
+    }
 
     Box {
-
         var shouldShowButton by remember { mutableStateOf(true) }
 
         Scaffold(
@@ -82,7 +87,7 @@ fun ProductsMaster(
             topBar = {
                 ProductHeader(
                     pagerState = pagerState,
-                    categories = categories.value,
+                    categories = categories,
                     onBackClicked = onBackClicked
                 )
             },
@@ -90,16 +95,18 @@ fun ProductsMaster(
                 HorizontalPager(
                     modifier = Modifier
                         .padding(padding),
-                    count = categories.value.size,
+                    count = products.value.size,
                     state = pagerState
                 ) { page ->
                     ProductItems(
-                        productViewModel = productViewModel,
-                        category = categories.value[page],
+                        products = products.value[page].second,
                         onItemClicked = onItemClicked,
                         onVariantClicked = onVariantClicked,
                         onScrollInProgress = {
                             shouldShowButton = !it
+                        },
+                        onUpdateProduct = {
+                            currentViewModel.updateProduct(it)
                         }
                     )
                 }
@@ -130,7 +137,6 @@ private fun ProductHeader(
     categories: List<Category>,
     onBackClicked: () -> Unit
 ) {
-
     val scope = rememberCoroutineScope()
 
     Surface(
@@ -195,28 +201,24 @@ private fun ProductHeader(
 
 @Composable
 private fun ProductItems(
-    productViewModel: ProductViewModel,
-    category: Category,
+    products: List<ProductItemViewData>,
     onItemClicked: (Product) -> Unit,
     onVariantClicked: (Product) -> Unit,
-    onScrollInProgress: (Boolean) -> Unit
+    onScrollInProgress: (Boolean) -> Unit,
+    onUpdateProduct: (product: Product) -> Unit
 ) {
-
-    val products =
-        productViewModel.getProductWithCategories(category.id).collectAsState(initial = emptyList())
-
     val listState = rememberLazyListState()
     onScrollInProgress(listState.isScrollInProgress)
 
     LazyColumn(state = listState) {
-        items(products.value) {
+        items(products) {
             ProductItem(
-                productViewModel = productViewModel,
-                product = it.product,
+                viewData = it,
                 onItemClicked = onItemClicked,
                 onVariantClicked = {
                     onVariantClicked(it.product)
-                }
+                },
+                onUpdateProduct = onUpdateProduct
             )
         }
 
@@ -226,11 +228,12 @@ private fun ProductItems(
 
 @Composable
 private fun ProductItem(
-    productViewModel: ProductViewModel,
-    product: Product,
+    viewData: ProductItemViewData,
     onItemClicked: (Product) -> Unit,
-    onVariantClicked: () -> Unit
+    onVariantClicked: () -> Unit,
+    onUpdateProduct: (product: Product) -> Unit
 ) {
+    val product = viewData.product
     ConstraintLayout(
         modifier = Modifier
             .padding(bottom = 4.dp)
@@ -279,7 +282,7 @@ private fun ProductItem(
                 },
             checked = product.isActive,
             onCheckedChange = {
-                productViewModel.updateProduct(
+                onUpdateProduct(
                     product.copy(
                         isActive = it
                     )
@@ -301,16 +304,10 @@ private fun ProductItem(
                     end.linkTo(parent.end)
                 },
         ) {
-
-            val variantsCount =
-                productViewModel.getProductVariantCount(product.id).collectAsState(
-                    initial = 0
-                )
-
-            val text = if (variantsCount.value == 0) {
+            val text = if (viewData.variantCount == 0) {
                 stringResource(id = R.string.select_variant)
             } else {
-                "${variantsCount.value} " + stringResource(id = R.string.variant)
+                "${viewData.variantCount} " + stringResource(id = R.string.variant)
             }
 
             Text(
