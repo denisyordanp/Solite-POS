@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.order_customer
+package com.socialite.solite_pos.view.order_customer.select_customer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,11 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
@@ -40,17 +43,20 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Custome
 
 @Composable
 @ExperimentalComposeUiApi
-fun OrderCustomerName(
-    state: OrderCustomerNameViewState,
+fun SelectCustomersScreen(
+    currentViewModel: SelectCustomersViewModel = viewModel(
+        factory = SelectCustomersViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit,
     onNewOrder: (
         customer: Customer,
         isTakeAway: Boolean
     ) -> Unit,
-    onNewCustomer: (customer: Customer) -> Unit,
-    onSearchCustomer: (keyword: String) -> Unit
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
+    val state = currentViewModel.viewState.collectAsState().value
     var searchName by remember {
         mutableStateOf("")
     }
@@ -61,7 +67,7 @@ fun OrderCustomerName(
     fun selectedCustomer(customer: Customer) {
         selectedId = if (customer.isAdd()) {
             val newCustomer = Customer.createNew(customer.name)
-            onNewCustomer(newCustomer)
+            currentViewModel.newCustomer(newCustomer)
             newCustomer.id
         } else {
             if (customer.id == selectedId)
@@ -78,7 +84,7 @@ fun OrderCustomerName(
                 onBackClicked = onBackClicked,
                 onSearch = {
                     searchName = it
-                    onSearchCustomer(it)
+                    currentViewModel.searchCustomer(it)
                 }
             )
         },

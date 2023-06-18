@@ -1,8 +1,8 @@
-package com.socialite.solite_pos.view.order_customer
+package com.socialite.solite_pos.view.order_customer.select_customer
 
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 
-data class OrderCustomerNameViewState(
+data class SelectCustomersViewState(
     val customers: List<Customer>,
     val keyword: String,
 ) {
@@ -17,7 +17,7 @@ data class OrderCustomerNameViewState(
     }
 
     companion object {
-        fun idle() = OrderCustomerNameViewState(
+        fun idle() = SelectCustomersViewState(
             customers = emptyList(),
             keyword = ""
         )
