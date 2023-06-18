@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.di.loggedin
 
 import android.content.Context
+import com.socialite.solite_pos.data.source.domain.GetCategoryProductItemViewData
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
@@ -13,6 +14,7 @@ import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
+import com.socialite.solite_pos.data.source.domain.impl.GetCategoryProductItemViewDataImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategoriesImpl
@@ -194,6 +196,16 @@ object LoggedInDomainInjection {
             LoggedInRepositoryInjection.provideProductVariantsRepository(context)
         val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
         return GetProductWithVariantOptionsImpl(
+            productVariantsRepository = productVariantRepository,
+            productsRepository = productsRepository
+        )
+    }
+
+    fun provideGetCategoryProductItemViewData(context: Context): GetCategoryProductItemViewData {
+        val productVariantRepository =
+            LoggedInRepositoryInjection.provideProductVariantsRepository(context)
+        val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
+        return GetCategoryProductItemViewDataImpl(
             productVariantsRepository = productVariantRepository,
             productsRepository = productsRepository
         )

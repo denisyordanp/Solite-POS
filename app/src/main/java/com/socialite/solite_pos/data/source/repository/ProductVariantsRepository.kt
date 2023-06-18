@@ -5,7 +5,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.Variant
 import kotlinx.coroutines.flow.Flow
 
 interface ProductVariantsRepository : SyncRepository<VariantProduct> {
-
     fun getVariantOptions(
         productId: String
     ): Flow<List<VariantProductWithOption>?>

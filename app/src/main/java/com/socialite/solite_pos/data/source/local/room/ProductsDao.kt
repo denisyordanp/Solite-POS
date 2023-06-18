@@ -43,7 +43,11 @@ interface ProductsDao {
 
     @Transaction
     @Query("SELECT * FROM ${NewProduct.DB_NAME} WHERE ${NewProduct.STATUS} = 1")
-    fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
+    fun getActiveProductsWithCategory(): Flow<List<ProductWithCategory>>
+
+    @Transaction
+    @Query("SELECT * FROM ${NewProduct.DB_NAME}")
+    fun getAllProductsWithCategory(): Flow<List<ProductWithCategory>>
 
     @Query("UPDATE ${Product.DB_NAME} SET ${Product.STOCK} = ((SELECT ${Product.STOCK} FROM ${Product.DB_NAME} WHERE ${Product.ID} = :idProduct) + :amount) WHERE ${Product.ID} = :idProduct")
     fun increaseProductStock(idProduct: Long, amount: Int)

@@ -9,7 +9,7 @@ class GetProductWithCategoriesImpl(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
 ) : GetProductWithCategories {
-    override fun invoke() = productsRepository.getAllProductWithCategories()
+    override fun invoke() = productsRepository.getActiveProductsWithCategory()
         .map {
             it.map { product ->
                 val hasVariant = productVariantsRepository

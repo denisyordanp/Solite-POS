@@ -39,7 +39,8 @@ class ProductsRepositoryImpl(
     }
 
     override fun getProductWithCategories(category: String) = dao.getProductWithCategories(category)
-    override fun getAllProductWithCategories() = dao.getAllProductWithCategories()
+    override fun getActiveProductsWithCategory() = dao.getActiveProductsWithCategory()
+    override fun getAllProductsWithCategory() = dao.getAllProductsWithCategory()
     override fun getProductWithCategory(productId: String) = dao.getProductWithCategory(productId)
     override fun getProductById(productId: String) = dao.getProductAsFlow(productId)
     override suspend fun getNeedUploadProducts() = dao.getNeedUploadProducts()
