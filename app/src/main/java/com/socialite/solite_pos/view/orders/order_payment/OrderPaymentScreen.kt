@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.orders
+package com.socialite.solite_pos.view.orders.order_payment
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,12 +32,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
@@ -49,51 +51,55 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 
 @Composable
 @ExperimentalCoroutinesApi
 @ExperimentalComposeUiApi
-fun OrderPaymentView(
+fun OrderPaymentScreen(
     orderId: String,
-    mainViewModel: MainViewModel,
-    orderViewModel: OrderViewModel,
+    currentViewModel: OrderPaymentViewModel = viewModel(
+        factory = OrderPaymentViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit,
-    onPayClicked: (order: Order, payment: Payment, pay: Long, promo: Promo?, total: Long?) -> Unit
+    onPayClicked: () -> Unit
 ) {
-
-    var orderWithProducts by remember {
-        mutableStateOf<OrderWithProduct?>(null)
-    }
-
     LaunchedEffect(key1 = orderId) {
-        orderViewModel.getOrderDetail(orderId)?.let {
-            val products = orderViewModel.getProductOrder(orderId).first()
-            orderWithProducts = OrderWithProduct(
-                order = it,
-                products = products
-            )
-        }
+        currentViewModel.getOrder(orderId)
     }
+    val state = currentViewModel.viewState.collectAsState().value
 
     Scaffold(
         topBar = {
             BasicTopBar(
-                titleText = orderWithProducts?.order?.customer?.name ?: "",
+                titleText = state.orderWithProduct?.order?.customer?.name ?: "",
                 onBackClicked = onBackClicked
             )
         },
         content = { padding ->
-            orderWithProducts?.let {
+            state.orderWithProduct?.let {
                 PaymentContent(
                     modifier = Modifier
                         .padding(padding),
-                    mainViewModel = mainViewModel,
+                    cashSuggestions = state.cashSuggestion,
+                    promos = state.promos,
+                    payments = state.payments,
                     orderWithProduct = it,
-                    onPayClicked = onPayClicked
+                    onPayClicked = { order, payment, pay, promo, total ->
+                        currentViewModel.payOrder(
+                            order = order,
+                            payment = payment,
+                            pay = pay,
+                            promo = promo,
+                            totalPromo = total
+                        )
+                        onPayClicked()
+                    },
+                    onAddCashInput = { cash, total ->
+                        currentViewModel.addCashInput(cash, total)
+                    }
                 )
             }
         }
@@ -105,38 +111,30 @@ fun OrderPaymentView(
 @ExperimentalComposeUiApi
 private fun PaymentContent(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel,
+    cashSuggestions: List<Long>?,
     orderWithProduct: OrderWithProduct,
-    onPayClicked: (order: Order, payment: Payment, pay: Long, promo: Promo?, total: Long?) -> Unit
+    promos: List<Promo>,
+    payments: List<Payment>,
+    onPayClicked: (order: Order, payment: Payment, pay: Long, promo: Promo?, total: Long?) -> Unit,
+    onAddCashInput: (cash: Long, total: Long) -> Unit
 ) {
-
     val keyboard = LocalSoftwareKeyboardController.current
-
-    val query = Payment.filter(Payment.ACTIVE)
-    val payments = mainViewModel.getPayments(query).collectAsState(initial = emptyList())
-    val promos = mainViewModel.getPromos(Promo.Status.ACTIVE).collectAsState(initial = emptyList())
-    val cashSuggestions = mainViewModel.cashSuggestions.collectAsState(initial = null)
 
     var paymentExpanded by remember {
         mutableStateOf(false)
     }
-
     var promoExpanded by remember {
         mutableStateOf(false)
     }
-
     var selectedPayment by remember {
         mutableStateOf<Payment?>(null)
     }
-
     var selectedPromo by remember {
         mutableStateOf<Promo?>(null)
     }
-
     var cashAmount by remember {
         mutableStateOf(Pair(0L, false))
     }
-
     var manualInputPromo by remember {
         mutableStateOf<Long?>(null)
     }
@@ -155,13 +153,12 @@ private fun PaymentContent(
             modifier = Modifier
                 .align(Alignment.TopCenter)
         ) {
-
-            if (promos.value.isNotEmpty()) {
+            if (promos.isNotEmpty()) {
                 basicDropdown(
                     isExpanded = promoExpanded,
                     title = R.string.select_promo,
                     selectedItem = selectedPromo?.name,
-                    items = promos.value,
+                    items = promos,
                     onHeaderClicked = {
                         promoExpanded = !promoExpanded
                     },
@@ -183,7 +180,9 @@ private fun PaymentContent(
                             value = manualInputPromo?.toString() ?: "",
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done,
-                            visualTransformation = ThousandAndSuggestionVisualTransformation(cashAmount.second),
+                            visualTransformation = ThousandAndSuggestionVisualTransformation(
+                                cashAmount.second
+                            ),
                             placeHolder = stringResource(R.string.promo_amount),
                             onValueChange = {
                                 val amount = it.toLongOrNull() ?: 0L
@@ -226,7 +225,7 @@ private fun PaymentContent(
                 isExpanded = paymentExpanded,
                 title = R.string.select_payment,
                 selectedItem = selectedPayment?.name,
-                items = payments.value,
+                items = payments,
                 onHeaderClicked = {
                     paymentExpanded = !paymentExpanded
                 },
@@ -242,9 +241,9 @@ private fun PaymentContent(
                         PaymentCashOption(
                             totalAmount = grandTotal,
                             cashAmount = cashAmount,
-                            cashSuggestions = cashSuggestions.value,
+                            cashSuggestions = cashSuggestions,
                             onAmountChange = {
-                                mainViewModel.addCashInput(
+                                onAddCashInput(
                                     it.first,
                                     grandTotal
                                 )

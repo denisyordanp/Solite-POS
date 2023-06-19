@@ -261,7 +261,7 @@ private fun OrderList(
             )
         }
 
-        if (defaultTabPage != 0) {
+        if (defaultTabPage != 0 && pagerState.pageCount != 0) {
             LaunchedEffect(key1 = true) {
                 pagerState.animateScrollToPage(defaultTabPage)
             }
