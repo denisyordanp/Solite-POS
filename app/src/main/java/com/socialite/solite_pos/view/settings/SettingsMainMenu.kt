@@ -33,7 +33,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.solite_pos.data.source.local.entity.helper.MenuBadge
+import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.SettingMenus
@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 @ExperimentalMaterialApi
 fun SettingsMainMenu(
-    badges: List<MenuBadge>,
+    badges: List<GeneralMenuBadge>,
     isDarkMode: Boolean,
     isServerActive: Boolean,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,

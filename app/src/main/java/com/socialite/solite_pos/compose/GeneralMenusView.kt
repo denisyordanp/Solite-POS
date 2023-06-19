@@ -6,12 +6,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.socialite.solite_pos.data.source.local.entity.helper.MenuBadge
+import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.view.ui.GeneralMenus
 
 @Composable
 fun GeneralMenusView(
-    badges: List<MenuBadge>,
+    badges: List<GeneralMenuBadge>,
     onClicked: (menu: GeneralMenus) -> Unit
 ) {
     LazyColumn(

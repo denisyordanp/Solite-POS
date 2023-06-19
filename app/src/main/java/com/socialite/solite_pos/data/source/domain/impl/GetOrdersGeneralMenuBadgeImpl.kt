@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.source.domain.impl
 
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
-import com.socialite.solite_pos.data.source.local.entity.helper.MenuBadge
+import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.data.source.local.entity.room.master.Order
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.view.ui.GeneralMenus
@@ -13,13 +13,13 @@ class GetOrdersGeneralMenuBadgeImpl(
     private val ordersRepository: OrdersRepository
 ) : GetOrdersGeneralMenuBadge {
 
-    override fun invoke(date: String): Flow<List<MenuBadge>> {
+    override fun invoke(date: String): Flow<List<GeneralMenuBadge>> {
         return flowOf(GeneralMenus.values())
             .combine(getOrdersCount(date = date)) { menus, orders ->
                 menus.map {
                     val count = if (orders == 0) null else orders
                     val badge = if (it == GeneralMenus.ORDERS) count else null
-                    MenuBadge(it, badge)
+                    GeneralMenuBadge(it, badge)
                 }
             }
     }
