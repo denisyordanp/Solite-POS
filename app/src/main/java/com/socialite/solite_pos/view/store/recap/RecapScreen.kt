@@ -22,33 +22,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.basicDropdown
+import com.socialite.solite_pos.data.source.local.entity.helper.MenuOrderAmount
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 @Composable
-fun RecapMainView(
-    mainViewModel: MainViewModel,
-    orderViewModel: OrderViewModel,
+fun RecapScreen(
+    currentViewModel: RecapViewModel = viewModel(
+        factory = RecapViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>,
     fragmentManager: FragmentManager,
     onOrdersClicked: (parameters: ReportsParameter) -> Unit,
     onOutcomesClicked: (parameters: ReportsParameter) -> Unit,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
 ) {
+    val state = currentViewModel.viewState.collectAsState().value
+
     Scaffold(
         topBar = {
             BasicTopBar(
@@ -60,12 +66,29 @@ fun RecapMainView(
             RecapContent(
                 modifier = Modifier
                     .padding(padding),
-                mainViewModel = mainViewModel,
-                orderViewModel = orderViewModel,
-                datePicker = datePicker,
-                fragmentManager = fragmentManager,
+                recap = state.recap,
+                stores = state.stores,
+                menusWithParameter = state.getMenuWithParameters(),
+                selectedDate = state.selectedDate,
+                selectedStore = state.selectedStore,
                 onOrdersClicked = onOrdersClicked,
-                onOutcomesClicked = onOutcomesClicked
+                onOutcomesClicked = onOutcomesClicked,
+                onDateClicked = {
+                    datePicker.addOnPositiveButtonClickListener {
+                        val start = DateUtils.millisToDate(it.first)
+                        val end = DateUtils.millisToDate(it.second)
+                        currentViewModel.selectDate(
+                            Pair(
+                                start,
+                                end
+                            )
+                        )
+                    }
+                    datePicker.show(fragmentManager, "")
+                },
+                onSelectedStore = {
+                    currentViewModel.selectStore(it)
+                }
             )
         }
     )
@@ -74,42 +97,19 @@ fun RecapMainView(
 @Composable
 private fun RecapContent(
     modifier: Modifier = Modifier,
-    orderViewModel: OrderViewModel,
-    mainViewModel: MainViewModel,
-    datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>,
-    fragmentManager: FragmentManager,
+    recap: RecapData,
+    stores: List<Store>,
+    menusWithParameter: MenusWithParameter,
+    selectedDate: Pair<String, String>,
+    selectedStore: Store?,
     onOrdersClicked: (parameters: ReportsParameter) -> Unit,
     onOutcomesClicked: (parameters: ReportsParameter) -> Unit,
+    onDateClicked: () -> Unit,
+    onSelectedStore: (store: Store) -> Unit
 ) {
-
-    val date = DateUtils.currentDate
-
     var storeExpanded by remember {
         mutableStateOf(false)
     }
-
-    var selectedDate by remember {
-        mutableStateOf(
-            Pair(
-                date,
-                date
-            )
-        )
-    }
-
-    var selectedStore by remember {
-        mutableStateOf<Store?>(null)
-    }
-
-    val stores = mainViewModel.getStores().collectAsState(initial = emptyList())
-
-    val parameters = ReportsParameter(
-        start = selectedDate.first,
-        end = selectedDate.second,
-        storeId = selectedStore?.id ?: ""
-    )
-    val recap = orderViewModel.getIncomes(parameters)
-        .collectAsState(initial = RecapData.empty())
 
     LazyColumn(
         modifier = modifier
@@ -119,15 +119,7 @@ private fun RecapContent(
                 selectedDateFrom = selectedDate.first,
                 selectedDateUntil = selectedDate.second,
                 onDateClicked = {
-                    datePicker.addOnPositiveButtonClickListener {
-                        val start = DateUtils.millisToDate(it.first)
-                        val end = DateUtils.millisToDate(it.second)
-                        selectedDate = Pair(
-                            start,
-                            end
-                        )
-                    }
-                    datePicker.show(fragmentManager, "")
+                    onDateClicked()
                 }
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -137,12 +129,12 @@ private fun RecapContent(
             isExpanded = storeExpanded,
             title = R.string.select_store,
             selectedItem = selectedStore?.name,
-            items = stores.value,
+            items = stores,
             onHeaderClicked = {
                 storeExpanded = !storeExpanded
             },
             onSelectedItem = {
-                selectedStore = it as Store
+                onSelectedStore(it as Store)
                 storeExpanded = false
             }
         )
@@ -150,25 +142,20 @@ private fun RecapContent(
         selectedStore?.let {
             item {
                 OrdersMenuItem(
-                    orderViewModel = orderViewModel,
-                    parameters = ReportsParameter(
-                        start = selectedDate.first,
-                        end = selectedDate.second,
-                        storeId = it.id
-                    ),
+                    menusWithParameter = menusWithParameter,
                     onOrdersClicked = onOrdersClicked
                 )
             }
         }
 
-        if (recap.value.incomes.isNotEmpty() && selectedStore != null) {
+        if (recap.incomes.isNotEmpty() && selectedStore != null) {
             item {
                 Column(
                     modifier = Modifier
                         .background(color = MaterialTheme.colors.surface)
                         .padding(16.dp)
                 ) {
-                    recap.value.incomes.forEach {
+                    recap.incomes.forEach {
                         RecapItem(
                             firstText = it.dateString(),
                             middleText = it.payment,
@@ -181,7 +168,7 @@ private fun RecapContent(
             }
         }
 
-        if (recap.value.outcomes.isNotEmpty() && selectedStore != null) {
+        if (recap.outcomes.isNotEmpty() && selectedStore != null) {
             item {
                 Column(
                     modifier = Modifier
@@ -191,13 +178,13 @@ private fun RecapContent(
                                 ReportsParameter(
                                     start = selectedDate.first,
                                     end = selectedDate.second,
-                                    storeId = selectedStore!!.id
+                                    storeId = selectedStore.id
                                 )
                             )
                         }
                         .padding(16.dp)
                 ) {
-                    recap.value.outcomes.forEach {
+                    recap.outcomes.forEach {
                         RecapItem(
                             firstText = it.dateString(),
                             middleText = it.name,
@@ -212,7 +199,7 @@ private fun RecapContent(
 
         selectedStore?.let {
             item {
-                TotalRecap(recap.value)
+                TotalRecap(recap)
             }
         }
     }
@@ -274,8 +261,7 @@ private fun DateSelection(
 
 @Composable
 private fun OrdersMenuItem(
-    orderViewModel: OrderViewModel,
-    parameters: ReportsParameter,
+    menusWithParameter: MenusWithParameter,
     onOrdersClicked: (parameters: ReportsParameter) -> Unit,
 ) {
     Spacer(modifier = Modifier.height(4.dp))
@@ -283,34 +269,17 @@ private fun OrdersMenuItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                onOrdersClicked(parameters)
+                onOrdersClicked(menusWithParameter.parameter)
             }
             .background(color = MaterialTheme.colors.surface)
             .padding(16.dp),
     ) {
-        MenuItem(
-            orderViewModel = orderViewModel,
-            menu = OrderMenus.CURRENT_ORDER,
-            parameters = parameters
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        MenuItem(
-            orderViewModel = orderViewModel,
-            menu = OrderMenus.NOT_PAY_YET,
-            parameters = parameters
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        MenuItem(
-            orderViewModel = orderViewModel,
-            menu = OrderMenus.CANCELED,
-            parameters = parameters
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        MenuItem(
-            orderViewModel = orderViewModel,
-            menu = OrderMenus.DONE,
-            parameters = parameters
-        )
+        menusWithParameter.menus.forEach {
+            MenuItem(
+                menuOrderAmount = it
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+        }
     }
     Spacer(modifier = Modifier.height(4.dp))
 }
@@ -474,23 +443,17 @@ private fun TotalRecap(recapData: RecapData) {
 
 @Composable
 private fun MenuItem(
-    orderViewModel: OrderViewModel,
-    menu: OrderMenus,
-    parameters: ReportsParameter
+    menuOrderAmount: MenuOrderAmount
 ) {
-
-    val amount = orderViewModel.getOrderList(menu.status, parameters)
-        .collectAsState(initial = emptyList())
-
     Row {
-        val text = when (menu) {
+        val text = when (menuOrderAmount.menu) {
             OrderMenus.CURRENT_ORDER -> stringResource(R.string.undone_orders)
             OrderMenus.NOT_PAY_YET -> stringResource(R.string.not_pay_yet_orders)
             OrderMenus.CANCELED -> stringResource(R.string.canceled_orders)
             OrderMenus.DONE -> stringResource(R.string.payed_orders)
         }
         Text(
-            text = amount.value.size.toString(),
+            text = menuOrderAmount.amount.toString(),
             style = MaterialTheme.typography.body1.copy(
                 fontWeight = FontWeight.Bold
             )
