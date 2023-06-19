@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,28 +29,26 @@ import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.outcomes.OutcomesActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
-import com.socialite.solite_pos.view.store.categories.CategoryMasterView
-import com.socialite.solite_pos.view.store.payments.PaymentMasterView
-import com.socialite.solite_pos.view.store.product.ProductDetailMaster
-import com.socialite.solite_pos.view.store.product.ProductsMaster
-import com.socialite.solite_pos.view.store.promo.PromoMasterView
-import com.socialite.solite_pos.view.store.recap.RecapMainView
-import com.socialite.solite_pos.view.store.stores.StoresView
-import com.socialite.solite_pos.view.store.variants.VariantView
+import com.socialite.solite_pos.view.store.categories.CategoryMasterScreen
+import com.socialite.solite_pos.view.store.payments.PaymentMasterScreen
+import com.socialite.solite_pos.view.store.product_detail.ProductDetailScreen
+import com.socialite.solite_pos.view.store.product_master.ProductsMasterScreen
+import com.socialite.solite_pos.view.store.promo.PromoMasterScreen
+import com.socialite.solite_pos.view.store.recap.RecapScreen
+import com.socialite.solite_pos.view.store.stores.StoresScreen
+import com.socialite.solite_pos.view.store.variant_master.VariantMasterScreen
+import com.socialite.solite_pos.view.store.variant_product.VariantProductScreen
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
 import com.socialite.solite_pos.view.ui.StoreMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 class StoreActivity : SoliteActivity() {
 
-    private lateinit var orderViewModel: OrderViewModel
-    private lateinit var mainViewModel: MainViewModel
-    private lateinit var productViewModel: ProductViewModel
+    private val storeViewModel: StoreViewModel by viewModels {
+        StoreViewModel.getFactory(this)
+    }
 
     companion object {
         private const val EXTRA_PAGE = "extra_page"
@@ -67,18 +67,14 @@ class StoreActivity : SoliteActivity() {
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        orderViewModel = OrderViewModel.getOrderViewModel(this)
-        mainViewModel = MainViewModel.getMainViewModel(this)
-        productViewModel = ProductViewModel.getMainViewModel(this)
-
         val date = DateUtils.currentDate
-        val directPage = intent?.extras?.getString(EXTRA_PAGE)
+        storeViewModel.loadBadges(date)
 
         setContent {
             SolitePOSTheme {
-
+                val directPage = intent?.extras?.getString(EXTRA_PAGE)
                 val navController = rememberNavController()
+                val state = storeViewModel.viewState.collectAsState().value
 
                 NavHost(
                     navController = navController,
@@ -86,8 +82,7 @@ class StoreActivity : SoliteActivity() {
                 ) {
                     composable(StoreDestinations.MAIN_STORE) {
                         MainStoreMenu(
-                            orderViewModel = orderViewModel,
-                            currentDate = date,
+                            badges = state.badges,
                             onGeneralMenuClicked = {
                                 when (it) {
                                     GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
@@ -118,6 +113,7 @@ class StoreActivity : SoliteActivity() {
                                     StoreMenus.SALES_RECAP -> {
                                         navController.navigate(StoreDestinations.MASTER_RECAP)
                                     }
+
                                     StoreMenus.OUTCOMES -> {
                                         OutcomesActivity.createInstanceForRecap(this@StoreActivity)
                                     }
@@ -129,9 +125,11 @@ class StoreActivity : SoliteActivity() {
                                     StoreMenus.STORE -> {
                                         navController.navigate(StoreDestinations.MASTER_STORES)
                                     }
+
                                     StoreMenus.PROMO -> {
                                         navController.navigate(StoreDestinations.MASTER_PROMO)
                                     }
+
                                     else -> {
                                         // Do nothing
                                     }
@@ -140,32 +138,28 @@ class StoreActivity : SoliteActivity() {
                         )
                     }
                     composable(StoreDestinations.MASTER_PAYMENT) {
-                        PaymentMasterView(
-                            mainViewModel = mainViewModel,
+                        PaymentMasterScreen(
                             onBackClicked = {
                                 navController.popBackStack()
                             }
                         )
                     }
                     composable(StoreDestinations.MASTER_PROMO) {
-                        PromoMasterView(
-                            mainViewModel = mainViewModel,
+                        PromoMasterScreen(
                             onBackClicked = {
                                 navController.popBackStack()
                             }
                         )
                     }
                     composable(StoreDestinations.MASTER_CATEGORY) {
-                        CategoryMasterView(
-                            productViewModel = productViewModel,
+                        CategoryMasterScreen(
                             onBackClicked = {
                                 navController.popBackStack()
                             }
                         )
                     }
                     composable(StoreDestinations.MASTER_STORES) {
-                        StoresView(
-                            mainViewModel = mainViewModel,
+                        StoresScreen(
                             onBackClicked = {
                                 val pop = navController.popBackStack()
                                 if (!pop) onBackPressed()
@@ -173,9 +167,7 @@ class StoreActivity : SoliteActivity() {
                         )
                     }
                     composable(StoreDestinations.MASTER_RECAP) {
-                        RecapMainView(
-                            mainViewModel = mainViewModel,
-                            orderViewModel = orderViewModel,
+                        RecapScreen(
                             datePicker = buildRecapDatePicker(),
                             fragmentManager = supportFragmentManager,
                             onBackClicked = {
@@ -196,8 +188,7 @@ class StoreActivity : SoliteActivity() {
                         )
                     }
                     composable(StoreDestinations.MASTER_PRODUCT) {
-                        ProductsMaster(
-                            productViewModel = productViewModel,
+                        ProductsMasterScreen(
                             onBackClicked = {
                                 navController.popBackStack()
                             },
@@ -221,13 +212,13 @@ class StoreActivity : SoliteActivity() {
                         arguments = listOf(productIdArgument)
                     ) {
                         var currentId by rememberSaveable {
-                            val idFromNav = it.arguments?.getString(StoreDestinations.PRODUCT_ID) ?: ""
+                            val idFromNav =
+                                it.arguments?.getString(StoreDestinations.PRODUCT_ID) ?: ""
                             val isNewProduct = StoreDestinations.isNewProduct(idFromNav)
                             mutableStateOf(if (isNewProduct) "" else idFromNav)
                         }
 
-                        ProductDetailMaster(
-                            productViewModel = productViewModel,
+                        ProductDetailScreen(
                             productId = currentId,
                             onVariantClicked = {
                                 navController.navigate(StoreDestinations.productVariants(currentId))
@@ -237,7 +228,6 @@ class StoreActivity : SoliteActivity() {
                             },
                             onCreateNewProduct = { product ->
                                 lifecycleScope.launch {
-                                    productViewModel.insertProduct(product)
                                     currentId = product.id
                                 }
                             }
@@ -248,9 +238,8 @@ class StoreActivity : SoliteActivity() {
                         arguments = listOf(productIdArgument)
                     ) {
                         it.arguments?.getString(StoreDestinations.PRODUCT_ID)?.let { id ->
-                            VariantView(
-                                productViewModel = productViewModel,
-                                idProduct = id,
+                            VariantProductScreen(
+                                productId = id,
                                 onBackClicked = {
                                     navController.popBackStack()
                                 }
@@ -258,8 +247,7 @@ class StoreActivity : SoliteActivity() {
                         }
                     }
                     composable(StoreDestinations.MASTER_VARIANTS) {
-                        VariantView(
-                            productViewModel = productViewModel,
+                        VariantMasterScreen(
                             onBackClicked = {
                                 navController.popBackStack()
                             }

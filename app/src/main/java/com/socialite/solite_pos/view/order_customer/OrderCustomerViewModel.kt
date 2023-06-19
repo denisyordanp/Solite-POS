@@ -28,27 +28,22 @@ class OrderCustomerViewModel(
 ) : ViewModel() {
 
     companion object {
-        fun getOrderCustomerViewModel(activity: FragmentActivity): OrderCustomerViewModel {
-            return ViewModelProvider(
-                owner = activity,
-                factory = object : ViewModelProvider.Factory {
-                    @Suppress("UNCHECKED_CAST")
-                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        return OrderCustomerViewModel(
-                            settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
-                                activity
-                            ),
-                            getProductWithCategories = LoggedInDomainInjection.provideGetProductWithCategories(
-                                activity
-                            ),
-                            getOrdersGeneralMenuBadge = LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge(
-                                activity
-                            ),
-                            newOrder = LoggedInDomainInjection.provideNewOrder(activity)
-                        ) as T
-                    }
-                }
-            )[OrderCustomerViewModel::class.java]
+        fun getFactory(activity: FragmentActivity) = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return OrderCustomerViewModel(
+                    settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
+                        activity
+                    ),
+                    getProductWithCategories = LoggedInDomainInjection.provideGetProductWithCategories(
+                        activity
+                    ),
+                    getOrdersGeneralMenuBadge = LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge(
+                        activity
+                    ),
+                    newOrder = LoggedInDomainInjection.provideNewOrder(activity)
+                ) as T
+            }
         }
     }
 

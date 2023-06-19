@@ -37,10 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicAlertDialog
@@ -49,20 +51,25 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
-import com.socialite.solite_pos.view.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-fun StoresView(
-    mainViewModel: MainViewModel,
+fun StoresScreen(
+    currentViewModel: StoresViewModel = viewModel(
+        factory = StoresViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     onBackClicked: () -> Unit
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
-    var selectedStore by remember { mutableStateOf<Store?>(null) }
 
+    val stores = currentViewModel.getStores().collectAsState(initial = emptyList())
+    val selectedActiveStore = currentViewModel.selectedStore.collectAsState(initial = "")
+    var selectedStoreForDetail by remember { mutableStateOf<Store?>(null) }
     if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
         LocalSoftwareKeyboardController.current?.hide()
     }
@@ -75,13 +82,13 @@ fun StoresView(
         ),
         sheetContent = {
             StoreDetail(
-                store = selectedStore,
+                store = selectedStoreForDetail,
                 onSubmitStore = {
                     scope.launch {
                         if (it.isNewStore()) {
-                            mainViewModel.insertStore(it)
+                            currentViewModel.insertStore(it)
                         } else {
-                            mainViewModel.updateStore(it)
+                            currentViewModel.updateStore(it)
                         }
                         modalState.hide()
                     }
@@ -100,18 +107,22 @@ fun StoresView(
                     StoresContent(
                         modifier = Modifier
                             .padding(padding),
-                        mainViewModel = mainViewModel,
+                        stores = stores.value,
+                        selectedStore = selectedActiveStore.value,
                         onAddClicked = {
                             scope.launch {
-                                selectedStore = null
+                                selectedStoreForDetail = null
                                 modalState.show()
                             }
                         },
                         onStoreClicked = {
                             scope.launch {
-                                selectedStore = it
+                                selectedStoreForDetail = it
                                 modalState.show()
                             }
+                        },
+                        onSelectStore = {
+                            currentViewModel.selectStore(it)
                         }
                     )
                 }
@@ -122,16 +133,14 @@ fun StoresView(
 
 @Composable
 private fun StoresContent(
-    mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
+    stores: List<Store>,
+    selectedStore: String,
     onAddClicked: () -> Unit,
-    onStoreClicked: (Store) -> Unit
+    onStoreClicked: (Store) -> Unit,
+    onSelectStore: (storeId: String) -> Unit
 ) {
-
     var alertSelectStore by remember { mutableStateOf<String?>(null) }
-
-    val stores = mainViewModel.getStores().collectAsState(initial = emptyList())
-    val selected = mainViewModel.selectedStore.collectAsState(initial = "")
 
     Box(
         modifier = modifier
@@ -145,10 +154,10 @@ private fun StoresContent(
                 .align(Alignment.TopCenter),
             state = listState
         ) {
-            items(stores.value) {
+            items(stores) {
                 StoreItem(
                     store = it,
-                    selected = selected.value,
+                    selected = selectedStore,
                     onStoreClicked = onStoreClicked,
                     onStoreSwitched = { isActive ->
                         if (isActive) alertSelectStore = it.id
@@ -180,7 +189,7 @@ private fun StoresContent(
             titleText = stringResource(R.string.select_store),
             descText = stringResource(R.string.are_you_sure_select_this_store_for_next_orders),
             positiveAction = {
-                mainViewModel.selectStore(it)
+                onSelectStore(it)
                 alertSelectStore = null
             },
             positiveText = stringResource(R.string.yes),

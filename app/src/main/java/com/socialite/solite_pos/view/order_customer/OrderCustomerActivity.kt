@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.order_customer
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
@@ -37,16 +38,16 @@ import kotlinx.coroutines.launch
 
 class OrderCustomerActivity : SoliteActivity() {
 
-    private lateinit var viewModel: OrderCustomerViewModel
+    private val viewModel: OrderCustomerViewModel by viewModels {
+        OrderCustomerViewModel.getFactory(this)
+    }
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val currentDate = DateUtils.currentDate
-        viewModel = OrderCustomerViewModel.getOrderCustomerViewModel(this)
         viewModel.loadBadges(currentDate)
 
         setContent {
