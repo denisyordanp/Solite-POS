@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.orders
+package com.socialite.solite_pos.view.orders.order_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,11 +30,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
@@ -46,13 +48,17 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.view.orders.OrderButtonType
 import com.socialite.solite_pos.view.ui.OrderMenus
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
 
 @Composable
-fun OrderDetailView(
+fun OrderDetailScreen(
     orderId: String,
-    orderViewModel: OrderViewModel,
+    currentViewModel: OrderDetailViewModel = viewModel(
+        factory = OrderDetailViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     timePicker: MaterialTimePicker.Builder,
     datePicker: MaterialDatePicker.Builder<Long>,
     fragmentManager: FragmentManager,
@@ -60,15 +66,7 @@ fun OrderDetailView(
     onButtonClicked: (OrderButtonType, OrderWithProduct?) -> Unit,
     onProductsClicked: () -> Unit
 ) {
-
-    val order = orderViewModel.getOrderData(orderId).collectAsState(initial = null)
-    val products = orderViewModel.getProductOrder(orderId).collectAsState(initial = emptyList())
-    val orderWithProducts = order.value?.run {
-        OrderWithProduct(
-            order = this,
-            products = products.value
-        )
-    }
+    val orderWithProducts = currentViewModel.getOrder(orderId).collectAsState(initial = null).value
 
     var alertDoneState by remember { mutableStateOf(false) }
     var alertCancelState by remember { mutableStateOf(false) }
@@ -186,7 +184,7 @@ fun OrderDetailView(
             descText = stringResource(R.string.are_you_sure_will_cancel_this_order),
             positiveAction = {
                 orderWithProducts?.order?.order?.let {
-                    orderViewModel.cancelOrder(it)
+                    currentViewModel.cancelOrder(it)
                 }
                 onButtonClicked(OrderButtonType.CANCEL, null)
                 alertCancelState = false
@@ -205,7 +203,7 @@ fun OrderDetailView(
             descText = stringResource(R.string.are_you_sure_will_done_this_order),
             positiveAction = {
                 orderWithProducts?.order?.order?.let {
-                    orderViewModel.doneOrder(it)
+                    currentViewModel.doneOrder(it)
                 }
                 alertDoneState = false
                 onButtonClicked(OrderButtonType.DONE, null)
@@ -223,7 +221,7 @@ fun OrderDetailView(
             descText = stringResource(R.string.are_you_sure_will_put_back_this_order),
             positiveAction = {
                 orderWithProducts?.order?.order?.let {
-                    orderViewModel.putBackOrder(it)
+                    currentViewModel.putBackOrder(it)
                 }
                 alertPutBackState = false
                 onButtonClicked(OrderButtonType.PUT_BACK, null)
@@ -242,7 +240,7 @@ fun OrderDetailView(
             descText = stringResource(R.string.are_you_sure_change_order_date_to, date),
             positiveAction = {
                 orderWithProducts?.order?.order?.let {
-                    orderViewModel.updateOrder(
+                    currentViewModel.updateOrder(
                         it.copy(
                             orderTime = selectedDateTime!!
                         )
@@ -291,7 +289,9 @@ private fun Details(
                                 clickable {
                                     onProductsClicked()
                                 }
-                            } else { this }
+                            } else {
+                                this
+                            }
                         }
                 ) {
                     orderWithProduct.products.forEachIndexed { i, product ->

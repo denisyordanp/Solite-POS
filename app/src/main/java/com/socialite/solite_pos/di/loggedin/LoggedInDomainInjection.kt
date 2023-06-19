@@ -3,6 +3,7 @@ package com.socialite.solite_pos.di.loggedin
 import android.content.Context
 import com.socialite.solite_pos.data.source.domain.GetCategoryProductVariantCount
 import com.socialite.solite_pos.data.source.domain.GetOrderMenusWithAmount
+import com.socialite.solite_pos.data.source.domain.GetOrderWithProduct
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetOrdersMenuWithOrders
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
@@ -19,6 +20,7 @@ import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrderMenusWithAmountImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetOrderWithProductImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersMenuWithOrdersImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductOrderImpl
@@ -246,6 +248,21 @@ object LoggedInDomainInjection {
             LoggedInRepositoryInjection.provideOrderDetailsRepository(context)
         val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
         return GetOrdersMenuWithOrdersImpl(
+            orderRepository = ordersRepository,
+            orderDetailRepository = orderDetailsRepository,
+            converter = ProductOrderDetailConverter(
+                orderDetailRepository = orderDetailsRepository,
+                productsRepository = productsRepository
+            )
+        )
+    }
+
+    fun provideGetOrderWithProduct(context: Context): GetOrderWithProduct {
+        val ordersRepository = LoggedInRepositoryInjection.provideOrdersRepository(context)
+        val orderDetailsRepository =
+            LoggedInRepositoryInjection.provideOrderDetailsRepository(context)
+        val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
+        return GetOrderWithProductImpl(
             orderRepository = ordersRepository,
             orderDetailRepository = orderDetailsRepository,
             converter = ProductOrderDetailConverter(
