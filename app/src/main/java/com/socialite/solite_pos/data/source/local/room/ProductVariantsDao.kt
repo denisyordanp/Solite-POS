@@ -21,6 +21,10 @@ interface ProductVariantsDao {
     @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct ORDER BY ${Variant.ID}")
     fun getVariantProducts(idProduct: String): Flow<List<VariantProductWithOption>?>
 
+    @Transaction
+    @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${NewVariantProduct.DELETED} = 0 ORDER BY ${Variant.ID}")
+    fun getAllVariantProducts(): Flow<List<VariantProductWithOption>>
+
     @Query("SELECT * FROM ${NewVariantProduct.DB_NAME} WHERE ${Product.ID} = :idProduct AND ${VariantOption.ID} = :idVariantOption")
     fun getVariantProduct(idProduct: String, idVariantOption: String): Flow<NewVariantProduct?>
 

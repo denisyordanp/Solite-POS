@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.store.variants
+package com.socialite.solite_pos.view.store.variant_master
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -25,8 +25,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -40,71 +38,59 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicRadioButton
 import com.socialite.solite_pos.compose.BasicTopBar
+import com.socialite.solite_pos.compose.OptionItem
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.view.ui.ModalContent
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-fun VariantView(
-    productViewModel: ProductViewModel,
-    idProduct: String? = "",
-    onBackClicked: () -> Unit
-) {
-
-    if (!idProduct.isNullOrEmpty()) {
-        VariantProductView(
-            productViewModel = productViewModel,
-            idProduct = idProduct,
-            onBackClicked = onBackClicked
+fun VariantMasterScreen(
+    currentViewModel: VariantMasterViewModel = viewModel(
+        factory = VariantMasterViewModel.getFactory(
+            LocalContext.current
         )
-    } else {
-        VariantMasterView(productViewModel = productViewModel, onBackClicked = onBackClicked)
-    }
-}
-
-@Composable
-private fun VariantProductView(
-    productViewModel: ProductViewModel,
-    idProduct: String,
+    ),
     onBackClicked: () -> Unit
 ) {
-    val product = productViewModel.getProduct(idProduct).collectAsState(initial = null)
+    val variants =
+        currentViewModel.getVariants().collectAsState(initial = emptyList()).value
 
-    Scaffold(
-        topBar = {
-            val title = "${stringResource(R.string.variants)} - ${product.value?.name}"
-            BasicTopBar(
-                titleText = title,
-                onBackClicked = onBackClicked
-            )
+    VariantMasterView(
+        onBackClicked = onBackClicked,
+        variants = variants,
+        onVariant = {
+            if (it.isAdd()) {
+                currentViewModel.insertVariant(it)
+            } else {
+                currentViewModel.updateVariant(it)
+            }
         },
-        content = { padding ->
-            VariantsContent(
-                modifier = Modifier
-                    .padding(padding),
-                productViewModel = productViewModel,
-                product = product.value
-            )
-        }
+        onVariantOption = {
+            if (it.isAdd()) {
+                currentViewModel.insertVariantOption(it)
+            } else {
+                currentViewModel.updateVariantOption(it)
+            }
+        },
     )
 }
 
@@ -112,24 +98,22 @@ private fun VariantProductView(
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 private fun VariantMasterView(
-    productViewModel: ProductViewModel,
-    onBackClicked: () -> Unit
+    variants: List<VariantWithOptions>,
+    onBackClicked: () -> Unit,
+    onVariant: (variant: Variant) -> Unit,
+    onVariantOption: (option: VariantOption) -> Unit,
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
-
     if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
         LocalSoftwareKeyboardController.current?.hide()
     }
-
     var sheetContent by remember {
         mutableStateOf(ModalContent.VARIANT_DETAIL)
     }
-
     var selectedVariant by remember {
         mutableStateOf<Variant?>(null)
     }
-
     var selectedOption by remember {
         mutableStateOf<Pair<Variant, VariantOption?>?>(null)
     }
@@ -145,11 +129,7 @@ private fun VariantMasterView(
                 ModalContent.VARIANT_DETAIL -> VariantDetail(
                     variant = selectedVariant,
                     onVariantSubmitted = {
-                        if (it.isAdd())
-                            productViewModel.insertVariant(it)
-                        else
-                            productViewModel.updateVariant(it)
-
+                        onVariant(it)
                         scope.launch {
                             modalState.hide()
                         }
@@ -161,11 +141,7 @@ private fun VariantMasterView(
                     variant = selectedOption?.first,
                     option = selectedOption?.second,
                     onOptionSubmitted = {
-                        if (it.isAdd())
-                            productViewModel.insertVariantOption(it)
-                        else
-                            productViewModel.updateVariantOption(it)
-
+                        onVariantOption(it)
                         scope.launch {
                             modalState.hide()
                         }
@@ -187,10 +163,10 @@ private fun VariantMasterView(
                     )
                 },
                 content = { padding ->
-                    VariantsContent(
+                    VariantsMasterContent(
                         modifier = Modifier
                             .padding(padding),
-                        productViewModel = productViewModel,
+                        variants = variants,
                         onAddVariantClicked = {
                             selectedVariant = null
                             scope.launch {
@@ -224,7 +200,10 @@ private fun VariantMasterView(
                                 sheetContent = ModalContent.VARIANT_OPTION_DETAIL
                                 modalState.show()
                             }
-                        }
+                        },
+                        onUpdateVariantOption = {
+                            onVariantOption(it)
+                        },
                     )
                 }
             )
@@ -375,22 +354,15 @@ private fun VariantOptionDetail(
 }
 
 @Composable
-private fun VariantsContent(
+private fun VariantsMasterContent(
     modifier: Modifier = Modifier,
-    productViewModel: ProductViewModel,
-    product: Product? = null,
+    variants: List<VariantWithOptions>,
     onAddVariantClicked: (() -> Unit)? = null,
     onAddOptionClicked: ((Variant) -> Unit)? = null,
     onVariantClicked: ((Variant) -> Unit)? = null,
-    onOptionClicked: ((Variant, VariantOption) -> Unit)? = null
+    onOptionClicked: ((Variant, VariantOption) -> Unit)? = null,
+    onUpdateVariantOption: (option: VariantOption) -> Unit,
 ) {
-
-    val isProductVariants = product != null
-
-    val selectedProductOptions = productViewModel.getVariantsProductById(product?.id ?: "")
-        .collectAsState(initial = emptyList())
-    val variants = productViewModel.variants.collectAsState(initial = emptyList())
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -404,22 +376,13 @@ private fun VariantsContent(
                 .align(Alignment.TopCenter),
             state = listState
         ) {
-            items(variants.value) {
-
-                val query = VariantOption.getFilter(it.id, VariantOption.ALL)
-                val options =
-                    productViewModel.getVariantOptions(query).collectAsState(initial = emptyList())
-
+            items(variants) {
                 VariantItem(
-                    isProductVariant = isProductVariants,
-                    variant = it,
-                    options = options.value,
-                    selectedProductOptions = selectedProductOptions.value.filter { variantProduct ->
-                        variantProduct.variant == it.id
-                    },
-                    isExpanded = expandedItem == it,
+                    variant = it.variant,
+                    options = it.options,
+                    isExpanded = expandedItem == it.variant,
                     onVariantClicked = {
-                        onVariantClicked?.invoke(it)
+                        onVariantClicked?.invoke(it.variant)
                     },
                     onAddOptionClicked = { addVariant ->
                         onAddOptionClicked?.invoke(addVariant)
@@ -428,19 +391,7 @@ private fun VariantsContent(
                         onOptionClicked?.invoke(optVariant, option)
                     },
                     onOptionMasterSwitched = { option ->
-                        productViewModel.updateVariantOption(option)
-                    },
-                    onOptionProductSwitched = { option, variantProduct ->
-                        if (variantProduct != null) {
-                            productViewModel.removeVariantProduct(variantProduct)
-                        } else {
-                            val newVariantProduct = VariantProduct.createNewVariantProduct(
-                                variant = option.variant,
-                                variantOption = option.id,
-                                product = product?.id ?: ""
-                            )
-                            productViewModel.insertVariantProduct(newVariantProduct)
-                        }
+                        onUpdateVariantOption(option)
                     },
                     onExpand = { variant ->
                         expandedItem = if (expandedItem != variant) variant else null
@@ -451,53 +402,41 @@ private fun VariantsContent(
             item { SpaceForFloatingButton() }
         }
 
-        if (!isProductVariants) {
-            AnimatedVisibility(
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp),
+            visible = !listState.isScrollInProgress,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            BasicAddButton(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(24.dp),
-                visible = !listState.isScrollInProgress,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                BasicAddButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd),
-                    onAddClicked = {
-                        onAddVariantClicked?.invoke()
-                    }
-                )
-            }
+                    .align(Alignment.BottomEnd),
+                onAddClicked = {
+                    onAddVariantClicked?.invoke()
+                }
+            )
         }
     }
 }
 
 @Composable
 private fun VariantItem(
-    isProductVariant: Boolean,
     variant: Variant,
     options: List<VariantOption>,
-    selectedProductOptions: List<VariantProduct>,
     isExpanded: Boolean,
     onVariantClicked: () -> Unit,
     onAddOptionClicked: (Variant) -> Unit,
     onOptionClicked: (Variant, VariantOption) -> Unit,
     onOptionMasterSwitched: (option: VariantOption) -> Unit,
-    onOptionProductSwitched: (option: VariantOption, variantProduct: VariantProduct?) -> Unit,
     onExpand: (Variant) -> Unit
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .run {
-                return@run if (!isProductVariant) {
-                    clickable {
-                        onVariantClicked()
-                    }
-                } else {
-                    this
-                }
+            .clickable {
+                onVariantClicked()
             }
             .background(color = MaterialTheme.colors.surface)
             .padding(16.dp)
@@ -513,28 +452,16 @@ private fun VariantItem(
                 )
             )
             Spacer(modifier = Modifier.height(4.dp))
-            val descText = when {
-                isProductVariant -> {
-                    stringResource(
-                        id = R.string.option_selected,
-                        selectedProductOptions.size.toString()
-                    )
-                }
-
-                else -> {
-                    "${
-                        if (variant.isMust == true) stringResource(id = R.string.must_choice) else stringResource(
-                            id = R.string.optional_choice
-                        )
-                    }, ${
-                        if (variant.isSingleOption()) stringResource(id = R.string.single_option) else stringResource(
-                            id = R.string.multiple_option
-                        )
-                    }"
-                }
-            }
             Text(
-                text = descText,
+                text = "${
+                    if (variant.isMust == true) stringResource(id = R.string.must_choice) else stringResource(
+                        id = R.string.optional_choice
+                    )
+                }, ${
+                    if (variant.isSingleOption()) stringResource(id = R.string.single_option) else stringResource(
+                        id = R.string.multiple_option
+                    )
+                }",
                 style = MaterialTheme.typography.body1
             )
         }
@@ -554,41 +481,30 @@ private fun VariantItem(
     }
     Spacer(modifier = Modifier.height(4.dp))
     if (isExpanded) {
-        if (!isProductVariant) {
-            Box(
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colors.surface)
+                .clickable {
+                    onAddOptionClicked(variant)
+                }
+                .padding(16.dp)
+        ) {
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = MaterialTheme.colors.surface)
-                    .clickable {
-                        onAddOptionClicked(variant)
-                    }
-                    .padding(16.dp)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    text = stringResource(R.string.add_new_option),
-                    style = MaterialTheme.typography.body2.copy(
-                        fontStyle = FontStyle.Italic
-                    )
+                    .align(Alignment.Center),
+                text = stringResource(R.string.add_new_option),
+                style = MaterialTheme.typography.body2.copy(
+                    fontStyle = FontStyle.Italic
                 )
-            }
-            Spacer(modifier = Modifier.height(2.dp))
+            )
         }
+        Spacer(modifier = Modifier.height(2.dp))
         options.forEach {
-
-            val variantProduct = selectedProductOptions.find { variantProduct ->
-                variantProduct.variantOption == it.id
-            }
-
             OptionItem(
-                isProductVariant = isProductVariant,
+                isProductVariant = false,
                 optionName = it.name,
-                isOptionActive = if (isProductVariant) {
-                    variantProduct != null
-                } else {
-                    it.isActive
-                },
+                isOptionActive = it.isActive,
                 onOptionClicked = {
                     onOptionClicked(
                         variant,
@@ -596,67 +512,15 @@ private fun VariantItem(
                     )
                 },
                 onOptionSwitch = { isActive ->
-                    if (isProductVariant) {
-                        onOptionProductSwitched(
-                            it,
-                            variantProduct
+                    onOptionMasterSwitched(
+                        it.copy(
+                            isActive = isActive
                         )
-                    } else {
-                        onOptionMasterSwitched(
-                            it.copy(
-                                isActive = isActive
-                            )
-                        )
-                    }
+                    )
                 }
             )
             Spacer(modifier = Modifier.height(2.dp))
         }
         Spacer(modifier = Modifier.height(2.dp))
-    }
-}
-
-@Composable
-private fun OptionItem(
-    isProductVariant: Boolean,
-    optionName: String,
-    isOptionActive: Boolean,
-    onOptionClicked: () -> Unit,
-    onOptionSwitch: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colors.surface)
-            .run {
-                return@run if (!isProductVariant) {
-                    clickable {
-                        onOptionClicked()
-                    }
-                } else {
-                    this
-                }
-            }
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-    ) {
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .weight(1f),
-            text = optionName,
-            style = MaterialTheme.typography.body2.copy(
-                fontWeight = FontWeight.Bold
-            )
-        )
-        Switch(
-            checked = isOptionActive,
-            onCheckedChange = {
-                onOptionSwitch(it)
-            },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colors.primary,
-                uncheckedThumbColor = MaterialTheme.colors.primaryVariant
-            )
-        )
     }
 }

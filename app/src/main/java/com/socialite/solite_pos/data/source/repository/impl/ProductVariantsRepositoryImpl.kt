@@ -50,6 +50,7 @@ class ProductVariantsRepositoryImpl(
     }
 
     override fun getVariantOptions(productId: String) = dao.getVariantProducts(productId)
+    override fun getAllVariantOptions() = dao.getAllVariantProducts()
 
     override suspend fun getNeedUploadVariantProducts() = dao.getNeedUploadVariantProducts()
 

@@ -8,6 +8,7 @@ interface ProductVariantsRepository : SyncRepository<VariantProduct> {
     fun getVariantOptions(
         productId: String
     ): Flow<List<VariantProductWithOption>?>
+    fun getAllVariantOptions(): Flow<List<VariantProductWithOption>>
     suspend fun getNeedUploadVariantProducts(): List<VariantProduct>
     suspend fun isProductHasVariants(idProduct: String): Boolean
     fun getVariantsProductById(idProduct: String): Flow<List<VariantProduct>>
