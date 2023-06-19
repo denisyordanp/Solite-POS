@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetVariantOptions
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository

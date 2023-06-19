@@ -40,7 +40,6 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
