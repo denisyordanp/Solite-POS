@@ -60,6 +60,7 @@ class OrderDetailsRepositoryImpl(
 
     override suspend fun getDeletedOrderDetailIds() = dao.getDeletedOrderDetailIds()
     override fun getOrderDetailByIdOrder(orderId: String) = dao.getOrderDetailByIdOrder(orderId)
+    override fun getOrderDetail() = dao.getOrderDetailsFlow()
     override suspend fun getOrderDetailWithVariants(idDetail: String) =
         dao.getOrderDetailWithVariants(idDetail)
 

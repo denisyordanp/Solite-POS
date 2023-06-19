@@ -36,6 +36,9 @@ interface OrderDetailsDao {
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrder.ID} = :orderId AND ${NewOrderDetail.DELETED} = 0")
     fun getOrderDetailByIdOrder(orderId: String): Flow<List<NewOrderDetail>>
 
+    @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.DELETED} = 0")
+    fun getOrderDetailsFlow(): Flow<List<NewOrderDetail>>
+
     @Transaction
     @Query("SELECT * FROM ${NewOrderDetail.DB_NAME} WHERE ${NewOrderDetail.ID} = :idDetail")
     suspend fun getOrderDetailWithVariants(idDetail: String): DetailWithVariantOption

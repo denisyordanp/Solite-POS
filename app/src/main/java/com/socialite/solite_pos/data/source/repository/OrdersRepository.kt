@@ -11,6 +11,7 @@ interface OrdersRepository : SyncRepository<Order> {
     fun getOrderList(status: Int, date: String, store: String): Flow<List<OrderData>>
     suspend fun getNeedUploadOrders(): List<Order>
     fun getOrderList(status: Int, parameters: ReportsParameter): Flow<List<OrderData>>
+    fun getAllOrderList(parameters: ReportsParameter): Flow<List<OrderData>>
     fun getOrderDataAsFlow(orderId: String): Flow<OrderData?>
     suspend fun getOrderData(orderId: String): OrderData?
     suspend fun updateOrder(order: Order)

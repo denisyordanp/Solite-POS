@@ -44,7 +44,7 @@ import com.socialite.solite_pos.compose.BucketView
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.helper.MenuBadge
+import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 @Composable
 @ExperimentalMaterialApi
 fun OrderSelectItems(
-    badges: List<MenuBadge>,
+    badges: List<GeneralMenuBadge>,
     products: Map<Category, List<ProductWithCategory>>,
     bucketOrderViewState: BucketOrderViewState,
     onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit,

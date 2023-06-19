@@ -71,6 +71,17 @@ class OrdersRepositoryImpl(
 
     override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
+    @OptIn(FlowPreview::class)
+    override fun getAllOrderList(parameters: ReportsParameter): Flow<List<OrderData>> {
+        return if (parameters.isTodayOnly()) {
+            settingRepository.getNewSelectedStore().flatMapConcat {
+                dao.getAllOrders(parameters.start, parameters.end, it)
+            }
+        } else {
+            dao.getAllOrders(parameters.start, parameters.end, parameters.storeId)
+        }
+    }
+
     override suspend fun getOrderData(orderId: String): OrderData? = dao.getOrderDataById(orderId)
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
         order.copy(

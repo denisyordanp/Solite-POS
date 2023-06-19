@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.orders
+package com.socialite.solite_pos.view.orders.order_items
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -39,11 +39,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -55,95 +57,38 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
+import com.socialite.solite_pos.data.source.local.entity.helper.OrderMenuWithOrders
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.OrderMenus
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
-fun OrderItems(
-    orderViewModel: OrderViewModel,
+fun OrderItemsScreen(
+    currentViewModel: OrderItemsViewModel = viewModel(
+        factory = OrderItemsViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     parameters: ReportsParameter,
     defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onOrderClicked: (orderId: String) -> Unit,
     onBackClicked: () -> Unit
 ) {
+    val orders = currentViewModel.getOrders(parameters).collectAsState(initial = emptyList()).value
 
     if (parameters.isTodayOnly()) {
-        val modalContent by remember { mutableStateOf(ModalContent.GENERAL_MENUS) }
-        val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-        val scope = rememberCoroutineScope()
-
-        ModalBottomSheetLayout(
-            sheetState = modalState,
-            sheetShape = RoundedCornerShape(
-                topStart = 8.dp,
-                topEnd = 8.dp
-            ),
-            sheetContent = {
-                when (modalContent) {
-                    ModalContent.GENERAL_MENUS -> GeneralMenusView(
-                        badges = emptyList(),
-                        onClicked = {
-                            if (it == GeneralMenus.ORDERS) {
-                                scope.launch {
-                                    modalState.hide()
-                                }
-                            } else {
-                                onGeneralMenuClicked(it)
-                            }
-                        }
-                    )
-
-                    else -> {
-                        // Do nothing
-                    }
-                }
-            },
-            content = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-
-                    var shouldShowButton by remember { mutableStateOf(true) }
-
-                    OrderList(
-                        viewModel = orderViewModel,
-                        parameters = parameters,
-                        defaultTabPage = defaultTabPage,
-                        onOrderClicked = onOrderClicked,
-                        onScrollProgress = {
-                            shouldShowButton = !it
-                        }
-                    )
-                    AnimatedVisibility(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(24.dp),
-                        visible = shouldShowButton,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        GeneralMenuButtonView(
-                            onMenuClicked = {
-                                scope.launch {
-                                    modalState.show()
-                                }
-                            }
-                        )
-                    }
-                }
-            }
+        TodayOnlyOrdersContent(
+            ordersMenu = orders,
+            defaultTabPage = defaultTabPage,
+            onGeneralMenuClicked = onGeneralMenuClicked,
+            onOrderClicked = onOrderClicked
         )
     } else {
         Box(
@@ -161,8 +106,7 @@ fun OrderItems(
                     OrderList(
                         modifier = Modifier
                             .padding(padding),
-                        viewModel = orderViewModel,
-                        parameters = parameters,
+                        ordersMenu = orders,
                         defaultTabPage = defaultTabPage,
                         onOrderClicked = onOrderClicked,
                     )
@@ -174,10 +118,84 @@ fun OrderItems(
 
 @Composable
 @ExperimentalPagerApi
+@ExperimentalMaterialApi
+private fun TodayOnlyOrdersContent(
+    ordersMenu: List<OrderMenuWithOrders>,
+    defaultTabPage: Int,
+    onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
+    onOrderClicked: (orderId: String) -> Unit,
+) {
+    val modalContent by remember { mutableStateOf(ModalContent.GENERAL_MENUS) }
+    val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val scope = rememberCoroutineScope()
+
+    ModalBottomSheetLayout(
+        sheetState = modalState,
+        sheetShape = RoundedCornerShape(
+            topStart = 8.dp,
+            topEnd = 8.dp
+        ),
+        sheetContent = {
+            when (modalContent) {
+                ModalContent.GENERAL_MENUS -> GeneralMenusView(
+                    badges = emptyList(),
+                    onClicked = {
+                        if (it == GeneralMenus.ORDERS) {
+                            scope.launch {
+                                modalState.hide()
+                            }
+                        } else {
+                            onGeneralMenuClicked(it)
+                        }
+                    }
+                )
+
+                else -> {
+                    // Do nothing
+                }
+            }
+        },
+        content = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                var shouldShowButton by remember { mutableStateOf(true) }
+
+                OrderList(
+                    ordersMenu = ordersMenu,
+                    defaultTabPage = defaultTabPage,
+                    onOrderClicked = onOrderClicked,
+                    onScrollProgress = {
+                        shouldShowButton = !it
+                    }
+                )
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(24.dp),
+                    visible = shouldShowButton,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    GeneralMenuButtonView(
+                        onMenuClicked = {
+                            scope.launch {
+                                modalState.show()
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+@ExperimentalPagerApi
 private fun OrderList(
     modifier: Modifier = Modifier,
-    viewModel: OrderViewModel,
-    parameters: ReportsParameter,
+    ordersMenu: List<OrderMenuWithOrders>,
     defaultTabPage: Int,
     onOrderClicked: (orderId: String) -> Unit,
     onScrollProgress: ((Boolean) -> Unit)? = null
@@ -185,7 +203,6 @@ private fun OrderList(
     Column {
         val pagerState = rememberPagerState()
         val scope = rememberCoroutineScope()
-        val menus = OrderMenus.values()
 
         Surface(
             modifier = modifier,
@@ -195,13 +212,13 @@ private fun OrderList(
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
                 indicator = {
-                    TabRowDefaults.Indicator(
+                    if (it.isNotEmpty()) TabRowDefaults.Indicator(
                         Modifier.pagerTabIndicatorOffset(pagerState, it)
                     )
                 },
                 edgePadding = 16.dp
             ) {
-                menus.forEachIndexed { i, menu ->
+                ordersMenu.forEachIndexed { i, menu ->
                     Tab(
                         selected = pagerState.currentPage == i,
                         onClick = {
@@ -210,14 +227,11 @@ private fun OrderList(
                             }
                         }
                     ) {
-                        val badge = viewModel.getOrderBadge(menu, parameters)
-                            .collectAsState(initial = null)
-
                         Row(
                             modifier = Modifier
                                 .padding(16.dp)
                         ) {
-                            badge.value?.let {
+                            menu.getBadges()?.let {
                                 BadgeNumber(
                                     modifier = Modifier
                                         .align(Alignment.CenterVertically),
@@ -227,7 +241,7 @@ private fun OrderList(
                             }
                             Text(
                                 modifier = Modifier,
-                                text = stringResource(id = menu.title),
+                                text = stringResource(id = menu.menu.title),
                                 style = MaterialTheme.typography.body2
                             )
                         }
@@ -237,13 +251,11 @@ private fun OrderList(
         }
 
         HorizontalPager(
-            count = menus.size,
+            count = ordersMenu.size,
             state = pagerState
         ) { page ->
             OrderContent(
-                menu = menus[page],
-                parameters = parameters,
-                viewModel = viewModel,
+                menuOrders = ordersMenu[page],
                 onOrderClicked = onOrderClicked,
                 onScrollProgress = onScrollProgress
             )
@@ -259,25 +271,18 @@ private fun OrderList(
 
 @Composable
 private fun OrderContent(
-    menu: OrderMenus,
-    parameters: ReportsParameter,
-    viewModel: OrderViewModel,
+    menuOrders: OrderMenuWithOrders,
     onOrderClicked: (orderId: String) -> Unit,
     onScrollProgress: ((Boolean) -> Unit)?
 ) {
-
-    val orders =
-        viewModel.getOrderList(menu.status, parameters).collectAsState(initial = emptyList())
-
-    if (orders.value.isEmpty()) {
-        EmptyOrders(menu = menu)
+    if (menuOrders.orders.isEmpty()) {
+        EmptyOrders(menu = menuOrders.menu)
     } else {
         Box(
             modifier = Modifier
                 .background(color = MaterialTheme.colors.background)
                 .fillMaxSize()
         ) {
-
             val listState = rememberLazyListState()
             onScrollProgress?.invoke(listState.isScrollInProgress)
 
@@ -286,10 +291,9 @@ private fun OrderContent(
                     .align(Alignment.TopCenter),
                 state = listState
             ) {
-                items(orders.value) {
+                items(menuOrders.orders) {
                     OrderItem(
-                        orderData = it,
-                        viewModel = viewModel,
+                        orderProducts = it,
                         onOrderClicked = onOrderClicked
                     )
                 }
@@ -337,28 +341,9 @@ private fun EmptyOrders(
 
 @Composable
 private fun OrderItem(
-    orderData: OrderData,
-    viewModel: OrderViewModel,
+    orderProducts: OrderWithProduct,
     onOrderClicked: (orderId: String) -> Unit
 ) {
-
-    var orderProducts by remember {
-        mutableStateOf(
-            OrderWithProduct(
-                order = orderData
-            )
-        )
-    }
-
-    LaunchedEffect(key1 = orderData) {
-        viewModel.getProductOrder(orderData.order.id)
-            .collectLatest {
-                orderProducts = orderProducts.copy(
-                    products = it
-                )
-            }
-    }
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()

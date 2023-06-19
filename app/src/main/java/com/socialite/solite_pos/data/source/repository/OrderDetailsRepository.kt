@@ -10,6 +10,7 @@ interface OrderDetailsRepository : SyncRepository<OrderDetail> {
     suspend fun insertOrderDetail(orderDetail: OrderDetail)
     suspend fun getDeletedOrderDetailIds(): List<String>
     fun getOrderDetailByIdOrder(orderId: String): Flow<List<OrderDetail>>
+    fun getOrderDetail(): Flow<List<OrderDetail>>
     suspend fun getOrderDetailWithVariants(idDetail: String): DetailWithVariantOption
     suspend fun deleteOrderDetailAndRelated(orderId: String)
     suspend fun migrateToUUID()

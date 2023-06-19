@@ -43,6 +43,14 @@ interface OrdersDao {
     ): Flow<List<OrderData>>
 
     @Transaction
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getAllOrders(
+        from: String,
+        until: String,
+        store: String
+    ): Flow<List<OrderData>>
+
+    @Transaction
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.ID} = :orderId")
     suspend fun getOrderDataById(orderId: String): OrderData?
 
