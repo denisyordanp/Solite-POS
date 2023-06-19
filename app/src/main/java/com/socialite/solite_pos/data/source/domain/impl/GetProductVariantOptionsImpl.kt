@@ -1,15 +1,15 @@
 package com.socialite.solite_pos.data.source.domain.impl
 
-import com.socialite.solite_pos.data.source.domain.GetVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class GetVariantOptionsImpl(
+class GetProductVariantOptionsImpl(
     private val productVariantsRepository: ProductVariantsRepository
-) : GetVariantOptions {
+) : GetProductVariantOptions {
     override fun invoke(idProduct: String): Flow<List<VariantWithOptions>?> {
         return productVariantsRepository.getVariantOptions(idProduct)
             .map { it?.handleVariants() }

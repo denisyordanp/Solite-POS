@@ -7,7 +7,7 @@ import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductOrder
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetRecapData
-import com.socialite.solite_pos.data.source.domain.GetVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
@@ -63,7 +63,7 @@ class LoggedInViewModelFactory private constructor(
     private val outcomesRepository: OutcomesRepository,
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
-    private val getVariantOptions: GetVariantOptions,
+    private val getProductVariantOptions: GetProductVariantOptions,
     private val ordersRepository: OrdersRepository,
     private val getProductOrder: GetProductOrder,
     private val getRecapData: GetRecapData,
@@ -96,7 +96,7 @@ class LoggedInViewModelFactory private constructor(
                             outcomesRepository = provideOutcomesRepository(context),
                             productsRepository = provideProductsRepository(context),
                             productVariantsRepository = provideProductVariantsRepository(context),
-                            getVariantOptions = provideGetVariantOptions(context),
+                            getProductVariantOptions = provideGetVariantOptions(context),
                             ordersRepository = provideOrdersRepository(context),
                             getProductOrder = provideGetProductOrder(context),
                             getRecapData = provideGetIncomesRecapData(context),
@@ -151,7 +151,7 @@ class LoggedInViewModelFactory private constructor(
                     categoriesRepository = categoriesRepository,
                     productsRepository = productsRepository,
                     productVariantsRepository = productVariantsRepository,
-                    getVariantOptions = getVariantOptions,
+                    getProductVariantOptions = getProductVariantOptions,
                     getProductWithCategories = getProductWithCategories
                 ) as T
             }

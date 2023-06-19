@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface VariantOptionsRepository : SyncRepository<VariantOption> {
 
     fun getVariantOptions(query: SupportSQLiteQuery): Flow<List<VariantOption>>
+    fun getVariantOptions(): Flow<List<VariantOption>>
     fun getVariantsWithOptions(): Flow<List<VariantWithOptions>>
     suspend fun getNeedUploadVariantOptions(): List<VariantOption>
     suspend fun insertVariantOption(data: VariantOption)

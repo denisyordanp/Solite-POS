@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 class ProductDetailViewModel(
     private val categoriesRepository: CategoriesRepository,
     private val productsRepository: ProductsRepository,
-    private val getVariantOptions: GetVariantOptions
+    private val getProductVariantOptions: GetProductVariantOptions
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(ProductDetailViewState.idle())
@@ -40,7 +40,7 @@ class ProductDetailViewModel(
     fun loadProduct(productId: String) {
         viewModelScope.launch {
             productsRepository.getProductWithCategory(productId)
-                .combine(getVariantOptions(productId)) { product, variants ->
+                .combine(getProductVariantOptions(productId)) { product, variants ->
                     product?.let {
                         ProductVariantOptions(
                             it,
@@ -75,7 +75,7 @@ class ProductDetailViewModel(
                 return ProductDetailViewModel(
                     categoriesRepository = LoggedInRepositoryInjection.provideCategoriesRepository(context),
                     productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context),
-                    getVariantOptions = LoggedInDomainInjection.provideGetVariantOptions(context)
+                    getProductVariantOptions = LoggedInDomainInjection.provideGetVariantOptions(context)
                 ) as T
             }
         }
