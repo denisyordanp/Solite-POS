@@ -22,7 +22,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
-import com.socialite.solite_pos.view.factory.DateAndTimeManager
+import com.socialite.solite_pos.view.managers.DateAndTimeManager
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.store.outcomes.OutComesScreen

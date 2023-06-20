@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.factory
+package com.socialite.solite_pos.view.managers
 
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
