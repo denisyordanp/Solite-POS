@@ -3,6 +3,7 @@ package com.socialite.solite_pos.view.settings
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
@@ -20,13 +21,12 @@ import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 
 class SettingsActivity : SoliteActivity() {
-    private lateinit var settingViewModel: SettingViewModel
+    private val settingViewModel: SettingViewModel by viewModels { SettingViewModel.getFactory(this) }
 
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        settingViewModel = SettingViewModel.getMainViewModel(this)
+        
         val currentDate = DateUtils.currentDate
         settingViewModel.getBadges(currentDate)
 
