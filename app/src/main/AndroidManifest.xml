@@ -17,9 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/NoActionBar">
         <activity
-            android:name=".view.outcomes.OutcomesActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".view.orders.OrdersActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
