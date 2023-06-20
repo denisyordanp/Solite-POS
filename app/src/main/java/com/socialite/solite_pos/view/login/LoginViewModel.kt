@@ -2,10 +2,11 @@ package com.socialite.solite_pos.view.login
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.LoginUser
 import com.socialite.solite_pos.data.source.domain.RegisterUser
-import com.socialite.solite_pos.view.factory.ViewModelFromFactory
+import com.socialite.solite_pos.di.DomainInjection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -17,12 +18,6 @@ class LoginViewModel(
     private val loginUser: LoginUser,
     private val registerUser: RegisterUser,
 ) : ViewModel() {
-
-    companion object : ViewModelFromFactory<LoginViewModel>() {
-        fun getOrderViewModel(activity: ComponentActivity): LoginViewModel {
-            return buildViewModel(activity, LoginViewModel::class.java)
-        }
-    }
 
     private val _viewState = MutableStateFlow(LoginViewState.idle())
     val viewState = _viewState.asStateFlow()
@@ -66,6 +61,20 @@ class LoginViewModel(
     }
 
     fun resetState() {
-        _viewState.value = LoginViewState.idle()
+        viewModelScope.launch {
+            _viewState.emit(LoginViewState.idle())
+        }
+    }
+
+    companion object {
+        fun getFactory(activity: ComponentActivity) = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return LoginViewModel(
+                    loginUser = DomainInjection.provideLoginUser(activity),
+                    registerUser = DomainInjection.provideRegisterUser(activity)
+                ) as T
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,14 +16,10 @@ import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 
 class LoginActivity : ComponentActivity() {
-
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels { LoginViewModel.getFactory(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = LoginViewModel.getOrderViewModel(this)
-
         setContent {
             SolitePOSTheme {
                 MainContent()

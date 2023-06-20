@@ -12,7 +12,7 @@ import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
@@ -59,7 +59,7 @@ class OrdersRepositoryImpl(
         dao.getOrdersByStatus(status, date, store)
 
     @FlowPreview
-    override fun getOrderList(status: Int, parameters: ReportsParameter): Flow<List<OrderData>> {
+    override fun getOrderList(status: Int, parameters: ReportParameter): Flow<List<OrderData>> {
         return if (parameters.isTodayOnly()) {
             settingRepository.getNewSelectedStore().flatMapConcat {
                 dao.getOrdersByStatus(status, parameters.start, parameters.end, it)
@@ -71,6 +71,17 @@ class OrdersRepositoryImpl(
 
     override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
+    @OptIn(FlowPreview::class)
+    override fun getAllOrderList(parameters: ReportParameter): Flow<List<OrderData>> {
+        return if (parameters.isTodayOnly()) {
+            settingRepository.getNewSelectedStore().flatMapConcat {
+                dao.getAllOrders(parameters.start, parameters.end, it)
+            }
+        } else {
+            dao.getAllOrders(parameters.start, parameters.end, parameters.storeId)
+        }
+    }
+
     override suspend fun getOrderData(orderId: String): OrderData? = dao.getOrderDataById(orderId)
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
         order.copy(

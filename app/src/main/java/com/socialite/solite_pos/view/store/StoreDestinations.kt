@@ -1,5 +1,7 @@
 package com.socialite.solite_pos.view.store
 
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
+
 object StoreDestinations {
 
     const val PRODUCT_ID = "product_id"
@@ -16,8 +18,10 @@ object StoreDestinations {
 
     const val DETAIL_PRODUCT = "detail_product/{$PRODUCT_ID}"
     const val PRODUCT_VARIANTS = "product_variants/{$PRODUCT_ID}"
+    val OUTCOMES = "outcomes/${ReportParameter.getRoute()}"
     fun productDetail(productId: String) = "detail_product/$productId"
     fun newProduct() = "detail_product/$NEW_PRODUCT"
     fun productVariants(productId: String) = "product_variants/$productId"
     fun isNewProduct(productId: String) = productId == NEW_PRODUCT
+    fun outcomes(reportParameter: ReportParameter) = "outcomes/${reportParameter.createRoute()}"
 }

@@ -49,8 +49,8 @@ class ProductVariantsRepositoryImpl(
         }
     }
 
-    override fun getVariantProduct(idProduct: String, idVariantOption: String) =
-        dao.getVariantProduct(idProduct, idVariantOption)
+    override fun getVariantOptions(productId: String) = dao.getVariantProducts(productId)
+    override fun getAllVariantOptions() = dao.getAllVariantProducts()
 
     override suspend fun getNeedUploadVariantProducts() = dao.getNeedUploadVariantProducts()
 
@@ -65,6 +65,7 @@ class ProductVariantsRepositoryImpl(
     override suspend fun insertVariantProduct(data: VariantProduct) {
         dao.insertNewVariantProduct(data)
     }
+
     override suspend fun insertVariantProducts(list: List<VariantProduct>) {
         dao.insertVariantProducts(list)
     }
@@ -72,9 +73,11 @@ class ProductVariantsRepositoryImpl(
     override suspend fun getProductVariantIds() = dao.getProductVariantIds()
 
     override suspend fun removeVariantProduct(data: VariantProduct) {
-        dao.updateNewVariantProduct(data.copy(
+        dao.updateNewVariantProduct(
+            data.copy(
                 isDeleted = true
-        ))
+            )
+        )
     }
 
     override suspend fun migrateToUUID() {
@@ -90,7 +93,8 @@ class ProductVariantsRepositoryImpl(
                 }
 
                 val variant = variantsDao.getVariantById(productVariant.idVariant)
-                val variantOption = variantOptionsDao.getVariantOptionById(productVariant.idVariantOption)
+                val variantOption =
+                    variantOptionsDao.getVariantOptionById(productVariant.idVariantOption)
                 val product = productsDao.getProductById(productVariant.idProduct)
                 if (variant != null && variantOption != null && product != null) {
                     val newProductVariant = VariantProduct(
@@ -99,7 +103,7 @@ class ProductVariantsRepositoryImpl(
                         variantOption = variantOption.new_id,
                         product = product.new_id,
                         isUploaded = productVariant.isUploaded,
-                            isDeleted = false
+                        isDeleted = false
                     )
                     dao.insertNewVariantProduct(newProductVariant)
                 }

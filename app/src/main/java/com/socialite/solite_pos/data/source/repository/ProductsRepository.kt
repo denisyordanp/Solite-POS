@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.Flow
 interface ProductsRepository : SyncRepository<Product> {
 
     fun getProductWithCategories(category: String): Flow<List<ProductWithCategory>>
-    fun getAllProductWithCategories(): Flow<List<ProductWithCategory>>
+    fun getActiveProductsWithCategory(): Flow<List<ProductWithCategory>>
+    fun getAllProductsWithCategory(): Flow<List<ProductWithCategory>>
     fun getProductWithCategory(productId: String): Flow<ProductWithCategory?>
     fun getProductById(productId: String): Flow<Product>
     suspend fun getNeedUploadProducts(): List<Product>

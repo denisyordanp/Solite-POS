@@ -6,8 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.BuildConfig
-import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
-import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
+import com.socialite.solite_pos.di.RepositoryInjection
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.viewModel.ApplicationViewModel
 import java.util.Locale
@@ -26,8 +25,7 @@ class SoliteApp : Application() {
     }
 
     private fun setupViewModel() {
-        val userPreferences = UserPreferencesImpl.getInstance(applicationContext)
-        val settingRepository = SettingRepositoryImpl.getDataStoreInstance(applicationContext, userPreferences)
+        val settingRepository = RepositoryInjection.provideSettingRepository(this)
         viewModel = ApplicationViewModel(this, settingRepository)
     }
 

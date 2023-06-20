@@ -2,12 +2,15 @@ package com.socialite.solite_pos.view.settings
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.view.factory.LoggedInViewModelFromFactory
+import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
+import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -20,14 +23,9 @@ class SettingViewModel(
     private val synchronize: Synchronize,
     private val migrateToUUID: MigrateToUUID,
     private val settingRepository: SettingRepository,
-    private val remoteConfigRepository: RemoteConfigRepository
+    private val remoteConfigRepository: RemoteConfigRepository,
+    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
 ) : ViewModel() {
-
-    companion object : LoggedInViewModelFromFactory<SettingViewModel>() {
-        fun getMainViewModel(activity: FragmentActivity): SettingViewModel {
-            return buildViewModel(activity, SettingViewModel::class.java)
-        }
-    }
 
     private val _viewState = MutableStateFlow(SettingViewState.idle())
     val viewState = _viewState.asStateFlow()
@@ -45,6 +43,18 @@ class SettingViewModel(
                 .map {
                     _viewState.value.copy(
                         isDarkMode = it
+                    )
+                }
+                .collect(_viewState)
+        }
+    }
+
+    fun getBadges(date: String) {
+        viewModelScope.launch {
+            getOrdersGeneralMenuBadge(date = date)
+                .map {
+                    _viewState.value.copy(
+                        badges = it
                     )
                 }
                 .collect(_viewState)
@@ -90,6 +100,27 @@ class SettingViewModel(
                     error = null
                 )
             )
+        }
+    }
+
+    companion object {
+        fun getFactory(activity: FragmentActivity) = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return SettingViewModel(
+                    synchronize = LoggedInDomainInjection.provideSynchronize(activity),
+                    migrateToUUID = LoggedInDomainInjection.provideMigrateToUUID(activity),
+                    settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
+                        activity
+                    ),
+                    remoteConfigRepository = LoggedInRepositoryInjection.provideRemoteConfigRepository(
+                        activity
+                    ),
+                    getOrdersGeneralMenuBadge = LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge(
+                        activity
+                    )
+                ) as T
+            }
         }
     }
 

@@ -33,21 +33,20 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.PrimaryButtonView
+import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.SettingMenus
 import com.socialite.solite_pos.view.ui.theme.GrayLight
 import com.socialite.solite_pos.view.ui.theme.RedLogout
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 fun SettingsMainMenu(
-    orderViewModel: OrderViewModel,
+    badges: List<GeneralMenuBadge>,
     isDarkMode: Boolean,
     isServerActive: Boolean,
-    currentDate: String,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onDarkModeChange: (Boolean) -> Unit,
     onSynchronizeClicked: () -> Unit,
@@ -68,8 +67,7 @@ fun SettingsMainMenu(
         sheetContent = {
             when (modalContent) {
                 ModalContent.GENERAL_MENUS -> GeneralMenusView(
-                    orderViewModel = orderViewModel,
-                    date = currentDate,
+                    badges = badges,
                     onClicked = {
                         if (it == GeneralMenus.SETTING) {
                             scope.launch {
@@ -126,7 +124,10 @@ fun SettingsMenus(
             items(SettingMenus.values()) {
                 when (it) {
                     SettingMenus.THEME -> ThemeSettingMenu(isDarkMode, onDarkModeChange)
-                    SettingMenus.SYNCHRONIZE -> if (isServerActive) SynchronizationMenu(onSynchronizeClicked = onSynchronizeClicked)
+                    SettingMenus.SYNCHRONIZE -> if (isServerActive) SynchronizationMenu(
+                        onSynchronizeClicked = onSynchronizeClicked
+                    )
+
                     SettingMenus.LOGOUT -> if (isServerActive) LogoutMenu(onLogout = onLogout)
                 }
             }

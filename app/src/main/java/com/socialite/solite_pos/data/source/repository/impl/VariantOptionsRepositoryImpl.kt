@@ -45,6 +45,8 @@ class VariantOptionsRepositoryImpl(
     }
 
     override fun getVariantOptions(query: SupportSQLiteQuery) = dao.getVariantOptions(query)
+    override fun getVariantOptions() = dao.getNewVariantOptionsFlow()
+
     override fun getVariantsWithOptions() = dao.getVariantWithOptions().map { list ->
         list.groupBy { it.variant }
             .map {

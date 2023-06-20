@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
@@ -25,34 +23,32 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.utils.printer.PrintBill
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
-import com.socialite.solite_pos.view.order_customer.OrderSelectItems
-import com.socialite.solite_pos.view.order_customer.OrderSelectVariants
+import com.socialite.solite_pos.view.order_customer.select_items.SelectItemsScreen
+import com.socialite.solite_pos.view.order_customer.select_variant.SelectVariantsScreen
+import com.socialite.solite_pos.view.orders.order_detail.OrderDetailScreen
+import com.socialite.solite_pos.view.orders.order_items.OrderItemsScreen
+import com.socialite.solite_pos.view.orders.order_payment.OrderPaymentScreen
 import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.OrderMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
-import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 class OrdersActivity : SoliteActivity() {
 
-    private lateinit var orderViewModel: OrderViewModel
-    private lateinit var mainViewModel: MainViewModel
-    private lateinit var productViewModel: ProductViewModel
+    private val ordersViewModel: OrdersViewModel by viewModels { OrdersViewModel.getFactory(this) }
 
     private var printBill: PrintBill? = null
 
     companion object {
 
         private const val EXTRA_REPORT = "extra_report"
-        fun createInstanceForRecap(context: Context, parameters: ReportsParameter) {
+        fun createInstanceForRecap(context: Context, parameters: ReportParameter) {
             val intent = Intent(context, OrdersActivity::class.java)
             intent.putExtra(EXTRA_REPORT, parameters)
             context.startActivity(intent)
@@ -65,21 +61,13 @@ class OrdersActivity : SoliteActivity() {
     @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        orderViewModel = OrderViewModel.getOrderViewModel(this)
-        mainViewModel = MainViewModel.getMainViewModel(this)
-        productViewModel = ProductViewModel.getMainViewModel(this)
-
-        printBill = PrintBill(this)
-
-        val date = getExtraReport() ?: ReportsParameter.createTodayOnly()
+//        printBill = PrintBill(this)
+        val date = getExtraReport() ?: ReportParameter.createTodayOnly()
 
         setContent {
             SolitePOSTheme {
-
                 val navController = rememberNavController()
-                var defaultTabPage by remember { mutableStateOf(0) }
-                var isInitialBucket by remember { mutableStateOf(false) }
+                val state = ordersViewModel.viewState.collectAsState().value
 
                 NavHost(
                     navController = navController,
@@ -88,10 +76,9 @@ class OrdersActivity : SoliteActivity() {
                     composable(
                         route = OrderDetailDestinations.ORDERS
                     ) {
-                        OrderItems(
-                            orderViewModel = orderViewModel,
+                        OrderItemsScreen(
                             parameters = date,
-                            defaultTabPage = defaultTabPage,
+                            defaultTabPage = state.defaultTabPage,
                             onGeneralMenuClicked = {
                                 when (it) {
                                     GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()
@@ -119,9 +106,8 @@ class OrdersActivity : SoliteActivity() {
                         arguments = listOf(orderIdArgument)
                     ) {
                         it.arguments?.getString(OrderDetailDestinations.ORDER_ID)?.let { orderId ->
-                            OrderDetailView(
+                            OrderDetailScreen(
                                 orderId = orderId,
-                                orderViewModel = orderViewModel,
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
@@ -132,25 +118,27 @@ class OrdersActivity : SoliteActivity() {
                                     when (buttonType) {
                                         OrderButtonType.PRINT -> {
                                             lifecycleScope.launch {
-                                                val store = mainViewModel.getStore()
-                                                if (store != null && orderWithProduct != null) {
-                                                    printBill?.doPrintBill(
-                                                        order = orderWithProduct,
-                                                        store = store,
-                                                        callback = {}
-                                                    )
-                                                }
+                                                // TODO: Create print bill function
+//                                                val store = mainViewModel.getStore()
+//                                                if (store != null && orderWithProduct != null) {
+//                                                    printBill?.doPrintBill(
+//                                                        order = orderWithProduct,
+//                                                        store = store,
+//                                                        callback = {}
+//                                                    )
+//                                                }
                                             }
                                         }
 
                                         OrderButtonType.QUEUE -> {
                                             lifecycleScope.launch {
-                                                if (orderWithProduct != null) {
-                                                    printBill?.doPrintQueue(
-                                                        order = orderWithProduct,
-                                                        callback = {}
-                                                    )
-                                                }
+                                                // TODO: Create print queue function
+//                                                if (orderWithProduct != null) {
+//                                                    printBill?.doPrintQueue(
+//                                                        order = orderWithProduct,
+//                                                        callback = {}
+//                                                    )
+//                                                }
                                             }
                                         }
 
@@ -163,7 +151,7 @@ class OrdersActivity : SoliteActivity() {
                                         }
 
                                         OrderButtonType.DONE -> {
-                                            defaultTabPage = OrderMenus.NOT_PAY_YET.status
+                                            ordersViewModel.setDefaultPage(OrderMenus.NOT_PAY_YET.status)
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
                                                 popUpTo(OrderDetailDestinations.ORDERS) {
                                                     inclusive = true
@@ -172,7 +160,7 @@ class OrdersActivity : SoliteActivity() {
                                         }
 
                                         OrderButtonType.CANCEL -> {
-                                            defaultTabPage = OrderMenus.CANCELED.status
+                                            ordersViewModel.setDefaultPage(OrderMenus.CANCELED.status)
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
                                                 popUpTo(OrderDetailDestinations.ORDERS) {
                                                     inclusive = true
@@ -181,7 +169,7 @@ class OrdersActivity : SoliteActivity() {
                                         }
 
                                         OrderButtonType.PUT_BACK -> {
-                                            defaultTabPage = OrderMenus.CURRENT_ORDER.status
+                                            ordersViewModel.setDefaultPage(OrderMenus.CURRENT_ORDER.status)
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
                                                 popUpTo(OrderDetailDestinations.ORDERS) {
                                                     inclusive = true
@@ -191,7 +179,7 @@ class OrdersActivity : SoliteActivity() {
                                     }
                                 },
                                 onProductsClicked = {
-                                    isInitialBucket = false
+                                    ordersViewModel.createBucketForEdit(orderId)
                                     navController.navigate(
                                         OrderDetailDestinations.orderEditProducts(orderId)
                                     )
@@ -207,23 +195,14 @@ class OrdersActivity : SoliteActivity() {
                             ProvideWindowInsets(
                                 windowInsetsAnimationsEnabled = true
                             ) {
-                                OrderPaymentView(
+                                OrderPaymentScreen(
                                     orderId = orderId,
-                                    orderViewModel = orderViewModel,
-                                    mainViewModel = mainViewModel,
                                     onBackClicked = {
                                         navController.popBackStack()
                                     },
-                                    onPayClicked = { order, payment, pay, promo, totalPromo ->
+                                    onPayClicked = {
                                         lifecycleScope.launch {
-                                            orderViewModel.payOrder(
-                                                order = order,
-                                                payment = payment,
-                                                pay = pay,
-                                                promo = promo,
-                                                totalPromo = totalPromo
-                                            )
-                                            defaultTabPage = OrderMenus.DONE.status
+                                            ordersViewModel.setDefaultPage(OrderMenus.DONE.status)
                                             navController.navigate(OrderDetailDestinations.ORDERS) {
                                                 popUpTo(OrderDetailDestinations.ORDERS) {
                                                     inclusive = true
@@ -240,15 +219,11 @@ class OrdersActivity : SoliteActivity() {
                         arguments = listOf(orderIdArgument)
                     ) {
                         it.arguments?.getString(OrderDetailDestinations.ORDER_ID)?.let { orderId ->
-
-                            if (!isInitialBucket) {
-                                orderViewModel.createBucketForEdit(orderId)
-                                isInitialBucket = true
-                            }
-
-                            OrderSelectItems(
-                                productViewModel = productViewModel,
-                                orderViewModel = orderViewModel,
+                            SelectItemsScreen(
+                                onRemoveProduct = { product ->
+                                    ordersViewModel.removeProductFromBucket(product)
+                                },
+                                bucketOrder = state.bucketOrder,
                                 onItemClick = { product, isAdd, hasVariant ->
                                     lifecycleScope.launch {
                                         if (hasVariant) {
@@ -259,11 +234,11 @@ class OrdersActivity : SoliteActivity() {
                                             )
                                         } else {
                                             if (isAdd) {
-                                                orderViewModel.addProductToBucket(
+                                                ordersViewModel.addProductToBucket(
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             } else {
-                                                orderViewModel.decreaseProduct(
+                                                ordersViewModel.decreaseProduct(
                                                     ProductOrderDetail.productNoVariant(product)
                                                 )
                                             }
@@ -271,7 +246,7 @@ class OrdersActivity : SoliteActivity() {
                                     }
                                 },
                                 onClickOrder = {
-                                    orderViewModel.updateOrderProducts(orderId)
+                                    ordersViewModel.updateOrderProducts(orderId)
                                     navController.popBackStack()
                                 },
                                 onBackClicked = {
@@ -289,15 +264,14 @@ class OrdersActivity : SoliteActivity() {
                         arguments = listOf(productIdArgument)
                     ) {
                         it.arguments?.getString(OrderDetailDestinations.PRODUCT_ID)?.let { id ->
-                            OrderSelectVariants(
+                            SelectVariantsScreen(
                                 productId = id,
-                                viewModel = productViewModel,
                                 onBackClicked = {
                                     navController.popBackStack()
                                 },
                                 onAddToBucketClicked = {
                                     lifecycleScope.launch {
-                                        orderViewModel.addProductToBucket(it)
+                                        ordersViewModel.addProductToBucket(it)
                                         navController.popBackStack()
                                     }
                                 }
@@ -321,7 +295,7 @@ class OrdersActivity : SoliteActivity() {
         .setValidator(DateValidatorPointBackward.now())
         .build()
 
-    private fun getExtraReport() = intent.getSerializableExtra(EXTRA_REPORT) as? ReportsParameter
+    private fun getExtraReport() = intent.getSerializableExtra(EXTRA_REPORT) as? ReportParameter
 
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)

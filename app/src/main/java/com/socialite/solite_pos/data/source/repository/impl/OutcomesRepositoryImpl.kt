@@ -10,7 +10,7 @@ import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapConcat
 import java.util.UUID
@@ -50,7 +50,7 @@ class OutcomesRepositoryImpl(
 
     override fun getOutcomes(date: String) = dao.getOutcome(date)
     @FlowPreview
-    override fun getOutcomes(parameters: ReportsParameter) = if (parameters.isTodayOnly()) {
+    override fun getOutcomes(parameters: ReportParameter) = if (parameters.isTodayOnly()) {
         settingRepository.getNewSelectedStore().flatMapConcat {
             dao.getOutcome(parameters.start, parameters.end, it)
         }

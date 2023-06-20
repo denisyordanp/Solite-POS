@@ -77,6 +77,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling"
     implementation "androidx.compose.foundation:foundation"
     implementation "androidx.compose.material:material"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 
     implementation "androidx.activity:activity-compose:$activityComposeVersion"
     implementation "androidx.constraintlayout:constraintlayout-compose:$constraintComposeVersion"

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -22,14 +23,12 @@ class OpeningActivity : SoliteActivity() {
         private const val IN_APP_UPDATE_REQUEST_CODE = 1234
     }
 
-    private lateinit var openingViewModel: OpeningViewModel
+    private val openingViewModel: OpeningViewModel by viewModels { OpeningViewModel.getFactory(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityOpeningBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        openingViewModel = OpeningViewModel.getMainViewModel(this)
 
         setupVersion(binding)
         inAppUpdate()

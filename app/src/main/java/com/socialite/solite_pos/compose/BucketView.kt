@@ -16,7 +16,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,29 +30,30 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.config.timeMilliSecondToDateFormat
-import com.socialite.solite_pos.view.viewModel.OrderViewModel
+import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 
 @Composable
 fun BucketView(
-    orderViewModel: OrderViewModel,
+    bucketOrder: BucketOrder,
     isEditOrder: Boolean,
     onClickOrder: () -> Unit,
-    onClearBucket: () -> Unit
+    onClearBucket: () -> Unit,
+    onRemoveProduct: (detail: ProductOrderDetail) -> Unit
 ) {
-
-    val currentBucket = orderViewModel.currentBucket.collectAsState()
 
     LazyColumn(
         modifier = Modifier
             .padding(16.dp)
     ) {
         item {
-            val time = currentBucket.value.time?.timeMilliSecondToDateFormat(DateUtils.DATE_WITH_DAY_AND_TIME_FORMAT)?.run {
-                Pair(
-                    first = this.substring(0..19),
-                    second = this.substring(21 until this.length),
-                )
-            }
+            val time =
+                bucketOrder.time?.timeMilliSecondToDateFormat(DateUtils.DATE_WITH_DAY_AND_TIME_FORMAT)
+                    ?.run {
+                        Pair(
+                            first = this.substring(0..19),
+                            second = this.substring(21 until this.length),
+                        )
+                    }
             Text(
                 text = time?.first ?: "",
                 style = MaterialTheme.typography.body1.copy(
@@ -67,7 +67,7 @@ fun BucketView(
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        currentBucket.value.products?.let {
+        bucketOrder.products?.let {
             items(it) { detail ->
                 BucketItem(
                     detail = detail,
@@ -75,7 +75,7 @@ fun BucketView(
                         if (it.size == 1) {
                             onClearBucket()
                         }
-                        orderViewModel.removeProductFromBucket(detail)
+                        onRemoveProduct(detail)
                     }
                 )
             }
@@ -83,7 +83,7 @@ fun BucketView(
 
         item {
             TotalBucket(
-                total = currentBucket.value.getTotal().thousand()
+                total = bucketOrder.getTotal().thousand()
             )
             Spacer(modifier = Modifier.height(24.dp))
             PrimaryButtonView(

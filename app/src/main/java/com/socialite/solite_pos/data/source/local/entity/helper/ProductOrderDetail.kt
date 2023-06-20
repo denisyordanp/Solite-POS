@@ -74,3 +74,10 @@ data class ProductOrderDetail(
         )
     }
 }
+
+fun List<ProductOrderDetail>.findExisting(compare: ProductOrderDetail): ProductOrderDetail? {
+    return this.find {
+        it.product == compare.product &&
+                it.variants == compare.variants
+    }
+}
