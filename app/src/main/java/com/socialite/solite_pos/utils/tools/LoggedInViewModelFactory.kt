@@ -4,55 +4,34 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
-import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
-import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.Synchronize
-import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
-import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
-import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
-import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
-import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetProductWithCategories
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideGetVariantOptions
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideMigrateToUUID
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideNewOutcome
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection.provideSynchronize
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideCategoriesRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideCustomersRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideOutcomesRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.providePaymentsRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideProductVariantsRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideProductsRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.providePromosRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideRemoteConfigRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideSettingRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideStoreRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantOptionsRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection.provideVariantsRepository
 import com.socialite.solite_pos.view.settings.SettingViewModel
 import com.socialite.solite_pos.view.viewModel.MainViewModel
-import com.socialite.solite_pos.view.viewModel.ProductViewModel
 
 class LoggedInViewModelFactory private constructor(
     private val paymentsRepository: PaymentsRepository,
     private val customersRepository: CustomersRepository,
-    private val variantsRepository: VariantsRepository,
-    private val variantOptionsRepository: VariantOptionsRepository,
-    private val categoriesRepository: CategoriesRepository,
     private val outcomesRepository: OutcomesRepository,
-    private val productsRepository: ProductsRepository,
-    private val productVariantsRepository: ProductVariantsRepository,
-    private val getProductVariantOptions: GetProductVariantOptions,
     private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
     private val storeRepository: StoreRepository,
     private val settingRepository: SettingRepository,
@@ -61,7 +40,6 @@ class LoggedInViewModelFactory private constructor(
     private val synchronize: Synchronize,
     private val remoteConfigRepository: RemoteConfigRepository,
     private val migrateToUUID: MigrateToUUID,
-    private val getProductWithCategories: GetProductWithCategories
 ) : NewInstanceFactory() {
     companion object {
         @Volatile
@@ -74,13 +52,7 @@ class LoggedInViewModelFactory private constructor(
                         INSTANCE = LoggedInViewModelFactory(
                             paymentsRepository = providePaymentsRepository(context),
                             customersRepository = provideCustomersRepository(context),
-                            variantsRepository = provideVariantsRepository(context),
-                            variantOptionsRepository = provideVariantOptionsRepository(context),
-                            categoriesRepository = provideCategoriesRepository(context),
                             outcomesRepository = provideOutcomesRepository(context),
-                            productsRepository = provideProductsRepository(context),
-                            productVariantsRepository = provideProductVariantsRepository(context),
-                            getProductVariantOptions = provideGetVariantOptions(context),
                             getOrdersGeneralMenuBadge = provideGetOrdersGeneralMenuBadge(context),
                             storeRepository = provideStoreRepository(context),
                             settingRepository = provideSettingRepository(context),
@@ -89,7 +61,6 @@ class LoggedInViewModelFactory private constructor(
                             synchronize = provideSynchronize(context),
                             remoteConfigRepository = provideRemoteConfigRepository(context),
                             migrateToUUID = provideMigrateToUUID(context),
-                            getProductWithCategories = provideGetProductWithCategories(context)
                         )
                     }
                 }
@@ -110,18 +81,6 @@ class LoggedInViewModelFactory private constructor(
                     settingRepository = settingRepository,
                     newOutcome = newOutcome,
                     promosRepository = promosRepository,
-                ) as T
-            }
-
-            modelClass.isAssignableFrom(ProductViewModel::class.java) -> {
-                ProductViewModel(
-                    variantsRepository = variantsRepository,
-                    variantOptionsRepository = variantOptionsRepository,
-                    categoriesRepository = categoriesRepository,
-                    productsRepository = productsRepository,
-                    productVariantsRepository = productVariantsRepository,
-                    getProductVariantOptions = getProductVariantOptions,
-                    getProductWithCategories = getProductWithCategories
                 ) as T
             }
 
