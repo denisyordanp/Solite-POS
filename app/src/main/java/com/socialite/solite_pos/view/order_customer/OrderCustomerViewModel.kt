@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
@@ -18,7 +17,6 @@ import com.socialite.solite_pos.utils.config.DateUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -26,28 +24,7 @@ class OrderCustomerViewModel(
     private val settingRepository: SettingRepository,
     private val getProductWithCategories: GetProductWithCategories,
     private val newOrder: NewOrder,
-    private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
 ) : ViewModel() {
-
-    companion object {
-        fun getFactory(activity: FragmentActivity) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return OrderCustomerViewModel(
-                    settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
-                        activity
-                    ),
-                    getProductWithCategories = LoggedInDomainInjection.provideGetProductWithCategories(
-                        activity
-                    ),
-                    getOrdersGeneralMenuBadge = LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge(
-                        activity
-                    ),
-                    newOrder = LoggedInDomainInjection.provideNewOrder(activity)
-                ) as T
-            }
-        }
-    }
 
     private val _viewState = MutableStateFlow(OrderCustomerViewState.idle())
     val viewState = _viewState.asStateFlow()
@@ -57,20 +34,7 @@ class OrderCustomerViewModel(
             settingRepository.getNewSelectedStore()
                 .combine(getProductWithCategories()) { selectedStore, categoryWithProducts ->
                     _viewState.value.copy(
-                        allProducts = categoryWithProducts,
                         isShouldSelectStore = selectedStore.isEmpty() && categoryWithProducts.isNotEmpty()
-                    )
-                }
-                .collect(_viewState)
-        }
-    }
-
-    fun loadBadges(date: String) {
-        viewModelScope.launch {
-            getOrdersGeneralMenuBadge(date = date)
-                .map {
-                    _viewState.value.copy(
-                        badges = it
                     )
                 }
                 .collect(_viewState)
@@ -187,6 +151,23 @@ class OrderCustomerViewModel(
                     products = it,
                     currentTime = DateUtils.currentDateTime
                 )
+            }
+        }
+    }
+
+    companion object {
+        fun getFactory(activity: FragmentActivity) = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return OrderCustomerViewModel(
+                    settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
+                        activity
+                    ),
+                    getProductWithCategories = LoggedInDomainInjection.provideGetProductWithCategories(
+                        activity
+                    ),
+                    newOrder = LoggedInDomainInjection.provideNewOrder(activity)
+                ) as T
             }
         }
     }

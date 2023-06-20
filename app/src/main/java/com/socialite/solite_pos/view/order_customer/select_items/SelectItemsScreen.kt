@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.order_customer.components
+package com.socialite.solite_pos.view.order_customer.select_items
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -22,6 +22,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
@@ -44,22 +47,26 @@ import com.socialite.solite_pos.compose.BucketView
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
+import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.toIDR
-import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
+import com.socialite.solite_pos.view.order_customer.components.ProductCustomerItemView
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
-fun OrderSelectItems(
-    badges: List<GeneralMenuBadge> = emptyList(),
-    products: Map<Category, List<ProductWithCategory>>,
+fun SelectItemsScreen(
+    currentViewModel: SelectItemsViewModel = viewModel(
+        factory = SelectItemsViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     bucketOrder: BucketOrder,
     onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit,
     onClickOrder: () -> Unit,
@@ -68,7 +75,7 @@ fun OrderSelectItems(
     onRemoveProduct: (detail: ProductOrderDetail) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val isEditOrder = onGeneralMenuClicked == null || badges.isEmpty()
+    val isEditOrder = onGeneralMenuClicked == null
     var modalContent by remember {
         mutableStateOf(ModalContent.BUCKET_VIEW)
     }
@@ -101,18 +108,23 @@ fun OrderSelectItems(
                     onRemoveProduct = onRemoveProduct
                 )
 
-                ModalContent.GENERAL_MENUS -> GeneralMenusView(
-                    badges = badges,
-                    onClicked = {
-                        if (it == GeneralMenus.NEW_ORDER) {
-                            scope.launch {
-                                modalState.hide()
+                ModalContent.GENERAL_MENUS -> {
+                    val badges = currentViewModel.getBadges(DateUtils.currentDate).collectAsState(
+                        initial = emptyList()
+                    )
+                    GeneralMenusView(
+                        badges = badges.value,
+                        onClicked = {
+                            if (it == GeneralMenus.NEW_ORDER) {
+                                scope.launch {
+                                    modalState.hide()
+                                }
+                            } else {
+                                onGeneralMenuClicked?.invoke(it)
                             }
-                        } else {
-                            onGeneralMenuClicked?.invoke(it)
                         }
-                    }
-                )
+                    )
+                }
 
                 else -> {
                     // Do nothing
@@ -120,6 +132,7 @@ fun OrderSelectItems(
             }
         },
         content = {
+            val products = currentViewModel.getAllProducts().collectAsState(initial = emptyMap())
             if (isEditOrder) {
                 Scaffold(
                     topBar = {
@@ -134,7 +147,7 @@ fun OrderSelectItems(
                         ProductOrderList(
                             modifier = Modifier
                                 .padding(padding),
-                            categoryWithProducts = products,
+                            categoryWithProducts = products.value,
                             bucketOrder = bucketOrder,
                             onBucketClicked = {
                                 modalContent = ModalContent.BUCKET_VIEW
@@ -148,7 +161,7 @@ fun OrderSelectItems(
                 )
             } else {
                 ProductOrderList(
-                    categoryWithProducts = products,
+                    categoryWithProducts = products.value,
                     bucketOrder = bucketOrder,
                     onBucketClicked = {
                         modalContent = ModalContent.BUCKET_VIEW

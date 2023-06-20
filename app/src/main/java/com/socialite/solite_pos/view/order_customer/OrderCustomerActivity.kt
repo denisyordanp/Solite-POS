@@ -23,10 +23,9 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
-import com.socialite.solite_pos.view.order_customer.components.OrderSelectItems
 import com.socialite.solite_pos.view.order_customer.select_customer.SelectCustomersScreen
+import com.socialite.solite_pos.view.order_customer.select_items.SelectItemsScreen
 import com.socialite.solite_pos.view.order_customer.select_variant.SelectVariantsScreen
 import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.settings.SettingsActivity
@@ -47,8 +46,6 @@ class OrderCustomerActivity : SoliteActivity() {
     @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val currentDate = DateUtils.currentDate
-        viewModel.loadBadges(currentDate)
 
         setContent {
             SolitePOSTheme {
@@ -66,9 +63,7 @@ class OrderCustomerActivity : SoliteActivity() {
                         composable(
                             OrderCustomerDestinations.SELECT_ITEMS
                         ) {
-                            OrderSelectItems(
-                                badges = state.badges,
-                                products = state.allProducts,
+                            SelectItemsScreen(
                                 bucketOrder = state.bucketOrder,
                                 onItemClick = { product, isAdd, hasVariant ->
                                     lifecycleScope.launch {

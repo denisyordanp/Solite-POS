@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetOrderWithProduct
-import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
@@ -15,29 +14,16 @@ import com.socialite.solite_pos.utils.config.DateUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class OrdersViewModel(
     private val updateOrderProducts: UpdateOrderProducts,
-    private val getProductWithCategories: GetProductWithCategories,
     private val getOrderWithProduct: GetOrderWithProduct,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(OrdersViewState.idle())
     val viewState = _viewState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            getProductWithCategories()
-                .map {
-                    _viewState.value.copy(
-                        allProducts = it
-                    )
-                }.collect(_viewState)
-        }
-    }
 
     fun setDefaultPage(page: Int) {
         viewModelScope.launch {
@@ -180,9 +166,6 @@ class OrdersViewModel(
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return OrdersViewModel(
                     updateOrderProducts = LoggedInDomainInjection.provideUpdateOrderProducts(
-                        activity
-                    ),
-                    getProductWithCategories = LoggedInDomainInjection.provideGetProductWithCategories(
                         activity
                     ),
                     getOrderWithProduct = LoggedInDomainInjection.provideGetOrderWithProduct(
