@@ -19,15 +19,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.socialite.solite_pos.R
 import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
+import com.socialite.solite_pos.view.factory.DateAndTimeManager
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.orders.OrdersActivity
-import com.socialite.solite_pos.view.outcomes.OutcomesActivity
+import com.socialite.solite_pos.view.store.outcomes.OutComesScreen
 import com.socialite.solite_pos.view.settings.SettingsActivity
 import com.socialite.solite_pos.view.store.categories.CategoryMasterScreen
 import com.socialite.solite_pos.view.store.payments.PaymentMasterScreen
@@ -115,7 +113,11 @@ class StoreActivity : SoliteActivity() {
                                     }
 
                                     StoreMenus.OUTCOMES -> {
-                                        OutcomesActivity.createInstanceForRecap(this@StoreActivity)
+                                        navController.navigate(
+                                            StoreDestinations.outcomes(
+                                                ReportParameter.createTodayOnly(true)
+                                            )
+                                        )
                                     }
 
                                     StoreMenus.PAYMENT -> {
@@ -168,7 +170,7 @@ class StoreActivity : SoliteActivity() {
                     }
                     composable(StoreDestinations.MASTER_RECAP) {
                         RecapScreen(
-                            datePicker = buildRecapDatePicker(),
+                            datePicker = DateAndTimeManager.getRangeDatePickerBuilder(),
                             fragmentManager = supportFragmentManager,
                             onBackClicked = {
                                 navController.popBackStack()
@@ -180,9 +182,8 @@ class StoreActivity : SoliteActivity() {
                                 )
                             },
                             onOutcomesClicked = {
-                                OutcomesActivity.createInstanceForRecap(
-                                    context = this@StoreActivity,
-                                    parameters = it
+                                navController.navigate(
+                                    StoreDestinations.outcomes(it)
                                 )
                             }
                         )
@@ -253,20 +254,25 @@ class StoreActivity : SoliteActivity() {
                             }
                         )
                     }
+                    composable(
+                        route = StoreDestinations.OUTCOMES,
+                        arguments = ReportParameter.getArguments()
+                    ) {
+                        val report = ReportParameter.createReportFromArguments(it.arguments)
+                        OutComesScreen(
+                            timePicker = DateAndTimeManager.getTimePickerBuilder(),
+                            datePicker = DateAndTimeManager.getDatePickerBuilder(),
+                            fragmentManager = supportFragmentManager,
+                            parameters = report,
+                            onBackClicked = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
                 }
             }
         }
     }
-
-    private fun buildRecapDatePicker() = MaterialDatePicker.Builder.dateRangePicker()
-        .setCalendarConstraints(dateConstraint)
-        .setTitleText(R.string.select_date)
-        .setPositiveButtonText(R.string.select)
-        .build()
-
-    private val dateConstraint = CalendarConstraints.Builder()
-        .setValidator(DateValidatorPointBackward.now())
-        .build()
 
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)

@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.outcomes
+package com.socialite.solite_pos.view.store.outcomes
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -27,6 +27,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,11 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
@@ -51,25 +54,31 @@ import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
-import com.socialite.solite_pos.view.viewModel.MainViewModel
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
+import com.socialite.solite_pos.view.store.outcomes.components.OutcomeDetail
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-fun OutComesView(
-    mainViewModel: MainViewModel,
+fun OutComesScreen(
+    currentViewModel: OutcomesViewModel = viewModel(
+        factory = OutcomesViewModel.getFactory(
+            LocalContext.current
+        )
+    ),
     timePicker: MaterialTimePicker.Builder,
     datePicker: MaterialDatePicker.Builder<Long>,
     fragmentManager: FragmentManager,
-    parameters: ReportsParameter,
+    parameters: ReportParameter,
     onBackClicked: () -> Unit
 ) {
-    var selectedDate by remember { mutableStateOf(parameters) }
-
+    LaunchedEffect(key1 = parameters) {
+        currentViewModel.setNewParameters(parameters)
+    }
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    val state = currentViewModel.viewState.collectAsState().value
     var selectedOutcome by remember { mutableStateOf<Outcome?>(null) }
 
     if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
@@ -85,23 +94,20 @@ fun OutComesView(
 
     fun onDateClicked() {
         val picker =
-            datePicker.setSelection(DateUtils.strToDate(selectedDate.start).time)
+            datePicker.setSelection(DateUtils.strToDate(state.parameters.start).time)
                 .build()
         picker.addOnPositiveButtonClickListener {
             val newDate = DateUtils.millisToDate(
                 millis = it,
                 isWithTime = true
             )
-            selectedDate = selectedDate.copy(
-                start = newDate,
-                end = newDate
-            )
+            currentViewModel.setDatesParameters(newDate)
             picker.dismiss()
         }
         picker.show(fragmentManager, "")
     }
 
-    if (selectedDate.isTodayOnly()) {
+    if (state.parameters.isTodayOnly()) {
         ModalBottomSheetLayout(
             sheetState = modalState,
             sheetShape = RoundedCornerShape(
@@ -110,15 +116,15 @@ fun OutComesView(
             ),
             sheetContent = {
                 OutcomeDetail(
-                    date = selectedDate.start,
-                    isTodayDate = DateUtils.isDateTimeIsToday(selectedDate.start),
+                    date = state.parameters.start,
+                    isTodayDate = DateUtils.isDateTimeIsToday(state.parameters.start),
                     timePicker = timePicker,
                     datePicker = datePicker,
                     outcome = selectedOutcome,
                     fragmentManager = fragmentManager,
                     onSubmitOutcome = {
                         scope.launch {
-                            mainViewModel.addNewOutcome(it)
+                            currentViewModel.addNewOutcome(it)
                             modalState.hide()
                         }
                     }
@@ -126,8 +132,8 @@ fun OutComesView(
             },
             content = {
                 OutcomesContent(
-                    mainViewModel = mainViewModel,
-                    parameters = selectedDate,
+                    outcomes = state.outcomes,
+                    parameters = state.parameters,
                     onAddClicked = {
                         onAddClicked()
                     },
@@ -146,8 +152,8 @@ fun OutComesView(
         )
     } else {
         OutcomesContent(
-            mainViewModel = mainViewModel,
-            parameters = selectedDate,
+            outcomes = state.outcomes,
+            parameters = state.parameters,
             onBackClicked = onBackClicked
         )
     }
@@ -157,8 +163,8 @@ fun OutComesView(
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 private fun OutcomesContent(
-    mainViewModel: MainViewModel,
-    parameters: ReportsParameter,
+    outcomes: List<Outcome>,
+    parameters: ReportParameter,
     onAddClicked: (() -> Unit)? = null,
     onDateClicked: (() -> Unit)? = null,
     onBackClicked: () -> Unit,
@@ -180,8 +186,8 @@ private fun OutcomesContent(
                 Outcomes(
                     modifier = Modifier
                         .padding(padding),
-                    mainViewModel = mainViewModel,
-                    parameters = parameters,
+                    outcomes = outcomes,
+                    isTodayOnly = parameters.isTodayOnly(),
                     onAddClicked = onAddClicked,
                     onItemClicked = onItemClicked
                 )
@@ -193,14 +199,11 @@ private fun OutcomesContent(
 @Composable
 private fun Outcomes(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel,
-    parameters: ReportsParameter,
+    outcomes: List<Outcome>,
+    isTodayOnly: Boolean,
     onAddClicked: (() -> Unit)? = null,
     onItemClicked: ((Outcome) -> Unit)? = null
 ) {
-
-    val outcomes = mainViewModel.getOutcome(parameters).collectAsState(initial = emptyList())
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -208,7 +211,7 @@ private fun Outcomes(
 
         val listState = rememberLazyListState()
 
-        if (outcomes.value.isNotEmpty()) {
+        if (outcomes.isNotEmpty()) {
 
             LazyColumn(
                 modifier = modifier
@@ -216,10 +219,10 @@ private fun Outcomes(
                 state = listState
             ) {
 
-                items(outcomes.value) {
+                items(outcomes) {
                     OutcomeItem(
                         outcome = it,
-                        isTodayOnly = parameters.isTodayOnly(),
+                        isTodayOnly = isTodayOnly,
                         onItemClicked = onItemClicked
                     )
                 }
@@ -251,7 +254,7 @@ private fun Outcomes(
 
 @Composable
 private fun OutcomeHeader(
-    parameters: ReportsParameter,
+    parameters: ReportParameter,
     onDateClicked: (() -> Unit)? = null,
 ) {
     Row(
@@ -330,7 +333,9 @@ private fun OutcomeItem(
                     clickable {
                         onItemClicked(outcome)
                     }
-                } else { this }
+                } else {
+                    this
+                }
             }
             .padding(16.dp)
     ) {

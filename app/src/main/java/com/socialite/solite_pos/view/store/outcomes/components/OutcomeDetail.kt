@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.outcomes
+package com.socialite.solite_pos.view.store.outcomes.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
