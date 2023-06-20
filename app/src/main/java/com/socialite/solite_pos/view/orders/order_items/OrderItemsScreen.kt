@@ -61,7 +61,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderMenuWithOrders
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.config.thousand
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -76,7 +76,7 @@ fun OrderItemsScreen(
             LocalContext.current
         )
     ),
-    parameters: ReportsParameter,
+    parameters: ReportParameter,
     defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onOrderClicked: (orderId: String) -> Unit,

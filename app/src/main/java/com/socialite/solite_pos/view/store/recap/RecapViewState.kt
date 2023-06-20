@@ -4,7 +4,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.MenuOrderAmount
 import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 
 data class RecapViewState(
     val stores: List<Store>,
@@ -19,7 +19,7 @@ data class RecapViewState(
         parameter = getParameters()
     )
 
-    fun getParameters() = ReportsParameter(
+    fun getParameters() = ReportParameter(
         start = selectedDate.first,
         end = selectedDate.second,
         storeId = selectedStore?.id ?: ""

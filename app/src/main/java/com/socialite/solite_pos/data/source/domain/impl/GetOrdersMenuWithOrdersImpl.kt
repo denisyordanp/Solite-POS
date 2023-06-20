@@ -6,7 +6,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -17,7 +17,7 @@ class GetOrdersMenuWithOrdersImpl(
     private val orderDetailRepository: OrderDetailsRepository,
     private val converter: ProductOrderDetailConverter
 ) : GetOrdersMenuWithOrders {
-    override fun invoke(parameter: ReportsParameter): Flow<List<OrderMenuWithOrders>> {
+    override fun invoke(parameter: ReportParameter): Flow<List<OrderMenuWithOrders>> {
         return combine(
             flowOf(OrderMenus.values()),
             orderRepository.getAllOrderList(parameter),

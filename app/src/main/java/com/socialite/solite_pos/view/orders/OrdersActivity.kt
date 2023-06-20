@@ -23,7 +23,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.utils.printer.PrintBill
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.order_customer.select_items.SelectItemsScreen
@@ -48,7 +48,7 @@ class OrdersActivity : SoliteActivity() {
     companion object {
 
         private const val EXTRA_REPORT = "extra_report"
-        fun createInstanceForRecap(context: Context, parameters: ReportsParameter) {
+        fun createInstanceForRecap(context: Context, parameters: ReportParameter) {
             val intent = Intent(context, OrdersActivity::class.java)
             intent.putExtra(EXTRA_REPORT, parameters)
             context.startActivity(intent)
@@ -62,7 +62,7 @@ class OrdersActivity : SoliteActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        printBill = PrintBill(this)
-        val date = getExtraReport() ?: ReportsParameter.createTodayOnly()
+        val date = getExtraReport() ?: ReportParameter.createTodayOnly()
 
         setContent {
             SolitePOSTheme {
@@ -295,7 +295,7 @@ class OrdersActivity : SoliteActivity() {
         .setValidator(DateValidatorPointBackward.now())
         .build()
 
-    private fun getExtraReport() = intent.getSerializableExtra(EXTRA_REPORT) as? ReportsParameter
+    private fun getExtraReport() = intent.getSerializableExtra(EXTRA_REPORT) as? ReportParameter
 
     private fun goToOrderCustomerActivity() {
         val intent = Intent(this, OrderCustomerActivity::class.java)

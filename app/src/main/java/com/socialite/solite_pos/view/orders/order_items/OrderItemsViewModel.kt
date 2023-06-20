@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetOrdersMenuWithOrders
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 
 class OrderItemsViewModel(
     private val getOrdersMenuWithOrders: GetOrdersMenuWithOrders,
     private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
 ) : ViewModel() {
 
-    fun getOrders(parameter: ReportsParameter) = getOrdersMenuWithOrders(parameter)
+    fun getOrders(parameter: ReportParameter) = getOrdersMenuWithOrders(parameter)
     fun getBadges(date: String) = getOrdersGeneralMenuBadge(date = date)
 
     companion object {

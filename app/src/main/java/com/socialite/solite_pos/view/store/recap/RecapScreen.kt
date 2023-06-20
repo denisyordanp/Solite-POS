@@ -37,7 +37,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
-import com.socialite.solite_pos.utils.tools.helper.ReportsParameter
+import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 
 @Composable
@@ -49,8 +49,8 @@ fun RecapScreen(
     ),
     datePicker: MaterialDatePicker<androidx.core.util.Pair<Long, Long>>,
     fragmentManager: FragmentManager,
-    onOrdersClicked: (parameters: ReportsParameter) -> Unit,
-    onOutcomesClicked: (parameters: ReportsParameter) -> Unit,
+    onOrdersClicked: (parameters: ReportParameter) -> Unit,
+    onOutcomesClicked: (parameters: ReportParameter) -> Unit,
     onBackClicked: () -> Unit,
 ) {
     val state = currentViewModel.viewState.collectAsState().value
@@ -102,8 +102,8 @@ private fun RecapContent(
     menusWithParameter: MenusWithParameter,
     selectedDate: Pair<String, String>,
     selectedStore: Store?,
-    onOrdersClicked: (parameters: ReportsParameter) -> Unit,
-    onOutcomesClicked: (parameters: ReportsParameter) -> Unit,
+    onOrdersClicked: (parameters: ReportParameter) -> Unit,
+    onOutcomesClicked: (parameters: ReportParameter) -> Unit,
     onDateClicked: () -> Unit,
     onSelectedStore: (store: Store) -> Unit
 ) {
@@ -175,7 +175,7 @@ private fun RecapContent(
                         .background(color = MaterialTheme.colors.surface)
                         .clickable {
                             onOutcomesClicked(
-                                ReportsParameter(
+                                ReportParameter(
                                     start = selectedDate.first,
                                     end = selectedDate.second,
                                     storeId = selectedStore.id
@@ -262,7 +262,7 @@ private fun DateSelection(
 @Composable
 private fun OrdersMenuItem(
     menusWithParameter: MenusWithParameter,
-    onOrdersClicked: (parameters: ReportsParameter) -> Unit,
+    onOrdersClicked: (parameters: ReportParameter) -> Unit,
 ) {
     Spacer(modifier = Modifier.height(4.dp))
     Column(
