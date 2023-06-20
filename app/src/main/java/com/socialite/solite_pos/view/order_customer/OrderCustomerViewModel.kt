@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.NewOrder
+import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.source.local.entity.helper.findExisting
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
@@ -77,9 +79,9 @@ class OrderCustomerViewModel(
 
     fun addProductToBucket(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val bucketState = _viewState.value.bucketOrderViewState
+            val bucketState = _viewState.value.bucketOrder
             val newBucket = if (bucketState.isIdle()) {
-                BucketOrderViewState(
+                BucketOrder(
                     time = Calendar.getInstance().timeInMillis,
                     products = listOf(detail)
                 )
@@ -104,7 +106,7 @@ class OrderCustomerViewModel(
 
             _viewState.emit(
                 _viewState.value.copy(
-                    bucketOrderViewState = newBucket
+                    bucketOrder = newBucket
                 )
             )
         }
@@ -112,7 +114,7 @@ class OrderCustomerViewModel(
 
     fun decreaseProduct(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val bucketState = _viewState.value.bucketOrderViewState
+            val bucketState = _viewState.value.bucketOrder
             val currentProducts = bucketState.products?.toMutableList()
 
             val existingDetail = currentProducts?.findExisting(detail)
@@ -130,13 +132,13 @@ class OrderCustomerViewModel(
             if (currentProducts.isNullOrEmpty()) {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderViewState = BucketOrderViewState.idle()
+                        bucketOrder = BucketOrder.idle()
                     )
                 )
             } else {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderViewState = bucketState.copy(
+                        bucketOrder = bucketState.copy(
                             products = currentProducts
                         )
                     )
@@ -147,7 +149,7 @@ class OrderCustomerViewModel(
 
     fun removeProductFromBucket(detail: ProductOrderDetail) {
         viewModelScope.launch {
-            val bucketState = _viewState.value.bucketOrderViewState
+            val bucketState = _viewState.value.bucketOrder
             val currentProducts = bucketState.products?.toMutableList()
 
             val existingDetail = currentProducts?.findExisting(detail)
@@ -158,13 +160,13 @@ class OrderCustomerViewModel(
             if (currentProducts.isNullOrEmpty()) {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderViewState = BucketOrderViewState.idle()
+                        bucketOrder = BucketOrder.idle()
                     )
                 )
             } else {
                 _viewState.emit(
                     _viewState.value.copy(
-                        bucketOrderViewState = bucketState.copy(
+                        bucketOrder = bucketState.copy(
                             products = currentProducts
                         )
                     )
@@ -178,7 +180,7 @@ class OrderCustomerViewModel(
         isTakeAway: Boolean,
     ) {
         viewModelScope.launch {
-            _viewState.value.bucketOrderViewState.products?.let {
+            _viewState.value.bucketOrder.products?.let {
                 newOrder.invoke(
                     customer = customer,
                     isTakeAway = isTakeAway,
@@ -186,13 +188,6 @@ class OrderCustomerViewModel(
                     currentTime = DateUtils.currentDateTime
                 )
             }
-        }
-    }
-
-    private fun List<ProductOrderDetail>.findExisting(compare: ProductOrderDetail): ProductOrderDetail? {
-        return this.find {
-            it.product == compare.product &&
-                    it.variants == compare.variants
         }
     }
 }

@@ -69,7 +69,7 @@ class OrderCustomerActivity : SoliteActivity() {
                             OrderSelectItems(
                                 badges = state.badges,
                                 products = state.allProducts,
-                                bucketOrderViewState = state.bucketOrderViewState,
+                                bucketOrder = state.bucketOrder,
                                 onItemClick = { product, isAdd, hasVariant ->
                                     lifecycleScope.launch {
                                         if (hasVariant) {
