@@ -57,6 +57,7 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
+import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderMenuWithOrders
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.config.thousand
@@ -84,7 +85,9 @@ fun OrderItemsScreen(
     val orders = currentViewModel.getOrders(parameters).collectAsState(initial = emptyList()).value
 
     if (parameters.isTodayOnly()) {
+        val badges = currentViewModel.getBadges(parameters.start).collectAsState(initial = emptyList())
         TodayOnlyOrdersContent(
+            badges = badges.value,
             ordersMenu = orders,
             defaultTabPage = defaultTabPage,
             onGeneralMenuClicked = onGeneralMenuClicked,
@@ -120,6 +123,7 @@ fun OrderItemsScreen(
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 private fun TodayOnlyOrdersContent(
+    badges: List<GeneralMenuBadge>,
     ordersMenu: List<OrderMenuWithOrders>,
     defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
@@ -138,7 +142,7 @@ private fun TodayOnlyOrdersContent(
         sheetContent = {
             when (modalContent) {
                 ModalContent.GENERAL_MENUS -> GeneralMenusView(
-                    badges = emptyList(),
+                    badges = badges,
                     onClicked = {
                         if (it == GeneralMenus.ORDERS) {
                             scope.launch {
