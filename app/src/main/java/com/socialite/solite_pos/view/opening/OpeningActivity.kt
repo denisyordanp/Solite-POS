@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
@@ -57,6 +58,7 @@ class OpeningActivity : SoliteActivity() {
     private fun OpeningContent(version: String) {
         Box(
             modifier = Modifier
+                .fillMaxSize()
                 .background(MaterialTheme.colors.primary),
             contentAlignment = Alignment.Center
         ) {
