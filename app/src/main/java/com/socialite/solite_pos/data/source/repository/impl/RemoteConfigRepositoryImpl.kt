@@ -3,8 +3,9 @@ package com.socialite.solite_pos.data.source.repository.impl
 import com.socialite.solite_pos.builder.RemoteConfigManager
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class RemoteConfigRepositoryImpl(
+class RemoteConfigRepositoryImpl @Inject constructor(
     private val remoteConfig: RemoteConfigManager
 ) : RemoteConfigRepository {
 

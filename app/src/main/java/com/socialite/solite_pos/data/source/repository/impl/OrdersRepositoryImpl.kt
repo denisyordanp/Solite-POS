@@ -17,8 +17,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import java.util.UUID
+import javax.inject.Inject
 
-class OrdersRepositoryImpl(
+class OrdersRepositoryImpl @Inject constructor(
     private val dao: OrdersDao,
     private val customersDao: CustomersDao,
     private val storesDao: StoreDao,

@@ -11,8 +11,9 @@ import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
+import javax.inject.Inject
 
-class VariantsRepositoryImpl(
+class VariantsRepositoryImpl @Inject constructor(
     private val dao: VariantsDao,
     private val db: AppDatabase
 ) : VariantsRepository {

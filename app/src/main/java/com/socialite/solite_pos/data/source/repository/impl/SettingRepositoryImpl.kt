@@ -7,18 +7,14 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.socialite.solite_pos.data.source.preference.UserPreferences
 import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.di.DataStoreModule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-private const val SETTING_DATASTORE = "setting_datastore"
-private val Context.settingDataStore by preferencesDataStore(
-    SETTING_DATASTORE
-)
-
-class SettingRepositoryImpl(
+class SettingRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val userPreference: UserPreferences
 ) : SettingRepository {
@@ -27,7 +23,7 @@ class SettingRepositoryImpl(
             context: Context,
             userPreference: UserPreferences
         ): SettingRepositoryImpl {
-            val dataStore = context.settingDataStore
+            val dataStore = DataStoreModule.provideSettingDataStore(context)
             return SettingRepositoryImpl(dataStore, userPreference)
         }
     }

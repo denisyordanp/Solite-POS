@@ -11,6 +11,7 @@ import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -18,8 +19,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingViewModel(
+@HiltViewModel
+class SettingViewModel @Inject constructor(
     private val synchronize: Synchronize,
     private val migrateToUUID: MigrateToUUID,
     private val settingRepository: SettingRepository,

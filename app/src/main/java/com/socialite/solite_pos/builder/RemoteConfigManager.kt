@@ -4,12 +4,16 @@ import android.content.Context
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.util.Locale
+import javax.inject.Inject
 
-class RemoteConfigManager(private val context: Context) {
+class RemoteConfigManager @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     companion object {
         fun getInstance(context: Context) = RemoteConfigManager(context)

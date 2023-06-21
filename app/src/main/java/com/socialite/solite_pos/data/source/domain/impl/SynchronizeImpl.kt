@@ -19,8 +19,9 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import javax.inject.Inject
 
-class SynchronizeImpl(
+class SynchronizeImpl @Inject constructor(
     private val customersRepository: CustomersRepository,
     private val storeRepository: StoreRepository,
     private val categoriesRepository: CategoriesRepository,

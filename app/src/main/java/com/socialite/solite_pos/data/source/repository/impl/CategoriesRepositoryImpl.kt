@@ -13,8 +13,9 @@ import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
+import javax.inject.Inject
 
-class CategoriesRepositoryImpl(
+class CategoriesRepositoryImpl @Inject constructor(
     private val dao: CategoriesDao,
     private val db: AppDatabase
 ) : CategoriesRepository {

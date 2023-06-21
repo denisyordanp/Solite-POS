@@ -9,8 +9,10 @@ import com.socialite.solite_pos.BuildConfig
 import com.socialite.solite_pos.di.RepositoryInjection
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.view.viewModel.ApplicationViewModel
+import dagger.hilt.android.HiltAndroidApp
 import java.util.Locale
 
+@HiltAndroidApp
 class SoliteApp : Application() {
 
     private lateinit var viewModel: ApplicationViewModel
