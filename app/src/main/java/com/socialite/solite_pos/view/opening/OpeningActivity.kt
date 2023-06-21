@@ -52,8 +52,7 @@ class OpeningActivity : SoliteActivity() {
             .addOnSuccessListener { appUpdateInfo ->
                 if (
                     appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
-                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
-                    appUpdateInfo.updatePriority() >= 4
+                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 ) {
                     requestInAppUpdate(appUpdateManager, appUpdateInfo)
                 } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
