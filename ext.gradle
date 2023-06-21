@@ -20,6 +20,9 @@ ext {
   constraintComposeVersion = '1.0.1'
   navigationComposeVersion = '2.5.2'
 
+  // Hilt
+  hiltVersion = '2.44'
+
   // Database
   roomVersion = '2.4.3'
   sqliteJdbc = '3.36.0.1'
