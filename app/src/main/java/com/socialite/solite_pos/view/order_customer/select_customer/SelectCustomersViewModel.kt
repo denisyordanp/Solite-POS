@@ -1,18 +1,18 @@
 package com.socialite.solite_pos.view.order_customer.select_customer
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SelectCustomersViewModel(
+@HiltViewModel
+class SelectCustomersViewModel @Inject constructor(
     private val customersRepository: CustomersRepository,
 ) : ViewModel() {
 
@@ -44,19 +44,6 @@ class SelectCustomersViewModel(
     fun newCustomer(data: Customer) {
         viewModelScope.launch {
             customersRepository.insertCustomer(data)
-        }
-    }
-
-    companion object {
-        fun getFactory(context: Context) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SelectCustomersViewModel(
-                    customersRepository = LoggedInRepositoryInjection.provideCustomersRepository(
-                        context
-                    )
-                ) as T
-            }
         }
     }
 }
