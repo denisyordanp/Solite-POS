@@ -37,15 +37,12 @@ class ProductsRepositoryImpl(
             return INSTANCE!!
         }
     }
-
-    override fun getProductWithCategories(category: String) = dao.getProductWithCategories(category)
     override fun getActiveProductsWithCategory() = dao.getActiveProductsWithCategory()
     override fun getAllProductsWithCategory() = dao.getAllProductsWithCategory()
     override fun getProductWithCategory(productId: String) = dao.getProductWithCategory(productId)
     override fun getProductById(productId: String) = dao.getProductAsFlow(productId)
     override suspend fun getNeedUploadProducts() = dao.getNeedUploadProducts()
     override suspend fun insertProduct(data: Product) = dao.insertNewProduct(data)
-    override suspend fun insertProducts(list: List<Product>) = dao.insertProducts(list)
     override suspend fun updateProduct(data: Product) {
         dao.updateNewProduct(data.copy(
             isUploaded = false

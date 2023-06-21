@@ -126,6 +126,9 @@ object LoggedInDomainInjection {
         val promosRepository = LoggedInRepositoryInjection.providePromosRepository(context)
         val paymentsRepository = LoggedInRepositoryInjection.providePaymentsRepository(context)
         val ordersRepository = LoggedInRepositoryInjection.provideOrdersRepository(context)
+        val orderDetailsRepository = LoggedInRepositoryInjection.provideOrderDetailsRepository(context)
+        val orderPaymentsRepository = LoggedInRepositoryInjection.provideOrderPaymentsRepository(context)
+        val orderPromosRepository = LoggedInRepositoryInjection.provideOrderPromosRepository(context)
         val outcomesRepository = LoggedInRepositoryInjection.provideOutcomesRepository(context)
         val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
         val variantsRepository = LoggedInRepositoryInjection.provideVariantsRepository(context)
@@ -141,6 +144,9 @@ object LoggedInDomainInjection {
             promosRepository = promosRepository,
             paymentsRepository = paymentsRepository,
             ordersRepository = ordersRepository,
+            orderDetailsRepository = orderDetailsRepository,
+            orderPaymentsRepository = orderPaymentsRepository,
+            orderPromosRepository = orderPromosRepository,
             outcomesRepository = outcomesRepository,
             productsRepository = productsRepository,
             variantsRepository = variantsRepository,

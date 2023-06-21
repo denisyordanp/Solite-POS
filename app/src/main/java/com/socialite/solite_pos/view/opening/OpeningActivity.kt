@@ -4,17 +4,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.socialite.solite_pos.databinding.ActivityOpeningBinding
+import com.socialite.solite_pos.R
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
+import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import kotlinx.coroutines.launch
 
 class OpeningActivity : SoliteActivity() {
@@ -27,20 +45,46 @@ class OpeningActivity : SoliteActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityOpeningBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setupVersion(binding)
+        setContent {
+            SolitePOSTheme {
+                val versionName = getVersionName()
+                OpeningContent(versionName)
+            }
+        }
         inAppUpdate()
     }
 
-    private fun setupVersion(binding: ActivityOpeningBinding) {
-        try {
-            binding.tvOpeningVersion.text.apply {
-                packageManager.getPackageInfo(packageName, 0).versionName
+    @Composable
+    private fun OpeningContent(version: String) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.primary),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier
+                        .width(300.dp),
+                    painter = painterResource(id = R.drawable.solite),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = version)
             }
+
+        }
+    }
+
+    private fun getVersionName(): String {
+        return try {
+            packageManager.getPackageInfo(packageName, 0).versionName
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
+            ""
         }
     }
 

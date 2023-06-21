@@ -49,7 +49,6 @@ class CustomersRepositoryImpl(
     }
 
     override suspend fun insertCustomer(data: Customer) = dao.insertNewCustomer(data)
-    override suspend fun insertCustomers(customers: List<Customer>) = dao.insertCustomers(customers)
 
     override suspend fun migrateToUUID() {
         val customers = dao.getCustomers().firstOrNull()

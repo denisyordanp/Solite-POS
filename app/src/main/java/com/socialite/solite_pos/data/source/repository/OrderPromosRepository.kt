@@ -6,5 +6,4 @@ interface OrderPromosRepository : SyncRepository<OrderPromo> {
     suspend fun getNeedUploadOrderPromos(): List<OrderPromo>
     suspend fun insertNewPromoOrder(promo: OrderPromo)
     suspend fun migrateToUUID()
-    suspend fun insertOrderPromos(list: List<OrderPromo>)
 }

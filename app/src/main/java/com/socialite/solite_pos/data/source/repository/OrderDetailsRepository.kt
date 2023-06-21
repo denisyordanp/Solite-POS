@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface OrderDetailsRepository : SyncRepository<OrderDetail> {
     suspend fun getNeedUploadOrderDetails(): List<OrderDetail>
-    suspend fun insertOrderDetails(list: List<OrderDetail>)
     suspend fun insertOrderDetail(orderDetail: OrderDetail)
     suspend fun getDeletedOrderDetailIds(): List<String>
     fun getOrderDetailByIdOrder(orderId: String): Flow<List<OrderDetail>>

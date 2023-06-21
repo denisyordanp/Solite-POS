@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface PaymentsRepository : SyncRepository<Payment> {
     suspend fun insertPayment(data: Payment)
-    suspend fun insertPayments(list: List<Payment>)
     suspend fun updatePayment(data: Payment)
     fun getPayments(query: SupportSQLiteQuery) : Flow<List<Payment>>
     suspend fun migrateToUUID()

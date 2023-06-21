@@ -41,9 +41,6 @@ class VariantsRepositoryImpl(
     override suspend fun insertVariant(data: Variant) {
         dao.insertNewVariant(data)
     }
-    override suspend fun insertVariants(list: List<Variant>) {
-        dao.insertVariants(list)
-    }
     override suspend fun updateVariant(data: Variant) {
         dao.updateNewVariant(data.copy(
             isUploaded = false

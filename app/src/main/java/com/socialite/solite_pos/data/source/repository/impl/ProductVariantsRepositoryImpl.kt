@@ -59,15 +59,8 @@ class ProductVariantsRepositoryImpl(
 
     override fun getVariantsProductById(idProduct: String) = dao.getProductVariantsById(idProduct)
 
-    override fun getVariantProductById(idProduct: String) =
-        dao.getVariantProductById(idProduct)
-
     override suspend fun insertVariantProduct(data: VariantProduct) {
         dao.insertNewVariantProduct(data)
-    }
-
-    override suspend fun insertVariantProducts(list: List<VariantProduct>) {
-        dao.insertVariantProducts(list)
     }
 
     override suspend fun getProductVariantIds() = dao.getProductVariantIds()

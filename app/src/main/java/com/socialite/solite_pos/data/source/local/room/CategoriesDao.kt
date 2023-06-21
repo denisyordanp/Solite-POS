@@ -26,9 +26,6 @@ interface CategoriesDao {
     @Query("SELECT * FROM ${Category.DB_NAME} WHERE ${Category.ID} = :categoryId LIMIT 1")
     suspend fun getCategoryById(categoryId: Long): Category?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCategory(data: Category)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategories(list: List<NewCategory>)
 
