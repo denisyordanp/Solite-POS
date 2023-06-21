@@ -4,8 +4,9 @@ import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class GetProductWithCategoriesImpl(
+class GetProductWithCategoriesImpl @Inject constructor(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
 ) : GetProductWithCategories {

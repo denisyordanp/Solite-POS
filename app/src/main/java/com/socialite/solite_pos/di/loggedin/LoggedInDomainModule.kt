@@ -1,10 +1,14 @@
 package com.socialite.solite_pos.di.loggedin
 
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
+import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
+import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
+import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.SynchronizeImpl
 import dagger.Binds
 import dagger.Module
@@ -29,4 +33,14 @@ abstract class LoggedInDomainModule {
     abstract fun bindSynchronize(
         synchronizeImpl: SynchronizeImpl
     ): Synchronize
+
+    @Binds
+    abstract fun bindNewOrder(
+        newOrderImpl: NewOrderImpl
+    ): NewOrder
+
+    @Binds
+    abstract fun bindGetProductWithCategories(
+        getProductWithCategoriesImpl: GetProductWithCategoriesImpl
+    ): GetProductWithCategories
 }

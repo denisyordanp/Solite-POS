@@ -12,11 +12,8 @@ import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetProductWithVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetVariantsWithOptions
-import com.socialite.solite_pos.data.source.domain.MigrateToUUID
-import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
-import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrderMenusWithAmountImpl
@@ -29,15 +26,9 @@ import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetVariantsWithOptionsImpl
-import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
-import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOutcomeImpl
 import com.socialite.solite_pos.data.source.domain.impl.PayOrderImpl
-import com.socialite.solite_pos.data.source.domain.impl.SynchronizeImpl
 import com.socialite.solite_pos.data.source.domain.impl.UpdateOrderProductsImpl
-import com.socialite.solite_pos.data.source.preference.OrderPref
-import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
-import com.socialite.solite_pos.data.source.repository.impl.SettingRepositoryImpl
 import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
 
 object LoggedInDomainInjection {
@@ -45,21 +36,6 @@ object LoggedInDomainInjection {
         val productVariantRepository =
             LoggedInRepositoryInjection.provideProductVariantsRepository(context)
         return GetProductVariantOptionsImpl(productVariantRepository)
-    }
-
-    fun provideNewOrder(context: Context): NewOrder {
-        val userPreferences = UserPreferencesImpl.getInstance(context)
-        return NewOrderImpl(
-            orderPref = OrderPref(context),
-            ordersRepository = LoggedInRepositoryInjection.provideOrdersRepository(context),
-            orderDetailsRepository = LoggedInRepositoryInjection.provideOrderDetailsRepository(
-                context
-            ),
-            orderProductVariantsRepository = LoggedInRepositoryInjection.provideOrderProductVariantsRepository(
-                context
-            ),
-            settingRepository = SettingRepositoryImpl.getDataStoreInstance(context, userPreferences)
-        )
     }
 
     fun provideGetProductOrder(context: Context): GetProductOrder {
@@ -115,89 +91,6 @@ object LoggedInDomainInjection {
             orderProductVariantsRepository = LoggedInRepositoryInjection.provideOrderProductVariantsRepository(
                 context
             )
-        )
-    }
-
-
-    fun provideMigrateToUUID(context: Context): MigrateToUUID {
-        val customerRepository = LoggedInRepositoryInjection.provideCustomersRepository(context)
-        val storeRepository = LoggedInRepositoryInjection.provideStoreRepository(context)
-        val categoriesRepository = LoggedInRepositoryInjection.provideCategoriesRepository(context)
-        val promosRepository = LoggedInRepositoryInjection.providePromosRepository(context)
-        val paymentsRepository = LoggedInRepositoryInjection.providePaymentsRepository(context)
-        val ordersRepository = LoggedInRepositoryInjection.provideOrdersRepository(context)
-        val orderDetailsRepository = LoggedInRepositoryInjection.provideOrderDetailsRepository(context)
-        val orderPaymentsRepository = LoggedInRepositoryInjection.provideOrderPaymentsRepository(context)
-        val orderPromosRepository = LoggedInRepositoryInjection.provideOrderPromosRepository(context)
-        val outcomesRepository = LoggedInRepositoryInjection.provideOutcomesRepository(context)
-        val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
-        val variantsRepository = LoggedInRepositoryInjection.provideVariantsRepository(context)
-        val variantOptionsRepository =
-            LoggedInRepositoryInjection.provideVariantOptionsRepository(context)
-        val productVariantsRepository =
-            LoggedInRepositoryInjection.provideProductVariantsRepository(context)
-        val settingRepository = LoggedInRepositoryInjection.provideSettingRepository(context)
-        return MigrateToUUIDImpl(
-            customersRepository = customerRepository,
-            storeRepository = storeRepository,
-            categoriesRepository = categoriesRepository,
-            promosRepository = promosRepository,
-            paymentsRepository = paymentsRepository,
-            ordersRepository = ordersRepository,
-            orderDetailsRepository = orderDetailsRepository,
-            orderPaymentsRepository = orderPaymentsRepository,
-            orderPromosRepository = orderPromosRepository,
-            outcomesRepository = outcomesRepository,
-            productsRepository = productsRepository,
-            variantsRepository = variantsRepository,
-            variantOptionsRepository = variantOptionsRepository,
-            productVariantsRepository = productVariantsRepository,
-            settingRepository = settingRepository
-        )
-    }
-
-    fun provideSynchronize(context: Context): Synchronize {
-        val customerRepository = LoggedInRepositoryInjection.provideCustomersRepository(context)
-        val storeRepository = LoggedInRepositoryInjection.provideStoreRepository(context)
-        val categoriesRepository = LoggedInRepositoryInjection.provideCategoriesRepository(context)
-        val promosRepository = LoggedInRepositoryInjection.providePromosRepository(context)
-        val paymentsRepository = LoggedInRepositoryInjection.providePaymentsRepository(context)
-        val ordersRepository = LoggedInRepositoryInjection.provideOrdersRepository(context)
-        val outcomesRepository = LoggedInRepositoryInjection.provideOutcomesRepository(context)
-        val productsRepository = LoggedInRepositoryInjection.provideProductsRepository(context)
-        val variantsRepository = LoggedInRepositoryInjection.provideVariantsRepository(context)
-        val orderDetailsRepository =
-            LoggedInRepositoryInjection.provideOrderDetailsRepository(context)
-        val orderPaymentsRepository =
-            LoggedInRepositoryInjection.provideOrderPaymentsRepository(context)
-        val orderPromosRepository =
-            LoggedInRepositoryInjection.provideOrderPromosRepository(context)
-        val variantOptionsRepository =
-            LoggedInRepositoryInjection.provideVariantOptionsRepository(context)
-        val orderProductVariantsRepository =
-            LoggedInRepositoryInjection.provideOrderProductVariantsRepository(context)
-        val productVariantsRepository =
-            LoggedInRepositoryInjection.provideProductVariantsRepository(context)
-        val userPreferences = UserPreferencesImpl.getInstance(context)
-        val service = LoggedNetworkInInjector.provideSoliteServices(userPreferences)
-
-        return SynchronizeImpl(
-            customersRepository = customerRepository,
-            storeRepository = storeRepository,
-            categoriesRepository = categoriesRepository,
-            promosRepository = promosRepository,
-            paymentsRepository = paymentsRepository,
-            ordersRepository = ordersRepository,
-            outcomesRepository = outcomesRepository,
-            productsRepository = productsRepository,
-            variantsRepository = variantsRepository,
-            variantOptionsRepository = variantOptionsRepository,
-            orderDetailsRepository = orderDetailsRepository,
-            orderPaymentsRepository = orderPaymentsRepository,
-            orderPromosRepository = orderPromosRepository,
-            orderProductVariantsRepository = orderProductVariantsRepository,
-            productVariantsRepository = productVariantsRepository,
-            service = service
         )
     }
 
