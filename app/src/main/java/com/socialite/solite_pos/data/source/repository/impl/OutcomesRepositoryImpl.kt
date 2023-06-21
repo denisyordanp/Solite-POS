@@ -47,8 +47,6 @@ class OutcomesRepositoryImpl(
             return INSTANCE!!
         }
     }
-
-    override fun getOutcomes(date: String) = dao.getOutcome(date)
     @FlowPreview
     override fun getOutcomes(parameters: ReportParameter) = if (parameters.isTodayOnly()) {
         settingRepository.getNewSelectedStore().flatMapConcat {
@@ -93,9 +91,6 @@ class OutcomesRepositoryImpl(
     }
 
     override suspend fun getNeedUploadOutcomes(): List<Outcome> = dao.getNeedUploadOutcomes()
-    override suspend fun insertOutcomes(list: List<Outcome>) {
-        dao.insertOutcomes(list)
-    }
 
     override suspend fun getItems(): List<Outcome> {
         return dao.getNewOutcomes()

@@ -9,9 +9,7 @@ class SettingPref(context: Context) {
 
 	companion object{
 		private const val PREF_SETTING = "setting_preference"
-
 		private const val PRINTER_DEVICE = "printer_device"
-		private const val COOK_TIME = "cook_time"
 	}
 
 	private var preferences: SharedPreferences = context.getSharedPreferences(PREF_SETTING, Context.MODE_PRIVATE)
@@ -25,13 +23,4 @@ class SettingPref(context: Context) {
 			editor.putString(PRINTER_DEVICE, value)
 			editor.apply()
 		}
-
-	var cookTime: Int
-	get() {
-		return preferences.getInt(COOK_TIME, 15)
-	}
-	set(value) {
-		editor.putInt(COOK_TIME, value)
-		editor.apply()
-	}
 }

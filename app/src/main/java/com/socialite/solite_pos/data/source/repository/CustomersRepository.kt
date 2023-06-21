@@ -11,5 +11,4 @@ interface CustomersRepository : SyncRepository<Customer> {
     suspend fun deleteAllOldCustomers()
     suspend fun deleteAllNewCustomers()
     suspend fun getNeedUploadCustomers(): List<Customer>
-    suspend fun insertCustomers(customers: List<Customer>)
 }

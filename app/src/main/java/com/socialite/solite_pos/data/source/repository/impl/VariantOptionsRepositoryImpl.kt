@@ -1,17 +1,14 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import androidx.room.withTransaction
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
-import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
 import com.socialite.solite_pos.data.source.local.room.VariantsDao
 import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
-import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 class VariantOptionsRepositoryImpl(
@@ -44,28 +41,12 @@ class VariantOptionsRepositoryImpl(
         }
     }
 
-    override fun getVariantOptions(query: SupportSQLiteQuery) = dao.getVariantOptions(query)
     override fun getVariantOptions() = dao.getNewVariantOptionsFlow()
-
-    override fun getVariantsWithOptions() = dao.getVariantWithOptions().map { list ->
-        list.groupBy { it.variant }
-            .map {
-                VariantWithOptions(
-                    variant = it.key,
-                    options = it.value.map { option ->
-                        option.option
-                    }
-                )
-            }
-    }
 
     override suspend fun getNeedUploadVariantOptions() = dao.getNeedUploadVariantOptions()
 
     override suspend fun insertVariantOption(data: VariantOption) {
         dao.insertNewVariantOption(data)
-    }
-    override suspend fun insertVariantOptions(list: List<VariantOption>) {
-        dao.insertVariantOptions(list)
     }
     override suspend fun updateVariantOption(data: VariantOption) {
         dao.updateNewVariantOption(data.copy(

@@ -8,8 +8,6 @@ data class OrderWithProduct(
 		val products: List<ProductOrderDetail>
 ): Serializable {
 
-	constructor(order: OrderData): this(order, emptyList())
-
 	val grandTotal: Long
 		get() {
 			return products.sumOf {

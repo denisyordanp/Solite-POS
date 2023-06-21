@@ -25,9 +25,6 @@ interface CustomersDao {
     suspend fun getNeedUploadCustomers(): List<NewCustomer>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCustomer(data: Customer): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewCustomer(data: NewCustomer)
 
     @Update

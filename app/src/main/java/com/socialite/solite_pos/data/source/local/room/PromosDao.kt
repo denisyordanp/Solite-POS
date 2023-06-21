@@ -30,9 +30,6 @@ interface PromosDao {
     suspend fun getPromoById(promoId: Long): Promo?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPromo(data: Promo)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewPromo(data: NewPromo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -46,9 +46,6 @@ class OrderPaymentsRepositoryImpl(
     }
 
     override suspend fun getNeedUploadOrderPayments() = dao.getNeedUploadOrderPayments()
-    override suspend fun insertOrderPayments(list: List<OrderPayment>) {
-        dao.insertOrderPayments(list)
-    }
 
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =
         dao.insertNewOrderPayment(payment)

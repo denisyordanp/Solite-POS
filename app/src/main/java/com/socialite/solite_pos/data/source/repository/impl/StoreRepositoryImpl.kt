@@ -45,14 +45,12 @@ class StoreRepositoryImpl(
 
     override fun getStores() = dao.getNewStores()
     override suspend fun getNeedUploadStores() = dao.getNeedUploadStores()
-    override suspend fun getStore(id: String) = dao.getNewStore(id)
     override suspend fun insertStore(store: Store) {
         dao.insertStore(store)
         if (settingRepository.getNewSelectedStore().first().isEmpty()) {
             settingRepository.selectNewStore(store.id)
         }
     }
-    override suspend fun insertStores(list: List<Store>) = dao.insertStores(list)
     override suspend fun updateStore(store: Store) = dao.updateNewStore(store)
     override suspend fun migrateToUUID() {
         val stores = dao.getStores().firstOrNull()

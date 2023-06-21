@@ -52,12 +52,6 @@ class SettingRepositoryImpl(
         it[PreferencesKeys.IS_DARK_MODE] ?: false
     }
 
-    override suspend fun selectStore(storeId: Long) {
-        dataStore.edit {
-            it[PreferencesKeys.SELECTED_STORE] = storeId
-        }
-    }
-
     override suspend fun selectNewStore(storeId: String) {
         dataStore.edit {
             it[PreferencesKeys.NEW_SELECTED_STORE] = storeId

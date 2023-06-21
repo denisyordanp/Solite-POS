@@ -7,9 +7,7 @@ interface StoreRepository : SyncRepository<Store> {
 
     fun getStores(): Flow<List<Store>>
     suspend fun getNeedUploadStores(): List<Store>
-    suspend fun getStore(id: String): Store?
     suspend fun insertStore(store: Store)
-    suspend fun insertStores(list: List<Store>)
     suspend fun updateStore(store: Store)
     suspend fun migrateToUUID()
     suspend fun deleteAllOldStores()

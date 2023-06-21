@@ -26,10 +26,6 @@ interface OrdersDao {
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND date(${NewOrder.ORDER_DATE}) = date(:date)")
     fun getOrdersByStatus(status: Int, date: String): Flow<List<OrderData>>
 
-    @Transaction
-    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :store")
-    fun getOrdersByStatus(status: Int, date: String, store: String): Flow<List<OrderData>>
-
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadOrders(): List<NewOrder>
 
@@ -49,10 +45,6 @@ interface OrdersDao {
         until: String,
         store: String
     ): Flow<List<OrderData>>
-
-    @Transaction
-    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.ID} = :orderId")
-    suspend fun getOrderDataById(orderId: String): OrderData?
 
     @Transaction
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.ID} = :orderId")

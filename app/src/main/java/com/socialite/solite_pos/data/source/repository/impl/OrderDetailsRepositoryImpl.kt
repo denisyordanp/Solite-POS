@@ -50,9 +50,6 @@ class OrderDetailsRepositoryImpl(
     }
 
     override suspend fun getNeedUploadOrderDetails() = dao.getNeedUploadOrderDetails()
-    override suspend fun insertOrderDetails(list: List<OrderDetail>) {
-        dao.insertOrderDetails(list)
-    }
 
     override suspend fun insertOrderDetail(orderDetail: OrderDetail) {
         dao.insertNewOrderDetail(orderDetail)

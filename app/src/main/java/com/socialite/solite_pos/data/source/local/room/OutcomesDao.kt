@@ -13,9 +13,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface OutcomesDao {
 
-    @Query("SELECT * FROM ${NewOutcome.DB_NAME} WHERE date(${NewOutcome.DATE}) = date(:date)")
-    fun getOutcome(date: String): Flow<List<NewOutcome>>
-
     @Query("SELECT * FROM ${NewOutcome.DB_NAME} WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadOutcomes(): List<NewOutcome>
 

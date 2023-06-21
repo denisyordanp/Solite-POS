@@ -46,9 +46,6 @@ class OrderPromosRepositoryImpl(
     }
 
     override suspend fun getNeedUploadOrderPromos() = dao.getNeedUploadOrderPromos()
-    override suspend fun insertOrderPromos(list: List<OrderPromo>) {
-        dao.insertOrderPromos(list)
-    }
 
     override suspend fun getItems(): List<OrderPromo> {
         return dao.getNewOrderPromos()

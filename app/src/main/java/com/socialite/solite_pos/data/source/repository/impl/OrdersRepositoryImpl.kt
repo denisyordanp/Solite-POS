@@ -55,8 +55,6 @@ class OrdersRepositoryImpl(
     }
 
     override fun getOrderList(status: Int, date: String) = dao.getOrdersByStatus(status, date)
-    override fun getOrderList(status: Int, date: String, store: String) =
-        dao.getOrdersByStatus(status, date, store)
 
     @FlowPreview
     override fun getOrderList(status: Int, parameters: ReportParameter): Flow<List<OrderData>> {
@@ -81,8 +79,6 @@ class OrdersRepositoryImpl(
             dao.getAllOrders(parameters.start, parameters.end, parameters.storeId)
         }
     }
-
-    override suspend fun getOrderData(orderId: String): OrderData? = dao.getOrderDataById(orderId)
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
         order.copy(
             isUploaded = false

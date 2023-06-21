@@ -47,9 +47,6 @@ class PaymentsRepositoryImpl(
             isUploaded = false
         ))
     }
-    override suspend fun insertPayments(list: List<NewPayment>) {
-        dao.insertPayments(list)
-    }
 
     override fun getPayments(query: SupportSQLiteQuery) = dao.getNewPayments(query)
     override suspend fun getNeedUploadPayments() = dao.getNeedUploadPayments()
