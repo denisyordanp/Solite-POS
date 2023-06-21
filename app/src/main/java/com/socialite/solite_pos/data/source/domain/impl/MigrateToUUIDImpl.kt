@@ -3,6 +3,9 @@ package com.socialite.solite_pos.data.source.domain.impl
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
+import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.source.repository.OrderPaymentsRepository
+import com.socialite.solite_pos.data.source.repository.OrderPromosRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
@@ -21,6 +24,9 @@ class MigrateToUUIDImpl(
     private val promosRepository: PromosRepository,
     private val paymentsRepository: PaymentsRepository,
     private val ordersRepository: OrdersRepository,
+    private val orderDetailsRepository: OrderDetailsRepository,
+    private val orderPaymentsRepository: OrderPaymentsRepository,
+    private val orderPromosRepository: OrderPromosRepository,
     private val outcomesRepository: OutcomesRepository,
     private val productsRepository: ProductsRepository,
     private val variantsRepository: VariantsRepository,
@@ -57,6 +63,9 @@ class MigrateToUUIDImpl(
             variantOptionsRepository.migrateToUUID()
             productVariantsRepository.migrateToUUID()
             ordersRepository.migrateToUUID()
+            orderDetailsRepository.migrateToUUID()
+            orderPaymentsRepository.migrateToUUID()
+            orderPromosRepository.migrateToUUID()
 
 //            customersRepository.deleteAllOldCustomers()
 //            storeRepository.deleteAllOldStores()
