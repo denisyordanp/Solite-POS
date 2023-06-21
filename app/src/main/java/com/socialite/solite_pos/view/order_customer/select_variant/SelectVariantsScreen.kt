@@ -35,14 +35,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
@@ -54,11 +53,7 @@ import com.socialite.solite_pos.utils.config.thousand
 @Composable
 fun SelectVariantsScreen(
     productId: String,
-    currentViewModel: SelectVariantsViewModel = viewModel(
-        factory = SelectVariantsViewModel.getFactory(
-            LocalContext.current
-        )
-    ),
+    currentViewModel: SelectVariantsViewModel = hiltViewModel(),
     onBackClicked: () -> Unit,
     onAddToBucketClicked: (detail: ProductOrderDetail) -> Unit,
 ) {
