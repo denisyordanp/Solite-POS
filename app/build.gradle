@@ -64,7 +64,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.recyclerview:recyclerview:$recycleViewVersion"
     implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionVersion"
