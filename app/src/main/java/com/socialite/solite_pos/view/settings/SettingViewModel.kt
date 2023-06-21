@@ -1,16 +1,12 @@
 package com.socialite.solite_pos.view.settings
 
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -105,26 +101,4 @@ class SettingViewModel @Inject constructor(
             )
         }
     }
-
-    companion object {
-        fun getFactory(activity: FragmentActivity) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SettingViewModel(
-                    synchronize = LoggedInDomainInjection.provideSynchronize(activity),
-                    migrateToUUID = LoggedInDomainInjection.provideMigrateToUUID(activity),
-                    settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
-                        activity
-                    ),
-                    remoteConfigRepository = LoggedInRepositoryInjection.provideRemoteConfigRepository(
-                        activity
-                    ),
-                    getOrdersGeneralMenuBadge = LoggedInDomainInjection.provideGetOrdersGeneralMenuBadge(
-                        activity
-                    )
-                ) as T
-            }
-        }
-    }
-
 }
