@@ -16,13 +16,16 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
 import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
 import com.socialite.solite_pos.utils.config.CashAmounts
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OrderPaymentViewModel(
+@HiltViewModel
+class OrderPaymentViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val promosRepository: PromosRepository,
     private val getOrderWithProduct: GetOrderWithProduct,

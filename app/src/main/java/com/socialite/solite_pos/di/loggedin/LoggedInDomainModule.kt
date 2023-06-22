@@ -6,6 +6,7 @@ import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetProductWithVariantOptions
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
+import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetOrderWithProductImpl
@@ -14,6 +15,7 @@ import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
+import com.socialite.solite_pos.data.source.domain.impl.PayOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.SynchronizeImpl
 import com.socialite.solite_pos.data.source.domain.impl.UpdateOrderProductsImpl
 import dagger.Binds
@@ -64,4 +66,9 @@ abstract class LoggedInDomainModule {
     abstract fun bindGetOrderWithProduct(
         getOrderWithProduct: GetOrderWithProductImpl
     ): GetOrderWithProduct
+
+    @Binds
+    abstract fun bindPayOrder(
+        payOrder: PayOrderImpl
+    ): PayOrder
 }
