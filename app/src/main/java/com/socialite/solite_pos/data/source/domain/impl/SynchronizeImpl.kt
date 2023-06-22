@@ -4,6 +4,7 @@ import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.remote.SoliteServices
 import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeParamItem
 import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeParams
+import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeResponse
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
@@ -41,7 +42,92 @@ class SynchronizeImpl @Inject constructor(
     @AuthorizationService private val service: SoliteServices
 ) : Synchronize {
     override suspend fun invoke(): Boolean {
-        // Get all un uploaded data
+        val synchronizeParam = createSynchronizeParams(
+            customersRepository = customersRepository,
+            storeRepository = storeRepository,
+            categoriesRepository = categoriesRepository,
+            promosRepository = promosRepository,
+            paymentsRepository = paymentsRepository,
+            ordersRepository = ordersRepository,
+            outcomesRepository = outcomesRepository,
+            productsRepository = productsRepository,
+            variantsRepository = variantsRepository,
+            orderDetailsRepository = orderDetailsRepository,
+            orderPaymentsRepository = orderPaymentsRepository,
+            orderPromosRepository = orderPromosRepository,
+            variantOptionsRepository = variantOptionsRepository,
+            orderProductVariantsRepository = orderProductVariantsRepository,
+            productVariantsRepository = productVariantsRepository
+        )
+        val response = service.synchronize(synchronizeParam)
+
+        // Update all un uploaded data that already uploaded
+        updateAllUnUploadedDataAfterUploaded(
+            customersRepository = customersRepository,
+            storeRepository = storeRepository,
+            categoriesRepository = categoriesRepository,
+            promosRepository = promosRepository,
+            paymentsRepository = paymentsRepository,
+            ordersRepository = ordersRepository,
+            outcomesRepository = outcomesRepository,
+            productsRepository = productsRepository,
+            variantsRepository = variantsRepository,
+            orderDetailsRepository = orderDetailsRepository,
+            orderPaymentsRepository = orderPaymentsRepository,
+            orderPromosRepository = orderPromosRepository,
+            variantOptionsRepository = variantOptionsRepository,
+            orderProductVariantsRepository = orderProductVariantsRepository,
+            productVariantsRepository = productVariantsRepository,
+            synchronizeParams = synchronizeParam
+        )
+
+        // Insert all missing data that given by server
+        insertAllMissingDataFromServer(
+            customersRepository = customersRepository,
+            storeRepository = storeRepository,
+            categoriesRepository = categoriesRepository,
+            promosRepository = promosRepository,
+            paymentsRepository = paymentsRepository,
+            ordersRepository = ordersRepository,
+            outcomesRepository = outcomesRepository,
+            productsRepository = productsRepository,
+            variantsRepository = variantsRepository,
+            orderDetailsRepository = orderDetailsRepository,
+            orderPaymentsRepository = orderPaymentsRepository,
+            orderPromosRepository = orderPromosRepository,
+            variantOptionsRepository = variantOptionsRepository,
+            orderProductVariantsRepository = orderProductVariantsRepository,
+            productVariantsRepository = productVariantsRepository,
+            data = response.data
+        )
+
+        // Delete the deleted items
+        deleteAllDeletedItems(
+            orderDetailsRepository = orderDetailsRepository,
+            orderProductVariantsRepository = orderProductVariantsRepository,
+            synchronizeParams = synchronizeParam
+        )
+
+        return true
+    }
+
+    private suspend fun createSynchronizeParams(
+        customersRepository: CustomersRepository,
+        storeRepository: StoreRepository,
+        categoriesRepository: CategoriesRepository,
+        promosRepository: PromosRepository,
+        paymentsRepository: PaymentsRepository,
+        ordersRepository: OrdersRepository,
+        outcomesRepository: OutcomesRepository,
+        productsRepository: ProductsRepository,
+        variantsRepository: VariantsRepository,
+        orderDetailsRepository: OrderDetailsRepository,
+        orderPaymentsRepository: OrderPaymentsRepository,
+        orderPromosRepository: OrderPromosRepository,
+        variantOptionsRepository: VariantOptionsRepository,
+        orderProductVariantsRepository: OrderProductVariantsRepository,
+        productVariantsRepository: ProductVariantsRepository,
+    ): SynchronizeParams {
         val needUploadCustomers =
             customersRepository.getNeedUploadCustomers().map { it.toResponse() }
         val needUploadStores = storeRepository.getNeedUploadStores().map { it.toResponse() }
@@ -73,7 +159,7 @@ class SynchronizeImpl @Inject constructor(
             items = productVariantsRepository.getNeedUploadVariantProducts().map { it.toResponse() }
         )
 
-        val synchronizeData = SynchronizeParams(
+        return SynchronizeParams(
             customer = needUploadCustomers,
             store = needUploadStores,
             category = needUploadCategories,
@@ -90,59 +176,93 @@ class SynchronizeImpl @Inject constructor(
             orderProductVariant = needUploadOrderProductVariants,
             variantProduct = needUploadVariantProducts
         )
-        val response = service.synchronize(synchronizeData)
+    }
 
-        // Update all un uploaded data that already uploaded
-        if (needUploadCustomers.isNotEmpty()) {
+    private suspend fun updateAllUnUploadedDataAfterUploaded(
+        customersRepository: CustomersRepository,
+        storeRepository: StoreRepository,
+        categoriesRepository: CategoriesRepository,
+        promosRepository: PromosRepository,
+        paymentsRepository: PaymentsRepository,
+        ordersRepository: OrdersRepository,
+        outcomesRepository: OutcomesRepository,
+        productsRepository: ProductsRepository,
+        variantsRepository: VariantsRepository,
+        orderDetailsRepository: OrderDetailsRepository,
+        orderPaymentsRepository: OrderPaymentsRepository,
+        orderPromosRepository: OrderPromosRepository,
+        variantOptionsRepository: VariantOptionsRepository,
+        orderProductVariantsRepository: OrderProductVariantsRepository,
+        productVariantsRepository: ProductVariantsRepository,
+        synchronizeParams: SynchronizeParams
+    ) {
+        if (synchronizeParams.customer.isNotEmpty()) {
             customersRepository.updateItems(
-                needUploadCustomers.map { it.toEntity() }
+                synchronizeParams.customer.map { it.toEntity() }
             )
         }
-        if (needUploadStores.isNotEmpty()) {
-            storeRepository.updateItems(needUploadStores.map { it.toEntity() })
+        if (synchronizeParams.store.isNotEmpty()) {
+            storeRepository.updateItems(synchronizeParams.store.map { it.toEntity() })
         }
-        if (needUploadCategories.isNotEmpty()) {
-            categoriesRepository.updateItems(needUploadCategories.map { it.toEntity() })
+        if (synchronizeParams.category.isNotEmpty()) {
+            categoriesRepository.updateItems(synchronizeParams.category.map { it.toEntity() })
         }
-        if (needUploadPromo.isNotEmpty()) {
-            promosRepository.updateItems(needUploadPromo.map { it.toEntity() })
+        if (synchronizeParams.promo.isNotEmpty()) {
+            promosRepository.updateItems(synchronizeParams.promo.map { it.toEntity() })
         }
-        if (needUploadPayments.isNotEmpty()) {
-            paymentsRepository.updateItems(needUploadPayments.map { it.toEntity() })
+        if (synchronizeParams.payment.isNotEmpty()) {
+            paymentsRepository.updateItems(synchronizeParams.payment.map { it.toEntity() })
         }
-        if (needUploadOrders.isNotEmpty()) {
-            ordersRepository.updateItems(needUploadOrders.map { it.toEntity() })
+        if (synchronizeParams.order.isNotEmpty()) {
+            ordersRepository.updateItems(synchronizeParams.order.map { it.toEntity() })
         }
-        if (needUploadOutcomes.isNotEmpty()) {
-            outcomesRepository.updateItems(needUploadOutcomes.map { it.toEntity() })
+        if (synchronizeParams.outcome.isNotEmpty()) {
+            outcomesRepository.updateItems(synchronizeParams.outcome.map { it.toEntity() })
         }
-        if (needUploadProducts.isNotEmpty()) {
-            productsRepository.updateItems(needUploadProducts.map { it.toEntity() })
+        if (synchronizeParams.product.isNotEmpty()) {
+            productsRepository.updateItems(synchronizeParams.product.map { it.toEntity() })
         }
-        if (needUploadVariants.isNotEmpty()) {
-            variantsRepository.updateItems(needUploadVariants.map { it.toEntity() })
+        if (synchronizeParams.variant.isNotEmpty()) {
+            variantsRepository.updateItems(synchronizeParams.variant.map { it.toEntity() })
         }
-        if (needUploadOrderDetails.items.isNotEmpty()) {
-            orderDetailsRepository.updateItems(needUploadOrderDetails.items.map { it.toEntity() })
+        if (synchronizeParams.orderDetail.items.isNotEmpty()) {
+            orderDetailsRepository.updateItems(synchronizeParams.orderDetail.items.map { it.toEntity() })
         }
-        if (needUploadOrderPayments.isNotEmpty()) {
-            orderPaymentsRepository.updateItems(needUploadOrderPayments.map { it.toEntity() })
+        if (synchronizeParams.orderPayment.isNotEmpty()) {
+            orderPaymentsRepository.updateItems(synchronizeParams.orderPayment.map { it.toEntity() })
         }
-        if (needUploadOrderPromos.isNotEmpty()) {
-            orderPromosRepository.updateItems(needUploadOrderPromos.map { it.toEntity() })
+        if (synchronizeParams.orderPromo.isNotEmpty()) {
+            orderPromosRepository.updateItems(synchronizeParams.orderPromo.map { it.toEntity() })
         }
-        if (needUploadVariantOptions.isNotEmpty()) {
-            variantOptionsRepository.updateItems(needUploadVariantOptions.map { it.toEntity() })
+        if (synchronizeParams.variantOption.isNotEmpty()) {
+            variantOptionsRepository.updateItems(synchronizeParams.variantOption.map { it.toEntity() })
         }
-        if (needUploadOrderProductVariants.items.isNotEmpty()) {
-            orderProductVariantsRepository.updateItems(needUploadOrderProductVariants.items.map { it.toEntity() })
+        if (synchronizeParams.orderProductVariant.items.isNotEmpty()) {
+            orderProductVariantsRepository.updateItems(synchronizeParams.orderProductVariant.items.map { it.toEntity() })
         }
-        if (needUploadVariantProducts.items.isNotEmpty()) {
-            productVariantsRepository.updateItems(needUploadVariantProducts.items.map { it.toEntity() })
+        if (synchronizeParams.variantProduct.items.isNotEmpty()) {
+            productVariantsRepository.updateItems(synchronizeParams.variantProduct.items.map { it.toEntity() })
         }
+    }
 
-        // Insert all missing data that given by server
-        val data = response.data
+    private suspend fun insertAllMissingDataFromServer(
+        customersRepository: CustomersRepository,
+        storeRepository: StoreRepository,
+        categoriesRepository: CategoriesRepository,
+        promosRepository: PromosRepository,
+        paymentsRepository: PaymentsRepository,
+        ordersRepository: OrdersRepository,
+        outcomesRepository: OutcomesRepository,
+        productsRepository: ProductsRepository,
+        variantsRepository: VariantsRepository,
+        orderDetailsRepository: OrderDetailsRepository,
+        orderPaymentsRepository: OrderPaymentsRepository,
+        orderPromosRepository: OrderPromosRepository,
+        variantOptionsRepository: VariantOptionsRepository,
+        orderProductVariantsRepository: OrderProductVariantsRepository,
+        productVariantsRepository: ProductVariantsRepository,
+        data: SynchronizeResponse?
+    ) {
         customersRepository.updateSynchronization(data?.customer?.map { it.toEntity() })
         storeRepository.updateSynchronization(data?.store?.map { it.toEntity() })
         categoriesRepository.updateSynchronization(data?.category?.map { it.toEntity() })
@@ -158,18 +278,21 @@ class SynchronizeImpl @Inject constructor(
         variantOptionsRepository.updateSynchronization(data?.variantOption?.map { it.toEntity() })
         orderProductVariantsRepository.updateSynchronization(data?.orderProductVariant?.map { it.toEntity() })
         productVariantsRepository.updateSynchronization(data?.variantProduct?.map { it.toEntity() })
+    }
 
-        // Delete the deleted items
-        if (needUploadOrderDetails.deletedItems.isNotEmpty()) {
+    private suspend fun deleteAllDeletedItems(
+        orderDetailsRepository: OrderDetailsRepository,
+        orderProductVariantsRepository: OrderProductVariantsRepository,
+        synchronizeParams: SynchronizeParams
+    ) {
+        if (synchronizeParams.orderDetail.deletedItems.isNotEmpty()) {
             orderDetailsRepository.deleteAllDeletedOrderDetails()
         }
-        if (needUploadOrderProductVariants.deletedItems.isNotEmpty()) {
+        if (synchronizeParams.orderProductVariant.deletedItems.isNotEmpty()) {
             orderProductVariantsRepository.deleteAllDeletedOrderProductVariants()
         }
-        if (needUploadOrderProductVariants.deletedItems.isNotEmpty()) {
+        if (synchronizeParams.variantProduct.deletedItems.isNotEmpty()) {
             productVariantsRepository.deleteAllDeletedProductVariants()
         }
-
-        return true
     }
 }
