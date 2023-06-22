@@ -40,13 +40,13 @@ import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
 import com.socialite.solite_pos.view.ui.StoreMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class StoreActivity : SoliteActivity() {
 
-    private val storeViewModel: StoreViewModel by viewModels {
-        StoreViewModel.getFactory(this)
-    }
+    private val storeViewModel: StoreViewModel by viewModels()
 
     companion object {
         private const val EXTRA_PAGE = "extra_page"
