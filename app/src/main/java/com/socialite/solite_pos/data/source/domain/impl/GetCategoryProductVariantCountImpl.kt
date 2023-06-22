@@ -8,8 +8,9 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class GetCategoryProductVariantCountImpl(
+class GetCategoryProductVariantCountImpl @Inject constructor(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
 ) : GetCategoryProductVariantCount {

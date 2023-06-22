@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.di.loggedin
 
+import com.socialite.solite_pos.data.source.domain.GetCategoryProductVariantCount
 import com.socialite.solite_pos.data.source.domain.GetOrderWithProduct
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetOrdersMenuWithOrders
@@ -12,6 +13,7 @@ import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
+import com.socialite.solite_pos.data.source.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrderWithProductImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersMenuWithOrdersImpl
@@ -92,4 +94,9 @@ abstract class LoggedInDomainModule {
     abstract fun bindGetProductVariantOptions(
         getProductVariantOptions: GetProductVariantOptionsImpl
     ): GetProductVariantOptions
+
+    @Binds
+    abstract fun bindGetCategoryProductVariantCount(
+        getCategoryProductVariantCount: GetCategoryProductVariantCountImpl
+    ): GetCategoryProductVariantCount
 }
