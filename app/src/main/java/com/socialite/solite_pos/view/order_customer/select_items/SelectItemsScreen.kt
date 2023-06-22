@@ -17,11 +17,13 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +49,7 @@ import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
+import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
@@ -56,6 +59,7 @@ import com.socialite.solite_pos.utils.config.toIDR
 import com.socialite.solite_pos.view.order_customer.components.ProductCustomerItemView
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -84,111 +88,177 @@ fun SelectItemsScreen(
             topEnd = 16.dp
         ),
         sheetContent = {
-            when (modalContent) {
-                ModalContent.BUCKET_VIEW -> BucketView(
-                    bucketOrder = bucketOrder,
-                    onClickOrder = {
-                        if (isEditOrder) {
-                            alertEditOrder = true
-                        } else {
-                            onClickOrder()
-                        }
-                    },
-                    isEditOrder = isEditOrder,
-                    onClearBucket = {
-                        scope.launch {
-                            modalState.hide()
-                        }
-                    },
-                    onRemoveProduct = onRemoveProduct
-                )
-
-                ModalContent.GENERAL_MENUS -> {
-                    val badges = currentViewModel.getBadges(DateUtils.currentDate).collectAsState(
-                        initial = emptyList()
-                    )
-                    GeneralMenusView(
-                        badges = badges.value,
-                        onClicked = {
-                            if (it == GeneralMenus.NEW_ORDER) {
-                                scope.launch {
-                                    modalState.hide()
-                                }
-                            } else {
-                                onGeneralMenuClicked?.invoke(it)
-                            }
-                        }
-                    )
+            SheetContent(
+                modalContent = modalContent,
+                isEditOrder = isEditOrder,
+                bucketOrder = bucketOrder,
+                scope = scope,
+                modalState = modalState,
+                getBadges = {
+                    currentViewModel.getBadges(DateUtils.currentDate)
+                        .collectAsState(initial = emptyList())
+                },
+                onRemoveProduct = onRemoveProduct,
+                onGeneralMenuClicked = onGeneralMenuClicked,
+                onClickOrder = onClickOrder,
+                onEditOrderClicked = {
+                    alertEditOrder = true
                 }
-
-                else -> {
-                    // Do nothing
-                }
-            }
+            )
         },
         content = {
             val products = currentViewModel.getAllProducts().collectAsState(initial = emptyMap())
-            if (isEditOrder) {
-                Scaffold(
-                    topBar = {
-                        BasicTopBar(
-                            titleText = stringResource(R.string.edit_order),
-                            onBackClicked = {
-                                onBackClicked?.invoke()
-                            }
-                        )
-                    },
-                    content = { padding ->
-                        ProductOrderList(
-                            modifier = Modifier
-                                .padding(padding),
-                            categoryWithProducts = products.value,
-                            bucketOrder = bucketOrder,
-                            onBucketClicked = {
-                                modalContent = ModalContent.BUCKET_VIEW
-                                scope.launch {
-                                    modalState.show()
-                                }
-                            },
-                            onItemClick = onItemClick,
-                        )
+            SelectItemsContent(
+                products = products.value,
+                isEditOrder = isEditOrder,
+                onBackClicked = onBackClicked,
+                bucketOrder = bucketOrder,
+                onBucketClicked = {
+                    modalContent = ModalContent.BUCKET_VIEW
+                    scope.launch {
+                        modalState.show()
                     }
-                )
-            } else {
-                ProductOrderList(
-                    categoryWithProducts = products.value,
-                    bucketOrder = bucketOrder,
-                    onBucketClicked = {
-                        modalContent = ModalContent.BUCKET_VIEW
-                        scope.launch {
-                            modalState.show()
-                        }
-                    },
-                    onItemClick = onItemClick,
-                    onMenusClicked = {
-                        modalContent = ModalContent.GENERAL_MENUS
-                        scope.launch {
-                            modalState.show()
-                        }
+                },
+                onMenuClicked = {
+                    modalContent = ModalContent.GENERAL_MENUS
+                    scope.launch {
+                        modalState.show()
                     }
-                )
-            }
+                },
+                onItemClick = onItemClick
+            )
         }
     )
 
-    if (alertEditOrder) {
+    EditOrderAlert(
+        shouldShow = alertEditOrder,
+        positiveAction = {
+            onClickOrder()
+            alertEditOrder = false
+        },
+        negativeAction = {
+            alertEditOrder = false
+        }
+    )
+}
+
+@Composable
+@ExperimentalMaterialApi
+private fun SheetContent(
+    modalContent: ModalContent,
+    isEditOrder: Boolean,
+    bucketOrder: BucketOrder,
+    scope: CoroutineScope,
+    modalState: ModalBottomSheetState,
+    getBadges: @Composable () -> State<List<GeneralMenuBadge>>,
+    onRemoveProduct: (detail: ProductOrderDetail) -> Unit,
+    onGeneralMenuClicked: ((menu: GeneralMenus) -> Unit)? = null,
+    onClickOrder: () -> Unit,
+    onEditOrderClicked: () -> Unit
+) {
+    when (modalContent) {
+        ModalContent.BUCKET_VIEW -> BucketView(
+            bucketOrder = bucketOrder,
+            onClickOrder = {
+                if (isEditOrder) {
+                    onEditOrderClicked()
+                } else {
+                    onClickOrder()
+                }
+            },
+            isEditOrder = isEditOrder,
+            onClearBucket = {
+                scope.launch {
+                    modalState.hide()
+                }
+            },
+            onRemoveProduct = onRemoveProduct
+        )
+
+        ModalContent.GENERAL_MENUS -> {
+            val badges = getBadges()
+            GeneralMenusView(
+                badges = badges.value,
+                onClicked = {
+                    if (it == GeneralMenus.NEW_ORDER) {
+                        scope.launch {
+                            modalState.hide()
+                        }
+                    } else {
+                        onGeneralMenuClicked?.invoke(it)
+                    }
+                }
+            )
+        }
+
+        else -> {
+            // Do nothing
+        }
+    }
+}
+
+@Composable
+private fun EditOrderAlert(
+    shouldShow: Boolean,
+    positiveAction: () -> Unit,
+    negativeAction: () -> Unit,
+) {
+    if (shouldShow) {
         BasicAlertDialog(
             titleText = stringResource(R.string.edit_order),
             descText = stringResource(R.string.are_you_sure_edit_this_order_products),
-            positiveAction = {
-                onClickOrder()
-                alertEditOrder = false
-            },
+            positiveAction = positiveAction,
             positiveText = stringResource(R.string.yes),
-            negativeAction = {
-                alertEditOrder = false
-            },
+            negativeAction = negativeAction,
             negativeText = stringResource(R.string.no)
+        )
+    }
+}
+
+@Composable
+private fun SelectItemsContent(
+    products: Map<Category, List<ProductWithCategory>>,
+    isEditOrder: Boolean,
+    onBackClicked: (() -> Unit)?,
+    bucketOrder: BucketOrder,
+    onBucketClicked: () -> Unit,
+    onMenuClicked: () -> Unit,
+    onItemClick: (product: Product, isAdd: Boolean, hasVariant: Boolean) -> Unit,
+) {
+    if (isEditOrder) {
+        Scaffold(
+            topBar = {
+                BasicTopBar(
+                    titleText = stringResource(R.string.edit_order),
+                    onBackClicked = {
+                        onBackClicked?.invoke()
+                    }
+                )
+            },
+            content = { padding ->
+                ProductOrderList(
+                    modifier = Modifier
+                        .padding(padding),
+                    categoryWithProducts = products,
+                    bucketOrder = bucketOrder,
+                    onBucketClicked = {
+                        onBucketClicked()
+                    },
+                    onItemClick = onItemClick,
+                )
+            }
+        )
+    } else {
+        ProductOrderList(
+            categoryWithProducts = products,
+            bucketOrder = bucketOrder,
+            onBucketClicked = {
+                onBucketClicked()
+            },
+            onItemClick = onItemClick,
+            onMenusClicked = {
+                onMenuClicked()
+            }
         )
     }
 }
