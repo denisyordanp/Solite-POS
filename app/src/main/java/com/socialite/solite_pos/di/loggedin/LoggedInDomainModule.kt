@@ -1,12 +1,15 @@
 package com.socialite.solite_pos.di.loggedin
 
 import com.socialite.solite_pos.data.source.domain.GetCategoryProductVariantCount
+import com.socialite.solite_pos.data.source.domain.GetOrderMenusWithAmount
 import com.socialite.solite_pos.data.source.domain.GetOrderWithProduct
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.source.domain.GetOrdersMenuWithOrders
 import com.socialite.solite_pos.data.source.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetProductWithVariantOptions
+import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.source.domain.GetVariantsWithOptions
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
@@ -14,12 +17,15 @@ import com.socialite.solite_pos.data.source.domain.PayOrder
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetCategoryProductVariantCountImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrderWithProductImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersMenuWithOrdersImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithVariantOptionsImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetVariantsWithOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOutcomeImpl
@@ -99,4 +105,19 @@ abstract class LoggedInDomainModule {
     abstract fun bindGetCategoryProductVariantCount(
         getCategoryProductVariantCount: GetCategoryProductVariantCountImpl
     ): GetCategoryProductVariantCount
+
+    @Binds
+    abstract fun bindGetRecapData(
+        getRecapData: GetRecapDataImpl
+    ): GetRecapData
+
+    @Binds
+    abstract fun bindGetOrderMenusWithAmount(
+        getOrderMenusWithAmount: GetOrderMenusWithAmountImpl
+    ): GetOrderMenusWithAmount
+
+    @Binds
+    abstract fun bindGetVariantsWithOptions(
+        getVariantsWithOptions: GetVariantsWithOptionsImpl
+    ): GetVariantsWithOptions
 }

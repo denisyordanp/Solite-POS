@@ -1,15 +1,12 @@
 package com.socialite.solite_pos.view.store.recap
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetOrderMenusWithAmount
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.repository.StoreRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -17,8 +14,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecapViewModel(
+@HiltViewModel
+class RecapViewModel @Inject constructor(
     private val storeRepository: StoreRepository,
     private val getRecapData: GetRecapData,
     private val getOrderMenusWithAmount: GetOrderMenusWithAmount
@@ -66,21 +65,6 @@ class RecapViewModel(
                     selectedStore = store
                 )
             )
-        }
-    }
-
-    companion object {
-        fun getFactory(context: Context) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return RecapViewModel(
-                    storeRepository = LoggedInRepositoryInjection.provideStoreRepository(context),
-                    getRecapData = LoggedInDomainInjection.provideGetIncomesRecapData(context),
-                    getOrderMenusWithAmount = LoggedInDomainInjection.provideGetOrderMenusWithAmount(
-                        context
-                    )
-                ) as T
-            }
         }
     }
 }
