@@ -2,6 +2,7 @@ package com.socialite.solite_pos.di.loggedin
 
 import com.socialite.solite_pos.data.source.domain.GetOrderWithProduct
 import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
+import com.socialite.solite_pos.data.source.domain.GetOrdersMenuWithOrders
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetProductWithVariantOptions
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
@@ -11,6 +12,7 @@ import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetOrderWithProductImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetOrdersGeneralMenuBadgeImpl
+import com.socialite.solite_pos.data.source.domain.impl.GetOrdersMenuWithOrdersImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
@@ -71,4 +73,9 @@ abstract class LoggedInDomainModule {
     abstract fun bindPayOrder(
         payOrder: PayOrderImpl
     ): PayOrder
+
+    @Binds
+    abstract fun bindGetOrdersMenuWithOrders(
+        getOrdersMenuWithOrders: GetOrdersMenuWithOrdersImpl
+    ): GetOrdersMenuWithOrders
 }

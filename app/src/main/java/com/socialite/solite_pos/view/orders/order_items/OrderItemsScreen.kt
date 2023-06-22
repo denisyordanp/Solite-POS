@@ -39,13 +39,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -71,11 +70,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 fun OrderItemsScreen(
-    currentViewModel: OrderItemsViewModel = viewModel(
-        factory = OrderItemsViewModel.getFactory(
-            LocalContext.current
-        )
-    ),
+    currentViewModel: OrderItemsViewModel = hiltViewModel(),
     parameters: ReportParameter,
     defaultTabPage: Int,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
@@ -85,7 +80,8 @@ fun OrderItemsScreen(
     val orders = currentViewModel.getOrders(parameters).collectAsState(initial = emptyList()).value
 
     if (parameters.isTodayOnly()) {
-        val badges = currentViewModel.getBadges(parameters.start).collectAsState(initial = emptyList())
+        val badges =
+            currentViewModel.getBadges(parameters.start).collectAsState(initial = emptyList())
         TodayOnlyOrdersContent(
             badges = badges.value,
             ordersMenu = orders,

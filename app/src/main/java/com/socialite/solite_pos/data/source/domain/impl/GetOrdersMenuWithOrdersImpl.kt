@@ -11,8 +11,9 @@ import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class GetOrdersMenuWithOrdersImpl(
+class GetOrdersMenuWithOrdersImpl @Inject constructor(
     private val orderRepository: OrdersRepository,
     private val orderDetailRepository: OrderDetailsRepository,
     private val converter: ProductOrderDetailConverter
