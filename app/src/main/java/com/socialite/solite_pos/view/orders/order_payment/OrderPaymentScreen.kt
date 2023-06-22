@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -49,6 +50,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.view.ui.DropdownItem
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -148,73 +150,37 @@ private fun PaymentContent(
             modifier = Modifier
                 .align(Alignment.TopCenter)
         ) {
-            if (promos.isNotEmpty()) {
-                basicDropdown(
-                    isExpanded = promoExpanded,
-                    title = R.string.select_promo,
-                    selectedItem = selectedPromo?.name,
-                    items = promos,
-                    onHeaderClicked = {
-                        promoExpanded = !promoExpanded
-                    },
-                    onSelectedItem = {
-                        selectedPromo = if (it == selectedPromo) {
-                            null
-                        } else {
-                            it as Promo
-                        }
-                        promoExpanded = false
+            promoOptions(
+                promos,
+                promoExpanded,
+                selectedPromo,
+                cashAmount,
+                onHeaderClicked = {
+                    promoExpanded = !promoExpanded
+                },
+                onSelectedItem = {
+                    selectedPromo = if (it == selectedPromo) {
+                        null
+                    } else {
+                        it as Promo
                     }
-                )
-                if (selectedPromo?.isManualInput() == true) {
-                    item {
-                        BasicEditText(
-                            modifier = Modifier
-                                .background(color = MaterialTheme.colors.surface)
-                                .padding(16.dp),
-                            value = manualInputPromo?.toString() ?: "",
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done,
-                            visualTransformation = ThousandAndSuggestionVisualTransformation(
-                                cashAmount.second
-                            ),
-                            placeHolder = stringResource(R.string.promo_amount),
-                            onValueChange = {
-                                val amount = it.toLongOrNull() ?: 0L
-                                manualInputPromo = amount
-                            },
-                            onAction = {
-                                keyboard?.hide()
-                            }
-                        )
-                    }
-                }
-                item {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
+                    promoExpanded = false
+                },
+                onValueChange = {
+                    val amount = it.toLongOrNull() ?: 0L
+                    manualInputPromo = amount
+                },
+                onAction = {
+                    keyboard?.hide()
+                },
+                manualInputPromo
+            )
 
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = MaterialTheme.colors.surface)
-                        .padding(16.dp)
-                ) {
-                    selectedPromo?.let {
-                        Text(
-                            text = "Rp. ${orderWithProduct.grandTotal.thousand()} - ${it.name}",
-                            style = MaterialTheme.typography.subtitle1
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                    }
-                    Text(
-                        text = "Rp. ${grandTotal.thousand()}",
-                        style = MaterialTheme.typography.h3
-                    )
-                }
-                Spacer(modifier = Modifier.height(4.dp))
-            }
+            grandTotalWithPromo(
+                selectedPromo = selectedPromo,
+                orderWithProduct = orderWithProduct,
+                grandTotal = grandTotal
+            )
 
             basicDropdown(
                 isExpanded = paymentExpanded,
@@ -230,24 +196,19 @@ private fun PaymentContent(
                 }
             )
 
-            selectedPayment?.let { payment ->
-                if (payment.isCash) {
-                    item {
-                        PaymentCashOption(
-                            totalAmount = grandTotal,
-                            cashAmount = cashAmount,
-                            cashSuggestions = cashSuggestions,
-                            onAmountChange = {
-                                onAddCashInput(
-                                    it.first,
-                                    grandTotal
-                                )
-                                cashAmount = it
-                            }
-                        )
-                    }
+            paymentCashOption(
+                payment = selectedPayment,
+                totalAmount = grandTotal,
+                cashAmount = cashAmount,
+                cashSuggestions = cashSuggestions,
+                onAmountChange = {
+                    onAddCashInput(
+                        it.first,
+                        grandTotal
+                    )
+                    cashAmount = it
                 }
-            }
+            )
         }
 
         PaymentFooter(
@@ -270,89 +231,164 @@ private fun PaymentContent(
     }
 }
 
-@Composable
 @ExperimentalComposeUiApi
-private fun PaymentCashOption(
+private fun LazyListScope.promoOptions(
+    promos: List<Promo>,
+    promoExpanded: Boolean,
+    selectedPromo: Promo?,
+    cashAmount: Pair<Long, Boolean>,
+    onHeaderClicked: () -> Unit,
+    onSelectedItem: (DropdownItem) -> Unit,
+    onValueChange: (String) -> Unit,
+    onAction: () -> Unit,
+    manualInputPromo: Long?
+) {
+    if (promos.isNotEmpty()) {
+        basicDropdown(
+            isExpanded = promoExpanded,
+            title = R.string.select_promo,
+            selectedItem = selectedPromo?.name,
+            items = promos,
+            onHeaderClicked = onHeaderClicked,
+            onSelectedItem = onSelectedItem
+        )
+        if (selectedPromo?.isManualInput() == true) {
+            item {
+                BasicEditText(
+                    modifier = Modifier
+                        .background(color = MaterialTheme.colors.surface)
+                        .padding(16.dp),
+                    value = manualInputPromo?.toString() ?: "",
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                    visualTransformation = ThousandAndSuggestionVisualTransformation(
+                        cashAmount.second
+                    ),
+                    placeHolder = stringResource(R.string.promo_amount),
+                    onValueChange = onValueChange,
+                    onAction = onAction
+                )
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+    }
+}
+
+private fun LazyListScope.grandTotalWithPromo(
+    selectedPromo: Promo?,
+    orderWithProduct: OrderWithProduct,
+    grandTotal: Long
+) {
+    item {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colors.surface)
+                .padding(16.dp)
+        ) {
+            selectedPromo?.let {
+                Text(
+                    text = "Rp. ${orderWithProduct.grandTotal.thousand()} - ${it.name}",
+                    style = MaterialTheme.typography.subtitle1
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+            Text(
+                text = "Rp. ${grandTotal.thousand()}",
+                style = MaterialTheme.typography.h3
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+}
+
+@ExperimentalComposeUiApi
+private fun LazyListScope.paymentCashOption(
+    payment: Payment?,
     totalAmount: Long,
     cashAmount: Pair<Long, Boolean>,
     cashSuggestions: List<Long>?,
     onAmountChange: (Pair<Long, Boolean>) -> Unit
 ) {
+    if (payment?.isCash == true) {
+        item {
+            val keyboardController = LocalSoftwareKeyboardController.current
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colors.surface)
+                    .padding(16.dp)
+            ) {
+                val maxWidth = maxWidth
+                Column {
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colors.surface)
-            .padding(16.dp)
-    ) {
-        val maxWidth = maxWidth
+                    val newAmount = if (cashAmount.first == 0L) "" else cashAmount.first.toString()
+                    BasicEditText(
+                        value = newAmount,
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done,
+                        visualTransformation = ThousandAndSuggestionVisualTransformation(cashAmount.second),
+                        placeHolder = stringResource(R.string.cash_amount),
+                        onValueChange = {
+                            val amount = it.toLongOrNull() ?: 0L
+                            onAmountChange(Pair(amount, false))
+                        },
+                        onAction = {
+                            keyboardController?.hide()
+                        }
+                    )
 
-        Column {
-
-            val newAmount = if (cashAmount.first == 0L) "" else cashAmount.first.toString()
-            BasicEditText(
-                value = newAmount,
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done,
-                visualTransformation = ThousandAndSuggestionVisualTransformation(cashAmount.second),
-                placeHolder = stringResource(R.string.cash_amount),
-                onValueChange = {
-                    val amount = it.toLongOrNull() ?: 0L
-                    onAmountChange(Pair(amount, false))
-                },
-                onAction = {
-                    keyboardController?.hide()
-                }
-            )
-
-            if (!cashSuggestions.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                LazyHorizontalGrid(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .height(35.dp),
-                    rows = GridCells.Adaptive(maxWidth)
-                ) {
-                    items(cashSuggestions) { suggestion ->
-                        Box(
+                    if (!cashSuggestions.isNullOrEmpty()) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        LazyHorizontalGrid(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(4.dp)
-                                .background(
-                                    color = MaterialTheme.colors.background,
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .padding(4.dp)
-                                .clickable {
-                                    onAmountChange(Pair(suggestion, true))
-                                }
+                                .padding(start = 16.dp)
+                                .height(35.dp),
+                            rows = GridCells.Adaptive(maxWidth)
                         ) {
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.Center),
-                                text = suggestion.thousand(),
-                                style = MaterialTheme.typography.overline
-                            )
+                            items(cashSuggestions) { suggestion ->
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(4.dp)
+                                        .background(
+                                            color = MaterialTheme.colors.background,
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                        .padding(4.dp)
+                                        .clickable {
+                                            onAmountChange(Pair(suggestion, true))
+                                        }
+                                ) {
+                                    Text(
+                                        modifier = Modifier
+                                            .align(Alignment.Center),
+                                        text = suggestion.thousand(),
+                                        style = MaterialTheme.typography.overline
+                                    )
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            Row {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(start = 16.dp),
-                    text = stringResource(R.string.cash_change),
-                    style = MaterialTheme.typography.body1
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                val change = cashAmount.first - totalAmount
-                Text(
-                    text = "Rp. ${change.thousand()}",
-                    style = MaterialTheme.typography.h6
-                )
+                    Row {
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(start = 16.dp),
+                            text = stringResource(R.string.cash_change),
+                            style = MaterialTheme.typography.body1
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        val change = cashAmount.first - totalAmount
+                        Text(
+                            text = "Rp. ${change.thousand()}",
+                            style = MaterialTheme.typography.h6
+                        )
+                    }
+                }
             }
         }
     }
