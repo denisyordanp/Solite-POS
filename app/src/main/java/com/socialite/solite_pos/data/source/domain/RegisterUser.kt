@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.source.domain
 
-interface RegisterUser {
+fun interface RegisterUser {
     suspend operator fun invoke(
         name: String,
         email: String,
