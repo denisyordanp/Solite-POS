@@ -30,13 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
@@ -54,11 +53,7 @@ import com.socialite.solite_pos.view.ui.OrderMenus
 @Composable
 fun OrderDetailScreen(
     orderId: String,
-    currentViewModel: OrderDetailViewModel = viewModel(
-        factory = OrderDetailViewModel.getFactory(
-            LocalContext.current
-        )
-    ),
+    currentViewModel: OrderDetailViewModel = hiltViewModel(),
     timePicker: MaterialTimePicker.Builder,
     datePicker: MaterialDatePicker.Builder<Long>,
     fragmentManager: FragmentManager,

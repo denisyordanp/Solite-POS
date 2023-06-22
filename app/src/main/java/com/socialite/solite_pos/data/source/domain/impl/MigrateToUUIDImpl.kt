@@ -16,8 +16,9 @@ import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import javax.inject.Inject
 
-class MigrateToUUIDImpl(
+class MigrateToUUIDImpl @Inject constructor(
     private val customersRepository: CustomersRepository,
     private val storeRepository: StoreRepository,
     private val categoriesRepository: CategoriesRepository,

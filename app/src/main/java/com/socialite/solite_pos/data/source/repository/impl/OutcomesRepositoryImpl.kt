@@ -14,8 +14,9 @@ import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapConcat
 import java.util.UUID
+import javax.inject.Inject
 
-class OutcomesRepositoryImpl(
+class OutcomesRepositoryImpl @Inject constructor(
         private val dao: OutcomesDao,
         private val storesDao: StoreDao,
         private val settingRepository: SettingRepository,

@@ -19,9 +19,11 @@ import com.socialite.solite_pos.view.orders.OrdersActivity
 import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsActivity : SoliteActivity() {
-    private val settingViewModel: SettingViewModel by viewModels { SettingViewModel.getFactory(this) }
+    private val settingViewModel: SettingViewModel by viewModels()
 
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {

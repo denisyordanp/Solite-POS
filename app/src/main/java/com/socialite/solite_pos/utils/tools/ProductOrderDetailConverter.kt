@@ -5,8 +5,11 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDe
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import kotlinx.coroutines.flow.firstOrNull
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ProductOrderDetailConverter(
+@Singleton
+class ProductOrderDetailConverter @Inject constructor(
     private val orderDetailRepository: OrderDetailsRepository,
     private val productsRepository: ProductsRepository,
 ) {

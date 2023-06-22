@@ -33,15 +33,17 @@ import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class OpeningActivity : SoliteActivity() {
 
     companion object {
         private const val IN_APP_UPDATE_REQUEST_CODE = 1234
     }
 
-    private val openingViewModel: OpeningViewModel by viewModels { OpeningViewModel.getFactory(this) }
+    private val openingViewModel: OpeningViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

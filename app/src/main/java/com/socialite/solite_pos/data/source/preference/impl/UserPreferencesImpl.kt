@@ -3,9 +3,13 @@ package com.socialite.solite_pos.data.source.preference.impl
 import android.content.Context
 import android.content.SharedPreferences
 import com.socialite.solite_pos.data.source.preference.UserPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserPreferencesImpl(
-    context: Context
+@Singleton
+class UserPreferencesImpl @Inject constructor(
+    @ApplicationContext context: Context
 ) : UserPreferences {
 
     companion object {

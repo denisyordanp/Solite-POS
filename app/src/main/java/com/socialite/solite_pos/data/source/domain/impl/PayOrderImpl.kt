@@ -7,8 +7,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.repository.OrderPaymentsRepository
 import com.socialite.solite_pos.data.source.repository.OrderPromosRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
+import javax.inject.Inject
 
-class PayOrderImpl(
+class PayOrderImpl @Inject constructor(
     private val ordersRepository: OrdersRepository,
     private val orderPaymentsRepository: OrderPaymentsRepository,
     private val orderPromosRepository: OrderPromosRepository,

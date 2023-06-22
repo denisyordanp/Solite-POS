@@ -12,8 +12,9 @@ import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import java.util.UUID
+import javax.inject.Inject
 
-class OrderDetailsRepositoryImpl(
+class OrderDetailsRepositoryImpl @Inject constructor(
     private val dao: OrderDetailsDao,
     private val ordersDao: OrdersDao,
     private val orderProductVariantsDao: OrderProductVariantsDao,

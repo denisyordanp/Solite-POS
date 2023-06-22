@@ -10,8 +10,9 @@ import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import java.util.UUID
+import javax.inject.Inject
 
-class ProductsRepositoryImpl(
+class ProductsRepositoryImpl @Inject constructor(
     private val dao: ProductsDao,
     private val categoryDao: CategoriesDao,
     private val db: AppDatabase

@@ -33,13 +33,13 @@ import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.store.StoreDestinations
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class OrderCustomerActivity : SoliteActivity() {
 
-    private val viewModel: OrderCustomerViewModel by viewModels {
-        OrderCustomerViewModel.getFactory(this)
-    }
+    private val viewModel: OrderCustomerViewModel by viewModels()
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi

@@ -12,9 +12,10 @@ import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
+import javax.inject.Inject
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment as NewPayment
 
-class PaymentsRepositoryImpl(
+class PaymentsRepositoryImpl @Inject  constructor(
     private val dao: PaymentsDao,
     private val db: AppDatabase
 ) : PaymentsRepository {

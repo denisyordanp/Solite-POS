@@ -12,8 +12,9 @@ import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import java.util.UUID
+import javax.inject.Inject
 
-class ProductVariantsRepositoryImpl(
+class ProductVariantsRepositoryImpl @Inject constructor(
     private val dao: ProductVariantsDao,
     private val variantsDao: VariantsDao,
     private val variantOptionsDao: VariantOptionsDao,

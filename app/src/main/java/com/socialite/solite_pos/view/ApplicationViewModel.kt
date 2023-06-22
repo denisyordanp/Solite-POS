@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.viewModel
+package com.socialite.solite_pos.view
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

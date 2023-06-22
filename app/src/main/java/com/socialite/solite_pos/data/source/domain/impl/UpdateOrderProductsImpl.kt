@@ -6,8 +6,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDe
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
+import javax.inject.Inject
 
-class UpdateOrderProductsImpl(
+class UpdateOrderProductsImpl @Inject constructor(
     private val orderDetailsRepository: OrderDetailsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository
 ) : UpdateOrderProducts {

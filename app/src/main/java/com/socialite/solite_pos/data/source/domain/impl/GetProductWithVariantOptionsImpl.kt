@@ -6,8 +6,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProd
 import com.socialite.solite_pos.data.source.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.ProductsRepository
 import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
-class GetProductWithVariantOptionsImpl(
+class GetProductWithVariantOptionsImpl @Inject constructor(
     private val productVariantsRepository: ProductVariantsRepository,
     private val productsRepository: ProductsRepository
 ) : GetProductWithVariantOptions {

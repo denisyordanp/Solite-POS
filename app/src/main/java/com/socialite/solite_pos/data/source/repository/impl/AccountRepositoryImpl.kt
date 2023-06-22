@@ -3,9 +3,11 @@ package com.socialite.solite_pos.data.source.repository.impl
 import com.socialite.solite_pos.data.source.remote.SoliteServices
 import com.socialite.solite_pos.data.source.remote.response.helper.ResponseHandler.handleErrorMessage
 import com.socialite.solite_pos.data.source.repository.AccountRepository
+import com.socialite.solite_pos.di.NonAuthorizationService
+import javax.inject.Inject
 
-class AccountRepositoryImpl(
-    private val service: SoliteServices,
+class AccountRepositoryImpl @Inject constructor(
+    @NonAuthorizationService private val service: SoliteServices,
 ) : AccountRepository {
     override suspend fun login(email: String, password: String): String {
         val response = handleErrorMessage {

@@ -8,8 +8,9 @@ import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class GetOrderMenusWithAmountImpl(
+class GetOrderMenusWithAmountImpl @Inject constructor(
     private val ordersRepository: OrdersRepository
 ) : GetOrderMenusWithAmount {
     override fun invoke(parameters: ReportParameter): Flow<List<MenuOrderAmount>> {

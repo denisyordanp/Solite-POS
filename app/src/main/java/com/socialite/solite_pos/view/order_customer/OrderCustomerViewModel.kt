@@ -1,8 +1,6 @@
 package com.socialite.solite_pos.view.order_customer
 
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.NewOrder
@@ -11,16 +9,17 @@ import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDeta
 import com.socialite.solite_pos.data.source.local.entity.helper.findExisting
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
 import com.socialite.solite_pos.utils.config.DateUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import javax.inject.Inject
 
-class OrderCustomerViewModel(
+@HiltViewModel
+class OrderCustomerViewModel @Inject constructor(
     private val settingRepository: SettingRepository,
     private val getProductWithCategories: GetProductWithCategories,
     private val newOrder: NewOrder,
@@ -151,23 +150,6 @@ class OrderCustomerViewModel(
                     products = it,
                     currentTime = DateUtils.currentDateTime
                 )
-            }
-        }
-    }
-
-    companion object {
-        fun getFactory(activity: FragmentActivity) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return OrderCustomerViewModel(
-                    settingRepository = LoggedInRepositoryInjection.provideSettingRepository(
-                        activity
-                    ),
-                    getProductWithCategories = LoggedInDomainInjection.provideGetProductWithCategories(
-                        activity
-                    ),
-                    newOrder = LoggedInDomainInjection.provideNewOrder(activity)
-                ) as T
             }
         }
     }

@@ -7,8 +7,9 @@ import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class GetOrderWithProductImpl(
+class GetOrderWithProductImpl @Inject constructor(
     private val orderRepository: OrdersRepository,
     private val orderDetailRepository: OrderDetailsRepository,
     private val converter: ProductOrderDetailConverter

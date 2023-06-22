@@ -22,7 +22,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
@@ -36,14 +35,17 @@ import com.socialite.solite_pos.view.store.StoreActivity
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.OrderMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class OrdersActivity : SoliteActivity() {
 
-    private val ordersViewModel: OrdersViewModel by viewModels { OrdersViewModel.getFactory(this) }
+    private val ordersViewModel: OrdersViewModel by viewModels()
 
-    private var printBill: PrintBill? = null
+    // TODO: Implement print bill
+//    private var printBill: PrintBill? = null
 
     companion object {
 
@@ -318,9 +320,9 @@ class OrdersActivity : SoliteActivity() {
         startActivity(intent)
     }
 
-    override fun onDestroy() {
-        printBill?.onDestroy()
-        printBill = null
-        super.onDestroy()
-    }
+//    override fun onDestroy() {
+//        printBill?.onDestroy()
+//        printBill = null
+//        super.onDestroy()
+//    }
 }

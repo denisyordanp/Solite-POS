@@ -37,12 +37,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicAlertDialog
@@ -57,11 +56,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 fun StoresScreen(
-    currentViewModel: StoresViewModel = viewModel(
-        factory = StoresViewModel.getFactory(
-            LocalContext.current
-        )
-    ),
+    currentViewModel: StoresViewModel = hiltViewModel(),
     onBackClicked: () -> Unit
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)

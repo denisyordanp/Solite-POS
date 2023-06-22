@@ -3,9 +3,15 @@ package com.socialite.solite_pos.data.source.preference
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @SuppressLint("CommitPrefEdits")
-class OrderPref(context: Context) {
+@Singleton
+class OrderPref @Inject constructor(
+    @ApplicationContext context: Context
+) {
 
     companion object {
         private const val PREF_SETTING = "setting_preference"

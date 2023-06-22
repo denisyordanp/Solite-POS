@@ -5,8 +5,9 @@ import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptio
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
 import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
-class GetVariantsWithOptionsImpl(
+class GetVariantsWithOptionsImpl @Inject constructor(
     private val variantsRepository: VariantsRepository,
     private val variantOptionsRepository: VariantOptionsRepository
 ) : GetVariantsWithOptions {

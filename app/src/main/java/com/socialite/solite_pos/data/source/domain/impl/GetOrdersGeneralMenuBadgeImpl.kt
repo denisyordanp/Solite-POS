@@ -8,8 +8,9 @@ import com.socialite.solite_pos.view.ui.GeneralMenus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class GetOrdersGeneralMenuBadgeImpl(
+class GetOrdersGeneralMenuBadgeImpl @Inject constructor(
     private val ordersRepository: OrdersRepository
 ) : GetOrdersGeneralMenuBadge {
 

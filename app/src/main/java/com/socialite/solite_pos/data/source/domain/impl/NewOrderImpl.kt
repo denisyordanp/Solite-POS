@@ -15,8 +15,9 @@ import com.socialite.solite_pos.data.source.repository.OrdersRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class NewOrderImpl(
+class NewOrderImpl @Inject constructor(
     private val orderPref: OrderPref,
     private val ordersRepository: OrdersRepository,
     private val orderDetailsRepository: OrderDetailsRepository,

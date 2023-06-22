@@ -12,8 +12,9 @@ import java.util.UUID
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
+import javax.inject.Inject
 
-class StoreRepositoryImpl(
+class StoreRepositoryImpl @Inject constructor(
     private val dao: StoreDao,
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
