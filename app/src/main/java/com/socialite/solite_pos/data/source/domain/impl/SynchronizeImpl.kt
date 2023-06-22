@@ -19,6 +19,7 @@ import com.socialite.solite_pos.data.source.repository.PromosRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import com.socialite.solite_pos.di.AuthorizationService
 import javax.inject.Inject
 
 class SynchronizeImpl @Inject constructor(
@@ -37,7 +38,7 @@ class SynchronizeImpl @Inject constructor(
     private val variantOptionsRepository: VariantOptionsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
-    private val service: SoliteServices
+    @AuthorizationService private val service: SoliteServices
 ) : Synchronize {
     override suspend fun invoke(): Boolean {
         // Get all un uploaded data

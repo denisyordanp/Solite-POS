@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.di.loggedin
+package com.socialite.solite_pos.di
 
 import com.socialite.solite_pos.data.source.domain.GetCategoryProductVariantCount
 import com.socialite.solite_pos.data.source.domain.GetOrderMenusWithAmount

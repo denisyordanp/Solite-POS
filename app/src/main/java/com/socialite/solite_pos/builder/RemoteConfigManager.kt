@@ -10,15 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteConfigManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-
-    companion object {
-        fun getInstance(context: Context) = RemoteConfigManager(context)
-    }
-
     enum class RemoteKeys {
         IS_SERVER_ACTIVE;
 

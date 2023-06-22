@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit
 object NetworkModule {
 
     @Provides
-    fun provideOkHttp(
+    @AuthorizationService
+    fun provideAuthorizationOkHttp(
         loggingInterceptor: HttpLoggingInterceptor,
         userPreferences: UserPreferences,
     ): OkHttpClient.Builder =
@@ -42,15 +43,25 @@ object NetworkModule {
         }
 
     @Provides
+    @NonAuthorizationService
+    fun provideNonAuthorizationOkHttp(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient.Builder =
+        OkHttpClient.Builder().apply {
+            readTimeout(NetworkConfig.timeout(), TimeUnit.SECONDS)
+            connectTimeout(NetworkConfig.timeout(), TimeUnit.SECONDS)
+            if (NetworkConfig.isDebugMode()) {
+                addNetworkInterceptor(loggingInterceptor)
+            }
+        }
+
+    @Provides
     fun provideRetrofit(
         gsonConverter: GsonConverterFactory,
-        okHttpBuilder: OkHttpClient.Builder
-    ): Retrofit =
+    ): Retrofit.Builder =
         Retrofit.Builder()
             .baseUrl(NetworkConfig.getBaseUrl())
-            .client(okHttpBuilder.build())
             .addConverterFactory(gsonConverter)
-            .build()
 
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor =
@@ -67,9 +78,24 @@ object NetworkModule {
         )
 
     @Provides
-    fun provideSoliteServices(
-        retrofit: Retrofit
+    @AuthorizationService
+    fun provideAuthorizationSoliteServices(
+        retrofit: Retrofit.Builder,
+        @AuthorizationService okHttpBuilder: OkHttpClient.Builder
     ): SoliteServices {
-        return retrofit.create(SoliteServices::class.java)
+        return retrofit
+            .client(okHttpBuilder.build())
+            .build().create(SoliteServices::class.java)
+    }
+
+    @Provides
+    @NonAuthorizationService
+    fun provideNonAuthorizationSoliteServices(
+        retrofit: Retrofit.Builder,
+        @NonAuthorizationService okHttpBuilder: OkHttpClient.Builder
+    ): SoliteServices {
+        return retrofit
+            .client(okHttpBuilder.build())
+            .build().create(SoliteServices::class.java)
     }
 }
