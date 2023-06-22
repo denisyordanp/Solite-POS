@@ -1,9 +1,10 @@
 package com.socialite.solite_pos.view.opening
 
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
@@ -22,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -34,7 +34,6 @@ import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class OpeningActivity : SoliteActivity() {
@@ -83,12 +82,19 @@ class OpeningActivity : SoliteActivity() {
 
     private fun getVersionName(): String {
         return try {
-            packageManager.getPackageInfo(packageName, 0).versionName
+            packageManager.getPackageInfoCompat(packageName).versionName
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
             ""
         }
     }
+
+    private fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
+        } else {
+            @Suppress("DEPRECATION") getPackageInfo(packageName, flags)
+        }
 
     private fun inAppUpdate() {
         val appUpdateManager = AppUpdateManagerFactory.create(this)
@@ -126,9 +132,8 @@ class OpeningActivity : SoliteActivity() {
     }
 
     private fun preparingApp() {
-        lifecycleScope.launch {
-            openingViewModel.fetchRemoteConfig()
-            Handler(Looper.getMainLooper()).postDelayed({ checkUser() }, 1000)
+        openingViewModel.fetchRemoteConfig {
+            checkUser()
         }
     }
 

@@ -1,5 +1,5 @@
 package com.socialite.solite_pos.data.source.domain
 
-interface MigrateToUUID {
+fun interface MigrateToUUID {
     suspend operator fun invoke()
 }
