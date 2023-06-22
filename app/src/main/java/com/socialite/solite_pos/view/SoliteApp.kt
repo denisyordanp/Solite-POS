@@ -6,14 +6,17 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.BuildConfig
-import com.socialite.solite_pos.di.RepositoryInjection
+import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
-import com.socialite.solite_pos.view.viewModel.ApplicationViewModel
 import dagger.hilt.android.HiltAndroidApp
 import java.util.Locale
+import javax.inject.Inject
 
 @HiltAndroidApp
 class SoliteApp : Application() {
+
+    @Inject
+    lateinit var settingRepository: SettingRepository
 
     private lateinit var viewModel: ApplicationViewModel
 
@@ -27,7 +30,6 @@ class SoliteApp : Application() {
     }
 
     private fun setupViewModel() {
-        val settingRepository = RepositoryInjection.provideSettingRepository(this)
         viewModel = ApplicationViewModel(this, settingRepository)
     }
 

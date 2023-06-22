@@ -15,38 +15,45 @@ import com.socialite.solite_pos.data.source.domain.impl.SynchronizeImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 abstract class LoggedInDomainModule {
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetOrdersGeneralMenuBadge(
         getOrdersGeneralMenuBadgeImpl: GetOrdersGeneralMenuBadgeImpl
     ): GetOrdersGeneralMenuBadge
 
     @Binds
+    @ViewModelScoped
     abstract fun bindMigrateToUUID(
         migrateToUUIDImpl: MigrateToUUIDImpl
     ): MigrateToUUID
 
     @Binds
+    @ViewModelScoped
     abstract fun bindSynchronize(
         synchronizeImpl: SynchronizeImpl
     ): Synchronize
 
     @Binds
+    @ViewModelScoped
     abstract fun bindNewOrder(
         newOrderImpl: NewOrderImpl
     ): NewOrder
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetProductWithCategories(
         getProductWithCategoriesImpl: GetProductWithCategoriesImpl
     ): GetProductWithCategories
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetProductWithVariantOptions(
         getProductWithVariantOptions: GetProductWithVariantOptionsImpl
     ): GetProductWithVariantOptions
