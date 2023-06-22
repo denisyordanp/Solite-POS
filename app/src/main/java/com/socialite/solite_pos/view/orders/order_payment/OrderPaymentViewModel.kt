@@ -1,8 +1,6 @@
 package com.socialite.solite_pos.view.orders.order_payment
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.GetOrderWithProduct
 import com.socialite.solite_pos.data.source.domain.PayOrder
@@ -13,8 +11,6 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 import com.socialite.solite_pos.data.source.repository.PaymentsRepository
 import com.socialite.solite_pos.data.source.repository.PromosRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
 import com.socialite.solite_pos.utils.config.CashAmounts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -102,22 +98,6 @@ class OrderPaymentViewModel @Inject constructor(
                 ),
                 promo = newPromo
             )
-        }
-    }
-
-    companion object {
-        fun getFactory(context: Context) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return OrderPaymentViewModel(
-                    paymentsRepository = LoggedInRepositoryInjection.providePaymentsRepository(
-                        context
-                    ),
-                    promosRepository = LoggedInRepositoryInjection.providePromosRepository(context),
-                    getOrderWithProduct = LoggedInDomainInjection.provideGetOrderWithProduct(context),
-                    payOrder = LoggedInDomainInjection.providePayOrder(context)
-                ) as T
-            }
         }
     }
 }
