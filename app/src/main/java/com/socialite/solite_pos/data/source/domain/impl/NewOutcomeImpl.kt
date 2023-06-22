@@ -5,8 +5,9 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class NewOutcomeImpl(
+class NewOutcomeImpl @Inject constructor(
     private val settingRepository: SettingRepository,
     private val outcomesRepository: OutcomesRepository
 ) : NewOutcome {

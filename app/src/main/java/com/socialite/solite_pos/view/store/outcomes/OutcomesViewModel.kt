@@ -1,22 +1,21 @@
 package com.socialite.solite_pos.view.store.outcomes
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome
 import com.socialite.solite_pos.data.source.repository.OutcomesRepository
-import com.socialite.solite_pos.di.loggedin.LoggedInDomainInjection
-import com.socialite.solite_pos.di.loggedin.LoggedInRepositoryInjection
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OutcomesViewModel(
+@HiltViewModel
+class OutcomesViewModel @Inject constructor(
     private val outcomesRepository: OutcomesRepository,
     private val newOutcome: NewOutcome,
 ) : ViewModel() {
@@ -64,20 +63,6 @@ class OutcomesViewModel(
                     )
                 )
             )
-        }
-    }
-
-    companion object {
-        fun getFactory(context: Context) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return OutcomesViewModel(
-                    outcomesRepository = LoggedInRepositoryInjection.provideOutcomesRepository(
-                        context
-                    ),
-                    newOutcome = LoggedInDomainInjection.provideNewOutcome(context)
-                ) as T
-            }
         }
     }
 }
