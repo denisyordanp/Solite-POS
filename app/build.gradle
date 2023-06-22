@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.socialite.solite_pos"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         versionCode 39
         versionName "3.2.5"
@@ -99,6 +99,7 @@ dependencies {
 
     // Utils
     implementation "pub.devrel:easypermissions:$easyPermissionVersion"
+    implementation "androidx.security:security-crypto-ktx:$securityCryptoVersion"
 
     // Firebase
     implementation platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
