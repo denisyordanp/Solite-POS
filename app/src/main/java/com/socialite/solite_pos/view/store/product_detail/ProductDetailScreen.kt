@@ -28,13 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
@@ -49,11 +48,7 @@ import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformatio
 @Composable
 @ExperimentalComposeUiApi
 fun ProductDetailScreen(
-    currentViewModel: ProductDetailViewModel = viewModel(
-        factory = ProductDetailViewModel.getFactory(
-            LocalContext.current
-        )
-    ),
+    currentViewModel: ProductDetailViewModel = hiltViewModel(),
     productId: String,
     onVariantClicked: () -> Unit,
     onBackClicked: () -> Unit,
