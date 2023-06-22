@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
-import com.socialite.solite_pos.data.source.preference.SettingPref
+import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import com.socialite.solite_pos.view.bluetooth.BluetoothDeviceListActivity
@@ -51,7 +51,7 @@ class PrintBill(private var activity: FragmentActivity) {
 			if (it != null) {
 				setPaper(it)
 			} else {
-				SettingPref(activity).printerDevice = ""
+				SettingPreferences(activity).printerDevice = ""
 				toBluetoothDevice()
 			}
 		}

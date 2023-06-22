@@ -12,7 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.databinding.ActivityBluetoothDeviceListBinding
-import com.socialite.solite_pos.data.source.preference.SettingPref
+import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.adapters.recycleView.bluetooth.BluetoothDeviceAdapter
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
@@ -25,7 +25,7 @@ class BluetoothDeviceListActivity : SoliteActivity() {
 
 	private lateinit var binding: ActivityBluetoothDeviceListBinding
 	private lateinit var adapterBluetooth: BluetoothDeviceAdapter
-	private lateinit var setting: SettingPref
+	private lateinit var setting: SettingPreferences
 	private lateinit var printBill: PrintBill
 
 	private var order: OrderWithProduct? = null
@@ -49,7 +49,7 @@ class BluetoothDeviceListActivity : SoliteActivity() {
 
 		printBill = PrintBill(this)
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-		setting = SettingPref(this)
+		setting = SettingPreferences(this)
 		adapterBluetooth = BluetoothDeviceAdapter(setting.printerDevice) { onChooseDevice(it) }
 
 		binding.rvBtDvList.layoutManager = LinearLayoutManager(this)
