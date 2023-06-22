@@ -1,6 +1,8 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
 import com.socialite.solite_pos.data.source.remote.SoliteServices
+import com.socialite.solite_pos.data.source.remote.response.entity.TokenResponse
+import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.ResponseHandler.handleErrorMessage
 import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.di.NonAuthorizationService
@@ -14,13 +16,7 @@ class AccountRepositoryImpl @Inject constructor(
             service.login(email, password)
         }
 
-        val error = response.error
-        if (error.isNullOrEmpty().not()) throw IllegalStateException(error)
-
-        val token = response.data?.token
-        if (token.isNullOrEmpty()) throw IllegalStateException("Token response null or empty")
-
-        return token
+        return response.getTokenOrError()
     }
 
     override suspend fun register(
@@ -32,12 +28,16 @@ class AccountRepositoryImpl @Inject constructor(
         val response = handleErrorMessage {
             service.register(name, email, password, storeName)
         }
+        return response.getTokenOrError()
+    }
 
-        val error = response.error
-        if (error.isNullOrEmpty().not()) throw IllegalStateException(error)
+    private fun ApiResponse<TokenResponse>.getTokenOrError(): String {
+        check(this.error.isNullOrEmpty())
 
-        val token = response.data?.token
-        if (token.isNullOrEmpty()) throw IllegalStateException("Token response null or empty")
+        val token = this.data?.token
+        check(!token.isNullOrEmpty()) {
+            "Token response null or empty"
+        }
 
         return token
     }
