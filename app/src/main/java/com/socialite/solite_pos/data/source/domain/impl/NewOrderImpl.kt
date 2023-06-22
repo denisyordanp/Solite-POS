@@ -8,7 +8,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDe
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
-import com.socialite.solite_pos.data.source.preference.OrderPref
+import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class NewOrderImpl @Inject constructor(
-    private val orderPref: OrderPref,
+    private val settingPreferences: SettingPreferences,
     private val ordersRepository: OrdersRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
@@ -64,16 +64,16 @@ class NewOrderImpl @Inject constructor(
         currentTime: String
     ): String {
         val time = generateOrderNoFromDate(currentTime)
-        if (time != orderPref.orderDate) {
+        if (time != settingPreferences.orderDate) {
             saveDate(time)
         }
-        val count = orderPref.orderCount
-        return "${orderPref.orderDate}${generateQueueNumber(count)}"
+        val count = settingPreferences.orderCount
+        return "${settingPreferences.orderDate}${generateQueueNumber(count)}"
     }
 
     private fun saveDate(time: String) {
-        orderPref.orderDate = time
-        orderPref.orderCount = 1
+        settingPreferences.orderDate = time
+        settingPreferences.orderCount = 1
     }
 
     private fun generateOrderNoFromDate(time: String) =
@@ -89,7 +89,7 @@ class NewOrderImpl @Inject constructor(
     }
 
     private fun increaseOrderQueue() {
-        orderPref.orderCount = orderPref.orderCount + 1
+        settingPreferences.orderCount = settingPreferences.orderCount + 1
     }
 
     private suspend fun insertOrderProduct(order: OrderWithProduct) {

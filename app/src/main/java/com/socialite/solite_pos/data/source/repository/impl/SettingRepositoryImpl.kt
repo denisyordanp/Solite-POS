@@ -1,6 +1,5 @@
 package com.socialite.solite_pos.data.source.repository.impl
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -9,7 +8,6 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.socialite.solite_pos.data.source.preference.UserPreferences
 import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.di.DataStoreModule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,15 +16,6 @@ class SettingRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val userPreference: UserPreferences
 ) : SettingRepository {
-    companion object {
-        fun getDataStoreInstance(
-            context: Context,
-            userPreference: UserPreferences
-        ): SettingRepositoryImpl {
-            val dataStore = DataStoreModule.provideSettingDataStore(context)
-            return SettingRepositoryImpl(dataStore, userPreference)
-        }
-    }
 
     private object PreferencesKeys {
         val SELECTED_STORE = longPreferencesKey("selected_store")

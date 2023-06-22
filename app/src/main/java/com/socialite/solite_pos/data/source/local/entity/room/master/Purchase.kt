@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.preference.PurchasePref
+import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -39,10 +39,10 @@ data class Purchase(
 
         const val DB_NAME = "purchase"
 
-        private var purchasePref: PurchasePref? = null
+        private var settingPreferences: SettingPreferences? = null
 
         fun purchaseNo(context: Context): String {
-            purchasePref = PurchasePref(context)
+            settingPreferences = SettingPreferences(context)
             return id
         }
 
@@ -51,7 +51,7 @@ data class Purchase(
                 if (date != savedDate) {
                     saveDate()
                 }
-                return "$savedDate${setNumber(purchasePref!!.purchaseCount)}"
+                return "$savedDate${setNumber(settingPreferences!!.purchaseCount)}"
             }
 
         private fun setNumber(i: Int): String {
@@ -71,24 +71,24 @@ data class Purchase(
 
         private val savedDate: String
             get() {
-                val date = purchasePref!!.purchaseDate
+                val date = settingPreferences!!.purchaseDate
                 return date ?: ""
             }
 
         private fun saveDate() {
-            purchasePref!!.purchaseDate = date
+            settingPreferences!!.purchaseDate = date
             reset()
         }
 
         fun add(context: Context) {
-            if (purchasePref == null) {
-                purchasePref = PurchasePref(context)
+            if (settingPreferences == null) {
+                settingPreferences = SettingPreferences(context)
             }
-            purchasePref!!.purchaseCount = purchasePref!!.purchaseCount + 1
+            settingPreferences!!.purchaseCount = settingPreferences!!.purchaseCount + 1
         }
 
         private fun reset() {
-            purchasePref!!.purchaseCount = 1
+            settingPreferences!!.purchaseCount = 1
         }
     }
 

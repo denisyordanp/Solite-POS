@@ -10,12 +10,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
-import com.socialite.solite_pos.data.source.preference.SettingPref
+import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import java.io.IOException
 
 class PrinterConnection(private val activity: FragmentActivity) {
 
-	private var setting: SettingPref = SettingPref(activity)
+	private var setting: SettingPreferences = SettingPreferences(activity)
 
 	companion object {
 		var mbtSocket: BluetoothSocket? = null
