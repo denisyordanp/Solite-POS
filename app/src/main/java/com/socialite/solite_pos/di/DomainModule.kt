@@ -10,10 +10,12 @@ import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.GetProductWithVariantOptions
 import com.socialite.solite_pos.data.source.domain.GetRecapData
 import com.socialite.solite_pos.data.source.domain.GetVariantsWithOptions
+import com.socialite.solite_pos.data.source.domain.LoginUser
 import com.socialite.solite_pos.data.source.domain.MigrateToUUID
 import com.socialite.solite_pos.data.source.domain.NewOrder
 import com.socialite.solite_pos.data.source.domain.NewOutcome
 import com.socialite.solite_pos.data.source.domain.PayOrder
+import com.socialite.solite_pos.data.source.domain.RegisterUser
 import com.socialite.solite_pos.data.source.domain.Synchronize
 import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.domain.impl.GetCategoryProductVariantCountImpl
@@ -26,10 +28,12 @@ import com.socialite.solite_pos.data.source.domain.impl.GetProductWithCategories
 import com.socialite.solite_pos.data.source.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetRecapDataImpl
 import com.socialite.solite_pos.data.source.domain.impl.GetVariantsWithOptionsImpl
+import com.socialite.solite_pos.data.source.domain.impl.LoginUserImpl
 import com.socialite.solite_pos.data.source.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOrderImpl
 import com.socialite.solite_pos.data.source.domain.impl.NewOutcomeImpl
 import com.socialite.solite_pos.data.source.domain.impl.PayOrderImpl
+import com.socialite.solite_pos.data.source.domain.impl.RegisterUserImpl
 import com.socialite.solite_pos.data.source.domain.impl.SynchronizeImpl
 import com.socialite.solite_pos.data.source.domain.impl.UpdateOrderProductsImpl
 import dagger.Binds
@@ -39,7 +43,7 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class LoggedInDomainModule {
+abstract class DomainModule {
 
     @Binds
     abstract fun bindGetOrdersGeneralMenuBadge(
@@ -120,4 +124,14 @@ abstract class LoggedInDomainModule {
     abstract fun bindGetVariantsWithOptions(
         getVariantsWithOptions: GetVariantsWithOptionsImpl
     ): GetVariantsWithOptions
+
+    @Binds
+    abstract fun bindLoginUser(
+        loginUser: LoginUserImpl
+    ): LoginUser
+
+    @Binds
+    abstract fun bindRegisterUser(
+        registerUser: RegisterUserImpl
+    ): RegisterUser
 }

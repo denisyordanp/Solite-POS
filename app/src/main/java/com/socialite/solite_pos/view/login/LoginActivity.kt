@@ -14,9 +14,11 @@ import androidx.navigation.compose.rememberNavController
 import com.socialite.solite_pos.compose.FullScreenLoadingView
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
-    private val viewModel: LoginViewModel by viewModels { LoginViewModel.getFactory(this) }
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

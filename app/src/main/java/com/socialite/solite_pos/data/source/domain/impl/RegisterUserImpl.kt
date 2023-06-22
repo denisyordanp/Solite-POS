@@ -3,8 +3,9 @@ package com.socialite.solite_pos.data.source.domain.impl
 import com.socialite.solite_pos.data.source.domain.RegisterUser
 import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.SettingRepository
+import javax.inject.Inject
 
-class RegisterUserImpl(
+class RegisterUserImpl @Inject constructor(
     private val repository: AccountRepository,
     private val settingRepository: SettingRepository
 ) : RegisterUser {

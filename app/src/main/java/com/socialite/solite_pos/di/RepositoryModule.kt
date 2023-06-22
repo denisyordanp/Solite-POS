@@ -2,6 +2,7 @@ package com.socialite.solite_pos.di
 
 import com.socialite.solite_pos.data.source.preference.UserPreferences
 import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
+import com.socialite.solite_pos.data.source.repository.AccountRepository
 import com.socialite.solite_pos.data.source.repository.CategoriesRepository
 import com.socialite.solite_pos.data.source.repository.CustomersRepository
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
@@ -19,6 +20,7 @@ import com.socialite.solite_pos.data.source.repository.SettingRepository
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import com.socialite.solite_pos.data.source.repository.impl.AccountRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.CategoriesRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.CustomersRepositoryImpl
 import com.socialite.solite_pos.data.source.repository.impl.OrderDetailsRepositoryImpl
@@ -43,7 +45,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class LoggedInRepositoryModule {
+abstract class RepositoryModule {
 
     @Binds
     abstract fun bindPaymentsRepository(
@@ -131,7 +133,12 @@ abstract class LoggedInRepositoryModule {
     ): RemoteConfigRepository
 
     @Binds
-    abstract fun provideUserPreferences(
+    abstract fun bindUserPreferences(
         userPreferencesImpl: UserPreferencesImpl
     ): UserPreferences
+
+    @Binds
+    abstract fun bindAccountRepository(
+        accountRepository: AccountRepositoryImpl
+    ): AccountRepository
 }
