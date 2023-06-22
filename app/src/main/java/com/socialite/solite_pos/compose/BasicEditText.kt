@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -53,81 +54,121 @@ fun BasicEditText(
     onPasswordVisibility: (() -> Unit)? = null,
 ) {
     val shape = RoundedCornerShape(8.dp)
+    val surfaceColor = if (isEnabled) MaterialTheme.colors.surface.copy(
+        alpha = 0.3f
+    ) else Color.Transparent
     Surface(
         modifier = Modifier
             .heightIn(min = 50.dp)
             .fillMaxWidth(),
-        color = if (isEnabled) MaterialTheme.colors.surface.copy(
-            alpha = 0.3f
-        ) else Color.Transparent,
+        color = surfaceColor,
         shape = shape
     ) {
+        val borderWidth = if (isEnabled) 0.5.dp else 0.dp
         Row(
             modifier = modifier
-                .run {
-                    return@run if (isEnabled) {
-                        border(
-                            width = 0.5.dp,
-                            color = MaterialTheme.colors.onSurface,
-                            shape = shape
-                        )
-                    } else {
-                        this
-                    }
-                }
+                .border(
+                    width = borderWidth,
+                    color = MaterialTheme.colors.onSurface,
+                    shape = shape
+                )
         ) {
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .weight(1f)
             ) {
-                if (isEnabled) {
-                    EnabledContent(
-                        visualTransformation = if (passwordVisible)
-                            VisualTransformation.None else visualTransformation,
-                        keyboardType = keyboardType,
-                        imeAction = imeAction,
-                        value = value,
-                        placeHolder = placeHolder,
-                        onAction = onAction,
-                        onValueChange = onValueChange
-                    )
-                } else {
-                    DisabledContent(value = value, placeHolder = placeHolder)
-                }
+                BasicEditTextContent(
+                    keyboardType = keyboardType,
+                    imeAction = imeAction,
+                    visualTransformation = visualTransformation,
+                    passwordVisible = passwordVisible,
+                    value = value,
+                    placeHolder = placeHolder,
+                    isEnabled = isEnabled,
+                    onValueChange = onValueChange,
+                    onAction = onAction
+                )
             }
-            if (isEnabled && value.isNotEmpty()) {
-                if (keyboardType == KeyboardType.Password) {
-                    Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .align(Alignment.CenterVertically)
-                            .clickable {
-                                onPasswordVisibility?.invoke()
-                            },
-                        painter = painterResource(
-                            id = if (passwordVisible)
-                                R.drawable.ic_visibility_on else R.drawable.ic_visibility_off
-                        ),
-                        tint = MaterialTheme.colors.onSurface,
-                        contentDescription = null
-                    )
-                } else {
-                    Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .align(Alignment.CenterVertically)
-                            .clickable {
-                                onValueChange("")
-                            },
-                        painter = painterResource(id = R.drawable.ic_close),
-                        tint = MaterialTheme.colors.onSurface,
-                        contentDescription = null
-                    )
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-            }
+            SuffixIcon(
+                keyboardType = keyboardType,
+                passwordVisible = passwordVisible,
+                value = value,
+                isEnabled = isEnabled,
+                onValueChange = onValueChange,
+                onPasswordVisibility = onPasswordVisibility
+            )
         }
+    }
+}
+
+@Composable
+private fun BoxScope.BasicEditTextContent(
+    keyboardType: KeyboardType,
+    imeAction: ImeAction,
+    visualTransformation: VisualTransformation,
+    passwordVisible: Boolean,
+    value: String,
+    placeHolder: String,
+    isEnabled: Boolean,
+    onValueChange: (String) -> Unit,
+    onAction: (() -> Unit)?,
+) {
+    if (isEnabled) {
+        EnabledContent(
+            visualTransformation = if (passwordVisible)
+                VisualTransformation.None else visualTransformation,
+            keyboardType = keyboardType,
+            imeAction = imeAction,
+            value = value,
+            placeHolder = placeHolder,
+            onAction = onAction,
+            onValueChange = onValueChange
+        )
+    } else {
+        DisabledContent(value = value, placeHolder = placeHolder)
+    }
+}
+
+@Composable
+private fun RowScope.SuffixIcon(
+    keyboardType: KeyboardType,
+    passwordVisible: Boolean,
+    value: String,
+    isEnabled: Boolean,
+    onValueChange: (String) -> Unit,
+    onPasswordVisibility: (() -> Unit)?,
+) {
+    if (isEnabled && value.isNotEmpty()) {
+        if (keyboardType == KeyboardType.Password) {
+            Icon(
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable {
+                        onPasswordVisibility?.invoke()
+                    },
+                painter = painterResource(
+                    id = if (passwordVisible)
+                        R.drawable.ic_visibility_on else R.drawable.ic_visibility_off
+                ),
+                tint = MaterialTheme.colors.onSurface,
+                contentDescription = null
+            )
+        } else {
+            Icon(
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable {
+                        onValueChange("")
+                    },
+                painter = painterResource(id = R.drawable.ic_close),
+                tint = MaterialTheme.colors.onSurface,
+                contentDescription = null
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
     }
 }
 
