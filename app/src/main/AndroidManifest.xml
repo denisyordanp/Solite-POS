@@ -18,21 +18,21 @@
         android:theme="@style/NoActionBar"
         tools:ignore="DataExtractionRules">
         <activity
-            android:name=".view.orders.OrdersActivity"
+            android:name=".view.screens.orders.OrdersActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".view.store.StoreActivity"
+            android:name=".view.screens.store.StoreActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".view.order_customer.OrderCustomerActivity"
+            android:name=".view.screens.order_customer.OrderCustomerActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".view.login.LoginActivity"
+            android:name=".view.screens.login.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.settings.SettingsActivity" />
-        <activity android:name=".view.bluetooth.BluetoothDevicesActivity" />
+        <activity android:name=".view.screens.settings.SettingsActivity" />
+        <activity android:name=".view.screens.bluetooth.BluetoothDevicesActivity" />
         <activity
-            android:name=".view.opening.OpeningActivity"
+            android:name=".view.screens.opening.OpeningActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
