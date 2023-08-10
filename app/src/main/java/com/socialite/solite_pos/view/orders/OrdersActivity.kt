@@ -1,13 +1,16 @@
 package com.socialite.solite_pos.view.orders
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,9 +24,13 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.utils.printer.PrintBill
+import com.socialite.solite_pos.utils.printer.PrinterConnection
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
+import com.socialite.solite_pos.view.bluetooth.BluetoothDevicesActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.order_customer.select_items.SelectItemsScreen
 import com.socialite.solite_pos.view.order_customer.select_variant.SelectVariantsScreen
@@ -44,9 +51,6 @@ class OrdersActivity : SoliteActivity() {
 
     private val ordersViewModel: OrdersViewModel by viewModels()
 
-    // TODO: Implement print bill
-//    private var printBill: PrintBill? = null
-
     companion object {
 
         private const val EXTRA_REPORT = "extra_report"
@@ -56,6 +60,7 @@ class OrdersActivity : SoliteActivity() {
             context.startActivity(intent)
         }
     }
+
 
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
@@ -120,15 +125,11 @@ class OrdersActivity : SoliteActivity() {
                                     when (buttonType) {
                                         OrderButtonType.PRINT -> {
                                             lifecycleScope.launch {
-                                                // TODO: Create print bill function
-//                                                val store = mainViewModel.getStore()
-//                                                if (store != null && orderWithProduct != null) {
-//                                                    printBill?.doPrintBill(
-//                                                        order = orderWithProduct,
-//                                                        store = store,
-//                                                        callback = {}
-//                                                    )
-//                                                }
+                                                if (orderWithProduct != null) {
+                                                    printBill(
+                                                        order = orderWithProduct,
+                                                    )
+                                                }
                                             }
                                         }
 
@@ -285,6 +286,37 @@ class OrdersActivity : SoliteActivity() {
         }
     }
 
+    private fun printBill(order: OrderWithProduct) {
+        val defaultAddress = ordersViewModel.defaultPrinterAddress
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED && defaultAddress != null
+        ) {
+            PrinterConnection.getSocketFromAddress(defaultAddress) { socket ->
+                if (socket != null) {
+                    PrintBill.doPrint(
+                        socket = socket,
+                        order = order,
+                        type = PrintBill.PrintType.BILL,
+                        onFinished = {
+                            socket.close()
+                        })
+                } else {
+                    toBluetoothDevice(orderId = order.orderData.order.id)
+                }
+            }
+        } else {
+            toBluetoothDevice(orderId = order.orderData.order.id)
+        }
+    }
+
+    private fun toBluetoothDevice(orderId: String) {
+        val intent = BluetoothDevicesActivity.createIntent(this, orderId, PrintBill.PrintType.BILL)
+        startActivity(intent)
+    }
+
     private fun buildTimePicker() = MaterialTimePicker.Builder()
         .setTitleText(R.string.select_time)
 
@@ -319,10 +351,4 @@ class OrdersActivity : SoliteActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
     }
-
-//    override fun onDestroy() {
-//        printBill?.onDestroy()
-//        printBill = null
-//        super.onDestroy()
-//    }
 }

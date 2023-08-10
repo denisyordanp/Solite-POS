@@ -29,6 +29,7 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.socialite.solite_pos.R
+import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.login.LoginActivity
 import com.socialite.solite_pos.view.order_customer.OrderCustomerActivity
@@ -46,6 +47,7 @@ class OpeningActivity : SoliteActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SettingPreferences(this).printerDevice = ""
         setContent {
             SolitePOSTheme {
                 val versionName = getVersionName()

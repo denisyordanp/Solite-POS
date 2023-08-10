@@ -69,11 +69,11 @@ fun OrderDetailScreen(
     var alertPutBackState by remember { mutableStateOf(false) }
     var alertReplaceDate by remember { mutableStateOf(false) }
 
-    var selectedDateTime by remember { mutableStateOf(orderWithProducts?.order?.order?.orderTime) }
+    var selectedDateTime by remember { mutableStateOf(orderWithProducts?.orderData?.order?.orderTime) }
 
     fun selectTime() {
         if (orderWithProducts != null && selectedDateTime != null) {
-            val hourMinute = DateUtils.strToHourAndMinute(orderWithProducts.order.order.orderTime)
+            val hourMinute = DateUtils.strToHourAndMinute(orderWithProducts.orderData.order.orderTime)
             val picker = timePicker.setHour(hourMinute.first)
                 .setMinute(hourMinute.second)
                 .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
@@ -93,7 +93,7 @@ fun OrderDetailScreen(
 
     fun selectDate() {
         orderWithProducts?.let { order ->
-            val date = DateUtils.strToDate(order.order.order.orderTime).time
+            val date = DateUtils.strToDate(order.orderData.order.orderTime).time
             val picker =
                 datePicker.setSelection(date)
                     .build()
@@ -113,7 +113,7 @@ fun OrderDetailScreen(
     Scaffold(
         topBar = {
             BasicTopBar(
-                titleText = orderWithProducts?.order?.customer?.name ?: "",
+                titleText = orderWithProducts?.orderData?.customer?.name ?: "",
                 onBackClicked = onBackClicked
             )
         },
@@ -178,7 +178,7 @@ fun OrderDetailScreen(
             titleText = stringResource(R.string.cancel_the_order),
             descText = stringResource(R.string.are_you_sure_will_cancel_this_order),
             positiveAction = {
-                orderWithProducts?.order?.order?.let {
+                orderWithProducts?.orderData?.order?.let {
                     currentViewModel.cancelOrder(it)
                 }
                 onButtonClicked(OrderButtonType.CANCEL, null)
@@ -197,7 +197,7 @@ fun OrderDetailScreen(
             titleText = stringResource(R.string.done_the_order),
             descText = stringResource(R.string.are_you_sure_will_done_this_order),
             positiveAction = {
-                orderWithProducts?.order?.order?.let {
+                orderWithProducts?.orderData?.order?.let {
                     currentViewModel.doneOrder(it)
                 }
                 alertDoneState = false
@@ -215,7 +215,7 @@ fun OrderDetailScreen(
             titleText = stringResource(R.string.put_back_order),
             descText = stringResource(R.string.are_you_sure_will_put_back_this_order),
             positiveAction = {
-                orderWithProducts?.order?.order?.let {
+                orderWithProducts?.orderData?.order?.let {
                     currentViewModel.putBackOrder(it)
                 }
                 alertPutBackState = false
@@ -234,7 +234,7 @@ fun OrderDetailScreen(
             titleText = stringResource(R.string.change_order_date),
             descText = stringResource(R.string.are_you_sure_change_order_date_to, date),
             positiveAction = {
-                orderWithProducts?.order?.order?.let {
+                orderWithProducts?.orderData?.order?.let {
                     currentViewModel.updateOrder(
                         it.copy(
                             orderTime = selectedDateTime!!
@@ -271,7 +271,7 @@ private fun Details(
         ) {
             item {
                 OrderHeader(
-                    order = orderWithProduct.order.order,
+                    order = orderWithProduct.orderData.order,
                     onHeaderClicked = onHeaderClicked
                 )
             }
@@ -280,7 +280,7 @@ private fun Details(
                 Column(
                     modifier = Modifier
                         .run {
-                            return@run if (orderWithProduct.order.order.isEditable()) {
+                            return@run if (orderWithProduct.orderData.order.isEditable()) {
                                 clickable {
                                     onProductsClicked()
                                 }
@@ -302,7 +302,7 @@ private fun Details(
                 OrderFooter(orderWithProduct = orderWithProduct)
             }
         }
-        orderWithProduct.order.order.statusToOrderMenu()?.let {
+        orderWithProduct.orderData.order.statusToOrderMenu()?.let {
             ButtonBottomBar(
                 modifier = Modifier
                     .align(Alignment.BottomCenter),
@@ -437,7 +437,7 @@ private fun OrderFooter(
         Column(
             horizontalAlignment = Alignment.End
         ) {
-            orderWithProduct.order.promo?.let {
+            orderWithProduct.orderData.promo?.let {
                 Text(
                     text = "Rp. ${orderWithProduct.grandTotal.thousand()}",
                     style = MaterialTheme.typography.body1
@@ -462,7 +462,7 @@ private fun OrderFooter(
                     fontWeight = FontWeight.Bold
                 )
             )
-            orderWithProduct.order.payment?.let {
+            orderWithProduct.orderData.payment?.let {
                 Text(
                     text = it.name,
                     style = MaterialTheme.typography.body1.copy(

@@ -44,6 +44,11 @@ class StoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getActiveStore(): Store? {
+        val selectedStore = settingRepository.getNewSelectedStore().first()
+        return dao.getNewStore(selectedStore)
+    }
+
     override fun getStores() = dao.getNewStores()
     override suspend fun getNeedUploadStores() = dao.getNeedUploadStores()
     override suspend fun insertStore(store: Store) {

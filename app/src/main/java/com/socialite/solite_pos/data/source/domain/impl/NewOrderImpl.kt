@@ -8,13 +8,13 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDe
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
 import com.socialite.solite_pos.data.source.repository.OrdersRepository
-import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.data.source.repository.StoreRepository
 import com.socialite.solite_pos.utils.config.DateUtils
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class NewOrderImpl @Inject constructor(
@@ -22,7 +22,7 @@ class NewOrderImpl @Inject constructor(
     private val ordersRepository: OrdersRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
-    private val settingRepository: SettingRepository
+    private val storeRepository: StoreRepository
 ) : NewOrder {
     override suspend fun invoke(
         customer: Customer,
@@ -30,33 +30,34 @@ class NewOrderImpl @Inject constructor(
         products: List<ProductOrderDetail>,
         currentTime: String
     ) {
-        val selectedStore = settingRepository.getNewSelectedStore().first()
-        val orderData = generateOrder(customer, isTakeAway, currentTime, selectedStore)
+        val selectedStore = storeRepository.getActiveStore()!!
+        val orderData = generateOrder(customer, selectedStore, isTakeAway, currentTime)
         val orderWithProducts = OrderWithProduct(
-            order = orderData,
+            orderData = orderData,
             products = products
         )
-        ordersRepository.insertOrder(orderWithProducts.order.order)
+        ordersRepository.insertOrder(orderWithProducts.orderData.order)
         insertOrderProduct(orderWithProducts)
         increaseOrderQueue()
     }
 
     private fun generateOrder(
         customer: Customer,
+        store: Store,
         isTakeAway: Boolean,
-        currentTime: String,
-        store: String
+        currentTime: String
     ): OrderData {
         val order = Order.createNew(
             orderNo = generateOrderNo(currentTime),
             customer = customer.id,
             orderTime = currentTime,
-            store = store,
+            store = store.id,
             isTakeAway = isTakeAway,
         )
         return OrderData.newOrder(
             order = order,
-            customer = customer
+            customer = customer,
+            store = store
         )
     }
 
@@ -97,7 +98,7 @@ class NewOrderImpl @Inject constructor(
             if (item.product != null) {
 
                 val detail = OrderDetail.createNewOrderDetail(
-                    order.order.order.id,
+                    order.orderData.order.id,
                     item.product.id,
                     item.amount
                 )

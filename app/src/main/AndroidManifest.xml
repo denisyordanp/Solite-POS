@@ -30,7 +30,7 @@
             android:name=".view.login.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.settings.SettingsActivity" />
-        <activity android:name=".view.bluetooth.BluetoothDeviceListActivity" />
+        <activity android:name=".view.bluetooth.BluetoothDevicesActivity" />
         <activity
             android:name=".view.opening.OpeningActivity"
             android:exported="true">

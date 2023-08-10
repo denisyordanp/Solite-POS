@@ -21,7 +21,7 @@ class GetOrderWithProductImpl @Inject constructor(
         ) { order, details ->
             order?.let {
                 OrderWithProduct(
-                    order = order,
+                    orderData = order,
                     products = details
                 )
             }

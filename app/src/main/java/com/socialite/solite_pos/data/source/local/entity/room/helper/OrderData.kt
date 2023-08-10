@@ -9,11 +9,15 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Custome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import java.io.Serializable
 
 data class OrderData(
     @Embedded
     val order: Order,
+
+    @Relation(parentColumn = Store.ID, entityColumn = Store.ID)
+    val store: Store,
 
     @Relation(parentColumn = Customer.ID, entityColumn = Customer.ID)
     val customer: Customer,
@@ -48,9 +52,10 @@ data class OrderData(
 ) : Serializable {
 
     companion object {
-        fun newOrder(order: Order, customer: Customer) = OrderData(
+        fun newOrder(order: Order, customer: Customer, store: Store) = OrderData(
             order = order,
             customer = customer,
+            store = store,
             orderPayment = null,
             payment = null,
             orderPromo = null,

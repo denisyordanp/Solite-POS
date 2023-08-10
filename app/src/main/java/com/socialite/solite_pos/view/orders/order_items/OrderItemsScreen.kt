@@ -349,7 +349,7 @@ private fun OrderItem(
             .fillMaxWidth()
             .padding(bottom = 4.dp)
             .clickable {
-                onOrderClicked(orderProducts.order.order.id)
+                onOrderClicked(orderProducts.orderData.order.id)
             }
             .background(
                 color = MaterialTheme.colors.surface
@@ -365,7 +365,7 @@ private fun OrderItem(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                 },
-            text = orderProducts.order.customer.name,
+            text = orderProducts.orderData.customer.name,
             style = MaterialTheme.typography.body1,
             color = MaterialTheme.colors.onSurface
         )
@@ -388,7 +388,7 @@ private fun OrderItem(
                     start.linkTo(total.end, margin = 16.dp)
                 },
             text = stringResource(
-                id = if (orderProducts.order.order.isTakeAway) R.string.take_away else R.string.dine_in
+                id = if (orderProducts.orderData.order.isTakeAway) R.string.take_away else R.string.dine_in
             ),
             style = MaterialTheme.typography.overline.copy(
                 fontWeight = FontWeight.Bold

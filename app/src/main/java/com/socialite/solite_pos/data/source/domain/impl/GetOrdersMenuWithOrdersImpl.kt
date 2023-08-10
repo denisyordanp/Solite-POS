@@ -30,7 +30,7 @@ class GetOrdersMenuWithOrdersImpl @Inject constructor(
                         val filteredDetails = details.filter { it.order == order.order.id }
                         val productDetails = converter.convert(filteredDetails)
                         OrderWithProduct(
-                            order = order,
+                            orderData = order,
                             products = productDetails
                         )
                     }

@@ -7,6 +7,7 @@ import com.socialite.solite_pos.data.source.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.findExisting
+import com.socialite.solite_pos.data.source.preference.SettingPreferences
 import com.socialite.solite_pos.utils.config.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,10 +21,13 @@ import javax.inject.Inject
 class OrdersViewModel @Inject constructor(
     private val updateOrderProducts: UpdateOrderProducts,
     private val getOrderWithProduct: GetOrderWithProduct,
+    private val settingPreferences: SettingPreferences
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(OrdersViewState.idle())
     val viewState = _viewState.asStateFlow()
+
+    val defaultPrinterAddress get() = settingPreferences.printerDevice
 
     fun setDefaultPage(page: Int) {
         viewModelScope.launch {
@@ -41,7 +45,7 @@ class OrdersViewModel @Inject constructor(
             orderWithProduct?.let {
 
                 val newBucket = BucketOrder(
-                    time = DateUtils.strToDate(it.order.order.orderTime).time,
+                    time = DateUtils.strToDate(it.orderData.order.orderTime).time,
                     products = it.products
                 )
 

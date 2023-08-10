@@ -71,7 +71,7 @@ fun OrderPaymentScreen(
     Scaffold(
         topBar = {
             BasicTopBar(
-                titleText = state.orderWithProduct?.order?.customer?.name ?: "",
+                titleText = state.orderWithProduct?.orderData?.customer?.name ?: "",
                 onBackClicked = onBackClicked
             )
         },
@@ -219,7 +219,7 @@ private fun PaymentContent(
             onPayClicked = {
                 selectedPayment?.let {
                     onPayClicked(
-                        orderWithProduct.order.order,
+                        orderWithProduct.orderData.order,
                         it,
                         cashAmount.first,
                         selectedPromo,
