@@ -1,7 +1,5 @@
 package com.socialite.solite_pos.utils.printer
 
-import android.bluetooth.BluetoothSocket
-import android.util.Log
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
@@ -14,28 +12,19 @@ import java.util.Locale
 object PrintBill {
 
     fun doPrint(
-        socket: BluetoothSocket,
+        outputStream: OutputStream,
         order: OrderWithProduct,
-        type: PrintType,
-        onFinished: (Boolean) -> Unit
+        type: PrintType
     ) {
-        val outputStream = socket.outputStream
-
-        //print command
         try {
             when (type) {
                 PrintType.BILL -> outputStream.printBill(order)
                 PrintType.QUEUE -> outputStream.printQueue(order)
             }
 
-            outputStream!!.flush()
-            onFinished.invoke(true)
+            outputStream.flush()
         } catch (e: IOException) {
-            Log.e("Print Bill", "${e.message}")
             e.printStackTrace()
-            onFinished.invoke(false)
-        } finally {
-            outputStream.close()
         }
     }
 

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.printer.PrinterConnection
@@ -66,27 +68,42 @@ class BluetoothDevicesActivity : SoliteActivity() {
 
         setContent {
             SolitePOSTheme {
-                val devices = viewModel.bluetoothDevices.collectAsState().value
-                val order = viewModel.getOrder(orderId).collectAsState(initial = null).value
-
-                if (devices.isNotEmpty() && order != null) {
-                    BluetoothContent(
-                        devices = devices,
-                        onChooseDevice = {
-                            onChooseDevice(it, order, printType)
-                        }
-                    )
-                } else {
-                    checkBluetooth()
-
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
+                Scaffold(
+                    topBar = {
+                        BasicTopBar(
+                            titleText = "Perangkat bluetooth",
+                            onBackClicked = {
+                                onBackPressed()
+                            }
                         )
+                    },
+                    content = { padding ->
+                        val devices = viewModel.bluetoothDevices.collectAsState().value
+                        val order = viewModel.getOrder(orderId).collectAsState(initial = null).value
+
+                        if (devices.isNotEmpty() && order != null) {
+                            BluetoothContent(
+                                modifier = Modifier.padding(padding),
+                                devices = devices,
+                                onChooseDevice = {
+                                    onChooseDevice(it, order, printType)
+                                }
+                            )
+                        } else {
+                            checkBluetooth()
+
+                            Box(
+                                modifier = Modifier
+                                    .padding(padding)
+                                    .fillMaxSize()
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        }
                     }
-                }
+                )
             }
         }
     }
@@ -94,20 +111,21 @@ class BluetoothDevicesActivity : SoliteActivity() {
     @SuppressLint("MissingPermission")
     @Composable
     fun BluetoothContent(
+        modifier: Modifier = Modifier,
         devices: List<BluetoothDevice>,
         onChooseDevice: (BluetoothDevice) -> Unit
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
         ) {
             items(devices) {
                 Text(
                     modifier = Modifier
-						.fillMaxWidth()
-						.padding(16.dp)
-						.clickable {
-							onChooseDevice(it)
-						},
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            onChooseDevice(it)
+                        },
                     text = "${it.name} \n ${it.address}"
                 )
             }
@@ -189,18 +207,35 @@ class BluetoothDevicesActivity : SoliteActivity() {
         viewModel.setNewPrinterDevice(device.address)
 
         whenPermissionGranted {
-            PrinterConnection.getSocketFromDevice(device) { socket ->
-                if (socket != null) {
+            PrinterConnection(this).getSocketFromDevice(
+                device = device,
+                print = {
                     PrintBill.doPrint(
-                        socket = socket,
+                        outputStream = it,
                         order = order,
                         type = printType,
-                        onFinished = {
-                            socket.close()
-                            finish()
-                        })
+                    )
+                },
+                onError = {
+                    when (it) {
+                        PrinterConnection.PrintConnectionErrors.FAILED_TO_CONNECT -> {
+                            Toast.makeText(
+                                this,
+                                "Tidak dapat koneksi ke perangkat, mohon periksa perangkat",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        PrinterConnection.PrintConnectionErrors.NEED_NEW_CONNECTION -> {
+                            Toast.makeText(
+                                this,
+                                "Terjadi kesalahan, mohon coba lagi",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
-            }
+            )
         }
     }
 

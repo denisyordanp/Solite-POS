@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
@@ -294,18 +295,35 @@ class OrdersActivity : SoliteActivity() {
                 Manifest.permission.BLUETOOTH_CONNECT
             ) != PackageManager.PERMISSION_GRANTED && defaultAddress != null
         ) {
-            PrinterConnection.getSocketFromAddress(defaultAddress) { socket ->
-                if (socket != null) {
-                    PrintBill.doPrint(
-                        socket = socket,
-                        order = order,
-                        type = PrintBill.PrintType.BILL,
-                        onFinished = {
-                            socket.close()
-                        })
-                } else {
-                    toBluetoothDevice(orderId = order.orderData.order.id)
-                }
+            if (defaultAddress.isNotEmpty()) {
+                PrinterConnection(this).getSocketFromAddress(
+                    defaultAddress = defaultAddress,
+                    print = {
+                        PrintBill.doPrint(
+                            outputStream = it,
+                            order = order,
+                            type = PrintBill.PrintType.BILL,
+                        )
+                    },
+                    onError = {
+                        when (it) {
+                            PrinterConnection.PrintConnectionErrors.FAILED_TO_CONNECT -> {
+                                Toast.makeText(
+                                    this,
+                                    "Tidak dapat koneksi ke perangkat, mohon periksa perangkat",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                toBluetoothDevice(orderId = order.orderData.order.id)
+                            }
+
+                            PrinterConnection.PrintConnectionErrors.NEED_NEW_CONNECTION -> {
+                                toBluetoothDevice(orderId = order.orderData.order.id)
+                            }
+                        }
+                    }
+                )
+            } else {
+                toBluetoothDevice(orderId = order.orderData.order.id)
             }
         } else {
             toBluetoothDevice(orderId = order.orderData.order.id)

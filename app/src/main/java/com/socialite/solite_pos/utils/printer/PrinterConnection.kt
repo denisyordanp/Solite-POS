@@ -3,43 +3,46 @@ package com.socialite.solite_pos.utils.printer
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.util.Log
 import androidx.annotation.RequiresPermission
+import androidx.fragment.app.FragmentActivity
 import java.io.IOException
+import java.io.OutputStream
 
-object PrinterConnection {
+class PrinterConnection(private val activity: FragmentActivity) {
+
+    enum class PrintConnectionErrors {
+        FAILED_TO_CONNECT, NEED_NEW_CONNECTION
+    }
 
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
     fun getSocketFromAddress(
         defaultAddress: String,
-        onSocketConnection: (BluetoothSocket?) -> Unit
+        print: (OutputStream) -> Unit,
+        onError: ((PrintConnectionErrors) -> Unit)? = null
     ) {
-        if (defaultAddress.isNotEmpty()) {
-            val device = getDeviceFromAddress(defaultAddress)
-            if (device != null) {
-                val socket = getSocket(device)
-                if (socket != null) {
-                    connectSocket(socket, onSocketConnection)
-                } else {
-                    onSocketConnection.invoke(null)
-                }
+        val device = getDeviceFromAddress(defaultAddress)
+        if (device != null) {
+            val socket = getSocket(device)
+            if (socket != null) {
+                tryToConnectTheSocket(socket, print, onError)
             } else {
-                onSocketConnection.invoke(null)
+                onError?.invoke(PrintConnectionErrors.NEED_NEW_CONNECTION)
             }
         } else {
-            onSocketConnection.invoke(null)
+            onError?.invoke(PrintConnectionErrors.NEED_NEW_CONNECTION)
         }
     }
 
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
     fun getSocketFromDevice(
         device: BluetoothDevice,
-        onSocketConnection: (BluetoothSocket?) -> Unit
+        print: (OutputStream) -> Unit,
+        onError: ((PrintConnectionErrors) -> Unit)? = null
     ) {
         val socket = getSocket(device)
-        return if (socket != null) {
-            connectSocket(socket, onSocketConnection)
-        } else onSocketConnection(null)
+        if (socket != null) {
+            tryToConnectTheSocket(socket, print, onError)
+        } else onError?.invoke(PrintConnectionErrors.NEED_NEW_CONNECTION)
     }
 
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
@@ -59,21 +62,27 @@ object PrinterConnection {
     }
 
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
-    private fun connectSocket(socket: BluetoothSocket, onResult: (BluetoothSocket?) -> Unit) {
+    private fun tryToConnectTheSocket(
+        socket: BluetoothSocket,
+        print: (OutputStream) -> Unit,
+        onError: ((PrintConnectionErrors) -> Unit)? = null
+    ) {
         Thread {
             try {
                 socket.connect()
-
-                onResult.invoke(socket)
+                print(socket.outputStream)
+                socket.outputStream.close()
             } catch (ex: IOException) {
                 ex.printStackTrace()
+                activity.runOnUiThread {
+                    onError?.invoke(PrintConnectionErrors.FAILED_TO_CONNECT)
+                }
+            } finally {
                 try {
                     socket.close()
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
-                Log.e("DeviceConnection", "getDevice connect ${ex.message}")
-                onResult.invoke(null)
             }
         }.start()
     }
