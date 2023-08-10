@@ -9,15 +9,15 @@ plugins {
 }
 
 android {
-    compileSdkVersion(33)
+    compileSdk = 33
     namespace = "com.socialite.solite_pos"
 
     defaultConfig {
         applicationId = "com.socialite.solite_pos"
-        minSdkVersion(23)
-        targetSdkVersion(33)
-        versionCode = 39
-        versionName = "3.2.5"
+        minSdk = 23
+        targetSdk = 33
+        versionCode = 40
+        versionName = "3.3.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -48,7 +48,7 @@ android {
 		viewBinding = true
         compose = true
 	}
-    buildToolsVersion("30.0.3")
+    buildToolsVersion = "30.0.3"
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
