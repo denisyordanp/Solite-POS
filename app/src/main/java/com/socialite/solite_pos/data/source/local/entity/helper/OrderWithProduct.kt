@@ -4,8 +4,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
 import java.io.Serializable
 
 data class OrderWithProduct(
-		val order: OrderData,
-		val products: List<ProductOrderDetail>
+	val orderData: OrderData,
+	val products: List<ProductOrderDetail>
 ): Serializable {
 
 	val grandTotal: Long
@@ -18,7 +18,7 @@ data class OrderWithProduct(
 		}
 
 	val totalPromo: Long
-		get() = order.orderPromo?.totalPromo ?: 0L
+		get() = orderData.orderPromo?.totalPromo ?: 0L
 
 	val grandTotalWithPromo: Long
 		get() { return grandTotal - totalPromo}

@@ -1,103 +1,94 @@
 package com.socialite.solite_pos.utils.printer
 
-import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.content.Context
-import android.content.pm.PackageManager
-import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentActivity
-import com.socialite.solite_pos.data.source.preference.SettingPreferences
+import androidx.annotation.RequiresPermission
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.io.OutputStream
 
-class PrinterConnection(private val activity: FragmentActivity) {
+class PrinterConnection(private val scope: CoroutineScope) {
 
-	private var setting: SettingPreferences = SettingPreferences(activity)
+    enum class PrintConnectionErrors {
+        FAILED_TO_CONNECT, NEED_NEW_CONNECTION
+    }
 
-	companion object {
-		var mbtSocket: BluetoothSocket? = null
+    @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    fun getSocketFromAddress(
+        defaultAddress: String,
+        print: (OutputStream) -> Unit,
+        onError: ((PrintConnectionErrors) -> Unit)? = null
+    ) {
+        val device = getDeviceFromAddress(defaultAddress)
+        if (device != null) {
+            val socket = getSocket(device)
+            if (socket != null) {
+                tryToConnectTheSocket(socket, print, onError)
+            } else {
+                onError?.invoke(PrintConnectionErrors.NEED_NEW_CONNECTION)
+            }
+        } else {
+            onError?.invoke(PrintConnectionErrors.NEED_NEW_CONNECTION)
+        }
+    }
 
-		fun setSocketFromDevice(context: Context, device: BluetoothDevice) {
-			 if (ActivityCompat.checkSelfPermission(
-					context,
-					Manifest.permission.BLUETOOTH_CONNECT
-				) != PackageManager.PERMISSION_GRANTED
-			) {
-				 val uuid = device.uuids[0].uuid
-				 try {
-					 mbtSocket = device.createRfcommSocketToServiceRecord(uuid)
-				 } catch (e: IOException) {
-					 e.printStackTrace()
-				 }
-			}
-		}
-	}
+    @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    fun getSocketFromDevice(
+        device: BluetoothDevice,
+        print: (OutputStream) -> Unit,
+        onError: ((PrintConnectionErrors) -> Unit)? = null
+    ) {
+        val socket = getSocket(device)
+        if (socket != null) {
+            tryToConnectTheSocket(socket, print, onError)
+        } else onError?.invoke(PrintConnectionErrors.NEED_NEW_CONNECTION)
+    }
 
-	fun getDevice(callback: (BluetoothSocket?) -> Unit) {
-		val address = setting.printerDevice
-		if (!address.isNullOrEmpty()) {
-			val device = getDeviceFromAddress(address)
-			if (device != null) {
-				setSocketFromDevice(activity, device)
-				if (mbtSocket != null) {
-					connectSocket(mbtSocket!!, callback)
-				} else {
-					callback.invoke(null)
-				}
-			} else {
-				callback.invoke(null)
-			}
-		} else {
-			callback.invoke(null)
-		}
-	}
+    @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    private fun getSocket(device: BluetoothDevice): BluetoothSocket? {
+        val uuid = device.uuids[0].uuid
+        return try {
+            device.createRfcommSocketToServiceRecord(uuid)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
 
-	private fun getDeviceFromAddress(address: String): BluetoothDevice? {
-		val adapter = BluetoothAdapter.getDefaultAdapter()
-		return if (adapter != null) {
-			adapter.getRemoteDevice(address)
-		} else {
-			showToast("Bluetooth tidak aktif")
-			null
-		}
-	}
+    private fun getDeviceFromAddress(address: String): BluetoothDevice? {
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        return adapter?.getRemoteDevice(address)
+    }
 
-	private fun connectSocket(socket: BluetoothSocket, callback: (BluetoothSocket?) -> Unit) {
-		Thread {
-			try {
-				if (ActivityCompat.checkSelfPermission(
-						activity,
-						Manifest.permission.BLUETOOTH_CONNECT
-					) != PackageManager.PERMISSION_GRANTED
-				) {
-					socket.connect()
-					activity.runOnUiThread {
-						showToast("Printing")
-					}
-
-					callback.invoke(mbtSocket)
-				}
-			} catch (ex: IOException) {
-				ex.printStackTrace()
-				try {
-					socket.close()
-				} catch (e: IOException) {
-					e.printStackTrace()
-				}
-				Log.e("DeviceConnection", "getDevice connect ${ex.message}")
-				mbtSocket = null
-				activity.runOnUiThread {
-					showToast("Error print, periksa perangkat perinter lalu coba kembali")
-				}
-				callback.invoke(null)
-			}
-		}.start()
-	}
-
-	private fun showToast(message: String) {
-		Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-	}
+    @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    private fun tryToConnectTheSocket(
+        socket: BluetoothSocket,
+        print: (OutputStream) -> Unit,
+        onError: ((PrintConnectionErrors) -> Unit)? = null
+    ) {
+        scope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    socket.connect()
+                    print(socket.outputStream)
+                    socket.outputStream.close()
+                }
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    onError?.invoke(PrintConnectionErrors.FAILED_TO_CONNECT)
+                }
+            } finally {
+                try {
+                    socket.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 }
