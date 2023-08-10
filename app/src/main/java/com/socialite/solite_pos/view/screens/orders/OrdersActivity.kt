@@ -29,6 +29,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.printer.PrinterConnection
+import com.socialite.solite_pos.utils.printer.PrinterUtils
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.screens.bluetooth.BluetoothDevicesActivity
@@ -129,6 +130,7 @@ class OrdersActivity : SoliteActivity() {
                                                 if (orderWithProduct != null) {
                                                     printBill(
                                                         order = orderWithProduct,
+                                                        printType = PrinterUtils.PrintType.BILL
                                                     )
                                                 }
                                             }
@@ -136,13 +138,12 @@ class OrdersActivity : SoliteActivity() {
 
                                         OrderButtonType.QUEUE -> {
                                             lifecycleScope.launch {
-                                                // TODO: Create print queue function
-//                                                if (orderWithProduct != null) {
-//                                                    printBill?.doPrintQueue(
-//                                                        order = orderWithProduct,
-//                                                        callback = {}
-//                                                    )
-//                                                }
+                                                if (orderWithProduct != null) {
+                                                    printBill(
+                                                        order = orderWithProduct,
+                                                        printType = PrinterUtils.PrintType.QUEUE
+                                                    )
+                                                }
                                             }
                                         }
 
@@ -287,7 +288,7 @@ class OrdersActivity : SoliteActivity() {
         }
     }
 
-    private fun printBill(order: OrderWithProduct) {
+    private fun printBill(order: OrderWithProduct, printType: PrinterUtils.PrintType) {
         val defaultAddress = ordersViewModel.defaultPrinterAddress
 
         if (ActivityCompat.checkSelfPermission(
@@ -296,13 +297,13 @@ class OrdersActivity : SoliteActivity() {
             ) != PackageManager.PERMISSION_GRANTED && defaultAddress != null
         ) {
             if (defaultAddress.isNotEmpty()) {
-                PrinterConnection(this).getSocketFromAddress(
+                PrinterConnection(lifecycleScope).getSocketFromAddress(
                     defaultAddress = defaultAddress,
                     print = {
                         PrintBill.doPrint(
                             outputStream = it,
                             order = order,
-                            type = PrintBill.PrintType.BILL,
+                            type = printType,
                         )
                     },
                     onError = {
@@ -310,28 +311,28 @@ class OrdersActivity : SoliteActivity() {
                             PrinterConnection.PrintConnectionErrors.FAILED_TO_CONNECT -> {
                                 Toast.makeText(
                                     this,
-                                    "Tidak dapat koneksi ke perangkat, mohon periksa perangkat",
+                                    "Tidak dapat koneksi ke perangkat, mohon periksa perangkat atau pilih perangkat lain",
                                     Toast.LENGTH_LONG
                                 ).show()
-                                toBluetoothDevice(orderId = order.orderData.order.id)
+                                toBluetoothDevice(orderId = order.orderData.order.id, printType)
                             }
 
                             PrinterConnection.PrintConnectionErrors.NEED_NEW_CONNECTION -> {
-                                toBluetoothDevice(orderId = order.orderData.order.id)
+                                toBluetoothDevice(orderId = order.orderData.order.id, printType)
                             }
                         }
                     }
                 )
             } else {
-                toBluetoothDevice(orderId = order.orderData.order.id)
+                toBluetoothDevice(orderId = order.orderData.order.id, printType)
             }
         } else {
-            toBluetoothDevice(orderId = order.orderData.order.id)
+            toBluetoothDevice(orderId = order.orderData.order.id, printType)
         }
     }
 
-    private fun toBluetoothDevice(orderId: String) {
-        val intent = BluetoothDevicesActivity.createIntent(this, orderId, PrintBill.PrintType.BILL)
+    private fun toBluetoothDevice(orderId: String, printType: PrinterUtils.PrintType) {
+        val intent = BluetoothDevicesActivity.createIntent(this, orderId, printType)
         startActivity(intent)
     }
 

@@ -2,16 +2,80 @@ package com.socialite.solite_pos.utils.printer
 
 import android.graphics.Bitmap
 import android.util.Log
+import java.io.IOException
+import java.io.OutputStream
 import java.util.*
+
+fun OutputStream.printNewLine(space: PrinterUtils.TextSpaceLine = PrinterUtils.TextSpaceLine.NO_SPACE) {
+	repeat(space.count) {
+		try {
+			this.write(PrinterCommands.FEED_LINE)
+		} catch (e: IOException) {
+			e.printStackTrace()
+		}
+	}
+}
+
+fun OutputStream.printCustom(msg: String, size: PrinterUtils.TextType, align: PrinterUtils.TextAlign) {
+	try {
+		when (size) {
+			PrinterUtils.TextType.NORMAL -> this.write(PrinterUtils.cc)
+			PrinterUtils.TextType.NORMAL_BOLD -> this.write(PrinterUtils.bb)
+			PrinterUtils.TextType.BOLD_MEDIUM -> this.write(PrinterUtils.bb2)
+			PrinterUtils.TextType.BOLD_LARGE -> this.write(PrinterUtils.bb3)
+		}
+		when (align) {
+			PrinterUtils.TextAlign.LEFT -> this.write(PrinterCommands.ESC_ALIGN_LEFT)
+			PrinterUtils.TextAlign.CENTER -> this.write(PrinterCommands.ESC_ALIGN_CENTER)
+			PrinterUtils.TextAlign.RIGHT -> this.write(PrinterCommands.ESC_ALIGN_RIGHT)
+		}
+		this.write(msg.toByteArray())
+	} catch (e: IOException) {
+		e.printStackTrace()
+	}
+}
 
 object PrinterUtils {
 
+	enum class PrintType {
+		BILL, QUEUE
+	}
+
+	enum class TextType {
+		NORMAL, NORMAL_BOLD, BOLD_MEDIUM, BOLD_LARGE
+	}
+
+	enum class TextAlign {
+		LEFT, CENTER, RIGHT
+	}
+
+	enum class TextSpaceLine(val count: Int) {
+		NO_SPACE(1), SMALL(2), MEDIUM(3)
+	}
+
+	val cc = byteArrayOf(0x1B, 0x21, 0x03) // 0- normal size text
+	val bb = byteArrayOf(0x1B, 0x21, 0x08) // 1- only bold text
+	val bb2 = byteArrayOf(0x1B, 0x21, 0x20) // 2- bold with medium text
+	val bb3 = byteArrayOf(0x1B, 0x21, 0x10) // 3- bold with large text
+
 	const val LINES = "--------------------------------"
-	const val LINES21 = "---------------------"
 	private const val hexStr = "0123456789ABCDEF"
 	private val binaryArray = arrayOf("0000", "0001", "0010", "0011",
 			"0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011",
 			"1100", "1101", "1110", "1111")
+
+	fun withSpace(str1: String, str2: String?, length: Int): String {
+		return if (str2 != null) {
+			val loop = length - (str1.length + str2.length)
+			var space = ""
+			repeat(loop) {
+				space = "$space "
+			}
+			"$str1$space$str2"
+		} else {
+			""
+		}
+	}
 
 	fun decodeBitmap(bmp: Bitmap): ByteArray? {
 		val bmpWidth = bmp.width

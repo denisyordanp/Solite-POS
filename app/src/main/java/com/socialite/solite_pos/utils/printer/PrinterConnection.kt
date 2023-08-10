@@ -4,11 +4,14 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import androidx.annotation.RequiresPermission
-import androidx.fragment.app.FragmentActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.OutputStream
 
-class PrinterConnection(private val activity: FragmentActivity) {
+class PrinterConnection(private val scope: CoroutineScope) {
 
     enum class PrintConnectionErrors {
         FAILED_TO_CONNECT, NEED_NEW_CONNECTION
@@ -67,14 +70,16 @@ class PrinterConnection(private val activity: FragmentActivity) {
         print: (OutputStream) -> Unit,
         onError: ((PrintConnectionErrors) -> Unit)? = null
     ) {
-        Thread {
+        scope.launch {
             try {
-                socket.connect()
-                print(socket.outputStream)
-                socket.outputStream.close()
-            } catch (ex: IOException) {
+                withContext(Dispatchers.IO) {
+                    socket.connect()
+                    print(socket.outputStream)
+                    socket.outputStream.close()
+                }
+            } catch (ex: Exception) {
                 ex.printStackTrace()
-                activity.runOnUiThread {
+                withContext(Dispatchers.Main) {
                     onError?.invoke(PrintConnectionErrors.FAILED_TO_CONNECT)
                 }
             } finally {
@@ -84,6 +89,6 @@ class PrinterConnection(private val activity: FragmentActivity) {
                     e.printStackTrace()
                 }
             }
-        }.start()
+        }
     }
 }

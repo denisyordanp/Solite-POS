@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.utils.printer
 
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import java.io.IOException
@@ -14,12 +15,12 @@ object PrintBill {
     fun doPrint(
         outputStream: OutputStream,
         order: OrderWithProduct,
-        type: PrintType
+        type: PrinterUtils.PrintType
     ) {
         try {
             when (type) {
-                PrintType.BILL -> outputStream.printBill(order)
-                PrintType.QUEUE -> outputStream.printQueue(order)
+                PrinterUtils.PrintType.BILL -> outputStream.printBill(order)
+                PrinterUtils.PrintType.QUEUE -> outputStream.printQueue(order)
             }
 
             outputStream.flush()
@@ -31,114 +32,167 @@ object PrintBill {
     private fun OutputStream.printQueue(order: OrderWithProduct) {
         setHeaderQueue(order)
         setItemsQueue(order)
-        printNewLine(4)
+        printNewLine(PrinterUtils.TextSpaceLine.SMALL)
     }
 
     private fun OutputStream.printBill(order: OrderWithProduct) {
         setHeaderBill(order)
         setItemsBill(order)
         setFooter()
-        //resetPrint();
     }
 
     private fun OutputStream.setHeaderBill(order: OrderWithProduct) {
 //		printLogo()
-        printCustom(order.orderData.store.name, 1, 1)
-        printNewLine(1)
-        printCustom(order.orderData.store.address, 0, 1)
-//		printNewLine(1)
-//		printCustom("Cimahi Tengah", 0, 1)
-        printNewLine(1)
-        printCustom(PrinterUtils.LINES, 0, 0)
-        printNewLine(1)
-        printCustom("Tgl : ${getDateTime()}", 0, 0)
-        printNewLine(1)
-        printCustom("No  : ${order.orderData.order.getQueueNumber()}", 0, 0)
-        printNewLine(1)
+        printCustom(
+            order.orderData.store.name,
+            PrinterUtils.TextType.BOLD_MEDIUM,
+            PrinterUtils.TextAlign.CENTER
+        )
+        printNewLine()
+        printCustom(
+            order.orderData.store.address,
+            PrinterUtils.TextType.NORMAL,
+            PrinterUtils.TextAlign.CENTER
+        )
+        printNewLine()
+        printCustom(PrinterUtils.LINES, PrinterUtils.TextType.NORMAL, PrinterUtils.TextAlign.LEFT)
+        printNewLine()
+        printCustom(
+            "Tgl : ${getDateTime()}",
+            PrinterUtils.TextType.NORMAL,
+            PrinterUtils.TextAlign.LEFT
+        )
+        printNewLine()
+        printCustom(
+            "No  : ${order.orderData.order.getQueueNumber()}",
+            PrinterUtils.TextType.NORMAL,
+            PrinterUtils.TextAlign.LEFT
+        )
+        printNewLine()
         setBasicHeader(order)
     }
 
     private fun OutputStream.setHeaderQueue(order: OrderWithProduct) {
-        printNewLine(2)
-        printCustom(order.orderData.order.getQueueNumber(), 3, 1)
-        printNewLine(1)
+        printNewLine()
+        printCustom(
+            order.orderData.order.getQueueNumber(),
+            PrinterUtils.TextType.BOLD_LARGE,
+            PrinterUtils.TextAlign.CENTER
+        )
+        printNewLine()
         setBasicHeader(order)
     }
 
     private fun OutputStream.setBasicHeader(order: OrderWithProduct) {
-        printCustom("Nama: ", 0, 0)
-        printCustom(order.orderData.customer.name, 1, 0)
-        printNewLine(1)
+        printCustom("Nama: ", PrinterUtils.TextType.NORMAL, PrinterUtils.TextAlign.LEFT)
+        printCustom(
+            order.orderData.customer.name,
+            PrinterUtils.TextType.NORMAL_BOLD,
+            PrinterUtils.TextAlign.LEFT
+        )
+        printNewLine()
         val takeAway = if (order.orderData.order.isTakeAway) {
             "Take Away"
         } else {
             "Dine In"
         }
-        printCustom(takeAway, 1, 2)
-        printNewLine(1)
-        printCustom(PrinterUtils.LINES, 0, 0)
-        printNewLine(1)
+        printCustom(takeAway, PrinterUtils.TextType.NORMAL_BOLD, PrinterUtils.TextAlign.RIGHT)
+        printNewLine()
+        printCustom(PrinterUtils.LINES, PrinterUtils.TextType.NORMAL, PrinterUtils.TextAlign.LEFT)
+        printNewLine()
     }
 
     private fun OutputStream.setItemsBill(order: OrderWithProduct) {
         if (order.products.isNotEmpty()) {
-            for ((i, item) in order.products.withIndex()) {
+            for (item in order.products) {
                 if (item.product != null) {
-                    printCustom("${i + 1}. ${item.product.name}", 0, 0)
+                    printCustom(
+                        item.product.name,
+                        PrinterUtils.TextType.NORMAL_BOLD,
+                        PrinterUtils.TextAlign.LEFT
+                    )
+                    printNewLine()
 
-                    for (variant in item.variants) {
-                        printCustom(" ${variant.name}", 1, 0)
-                    }
-                    printNewLine(1)
-
-                    for (variant in item.variants) {
-                        printCustom(" ${variant.name}", 1, 0)
-                    }
-                    printNewLine(1)
+                    printVariants(item.variants)
 
                     printCustom(
-                        withSpace(
+                        PrinterUtils.withSpace(
                             "  ${item.amount} x ${toRupiah(item.product.price)}",
                             "= ${toRupiah(item.amount * item.product.price)}",
                             32
-                        ), 0, 0
+                        ), PrinterUtils.TextType.NORMAL, PrinterUtils.TextAlign.LEFT
                     )
-                    printNewLine(1)
+                    printNewLine()
                 }
             }
-            printCustom(PrinterUtils.LINES21, 0, 2)
-            printNewLine(1)
+            printCustom(
+                PrinterUtils.LINES,
+                PrinterUtils.TextType.NORMAL,
+                PrinterUtils.TextAlign.CENTER
+            )
             printTotal(order)
         }
     }
 
+    private fun OutputStream.printVariants(variants: List<VariantOption>) {
+        if (variants.isNotEmpty()) {
+            val lastIndex = variants.size - 1
+            variants.forEachIndexed { index, variant ->
+                if (index == 0) printCustom(
+                    " ",
+                    PrinterUtils.TextType.NORMAL,
+                    PrinterUtils.TextAlign.LEFT
+                )
+                printCustom(
+                    " ${variant.name}",
+                    PrinterUtils.TextType.NORMAL,
+                    PrinterUtils.TextAlign.LEFT
+                )
+                if (index != lastIndex) printCustom(
+                    "-",
+                    PrinterUtils.TextType.NORMAL,
+                    PrinterUtils.TextAlign.LEFT
+                )
+            }
+        }
+        printNewLine()
+    }
+
     private fun OutputStream.printTotal(order: OrderWithProduct) {
         if (order.orderData.payment != null) {
-            printCustom(withSpace("Total   : Rp.", thousand(order.grandTotal), 21), 1, 2)
-            printNewLine(1)
+            printNewLine()
+            printCustom(
+                PrinterUtils.withSpace("Total   : Rp.", thousand(order.grandTotal), 21),
+                PrinterUtils.TextType.NORMAL_BOLD,
+                PrinterUtils.TextAlign.RIGHT
+            )
+            printNewLine()
 
             if (order.orderData.payment.isCash) {
                 printCustom(
-                    withSpace(
+                    PrinterUtils.withSpace(
                         "Bayar   : Rp.",
                         thousand(order.orderData.orderPayment?.pay),
                         21
-                    ), 1, 2
+                    ), PrinterUtils.TextType.NORMAL_BOLD, PrinterUtils.TextAlign.RIGHT
                 )
-                printNewLine(1)
+                printNewLine()
                 printCustom(
-                    withSpace(
+                    PrinterUtils.withSpace(
                         "Kembali : Rp.",
                         thousand(order.orderData.orderPayment?.inReturn(order.grandTotal)),
                         21
-                    ), 1, 2
+                    ), PrinterUtils.TextType.NORMAL_BOLD, PrinterUtils.TextAlign.RIGHT
                 )
-                printNewLine(1)
+                printNewLine()
             } else {
-                printCustom(withSpace("Bayar   :", order.orderData.payment.name, 21), 1, 2)
-                printNewLine(1)
+                printCustom(
+                    PrinterUtils.withSpace("Bayar   :", order.orderData.payment.name, 21),
+                    PrinterUtils.TextType.NORMAL_BOLD,
+                    PrinterUtils.TextAlign.RIGHT
+                )
+                printNewLine()
             }
-            printCustom(PrinterUtils.LINES, 0, 0)
         }
     }
 
@@ -146,69 +200,36 @@ object PrintBill {
         if (order.products.isNotEmpty()) {
             for ((i, item) in order.products.withIndex()) {
                 if (item.product != null) {
-                    printCustom("${i + 1}. ${item.product.name} x${item.amount}", 0, 0)
+                    printCustom(
+                        "${i + 1}. ${item.product.name} x${item.amount}",
+                        PrinterUtils.TextType.NORMAL,
+                        PrinterUtils.TextAlign.LEFT
+                    )
+                    printNewLine()
 
                     for (variant in item.variants) {
-                        printCustom(" ${variant.name}", 1, 0)
+                        printCustom(
+                            " ${variant.name}",
+                            PrinterUtils.TextType.NORMAL_BOLD,
+                            PrinterUtils.TextAlign.LEFT
+                        )
                     }
-                    printNewLine(1)
-
-                    for (variant in item.variants) {
-                        printCustom(" ${variant.name}", 1, 0)
-                    }
-                    printNewLine(1)
-                    printNewLine(1)
+                    printNewLine(PrinterUtils.TextSpaceLine.SMALL)
                 }
             }
-            printNewLine(1)
+            printNewLine()
         }
     }
-
-//	set footer
 
     private fun OutputStream.setFooter() {
-        printCustom("Terima kasih atas kunjungannya", 1, 1)
-//		printNewLine(2)
-//		printCustom("Kritik Saran mohon sampaikan ke", 1, 1)
-//		printNewLine(1)
-//		printCustom("FB / IG : jajanansosialita", 1, 1)
-//		printNewLine(1)
-//		printCustom("WA : 0821-1711-6825", 1, 1)
-        printNewLine(5)
+        printNewLine(PrinterUtils.TextSpaceLine.MEDIUM)
+        printCustom(
+            "Terima kasih atas kunjungannya",
+            PrinterUtils.TextType.NORMAL_BOLD,
+            PrinterUtils.TextAlign.CENTER
+        )
+        printNewLine(PrinterUtils.TextSpaceLine.MEDIUM)
     }
-
-    //print custom
-
-    private fun OutputStream.printCustom(msg: String, size: Int, align: Int) {
-        //Print config "mode"
-        val cc = byteArrayOf(0x1B, 0x21, 0x03) // 0- normal size text
-        val bb = byteArrayOf(0x1B, 0x21, 0x08) // 1- only bold text
-        val bb2 = byteArrayOf(0x1B, 0x21, 0x20) // 2- bold with medium text
-        val bb3 = byteArrayOf(0x1B, 0x21, 0x10) // 3- bold with large text
-        try {
-            when (size) {
-                0 -> this.write(cc)
-                1 -> this.write(bb)
-                2 -> this.write(bb2)
-                3 -> this.write(bb3)
-            }
-            when (align) {
-                0 ->                     //left align
-                    this.write(PrinterCommands.ESC_ALIGN_LEFT)
-
-                1 ->                     //center align
-                    this.write(PrinterCommands.ESC_ALIGN_CENTER)
-
-                2 ->                     //right align
-                    this.write(PrinterCommands.ESC_ALIGN_RIGHT)
-            }
-            this.write(msg.toByteArray())
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    //print logo
 
 //	private fun printLogo() {
 //		try {
@@ -229,71 +250,9 @@ object PrintBill {
 //		}
 //	}
 
-    //print new line
-
-    private fun OutputStream.printNewLine(count: Int) {
-        repeat(count) {
-            try {
-                this.write(PrinterCommands.FEED_LINE)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-//	fun resetPrint() {
-//		try {
-//			outputStream?.write(PrinterCommands.ESC_FONT_COLOR_DEFAULT)
-//			outputStream?.write(PrinterCommands.FS_FONT_ALIGN)
-//			outputStream?.write(PrinterCommands.ESC_ALIGN_LEFT)
-//			outputStream?.write(PrinterCommands.ESC_CANCEL_BOLD)
-//		} catch (e: IOException) {
-//			e.printStackTrace()
-//		}
-//	}
-
-//	print text
-//	private fun printText(msg: String?) {
-//		try {
-//			// Print normal text
-//			outputStream?.write(msg?.toByteArray())
-//		} catch (e: IOException) {
-//			e.printStackTrace()
-//		}
-//	}
-
-    //print byte[]
-
-//    private fun OutputStream.printText(msg: ByteArray?) {
-//        try {
-//            // Print normal text
-//            this.write(msg)
-//            printNewLine(1)
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//        }
-//    }
-
     private fun getDateTime(): String {
         val l = Locale.getDefault()
         val dateF = SimpleDateFormat("EE, d/M/y H:m", l)
         return dateF.format(Date())
-    }
-
-    private fun withSpace(str1: String, str2: String?, length: Int): String {
-        return if (str2 != null) {
-            val loop = length - (str1.length + str2.length)
-            var space = ""
-            repeat(loop) {
-                space = "$space "
-            }
-            "$str1$space$str2"
-        } else {
-            ""
-        }
-    }
-
-    enum class PrintType {
-        BILL, QUEUE
     }
 }

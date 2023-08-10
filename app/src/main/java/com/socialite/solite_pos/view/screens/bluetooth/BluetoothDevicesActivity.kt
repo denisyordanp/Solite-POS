@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,10 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.printer.PrinterConnection
+import com.socialite.solite_pos.utils.printer.PrinterUtils
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,7 +53,7 @@ class BluetoothDevicesActivity : SoliteActivity() {
         fun createIntent(
             context: Context,
             orderId: String,
-            printType: PrintBill.PrintType
+            printType: PrinterUtils.PrintType
         ): Intent {
             val intent = Intent(context, BluetoothDevicesActivity::class.java).apply {
                 putExtra(EXTRA_ORDER_ID, orderId)
@@ -64,7 +67,7 @@ class BluetoothDevicesActivity : SoliteActivity() {
         super.onCreate(savedInstanceState)
 
         val orderId = intent.getStringExtra(EXTRA_ORDER_ID)!!
-        val printType = intent.getSerializableExtra(EXTRA_PRINT_TYPE) as PrintBill.PrintType
+        val printType = intent.getSerializableExtra(EXTRA_PRINT_TYPE) as PrinterUtils.PrintType
 
         setContent {
             SolitePOSTheme {
@@ -119,13 +122,14 @@ class BluetoothDevicesActivity : SoliteActivity() {
             modifier = modifier.fillMaxWidth()
         ) {
             items(devices) {
+                Divider()
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
                         .clickable {
                             onChooseDevice(it)
-                        },
+                        }
+                        .padding(16.dp),
                     text = "${it.name} \n ${it.address}"
                 )
             }
@@ -202,12 +206,12 @@ class BluetoothDevicesActivity : SoliteActivity() {
     private fun onChooseDevice(
         device: BluetoothDevice,
         order: OrderWithProduct,
-        printType: PrintBill.PrintType
+        printType: PrinterUtils.PrintType
     ) {
         viewModel.setNewPrinterDevice(device.address)
 
         whenPermissionGranted {
-            PrinterConnection(this).getSocketFromDevice(
+            PrinterConnection(lifecycleScope).getSocketFromDevice(
                 device = device,
                 print = {
                     PrintBill.doPrint(
