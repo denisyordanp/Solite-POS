@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "69502937231",
+    "project_id": "pos-sosialita-develop",
+    "storage_bucket": "pos-sosialita-develop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69502937231:android:60fa66fcd6fef8775468fa",
+        "android_client_info": {
+          "package_name": "com.socialite.solite_pos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69502937231-9san7e5i3ll2q4u6ornvdf5pb5ec9uu3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSzEJP9QC1dQxnlF23mYZKhVqaWGAgyt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69502937231-9san7e5i3ll2q4u6ornvdf5pb5ec9uu3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
