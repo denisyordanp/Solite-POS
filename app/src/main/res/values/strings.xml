@@ -21,6 +21,7 @@
     <string name="sales_recap">Rekap penjualan</string>
     <string name="products">Data Produk</string>
     <string name="stores">Data Kedai</string>
+    <string name="store_users">Data Pengguna Kedai</string>
     <string name="not_pay_yet">Belum Bayar</string>
     <string name="done">Selesai</string>
     <string name="canceled">Dibatalkan</string>
@@ -28,6 +29,7 @@
     <string name="optional_choice">Pilihan optional</string>
     <string name="amount">Banyaknya</string>
     <string name="adding">Tambahkan</string>
+    <string name="add_store_user">Tambah pengguna kedai</string>
     <string name="done_the_order">Selesaikan pesanan</string>
     <string name="put_back_order">Kembalikan pesanan</string>
     <string name="are_you_sure_will_done_this_order">Anda yakin akan menyelesaikan pesanan ini?</string>
@@ -59,8 +61,13 @@
     <string name="date">Tanggal</string>
     <string name="until">Sampai</string>
     <string name="store_name">Nama kedai</string>
+    <string name="user_name">Nama pengguna</string>
     <string name="address">Alamat</string>
     <string name="select_store">Pilih kedai</string>
+    <string name="user_access_off">Menonaktifkan user</string>
+    <string name="user_access_on">Mengaktifkan user</string>
+    <string name="user_access_off_desc">Anda yakin akan menonaktifkan user <b>%s</b>, sehingga user tidak dapat login kembali?</string>
+    <string name="user_access_on_desc">Anda yakin akan mengaktifkan user <b>%s</b>, sehingga user dapat login kembali?</string>
     <string name="unselect_store_title">Kedai belum dipilih</string>
     <string name="are_you_sure_select_this_store_for_next_orders">Anda yakin akan memilih kedai ini untuk pesanan selanjutnya?</string>
     <string name="please_select_store_first_before_do_a_transaction">Mohon pilih kedai terlebih dahulu sebelum memulai transaksi</string>
@@ -119,6 +126,7 @@
     <string name="manual_input">Input manual</string>
     <string name="enter_email">Masukan email</string>
     <string name="enter_your_name">Masukan nama anda</string>
+    <string name="enter_user_name">Masukan nama pengguna</string>
     <string name="field_can_not_emtpy">Kolom tidak boleh kosong</string>
     <string name="fill_with_email_correct_format">Masukan format email yang benar</string>
     <string name="password_must_between_8_15_character">Password harus antara 8–15 karakter</string>
@@ -132,6 +140,7 @@
     <string name="enter_password">Masukan password</string>
     <string name="enter_confirm_password">Masukan konfirmasi password</string>
     <string name="enter_store_name">Masukan nama toko anda</string>
+    <string name="select_authority">Pilih hak akses pengguna</string>
     <string name="email_or_password_not_found_please_try_again">Email atau password tidak ditemukan, silahkan coba lagi</string>
     <string name="synchronization_success_message">Silahkan periksa data terbaru</string>
     <string name="synchronization_success_title">Sinkronisasi Berhasil</string>

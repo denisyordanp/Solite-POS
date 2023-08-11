@@ -33,6 +33,7 @@ import com.socialite.solite_pos.view.screens.store.product_detail.ProductDetailS
 import com.socialite.solite_pos.view.screens.store.product_master.ProductsMasterScreen
 import com.socialite.solite_pos.view.screens.store.promo.PromoMasterScreen
 import com.socialite.solite_pos.view.screens.store.recap.RecapScreen
+import com.socialite.solite_pos.view.screens.store.store_account.StoreUsersScreen
 import com.socialite.solite_pos.view.screens.store.stores.StoresScreen
 import com.socialite.solite_pos.view.screens.store.variant_master.VariantMasterScreen
 import com.socialite.solite_pos.view.screens.store.variant_product.VariantProductScreen
@@ -132,9 +133,11 @@ class StoreActivity : SoliteActivity() {
                                         navController.navigate(StoreDestinations.MASTER_PROMO)
                                     }
 
-                                    else -> {
-                                        // Do nothing
+                                    StoreMenus.STORE_USER -> {
+                                        navController.navigate(StoreDestinations.STORE_USERS)
                                     }
+
+                                    else -> {}
                                 }
                             }
                         )
@@ -142,28 +145,28 @@ class StoreActivity : SoliteActivity() {
                     composable(StoreDestinations.MASTER_PAYMENT) {
                         PaymentMasterScreen(
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             }
                         )
                     }
                     composable(StoreDestinations.MASTER_PROMO) {
                         PromoMasterScreen(
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             }
                         )
                     }
                     composable(StoreDestinations.MASTER_CATEGORY) {
                         CategoryMasterScreen(
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             }
                         )
                     }
                     composable(StoreDestinations.MASTER_STORES) {
                         StoresScreen(
                             onBackClicked = {
-                                val pop = navController.popBackStack()
+                                val pop = navController.navigateUp()
                                 if (!pop) onBackPressed()
                             }
                         )
@@ -173,7 +176,7 @@ class StoreActivity : SoliteActivity() {
                             datePicker = DateAndTimeManager.getRangeDatePickerBuilder(),
                             fragmentManager = supportFragmentManager,
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             },
                             onOrdersClicked = {
                                 OrdersActivity.createInstanceForRecap(
@@ -191,7 +194,7 @@ class StoreActivity : SoliteActivity() {
                     composable(StoreDestinations.MASTER_PRODUCT) {
                         ProductsMasterScreen(
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             },
                             onItemClicked = {
                                 navController.navigate(StoreDestinations.productDetail(it.id))
@@ -225,7 +228,7 @@ class StoreActivity : SoliteActivity() {
                                 navController.navigate(StoreDestinations.productVariants(currentId))
                             },
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             },
                             onCreateNewProduct = { product ->
                                 lifecycleScope.launch {
@@ -242,7 +245,7 @@ class StoreActivity : SoliteActivity() {
                             VariantProductScreen(
                                 productId = id,
                                 onBackClicked = {
-                                    navController.popBackStack()
+                                    navController.navigateUp()
                                 }
                             )
                         }
@@ -250,7 +253,7 @@ class StoreActivity : SoliteActivity() {
                     composable(StoreDestinations.MASTER_VARIANTS) {
                         VariantMasterScreen(
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             }
                         )
                     }
@@ -265,7 +268,14 @@ class StoreActivity : SoliteActivity() {
                             fragmentManager = supportFragmentManager,
                             parameters = report,
                             onBackClicked = {
-                                navController.popBackStack()
+                                navController.navigateUp()
+                            }
+                        )
+                    }
+                    composable(StoreDestinations.STORE_USERS) {
+                        StoreUsersScreen(
+                            onBackClicked = {
+                                navController.navigateUp()
                             }
                         )
                     }

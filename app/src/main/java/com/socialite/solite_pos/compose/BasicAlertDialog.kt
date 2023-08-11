@@ -14,6 +14,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,8 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun BasicAlertDialog(
     titleText: String,
-    descText: String,
+    descText: String? = null,
+    descAnnotatedString: AnnotatedString? = null,
     positiveAction: () -> Unit,
     positiveText: String,
     negativeAction: (() -> Unit)? = null,
@@ -50,14 +52,26 @@ fun BasicAlertDialog(
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = descText,
-                    style = MaterialTheme.typography.body2.copy(
-                        textAlign = TextAlign.Center
+                descText?.let {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = it,
+                        style = MaterialTheme.typography.body2.copy(
+                            textAlign = TextAlign.Center
+                        )
                     )
-                )
+                }
+                descAnnotatedString?.let {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = it,
+                        style = MaterialTheme.typography.body2.copy(
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
                 Spacer(modifier = Modifier.height(25.dp))
                 Row(
                     modifier = Modifier

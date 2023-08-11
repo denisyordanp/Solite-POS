@@ -31,6 +31,7 @@ enum class StoreMenus(@StringRes val title: Int) {
     PROMO(R.string.promo),
     MASTERS(R.string.products),
     STORE(R.string.stores),
+    STORE_USER(R.string.store_users)
 }
 
 enum class MasterMenus(@StringRes val title: Int) {
