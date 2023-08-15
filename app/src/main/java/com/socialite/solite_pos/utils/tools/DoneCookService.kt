@@ -11,6 +11,8 @@ import com.socialite.solite_pos.view.SoliteActivity.Companion.BROADCAST_KEY
 
 class DoneCookService(private var context: Context?) : BroadcastReceiver() {
 
+	constructor() : this(null)
+
 	companion object{
 		const val EXTRA_NAME = "extra_name"
 	}
