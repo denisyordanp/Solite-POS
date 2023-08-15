@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.order_customer.select_variant
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetProductWithVariantOptions
+import com.socialite.solite_pos.data.domain.GetProductWithVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import dagger.hilt.android.lifecycle.HiltViewModel

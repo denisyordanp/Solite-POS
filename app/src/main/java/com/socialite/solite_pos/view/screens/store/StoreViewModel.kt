@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.store
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetOrdersGeneralMenuBadge
+import com.socialite.solite_pos.data.domain.GetOrdersGeneralMenuBadge
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

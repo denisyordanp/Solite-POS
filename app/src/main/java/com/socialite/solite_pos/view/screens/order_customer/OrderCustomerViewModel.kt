@@ -2,8 +2,8 @@ package com.socialite.solite_pos.view.screens.order_customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetProductWithCategories
-import com.socialite.solite_pos.data.source.domain.NewOrder
+import com.socialite.solite_pos.data.domain.GetProductWithCategories
+import com.socialite.solite_pos.data.domain.NewOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.findExisting

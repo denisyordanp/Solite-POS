@@ -2,8 +2,8 @@ package com.socialite.solite_pos.view.screens.store.recap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetOrderMenusWithAmount
-import com.socialite.solite_pos.data.source.domain.GetRecapData
+import com.socialite.solite_pos.data.domain.GetOrderMenusWithAmount
+import com.socialite.solite_pos.data.domain.GetRecapData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.repository.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
