@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository.impl
 
 import com.socialite.solite_pos.data.source.remote.SoliteServices
-import com.socialite.solite_pos.data.source.remote.response.entity.TokenResponse
+import com.socialite.solite_pos.data.schema.response.TokenResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.ResponseHandler.handleErrorMessage
 import com.socialite.solite_pos.data.repository.AccountRepository

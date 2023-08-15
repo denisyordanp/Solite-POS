@@ -1,8 +1,8 @@
-package com.socialite.solite_pos.data.source.preference.impl
+package com.socialite.solite_pos.data.preference.impl
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.socialite.solite_pos.data.source.preference.UserPreferences
+import com.socialite.solite_pos.data.preference.UserPreferences
 import com.socialite.solite_pos.utils.config.PreferencesFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

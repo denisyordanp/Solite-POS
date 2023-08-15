@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.di
 
-import com.socialite.solite_pos.data.source.preference.UserPreferences
-import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
+import com.socialite.solite_pos.data.preference.UserPreferences
+import com.socialite.solite_pos.data.preference.impl.UserPreferencesImpl
 import com.socialite.solite_pos.data.repository.AccountRepository
 import com.socialite.solite_pos.data.repository.CategoriesRepository
 import com.socialite.solite_pos.data.repository.CustomersRepository

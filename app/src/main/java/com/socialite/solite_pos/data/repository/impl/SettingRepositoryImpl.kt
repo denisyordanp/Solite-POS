@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.socialite.solite_pos.data.source.preference.UserPreferences
+import com.socialite.solite_pos.data.preference.UserPreferences
 import com.socialite.solite_pos.data.repository.SettingRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

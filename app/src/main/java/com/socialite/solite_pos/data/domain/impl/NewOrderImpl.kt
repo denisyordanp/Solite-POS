@@ -9,7 +9,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPr
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
-import com.socialite.solite_pos.data.source.preference.SettingPreferences
+import com.socialite.solite_pos.data.preference.SettingPreferences
 import com.socialite.solite_pos.data.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.repository.OrderProductVariantsRepository
 import com.socialite.solite_pos.data.repository.OrdersRepository

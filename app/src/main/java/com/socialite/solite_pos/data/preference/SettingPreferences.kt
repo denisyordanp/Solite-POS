@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.preference
+package com.socialite.solite_pos.data.preference
 
 import android.annotation.SuppressLint
 import android.content.Context

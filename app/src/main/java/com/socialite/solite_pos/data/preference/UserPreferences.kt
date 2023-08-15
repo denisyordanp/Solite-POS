@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.preference
+package com.socialite.solite_pos.data.preference
 
 interface UserPreferences {
     fun setUserToken(token: String)
