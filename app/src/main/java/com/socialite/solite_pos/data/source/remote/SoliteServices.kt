@@ -1,8 +1,8 @@
 package com.socialite.solite_pos.data.source.remote
 
-import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeParams
-import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeResponse
-import com.socialite.solite_pos.data.source.remote.response.entity.TokenResponse
+import com.socialite.solite_pos.data.schema.response.SynchronizeParams
+import com.socialite.solite_pos.data.schema.response.SynchronizeResponse
+import com.socialite.solite_pos.data.schema.response.TokenResponse
 import com.socialite.solite_pos.data.source.remote.response.helper.ApiResponse
 import retrofit2.http.Body
 import retrofit2.http.Field
