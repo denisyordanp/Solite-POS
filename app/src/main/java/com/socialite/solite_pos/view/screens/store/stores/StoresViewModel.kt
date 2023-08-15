@@ -3,8 +3,8 @@ package com.socialite.solite_pos.view.screens.store.stores
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
-import com.socialite.solite_pos.data.source.repository.SettingRepository
-import com.socialite.solite_pos.data.source.repository.StoreRepository
+import com.socialite.solite_pos.data.repository.SettingRepository
+import com.socialite.solite_pos.data.repository.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

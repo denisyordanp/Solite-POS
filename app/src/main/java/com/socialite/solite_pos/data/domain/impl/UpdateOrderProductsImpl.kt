@@ -4,8 +4,8 @@ import com.socialite.solite_pos.data.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
+import com.socialite.solite_pos.data.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.repository.OrderProductVariantsRepository
 import javax.inject.Inject
 
 class UpdateOrderProductsImpl @Inject constructor(

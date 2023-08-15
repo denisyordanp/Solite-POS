@@ -10,10 +10,10 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Custome
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
 import com.socialite.solite_pos.data.source.preference.SettingPreferences
-import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.source.repository.OrderProductVariantsRepository
-import com.socialite.solite_pos.data.source.repository.OrdersRepository
-import com.socialite.solite_pos.data.source.repository.StoreRepository
+import com.socialite.solite_pos.data.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.repository.OrderProductVariantsRepository
+import com.socialite.solite_pos.data.repository.OrdersRepository
+import com.socialite.solite_pos.data.repository.StoreRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import javax.inject.Inject
 

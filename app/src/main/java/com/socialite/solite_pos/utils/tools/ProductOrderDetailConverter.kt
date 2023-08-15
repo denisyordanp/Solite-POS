@@ -2,8 +2,8 @@ package com.socialite.solite_pos.utils.tools
 
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
-import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.source.repository.ProductsRepository
+import com.socialite.solite_pos.data.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.repository.ProductsRepository
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import javax.inject.Singleton

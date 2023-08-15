@@ -4,8 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.repository.RemoteConfigRepository
-import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.data.repository.RemoteConfigRepository
+import com.socialite.solite_pos.data.repository.SettingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

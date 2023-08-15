@@ -1,8 +1,8 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.LoginUser
-import com.socialite.solite_pos.data.source.repository.AccountRepository
-import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.data.repository.AccountRepository
+import com.socialite.solite_pos.data.repository.SettingRepository
 import javax.inject.Inject
 
 class LoginUserImpl @Inject constructor(

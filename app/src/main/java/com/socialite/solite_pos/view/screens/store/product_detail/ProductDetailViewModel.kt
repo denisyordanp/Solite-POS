@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
-import com.socialite.solite_pos.data.source.repository.CategoriesRepository
-import com.socialite.solite_pos.data.source.repository.ProductsRepository
+import com.socialite.solite_pos.data.repository.CategoriesRepository
+import com.socialite.solite_pos.data.repository.ProductsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

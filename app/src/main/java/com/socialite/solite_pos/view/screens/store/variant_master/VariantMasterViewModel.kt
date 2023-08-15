@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
-import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
-import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import com.socialite.solite_pos.data.repository.VariantOptionsRepository
+import com.socialite.solite_pos.data.repository.VariantsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

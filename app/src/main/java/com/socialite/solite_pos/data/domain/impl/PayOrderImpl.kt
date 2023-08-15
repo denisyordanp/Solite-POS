@@ -4,9 +4,9 @@ import com.socialite.solite_pos.data.domain.PayOrder
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
 import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
-import com.socialite.solite_pos.data.source.repository.OrderPaymentsRepository
-import com.socialite.solite_pos.data.source.repository.OrderPromosRepository
-import com.socialite.solite_pos.data.source.repository.OrdersRepository
+import com.socialite.solite_pos.data.repository.OrderPaymentsRepository
+import com.socialite.solite_pos.data.repository.OrderPromosRepository
+import com.socialite.solite_pos.data.repository.OrdersRepository
 import javax.inject.Inject
 
 class PayOrderImpl @Inject constructor(

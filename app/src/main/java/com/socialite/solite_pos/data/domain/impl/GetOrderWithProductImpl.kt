@@ -2,8 +2,8 @@ package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetOrderWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.source.repository.OrdersRepository
+import com.socialite.solite_pos.data.repository.OrderDetailsRepository
+import com.socialite.solite_pos.data.repository.OrdersRepository
 import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map

@@ -9,8 +9,8 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPr
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
-import com.socialite.solite_pos.data.source.repository.PaymentsRepository
-import com.socialite.solite_pos.data.source.repository.PromosRepository
+import com.socialite.solite_pos.data.repository.PaymentsRepository
+import com.socialite.solite_pos.data.repository.PromosRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

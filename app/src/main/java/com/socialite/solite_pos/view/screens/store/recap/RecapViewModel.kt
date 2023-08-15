@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.domain.GetOrderMenusWithAmount
 import com.socialite.solite_pos.data.domain.GetRecapData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
-import com.socialite.solite_pos.data.source.repository.StoreRepository
+import com.socialite.solite_pos.data.repository.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
