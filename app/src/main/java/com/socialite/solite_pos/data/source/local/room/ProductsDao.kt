@@ -6,9 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.room.helper.ProductWithCategory
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product as NewProduct
+import com.socialite.solite_pos.data.schema.room.helper.ProductWithCategory
+import com.socialite.solite_pos.data.schema.room.master.Product
+import com.socialite.solite_pos.data.schema.room.new_master.Product as NewProduct
 import kotlinx.coroutines.flow.Flow
 
 @Dao

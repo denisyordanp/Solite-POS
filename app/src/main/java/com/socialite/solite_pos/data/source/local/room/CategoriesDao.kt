@@ -7,8 +7,8 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.solite_pos.data.source.local.entity.room.master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category as NewCategory
+import com.socialite.solite_pos.data.schema.room.master.Category
+import com.socialite.solite_pos.data.schema.room.new_master.Category as NewCategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,11 +1,11 @@
 package com.socialite.solite_pos.data.source.local.entity.helper
 
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
+import com.socialite.solite_pos.data.schema.room.helper.OrderData
 import java.io.Serializable
 
 data class OrderWithProduct(
-	val orderData: OrderData,
-	val products: List<ProductOrderDetail>
+    val orderData: OrderData,
+    val products: List<ProductOrderDetail>
 ): Serializable {
 
 	val grandTotal: Long

@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository
 
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
+import com.socialite.solite_pos.data.schema.room.bridge.VariantMix
+import com.socialite.solite_pos.data.schema.room.helper.VariantWithVariantMix
 import kotlinx.coroutines.flow.Flow
 
 interface VariantMixesRepository {

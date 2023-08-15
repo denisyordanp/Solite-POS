@@ -3,7 +3,7 @@ package com.socialite.solite_pos.data.repository.impl
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
-import com.socialite.solite_pos.data.source.local.entity.room.master.Promo
+import com.socialite.solite_pos.data.schema.room.master.Promo
 import com.socialite.solite_pos.data.source.local.room.AppDatabase
 import com.socialite.solite_pos.data.source.local.room.PromosDao
 import com.socialite.solite_pos.data.repository.PromosRepository
@@ -12,7 +12,7 @@ import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.UUID
 import javax.inject.Inject
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo as NewPromo
+import com.socialite.solite_pos.data.schema.room.new_master.Promo as NewPromo
 
 class PromosRepositoryImpl @Inject constructor(
     private val dao: PromosDao,

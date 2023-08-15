@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.schema.response
 
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.schema.room.new_master.Product
 
 data class ProductResponse(
     val category: String,

@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository
 
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
+import com.socialite.solite_pos.data.schema.room.new_master.Promo
 import kotlinx.coroutines.flow.Flow
 
 interface PromosRepository : SyncRepository<Promo> {

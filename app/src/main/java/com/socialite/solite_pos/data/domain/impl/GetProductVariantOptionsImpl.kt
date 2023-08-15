@@ -2,7 +2,7 @@ package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetProductVariantOptions
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
+import com.socialite.solite_pos.data.schema.room.helper.VariantProductWithOption
 import com.socialite.solite_pos.data.repository.ProductVariantsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

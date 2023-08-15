@@ -7,7 +7,7 @@ import com.socialite.solite_pos.data.domain.NewOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.source.local.entity.helper.findExisting
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
+import com.socialite.solite_pos.data.schema.room.new_master.Customer
 import com.socialite.solite_pos.data.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel

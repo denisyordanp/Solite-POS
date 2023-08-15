@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.repository.impl
 
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
+import com.socialite.solite_pos.data.schema.room.bridge.VariantMix
 import com.socialite.solite_pos.data.source.local.room.VariantMixesDao
 import com.socialite.solite_pos.data.repository.VariantMixesRepository
 

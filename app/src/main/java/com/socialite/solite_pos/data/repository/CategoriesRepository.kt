@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository
 
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
+import com.socialite.solite_pos.data.schema.room.new_master.Category
 import kotlinx.coroutines.flow.Flow
 
 interface CategoriesRepository : SyncRepository<Category> {

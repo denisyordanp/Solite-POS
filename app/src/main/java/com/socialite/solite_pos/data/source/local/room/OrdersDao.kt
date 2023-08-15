@@ -6,19 +6,19 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store
+import com.socialite.solite_pos.data.schema.room.bridge.OrderDetail
+import com.socialite.solite_pos.data.schema.room.bridge.OrderPayment
+import com.socialite.solite_pos.data.schema.room.bridge.OrderProductVariant
+import com.socialite.solite_pos.data.schema.room.bridge.OrderPromo
+import com.socialite.solite_pos.data.schema.room.helper.OrderData
+import com.socialite.solite_pos.data.schema.room.master.Order
+import com.socialite.solite_pos.data.schema.room.new_master.Store
 import kotlinx.coroutines.flow.Flow
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail as NewOrderDetail
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment as NewOrderPayment
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant as NewOrderProductVariant
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPromo as NewOrderPromo
+import com.socialite.solite_pos.data.schema.room.new_master.Order as NewOrder
 
 @Dao
 interface OrdersDao {

@@ -1,17 +1,15 @@
 package com.socialite.solite_pos.data.source.local.entity.helper
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Purchase
-import com.socialite.solite_pos.data.source.local.entity.room.master.PurchaseProduct
-import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
+import com.socialite.solite_pos.data.schema.room.master.Purchase
+import com.socialite.solite_pos.data.schema.room.master.PurchaseProduct
+import com.socialite.solite_pos.data.schema.room.master.Supplier
 import java.io.Serializable
 
 data class PurchaseWithProduct(
-        var purchase: Purchase,
-        var supplier: Supplier,
-        var products: ArrayList<PurchaseProductWithProduct>
+    var purchase: Purchase,
+    var supplier: Supplier,
+    var products: ArrayList<PurchaseProductWithProduct>
 ): Serializable{
-
-    constructor(purchase: Purchase, supplier: Supplier): this(purchase, supplier, ArrayList())
 
     val purchaseProduct: List<PurchaseProduct>
     get() {

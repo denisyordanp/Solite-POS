@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.repository
 
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant
 
 interface OrderProductVariantsRepository : SyncRepository<OrderProductVariant> {
     suspend fun getNeedUploadOrderProductVariants(): List<OrderProductVariant>

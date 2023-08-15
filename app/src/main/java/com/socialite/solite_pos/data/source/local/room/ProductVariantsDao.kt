@@ -6,12 +6,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
+import com.socialite.solite_pos.data.schema.room.bridge.VariantProduct
+import com.socialite.solite_pos.data.schema.room.helper.VariantProductWithOption
+import com.socialite.solite_pos.data.schema.room.new_master.Product
+import com.socialite.solite_pos.data.schema.room.new_master.Variant
 import kotlinx.coroutines.flow.Flow
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
+import com.socialite.solite_pos.data.schema.room.new_bridge.VariantProduct as NewVariantProduct
 
 @Dao
 interface ProductVariantsDao {

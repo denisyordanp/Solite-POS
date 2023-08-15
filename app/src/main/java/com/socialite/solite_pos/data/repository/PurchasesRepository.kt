@@ -2,7 +2,7 @@ package com.socialite.solite_pos.data.repository
 
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.helper.PurchaseWithSupplier
+import com.socialite.solite_pos.data.schema.room.helper.PurchaseWithSupplier
 import kotlinx.coroutines.flow.Flow
 
 interface PurchasesRepository {

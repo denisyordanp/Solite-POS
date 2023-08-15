@@ -5,10 +5,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.VariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantWithVariantMix
-import com.socialite.solite_pos.data.source.local.entity.room.master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.master.Variant
+import com.socialite.solite_pos.data.schema.room.bridge.VariantMix
+import com.socialite.solite_pos.data.schema.room.helper.VariantWithVariantMix
+import com.socialite.solite_pos.data.schema.room.master.Product
+import com.socialite.solite_pos.data.schema.room.master.Variant
 import kotlinx.coroutines.flow.Flow
 
 @Dao

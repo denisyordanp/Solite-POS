@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.repository
 
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer
+import com.socialite.solite_pos.data.schema.room.new_master.Customer
 import kotlinx.coroutines.flow.Flow
 
 interface CustomersRepository : SyncRepository<Customer> {

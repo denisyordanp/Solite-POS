@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository
 
-import com.socialite.solite_pos.data.source.local.entity.room.helper.VariantProductWithOption
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
+import com.socialite.solite_pos.data.schema.room.helper.VariantProductWithOption
+import com.socialite.solite_pos.data.schema.room.new_bridge.VariantProduct
 import kotlinx.coroutines.flow.Flow
 
 interface ProductVariantsRepository : SyncRepository<VariantProduct> {

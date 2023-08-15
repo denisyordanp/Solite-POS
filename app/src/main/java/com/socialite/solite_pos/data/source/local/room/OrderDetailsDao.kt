@@ -6,11 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
+import com.socialite.solite_pos.data.schema.room.bridge.OrderDetail
+import com.socialite.solite_pos.data.schema.room.helper.DetailWithVariantOption
 import kotlinx.coroutines.flow.Flow
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail as NewOrderDetail
+import com.socialite.solite_pos.data.schema.room.new_master.Order as NewOrder
 
 @Dao
 interface OrderDetailsDao {

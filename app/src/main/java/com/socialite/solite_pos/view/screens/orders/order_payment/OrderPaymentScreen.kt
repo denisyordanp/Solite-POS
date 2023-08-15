@@ -46,9 +46,9 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
+import com.socialite.solite_pos.data.schema.room.new_master.Order
+import com.socialite.solite_pos.data.schema.room.new_master.Payment
+import com.socialite.solite_pos.data.schema.room.new_master.Promo
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.DropdownItem
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation

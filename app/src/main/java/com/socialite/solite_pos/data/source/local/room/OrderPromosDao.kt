@@ -5,8 +5,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
+import com.socialite.solite_pos.data.schema.room.bridge.OrderPromo
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPromo as NewOrderPromo
 
 @Dao
 interface OrderPromosDao {

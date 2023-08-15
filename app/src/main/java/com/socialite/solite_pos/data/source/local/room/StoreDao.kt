@@ -5,8 +5,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.room.master.Store
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store as NewStore
+import com.socialite.solite_pos.data.schema.room.master.Store
+import com.socialite.solite_pos.data.schema.room.new_master.Store as NewStore
 import kotlinx.coroutines.flow.Flow
 
 @Dao

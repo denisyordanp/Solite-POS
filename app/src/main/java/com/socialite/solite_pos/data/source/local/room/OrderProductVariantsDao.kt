@@ -5,9 +5,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
+import com.socialite.solite_pos.data.schema.room.bridge.OrderProductVariant
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail as NewOrderDetail
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant as NewOrderProductVariant
 
 @Dao
 interface OrderProductVariantsDao {

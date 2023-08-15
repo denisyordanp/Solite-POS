@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository
 
-import com.socialite.solite_pos.data.source.local.entity.room.helper.OrderData
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
+import com.socialite.solite_pos.data.schema.room.helper.OrderData
+import com.socialite.solite_pos.data.schema.room.new_master.Order
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import kotlinx.coroutines.flow.Flow
 

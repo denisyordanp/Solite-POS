@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.utils.tools
 
 import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail
 import com.socialite.solite_pos.data.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.repository.ProductsRepository
 import kotlinx.coroutines.flow.firstOrNull

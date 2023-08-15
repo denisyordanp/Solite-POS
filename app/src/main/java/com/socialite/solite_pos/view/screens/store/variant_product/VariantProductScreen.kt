@@ -38,10 +38,10 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.OptionItem
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
+import com.socialite.solite_pos.data.schema.room.new_bridge.VariantProduct
+import com.socialite.solite_pos.data.schema.room.new_master.Product
+import com.socialite.solite_pos.data.schema.room.new_master.Variant
+import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
 
 @Composable
 @ExperimentalMaterialApi

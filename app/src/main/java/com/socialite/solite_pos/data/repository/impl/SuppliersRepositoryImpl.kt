@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.repository.impl
 
-import com.socialite.solite_pos.data.source.local.entity.room.master.Supplier
+import com.socialite.solite_pos.data.schema.room.master.Supplier
 import com.socialite.solite_pos.data.source.local.room.SuppliersDao
 import com.socialite.solite_pos.data.repository.SuppliersRepository
 import kotlinx.coroutines.flow.Flow

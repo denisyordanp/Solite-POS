@@ -7,23 +7,23 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.socialite.solite_pos.data.source.local.entity.room.bridge.*
-import com.socialite.solite_pos.data.source.local.entity.room.master.*
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail as NewOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment as NewOrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderProductVariant as NewOrderProductVariant
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo as NewOrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.VariantProduct as NewVariantProduct
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category as NewCategory
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Customer as NewCustomer
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order as NewOrder
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Outcome as NewOutcome
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment as NewPayment
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product as NewProduct
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo as NewPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Store as NewStore
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant as NewVariant
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption as NewVariantOption
+import com.socialite.solite_pos.data.schema.room.bridge.*
+import com.socialite.solite_pos.data.schema.room.master.*
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail as NewOrderDetail
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment as NewOrderPayment
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant as NewOrderProductVariant
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPromo as NewOrderPromo
+import com.socialite.solite_pos.data.schema.room.new_bridge.VariantProduct as NewVariantProduct
+import com.socialite.solite_pos.data.schema.room.new_master.Category as NewCategory
+import com.socialite.solite_pos.data.schema.room.new_master.Customer as NewCustomer
+import com.socialite.solite_pos.data.schema.room.new_master.Order as NewOrder
+import com.socialite.solite_pos.data.schema.room.new_master.Outcome as NewOutcome
+import com.socialite.solite_pos.data.schema.room.new_master.Payment as NewPayment
+import com.socialite.solite_pos.data.schema.room.new_master.Product as NewProduct
+import com.socialite.solite_pos.data.schema.room.new_master.Promo as NewPromo
+import com.socialite.solite_pos.data.schema.room.new_master.Store as NewStore
+import com.socialite.solite_pos.data.schema.room.new_master.Variant as NewVariant
+import com.socialite.solite_pos.data.schema.room.new_master.VariantOption as NewVariantOption
 
 @Database(
     entities = [

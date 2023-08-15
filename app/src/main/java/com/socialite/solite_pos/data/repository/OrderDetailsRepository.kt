@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository
 
-import com.socialite.solite_pos.data.source.local.entity.room.helper.DetailWithVariantOption
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderDetail
+import com.socialite.solite_pos.data.schema.room.helper.DetailWithVariantOption
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail
 import kotlinx.coroutines.flow.Flow
 
 interface OrderDetailsRepository : SyncRepository<OrderDetail> {
