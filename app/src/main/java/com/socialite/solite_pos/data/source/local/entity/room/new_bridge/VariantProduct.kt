@@ -10,7 +10,7 @@ import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.remote.response.entity.VariantProductResponse
+import com.socialite.solite_pos.data.schema.response.VariantProductResponse
 import java.io.Serializable
 import java.util.UUID
 

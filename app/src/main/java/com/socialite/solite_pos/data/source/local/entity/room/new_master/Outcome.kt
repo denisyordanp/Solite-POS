@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.remote.response.entity.OutcomeResponse
+import com.socialite.solite_pos.data.schema.response.OutcomeResponse
 import com.socialite.solite_pos.utils.config.DateUtils
 import java.io.Serializable
 import java.util.UUID

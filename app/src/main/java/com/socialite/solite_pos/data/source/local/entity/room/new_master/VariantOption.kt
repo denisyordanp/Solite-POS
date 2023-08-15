@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.remote.response.entity.VariantOptionResponse
+import com.socialite.solite_pos.data.schema.response.VariantOptionResponse
 import java.io.Serializable
 import java.util.UUID
 

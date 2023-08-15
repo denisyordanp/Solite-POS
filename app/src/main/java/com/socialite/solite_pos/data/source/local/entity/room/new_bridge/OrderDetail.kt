@@ -9,7 +9,7 @@ import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
 import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.remote.response.entity.OrderDetailResponse
+import com.socialite.solite_pos.data.schema.response.OrderDetailResponse
 import java.io.Serializable
 import java.util.UUID
 

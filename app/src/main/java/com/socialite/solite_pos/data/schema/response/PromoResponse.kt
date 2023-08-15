@@ -1,25 +1,25 @@
-package com.socialite.solite_pos.data.source.remote.response.entity
+package com.socialite.solite_pos.data.schema.response
 
 import com.socialite.solite_pos.data.source.local.entity.helper.ResponseData
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
+import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
 
-data class PaymentResponse(
+data class PromoResponse(
     val desc: String,
     override val id: String,
     val isActive: Boolean,
     val isCash: Boolean,
     val isUploaded: Boolean,
     val name: String,
-    val tax: Float
+    val value: Int?
 ) : ResponseData {
 
-    override fun toEntity(): Payment {
-        return Payment(
+    override fun toEntity(): Promo {
+        return Promo(
             id = id,
             name = name,
             desc = desc,
-            tax = tax,
             isCash = isCash,
+            value = value,
             isActive = isActive,
             isUploaded = isUploaded
         )

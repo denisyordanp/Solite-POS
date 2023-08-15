@@ -1,6 +1,6 @@
-package com.socialite.solite_pos.data.source.remote.response.entity
+package com.socialite.solite_pos.data.schema.response
 
-data class SynchronizeResponse(
+data class SynchronizeParams(
     val customer: List<CustomerResponse>,
     val store: List<StoreResponse>,
     val category: List<CategoryResponse>,
@@ -10,10 +10,10 @@ data class SynchronizeResponse(
     val outcome: List<OutcomeResponse>,
     val product: List<ProductResponse>,
     val variant: List<VariantResponse>,
-    val orderDetail: List<OrderDetailResponse>,
+    val orderDetail: SynchronizeParamItem<OrderDetailResponse>,
     val orderPayment: List<OrderPaymentResponse>,
     val orderPromo: List<OrderPromoResponse>,
     val variantOption: List<VariantOptionResponse>,
-    val orderProductVariant: List<OrderProductVariantResponse>,
-    val variantProduct: List<VariantProductResponse>
+    val orderProductVariant: SynchronizeParamItem<OrderProductVariantResponse>,
+    val variantProduct: SynchronizeParamItem<VariantProductResponse>
 )

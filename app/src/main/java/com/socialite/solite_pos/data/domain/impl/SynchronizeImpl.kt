@@ -2,9 +2,9 @@ package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.Synchronize
 import com.socialite.solite_pos.data.source.remote.SoliteServices
-import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeParamItem
-import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeParams
-import com.socialite.solite_pos.data.source.remote.response.entity.SynchronizeResponse
+import com.socialite.solite_pos.data.schema.response.SynchronizeParamItem
+import com.socialite.solite_pos.data.schema.response.SynchronizeParams
+import com.socialite.solite_pos.data.schema.response.SynchronizeResponse
 import com.socialite.solite_pos.data.repository.CategoriesRepository
 import com.socialite.solite_pos.data.repository.CustomersRepository
 import com.socialite.solite_pos.data.repository.OrderDetailsRepository

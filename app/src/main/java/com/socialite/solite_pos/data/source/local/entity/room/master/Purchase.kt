@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.source.preference.SettingPreferences
+import com.socialite.solite_pos.data.preference.SettingPreferences
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
 import java.io.Serializable
 import java.text.SimpleDateFormat
