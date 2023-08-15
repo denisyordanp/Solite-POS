@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.Synchronize
-import com.socialite.solite_pos.data.source.remote.SoliteServices
+import com.socialite.solite_pos.network.SoliteServices
 import com.socialite.solite_pos.data.schema.response.SynchronizeParamItem
 import com.socialite.solite_pos.data.schema.response.SynchronizeParams
 import com.socialite.solite_pos.data.schema.response.SynchronizeResponse
