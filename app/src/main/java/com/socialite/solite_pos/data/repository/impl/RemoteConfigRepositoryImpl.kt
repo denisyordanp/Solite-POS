@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.repository.impl
 
-import com.socialite.solite_pos.builder.RemoteConfigManager
+import com.socialite.solite_pos.network.RemoteConfigManager
 import com.socialite.solite_pos.data.repository.RemoteConfigRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

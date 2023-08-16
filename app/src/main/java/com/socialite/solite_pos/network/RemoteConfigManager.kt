@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.builder
+package com.socialite.solite_pos.network
 
 import android.content.Context
 import com.google.firebase.FirebaseApp
