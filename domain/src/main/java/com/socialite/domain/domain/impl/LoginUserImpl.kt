@@ -1,6 +1,6 @@
-package com.socialite.domain.domain.impl
+package com.socialite.solite_pos.data.domain.impl
 
-import com.socialite.domain.domain.LoginUser
+import com.socialite.solite_pos.data.domain.LoginUser
 import com.socialite.data.repository.AccountRepository
 import com.socialite.data.repository.SettingRepository
 import javax.inject.Inject

@@ -37,7 +37,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.OptionItem
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.domain.schema.helper.VariantWithOptions
+import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
 import com.socialite.data.schema.room.new_bridge.VariantProduct
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.data.schema.room.new_master.Variant

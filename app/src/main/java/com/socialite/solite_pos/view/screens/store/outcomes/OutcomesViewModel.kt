@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.store.outcomes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.domain.domain.NewOutcome
+import com.socialite.solite_pos.data.domain.NewOutcome
 import com.socialite.data.schema.room.new_master.Outcome
 import com.socialite.data.repository.OutcomesRepository
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter

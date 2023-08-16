@@ -1,6 +1,6 @@
-package com.socialite.domain.domain.impl
+package com.socialite.solite_pos.data.domain.impl
 
-import com.socialite.domain.domain.PayOrder
+import com.socialite.solite_pos.data.domain.PayOrder
 import com.socialite.data.schema.room.new_bridge.OrderPayment
 import com.socialite.data.schema.room.new_bridge.OrderPromo
 import com.socialite.data.schema.room.new_master.Order

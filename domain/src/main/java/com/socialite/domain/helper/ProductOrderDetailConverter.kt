@@ -1,6 +1,6 @@
-package com.socialite.domain.helper
+package com.socialite.solite_pos.utils.tools
 
-import com.socialite.domain.schema.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
 import com.socialite.data.schema.room.new_bridge.OrderDetail
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.ProductsRepository

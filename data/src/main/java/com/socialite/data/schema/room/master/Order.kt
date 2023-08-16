@@ -59,5 +59,10 @@ data class Order(
         const val STORE = "store"
         const val NO = "order_no"
         const val DB_NAME = "order"
+
+        const val ON_PROCESS = 0
+        const val NEED_PAY = 1
+        const val CANCEL = 2
+        const val DONE = 3
     }
 }

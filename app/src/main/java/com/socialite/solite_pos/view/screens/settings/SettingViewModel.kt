@@ -2,12 +2,11 @@ package com.socialite.solite_pos.view.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
-import com.socialite.domain.domain.MigrateToUUID
-import com.socialite.domain.domain.Synchronize
+import com.socialite.solite_pos.data.domain.GetOrdersGeneralMenuBadge
+import com.socialite.solite_pos.data.domain.MigrateToUUID
+import com.socialite.solite_pos.data.domain.Synchronize
 import com.socialite.data.repository.RemoteConfigRepository
 import com.socialite.data.repository.SettingRepository
-import com.socialite.solite_pos.schema.GeneralMenuBadge
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,9 +50,7 @@ class SettingViewModel @Inject constructor(
 
     fun getBadges(date: String) {
         viewModelScope.launch {
-            getOrdersGeneralMenuBadge(date = date).map { menus ->
-                menus.map { GeneralMenuBadge.fromDomain(it) }
-            }
+            getOrdersGeneralMenuBadge(date = date)
                 .map {
                     _viewState.value.copy(
                         badges = it

@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.store.product_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.domain.domain.GetProductVariantOptions
+import com.socialite.solite_pos.data.domain.GetProductVariantOptions
 import com.socialite.data.schema.room.new_master.Category
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.data.repository.CategoriesRepository
@@ -28,9 +28,9 @@ class ProductDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             categoriesRepository.getCategories(Category.getFilter(Category.ALL))
-                .map {categories ->
+                .map {
                     _viewState.value.copy(
-                        categories = categories.map { com.socialite.solite_pos.schema.Category.fromData(it) }
+                        categories = it
                     )
                 }.collect(_viewState)
         }

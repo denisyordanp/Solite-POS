@@ -41,10 +41,11 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
-import com.socialite.domain.schema.helper.OrderWithProduct
-import com.socialite.domain.schema.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
+import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
 import com.socialite.data.schema.room.new_master.Order
-import com.socialite.domain.helper.DateUtils
+import com.socialite.solite_pos.data.schema.Order as OrderUi
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.screens.orders.OrderButtonType
@@ -302,7 +303,7 @@ private fun Details(
                 OrderFooter(orderWithProduct = orderWithProduct)
             }
         }
-        val statusToOrderMenu = com.socialite.solite_pos.schema.Order.fromData(orderWithProduct.orderData.order).statusToOrderMenu()
+        val statusToOrderMenu = OrderUi.fromData(orderWithProduct.orderData.order).statusToOrderMenu()
         statusToOrderMenu?.let {
             ButtonBottomBar(
                 modifier = Modifier
@@ -319,7 +320,7 @@ private fun OrderHeader(
     order: Order,
     onHeaderClicked: () -> Unit
 ) {
-    val uiOrder = com.socialite.solite_pos.schema.Order.fromData(order)
+    val uiOrder = OrderUi.fromData(order)
     Row(
         modifier = Modifier
             .fillMaxWidth()

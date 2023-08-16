@@ -1,6 +1,6 @@
-package com.socialite.domain.domain.impl
+package com.socialite.solite_pos.data.domain.impl
 
-import com.socialite.domain.domain.GetProductWithCategories
+import com.socialite.solite_pos.data.domain.GetProductWithCategories
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
 import kotlinx.coroutines.flow.map

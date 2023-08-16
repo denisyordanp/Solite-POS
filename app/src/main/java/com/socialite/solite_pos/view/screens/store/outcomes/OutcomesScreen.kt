@@ -51,7 +51,7 @@ import com.socialite.solite_pos.compose.BasicEmptyList
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.data.schema.room.new_master.Outcome
-import com.socialite.domain.helper.DateUtils
+import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.screens.store.outcomes.components.OutcomeDetail

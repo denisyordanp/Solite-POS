@@ -1,5 +1,7 @@
 package com.socialite.data.di
 
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import com.socialite.data.network.NetworkConfig
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.preference.UserPreferences
@@ -70,7 +72,9 @@ object NetworkModule {
     @Provides
     fun provideGsonConverter(): GsonConverterFactory =
         GsonConverterFactory.create(
-            NetworkConfig.gson()
+            GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create()
         )
 
     @Provides

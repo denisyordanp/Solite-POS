@@ -45,8 +45,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.domain.schema.helper.ProductOrderDetail
-import com.socialite.domain.schema.helper.VariantWithOptions
+import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
 import com.socialite.data.schema.room.new_master.VariantOption
 import com.socialite.solite_pos.utils.config.thousand
 

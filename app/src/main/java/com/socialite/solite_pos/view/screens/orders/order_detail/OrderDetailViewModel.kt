@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.orders.order_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.domain.domain.GetOrderWithProduct
+import com.socialite.solite_pos.data.domain.GetOrderWithProduct
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.repository.OrdersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
