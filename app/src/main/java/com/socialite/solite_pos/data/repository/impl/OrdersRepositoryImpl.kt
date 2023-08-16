@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
+import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.data.schema.room.helper.OrderData
 import com.socialite.solite_pos.data.schema.room.new_master.Order
 import com.socialite.solite_pos.database.AppDatabase

@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.UpdateOrderProducts
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant
 import com.socialite.solite_pos.data.repository.OrderDetailsRepository

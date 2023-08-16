@@ -1,10 +1,10 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetRecapData
-import com.socialite.solite_pos.data.source.local.entity.helper.Income
-import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
+import com.socialite.solite_pos.data.schema.helper.Income
+import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
+import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.schema.helper.RecapData
 import com.socialite.solite_pos.data.schema.room.master.Order
 import com.socialite.solite_pos.data.repository.OrderDetailsRepository
 import com.socialite.solite_pos.data.repository.OrdersRepository

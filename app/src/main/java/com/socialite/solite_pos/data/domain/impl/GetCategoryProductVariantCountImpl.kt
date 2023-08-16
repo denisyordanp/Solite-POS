@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetCategoryProductVariantCount
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductVariantCount
+import com.socialite.solite_pos.data.schema.helper.ProductVariantCount
 import com.socialite.solite_pos.data.schema.room.new_master.Category
 import com.socialite.solite_pos.data.repository.ProductVariantsRepository
 import com.socialite.solite_pos.data.repository.ProductsRepository

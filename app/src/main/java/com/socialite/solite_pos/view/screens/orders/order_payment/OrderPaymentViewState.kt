@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.orders.order_payment
 
-import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
 import com.socialite.solite_pos.data.schema.room.new_master.Payment
 import com.socialite.solite_pos.data.schema.room.new_master.Promo
 

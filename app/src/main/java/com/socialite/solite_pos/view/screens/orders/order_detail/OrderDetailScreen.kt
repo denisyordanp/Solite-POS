@@ -41,8 +41,8 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
-import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
+import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.schema.room.new_master.Order
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.rupiahToK

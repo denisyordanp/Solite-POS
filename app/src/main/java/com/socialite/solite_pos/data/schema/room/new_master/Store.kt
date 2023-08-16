@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
+import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.database.AppDatabase
 import com.socialite.solite_pos.data.schema.response.StoreResponse
 import com.socialite.solite_pos.view.ui.DropdownItem

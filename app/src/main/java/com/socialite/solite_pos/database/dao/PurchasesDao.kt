@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseProductWithProduct
+import com.socialite.solite_pos.data.schema.helper.PurchaseProductWithProduct
 import com.socialite.solite_pos.data.schema.room.helper.PurchaseWithSupplier
 import com.socialite.solite_pos.data.schema.room.master.Purchase
 import com.socialite.solite_pos.data.schema.room.master.PurchaseProduct

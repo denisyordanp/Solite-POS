@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.repository.impl
 
-import com.socialite.solite_pos.data.source.local.entity.helper.PurchaseWithProduct
+import com.socialite.solite_pos.data.schema.helper.PurchaseWithProduct
 import com.socialite.solite_pos.database.dao.ProductsDao
 import com.socialite.solite_pos.database.dao.PurchasesDao
 import com.socialite.solite_pos.data.repository.PurchasesRepository

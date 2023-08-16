@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.local.entity.helper
+package com.socialite.solite_pos.data.schema.helper
 
 data class BucketOrder(
     val time: Long?,

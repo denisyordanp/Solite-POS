@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
-import com.socialite.solite_pos.data.source.local.entity.helper.VariantWithOptions
+import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
 import com.socialite.solite_pos.data.repository.VariantOptionsRepository
 import com.socialite.solite_pos.data.repository.VariantsRepository
 import kotlinx.coroutines.flow.combine

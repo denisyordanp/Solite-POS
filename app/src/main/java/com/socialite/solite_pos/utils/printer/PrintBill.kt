@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.utils.printer
 
-import com.socialite.solite_pos.data.source.local.entity.helper.OrderWithProduct
+import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
 import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah

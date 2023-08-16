@@ -31,8 +31,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.basicDropdown
-import com.socialite.solite_pos.data.source.local.entity.helper.MenuOrderAmount
-import com.socialite.solite_pos.data.source.local.entity.helper.RecapData
+import com.socialite.solite_pos.data.schema.helper.MenuOrderAmount
+import com.socialite.solite_pos.data.schema.helper.RecapData
 import com.socialite.solite_pos.data.schema.room.new_master.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand

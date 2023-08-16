@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
+import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.Product
 import com.socialite.solite_pos.data.schema.room.new_master.Variant
 import com.socialite.solite_pos.data.schema.room.new_master.VariantOption

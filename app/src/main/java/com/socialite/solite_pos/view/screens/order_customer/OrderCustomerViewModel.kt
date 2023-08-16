@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.domain.NewOrder
-import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.source.local.entity.helper.findExisting
+import com.socialite.solite_pos.data.schema.helper.BucketOrder
+import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
+import com.socialite.solite_pos.data.schema.helper.findExisting
 import com.socialite.solite_pos.data.schema.room.new_master.Customer
 import com.socialite.solite_pos.data.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils

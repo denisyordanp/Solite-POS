@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.local.entity.helper
+package com.socialite.solite_pos.data.schema.helper
 
 import com.socialite.solite_pos.data.schema.room.helper.OrderData
 import java.io.Serializable

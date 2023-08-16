@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
+import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.schema.response.VariantOptionResponse
 import java.io.Serializable
