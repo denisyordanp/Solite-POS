@@ -3,8 +3,8 @@ package com.socialite.solite_pos.data.domain.impl
 import com.socialite.solite_pos.data.domain.GetOrdersMenuWithOrders
 import com.socialite.solite_pos.data.schema.helper.OrderMenuWithOrders
 import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
-import com.socialite.solite_pos.data.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.repository.OrdersRepository
+import com.socialite.data.repository.OrderDetailsRepository
+import com.socialite.data.repository.OrdersRepository
 import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -21,7 +21,7 @@ class GetOrdersMenuWithOrdersImpl @Inject constructor(
     override fun invoke(parameter: ReportParameter): Flow<List<OrderMenuWithOrders>> {
         return combine(
             flowOf(OrderMenus.values()),
-            orderRepository.getAllOrderList(parameter),
+            orderRepository.getAllOrderList(parameter.toDataReport()),
             orderDetailRepository.getOrderDetail()
         ) { menus, orders, details ->
             menus.map { menu ->

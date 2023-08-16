@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.data.schema.room.EntityData
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.schema.response.OutcomeResponse
+import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.utils.config.DateUtils
 import java.io.Serializable
 import java.util.UUID

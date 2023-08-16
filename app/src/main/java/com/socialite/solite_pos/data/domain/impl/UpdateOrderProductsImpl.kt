@@ -2,10 +2,10 @@ package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.UpdateOrderProducts
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail
-import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant
-import com.socialite.solite_pos.data.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.repository.OrderProductVariantsRepository
+import com.socialite.data.schema.room.new_bridge.OrderDetail
+import com.socialite.data.schema.room.new_bridge.OrderProductVariant
+import com.socialite.data.repository.OrderDetailsRepository
+import com.socialite.data.repository.OrderProductVariantsRepository
 import javax.inject.Inject
 
 class UpdateOrderProductsImpl @Inject constructor(

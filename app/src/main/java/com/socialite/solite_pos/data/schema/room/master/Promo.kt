@@ -5,43 +5,43 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.socialite.solite_pos.database.AppDatabase
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.database.AppDatabase.Companion.REPLACED_UUID
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 
 @Entity(
-        tableName = Promo.DB_NAME,
-        indices = [
-            Index(value = [Promo.ID])
-        ]
+    tableName = Promo.DB_NAME,
+    indices = [
+        Index(value = [Promo.ID])
+    ]
 )
 data class Promo(
 
-        @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = ID)
-        var id: Long,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = ID)
+    var id: Long,
 
-        @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
-        val new_id: String,
+    @ColumnInfo(name = REPLACED_UUID, defaultValue = "")
+    val new_id: String,
 
-        @ColumnInfo(name = NAME)
-        override var name: String,
+    @ColumnInfo(name = NAME)
+    override var name: String,
 
-        @ColumnInfo(name = DESC)
-        var desc: String,
+    @ColumnInfo(name = DESC)
+    var desc: String,
 
-        @ColumnInfo(name = CASH)
-        var isCash: Boolean,
+    @ColumnInfo(name = CASH)
+    var isCash: Boolean,
 
-        @ColumnInfo(name = VALUE)
-        var value: Int?,
+    @ColumnInfo(name = VALUE)
+    var value: Int?,
 
-        @ColumnInfo(name = STATUS)
-        var isActive: Boolean,
+    @ColumnInfo(name = STATUS)
+    var isActive: Boolean,
 
-        @ColumnInfo(name = UPLOAD)
-        var isUploaded: Boolean
+    @ColumnInfo(name = UPLOAD)
+    var isUploaded: Boolean
 ) : Serializable, DropdownItem {
 
     companion object {
@@ -60,8 +60,8 @@ data class Promo(
             when (status) {
                 Status.ACTIVE -> {
                     query.append(" WHERE ")
-                            .append(STATUS)
-                            .append(" = ").append(status.code)
+                        .append(STATUS)
+                        .append(" = ").append(status.code)
                 }
 
                 else -> {

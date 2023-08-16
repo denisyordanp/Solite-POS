@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.data.database.AppDatabase.Companion.REPLACED_UUID
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.schema.room.master.VariantOption
-import com.socialite.solite_pos.database.AppDatabase
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
 
 @Entity(
@@ -35,7 +35,7 @@ data class OrderProductVariant(
         @ColumnInfo(name = ID)
         var id: Long,
 
-        @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+        @ColumnInfo(name = REPLACED_UUID, defaultValue = "")
         val new_id: String,
 
         @ColumnInfo(name = OrderDetail.ID)

@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
 
 @Entity(

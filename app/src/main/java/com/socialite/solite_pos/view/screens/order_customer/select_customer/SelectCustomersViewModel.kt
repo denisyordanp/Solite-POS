@@ -2,8 +2,8 @@ package com.socialite.solite_pos.view.screens.order_customer.select_customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
-import com.socialite.solite_pos.data.repository.CustomersRepository
+import com.socialite.data.repository.CustomersRepository
+import com.socialite.data.schema.room.new_master.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

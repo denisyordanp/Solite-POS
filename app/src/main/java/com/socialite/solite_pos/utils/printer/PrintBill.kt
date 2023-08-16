@@ -1,7 +1,8 @@
 package com.socialite.solite_pos.utils.printer
 
+import com.socialite.solite_pos.data.schema.Order
 import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
-import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
+import com.socialite.data.schema.room.new_master.VariantOption
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import java.io.IOException
@@ -63,8 +64,9 @@ object PrintBill {
             PrinterUtils.TextAlign.LEFT
         )
         printNewLine()
+        val queueNumber = Order.fromData(order.orderData.order).getQueueNumber()
         printCustom(
-            "No  : ${order.orderData.order.getQueueNumber()}",
+            "No  : $queueNumber",
             PrinterUtils.TextType.NORMAL,
             PrinterUtils.TextAlign.LEFT
         )
@@ -74,8 +76,9 @@ object PrintBill {
 
     private fun OutputStream.setHeaderQueue(order: OrderWithProduct) {
         printNewLine()
+        val queueNumber = Order.fromData(order.orderData.order).getQueueNumber()
         printCustom(
-            order.orderData.order.getQueueNumber(),
+            queueNumber,
             PrinterUtils.TextType.BOLD_LARGE,
             PrinterUtils.TextAlign.CENTER
         )
@@ -168,7 +171,7 @@ object PrintBill {
             )
             printNewLine()
 
-            if (order.orderData.payment.isCash) {
+            if (order.orderData.payment?.isCash == true) {
                 printCustom(
                     PrinterUtils.withSpace(
                         "Bayar   : Rp.",
@@ -187,7 +190,7 @@ object PrintBill {
                 printNewLine()
             } else {
                 printCustom(
-                    PrinterUtils.withSpace("Bayar   :", order.orderData.payment.name, 21),
+                    PrinterUtils.withSpace("Bayar   :", order.orderData.payment?.name, 21),
                     PrinterUtils.TextType.NORMAL_BOLD,
                     PrinterUtils.TextAlign.RIGHT
                 )

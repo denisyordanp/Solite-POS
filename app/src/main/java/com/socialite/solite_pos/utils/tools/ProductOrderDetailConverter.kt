@@ -1,9 +1,9 @@
 package com.socialite.solite_pos.utils.tools
 
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail
-import com.socialite.solite_pos.data.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.repository.ProductsRepository
+import com.socialite.data.schema.room.new_bridge.OrderDetail
+import com.socialite.data.repository.OrderDetailsRepository
+import com.socialite.data.repository.ProductsRepository
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -1,26 +1,26 @@
 package com.socialite.solite_pos.data.domain.impl
 
+import com.socialite.data.di.AuthorizationService
+import com.socialite.data.network.SoliteServices
 import com.socialite.solite_pos.data.domain.Synchronize
-import com.socialite.solite_pos.network.SoliteServices
-import com.socialite.solite_pos.data.schema.response.SynchronizeParamItem
-import com.socialite.solite_pos.data.schema.response.SynchronizeParams
-import com.socialite.solite_pos.data.schema.response.SynchronizeResponse
-import com.socialite.solite_pos.data.repository.CategoriesRepository
-import com.socialite.solite_pos.data.repository.CustomersRepository
-import com.socialite.solite_pos.data.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.repository.OrderPaymentsRepository
-import com.socialite.solite_pos.data.repository.OrderProductVariantsRepository
-import com.socialite.solite_pos.data.repository.OrderPromosRepository
-import com.socialite.solite_pos.data.repository.OrdersRepository
-import com.socialite.solite_pos.data.repository.OutcomesRepository
-import com.socialite.solite_pos.data.repository.PaymentsRepository
-import com.socialite.solite_pos.data.repository.ProductVariantsRepository
-import com.socialite.solite_pos.data.repository.ProductsRepository
-import com.socialite.solite_pos.data.repository.PromosRepository
-import com.socialite.solite_pos.data.repository.StoreRepository
-import com.socialite.solite_pos.data.repository.VariantOptionsRepository
-import com.socialite.solite_pos.data.repository.VariantsRepository
-import com.socialite.solite_pos.di.AuthorizationService
+import com.socialite.data.schema.response.SynchronizeParamItem
+import com.socialite.data.schema.response.SynchronizeParams
+import com.socialite.data.schema.response.SynchronizeResponse
+import com.socialite.data.repository.CategoriesRepository
+import com.socialite.data.repository.CustomersRepository
+import com.socialite.data.repository.OrderDetailsRepository
+import com.socialite.data.repository.OrderPaymentsRepository
+import com.socialite.data.repository.OrderProductVariantsRepository
+import com.socialite.data.repository.OrderPromosRepository
+import com.socialite.data.repository.OrdersRepository
+import com.socialite.data.repository.OutcomesRepository
+import com.socialite.data.repository.PaymentsRepository
+import com.socialite.data.repository.ProductVariantsRepository
+import com.socialite.data.repository.ProductsRepository
+import com.socialite.data.repository.PromosRepository
+import com.socialite.data.repository.StoreRepository
+import com.socialite.data.repository.VariantOptionsRepository
+import com.socialite.data.repository.VariantsRepository
 import javax.inject.Inject
 
 class SynchronizeImpl @Inject constructor(

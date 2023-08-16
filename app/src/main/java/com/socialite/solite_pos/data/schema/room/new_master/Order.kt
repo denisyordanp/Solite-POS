@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.data.schema.room.EntityData
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.schema.response.OrderResponse
+import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.DATE_WITH_TIME_FORMAT
 import com.socialite.solite_pos.utils.config.DateUtils.Companion.convertDateFromDb
 import com.socialite.solite_pos.view.ui.OrderMenus

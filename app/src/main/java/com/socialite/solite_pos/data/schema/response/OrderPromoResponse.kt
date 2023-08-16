@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.data.schema.response
 
+import com.socialite.data.schema.response.OrderPromoResponse as DataResponse
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPromo
 
 data class OrderPromoResponse(

@@ -1,12 +1,12 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.PayOrder
-import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment
-import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPromo
-import com.socialite.solite_pos.data.schema.room.new_master.Order
-import com.socialite.solite_pos.data.repository.OrderPaymentsRepository
-import com.socialite.solite_pos.data.repository.OrderPromosRepository
-import com.socialite.solite_pos.data.repository.OrdersRepository
+import com.socialite.data.schema.room.new_bridge.OrderPayment
+import com.socialite.data.schema.room.new_bridge.OrderPromo
+import com.socialite.data.schema.room.new_master.Order
+import com.socialite.data.repository.OrderPaymentsRepository
+import com.socialite.data.repository.OrderPromosRepository
+import com.socialite.data.repository.OrdersRepository
 import javax.inject.Inject
 
 class PayOrderImpl @Inject constructor(

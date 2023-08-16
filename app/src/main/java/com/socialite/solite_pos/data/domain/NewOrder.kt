@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.domain
 
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
+import com.socialite.data.schema.room.new_master.Customer
 
 fun interface NewOrder {
     suspend operator fun invoke(

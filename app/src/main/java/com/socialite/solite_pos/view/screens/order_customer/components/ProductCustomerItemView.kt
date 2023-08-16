@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.data.schema.room.helper.ProductWithCategory
+import com.socialite.data.schema.room.helper.ProductWithCategory
 import com.socialite.solite_pos.utils.config.toIDR
 
 @Composable

@@ -2,8 +2,8 @@ package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetOrdersGeneralMenuBadge
 import com.socialite.solite_pos.data.schema.helper.GeneralMenuBadge
-import com.socialite.solite_pos.data.schema.room.master.Order
-import com.socialite.solite_pos.data.repository.OrdersRepository
+import com.socialite.data.schema.room.master.Order
+import com.socialite.data.repository.OrdersRepository
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

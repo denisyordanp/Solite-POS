@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.data.schema.response
 
+
 data class SynchronizeParams(
     val customer: List<CustomerResponse>,
     val store: List<StoreResponse>,

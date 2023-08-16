@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.database.AppDatabase.Companion.REPLACED_UUID
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.database.AppDatabase.Companion.REPLACED_UUID
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
 
 @Entity(

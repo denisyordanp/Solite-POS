@@ -7,7 +7,7 @@ import com.socialite.solite_pos.data.domain.NewOrder
 import com.socialite.solite_pos.data.schema.helper.BucketOrder
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.schema.helper.findExisting
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
+import com.socialite.data.schema.room.new_master.Customer
 import com.socialite.solite_pos.utils.config.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

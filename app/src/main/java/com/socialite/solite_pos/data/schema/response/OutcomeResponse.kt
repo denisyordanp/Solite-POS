@@ -1,5 +1,7 @@
 package com.socialite.solite_pos.data.schema.response
 
+import android.provider.ContactsContract.Data
+import com.socialite.data.schema.response.OutcomeResponse as DataOutcomeResponse
 import com.socialite.solite_pos.data.schema.room.new_master.Outcome
 
 data class OutcomeResponse(

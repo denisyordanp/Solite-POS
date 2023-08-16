@@ -3,9 +3,9 @@ package com.socialite.solite_pos.view.screens.store.variant_product
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
-import com.socialite.solite_pos.data.schema.room.new_bridge.VariantProduct
-import com.socialite.solite_pos.data.repository.ProductVariantsRepository
-import com.socialite.solite_pos.data.repository.ProductsRepository
+import com.socialite.data.schema.room.new_bridge.VariantProduct
+import com.socialite.data.repository.ProductVariantsRepository
+import com.socialite.data.repository.ProductsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

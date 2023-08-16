@@ -51,9 +51,9 @@ import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.data.schema.helper.BucketOrder
 import com.socialite.solite_pos.data.schema.helper.GeneralMenuBadge
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.room.helper.ProductWithCategory
-import com.socialite.solite_pos.data.schema.room.new_master.Category
-import com.socialite.solite_pos.data.schema.room.new_master.Product
+import com.socialite.data.schema.room.helper.ProductWithCategory
+import com.socialite.data.schema.room.new_master.Category
+import com.socialite.data.schema.room.new_master.Product
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.toIDR
 import com.socialite.solite_pos.view.screens.order_customer.components.ProductCustomerItemView

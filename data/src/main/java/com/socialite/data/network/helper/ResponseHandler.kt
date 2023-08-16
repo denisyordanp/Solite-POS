@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.network.helper
+package com.socialite.data.network.helper
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

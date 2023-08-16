@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.data.schema.response
 
+import com.socialite.data.schema.response.PaymentResponse as DataPaymentResponse
 import com.socialite.solite_pos.data.schema.room.new_master.Payment
 
 data class PaymentResponse(

@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.data.schema.response
 
+import com.socialite.data.schema.response.VariantResponse as DataVariantResponse
 import com.socialite.solite_pos.data.schema.room.new_master.Variant
 
 data class VariantResponse(

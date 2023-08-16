@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.data.schema.response
 
+import com.socialite.data.schema.response.OrderResponse as DataOrderResponse
 import com.socialite.solite_pos.data.schema.room.new_master.Order
 
 data class OrderResponse(

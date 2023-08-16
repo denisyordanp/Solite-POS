@@ -1,8 +1,8 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetProductWithCategories
-import com.socialite.solite_pos.data.repository.ProductVariantsRepository
-import com.socialite.solite_pos.data.repository.ProductsRepository
+import com.socialite.data.repository.ProductVariantsRepository
+import com.socialite.data.repository.ProductsRepository
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

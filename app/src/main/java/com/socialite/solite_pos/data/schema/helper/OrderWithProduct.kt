@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.data.schema.helper
 
-import com.socialite.solite_pos.data.schema.room.helper.OrderData
+import com.socialite.data.schema.room.helper.OrderData
 import java.io.Serializable
 
 data class OrderWithProduct(

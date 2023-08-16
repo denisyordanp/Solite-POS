@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.data.schema.helper
 
-import com.socialite.solite_pos.data.schema.room.new_master.Variant
-import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
+import com.socialite.data.schema.room.new_master.Variant
+import com.socialite.data.schema.room.new_master.VariantOption
 
 data class VariantWithOptions(
     val variant: Variant,

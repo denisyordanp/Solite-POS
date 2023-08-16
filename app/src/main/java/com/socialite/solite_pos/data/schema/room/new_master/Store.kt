@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.data.schema.room.EntityData
-import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.schema.response.StoreResponse
+import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 import java.util.UUID
@@ -28,7 +28,7 @@ data class Store(
         @ColumnInfo(name = ADDRESS)
         var address: String,
 
-        @ColumnInfo(name = AppDatabase.UPLOAD)
+        @ColumnInfo(name = UPLOAD)
         var isUploaded: Boolean
 ) : Serializable, DropdownItem, EntityData {
 

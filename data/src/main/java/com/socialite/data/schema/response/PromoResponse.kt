@@ -1,11 +1,26 @@
 package com.socialite.data.schema.response
 
+import com.socialite.data.schema.room.new_master.Promo
+
 data class PromoResponse(
     val desc: String,
-    val id: String,
+    override val id: String,
     val isActive: Boolean,
     val isCash: Boolean,
     val isUploaded: Boolean,
     val name: String,
     val value: Int?
-)
+) : ResponseData {
+
+    override fun toEntity(): Promo {
+        return Promo(
+            id = id,
+            name = name,
+            desc = desc,
+            isCash = isCash,
+            value = value,
+            isActive = isActive,
+            isUploaded = isUploaded
+        )
+    }
+}

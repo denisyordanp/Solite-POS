@@ -1,21 +1,21 @@
 package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.MigrateToUUID
-import com.socialite.solite_pos.data.repository.CategoriesRepository
-import com.socialite.solite_pos.data.repository.CustomersRepository
-import com.socialite.solite_pos.data.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.repository.OrderPaymentsRepository
-import com.socialite.solite_pos.data.repository.OrderPromosRepository
-import com.socialite.solite_pos.data.repository.OrdersRepository
-import com.socialite.solite_pos.data.repository.OutcomesRepository
-import com.socialite.solite_pos.data.repository.PaymentsRepository
-import com.socialite.solite_pos.data.repository.ProductVariantsRepository
-import com.socialite.solite_pos.data.repository.ProductsRepository
-import com.socialite.solite_pos.data.repository.PromosRepository
-import com.socialite.solite_pos.data.repository.SettingRepository
-import com.socialite.solite_pos.data.repository.StoreRepository
-import com.socialite.solite_pos.data.repository.VariantOptionsRepository
-import com.socialite.solite_pos.data.repository.VariantsRepository
+import com.socialite.data.repository.CategoriesRepository
+import com.socialite.data.repository.CustomersRepository
+import com.socialite.data.repository.OrderDetailsRepository
+import com.socialite.data.repository.OrderPaymentsRepository
+import com.socialite.data.repository.OrderPromosRepository
+import com.socialite.data.repository.OrdersRepository
+import com.socialite.data.repository.OutcomesRepository
+import com.socialite.data.repository.PaymentsRepository
+import com.socialite.data.repository.ProductVariantsRepository
+import com.socialite.data.repository.ProductsRepository
+import com.socialite.data.repository.PromosRepository
+import com.socialite.data.repository.SettingRepository
+import com.socialite.data.repository.StoreRepository
+import com.socialite.data.repository.VariantOptionsRepository
+import com.socialite.data.repository.VariantsRepository
 import javax.inject.Inject
 
 class MigrateToUUIDImpl @Inject constructor(

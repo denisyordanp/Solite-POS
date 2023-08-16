@@ -2,9 +2,9 @@ package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetCategoryProductVariantCount
 import com.socialite.solite_pos.data.schema.helper.ProductVariantCount
-import com.socialite.solite_pos.data.schema.room.new_master.Category
-import com.socialite.solite_pos.data.repository.ProductVariantsRepository
-import com.socialite.solite_pos.data.repository.ProductsRepository
+import com.socialite.data.schema.room.new_master.Category
+import com.socialite.data.repository.ProductVariantsRepository
+import com.socialite.data.repository.ProductsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map

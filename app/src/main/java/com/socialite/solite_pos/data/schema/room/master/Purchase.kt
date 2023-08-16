@@ -1,15 +1,10 @@
 package com.socialite.solite_pos.data.schema.room.master
 
-import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.preference.SettingPreferences
-import com.socialite.solite_pos.utils.config.DateUtils.Companion.currentTime
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @Entity(
     tableName = Purchase.DB_NAME,
@@ -39,57 +34,57 @@ data class Purchase(
 
         const val DB_NAME = "purchase"
 
-        private var settingPreferences: SettingPreferences? = null
-
-        fun purchaseNo(context: Context): String {
-            settingPreferences = SettingPreferences(context)
-            return id
-        }
-
-        private val id: String
-            get() {
-                if (date != savedDate) {
-                    saveDate()
-                }
-                return "$savedDate${setNumber(settingPreferences!!.purchaseCount)}"
-            }
-
-        private fun setNumber(i: Int): String {
-            var str = i.toString()
-            when (str.length) {
-                1 -> str = "00$i"
-                2 -> str = "0$i"
-            }
-            return str
-        }
-
-        private val date: String
-            get() {
-                val fd = SimpleDateFormat("ddMMyy", Locale.getDefault())
-                return fd.format(currentTime)
-            }
-
-        private val savedDate: String
-            get() {
-                val date = settingPreferences!!.purchaseDate
-                return date ?: ""
-            }
-
-        private fun saveDate() {
-            settingPreferences!!.purchaseDate = date
-            reset()
-        }
-
-        fun add(context: Context) {
-            if (settingPreferences == null) {
-                settingPreferences = SettingPreferences(context)
-            }
-            settingPreferences!!.purchaseCount = settingPreferences!!.purchaseCount + 1
-        }
-
-        private fun reset() {
-            settingPreferences!!.purchaseCount = 1
-        }
+//        private var settingPreferences: SettingPreferences? = null
+//
+//        fun purchaseNo(context: Context): String {
+//            settingPreferences = SettingPreferences(context)
+//            return id
+//        }
+//
+//        private val id: String
+//            get() {
+//                if (date != savedDate) {
+//                    saveDate()
+//                }
+//                return "$savedDate${setNumber(settingPreferences!!.purchaseCount)}"
+//            }
+//
+//        private fun setNumber(i: Int): String {
+//            var str = i.toString()
+//            when (str.length) {
+//                1 -> str = "00$i"
+//                2 -> str = "0$i"
+//            }
+//            return str
+//        }
+//
+//        private val date: String
+//            get() {
+//                val fd = SimpleDateFormat("ddMMyy", Locale.getDefault())
+//                return fd.format(currentTime)
+//            }
+//
+//        private val savedDate: String
+//            get() {
+//                val date = settingPreferences!!.purchaseDate
+//                return date ?: ""
+//            }
+//
+//        private fun saveDate() {
+//            settingPreferences!!.purchaseDate = date
+//            reset()
+//        }
+//
+//        fun add(context: Context) {
+//            if (settingPreferences == null) {
+//                settingPreferences = SettingPreferences(context)
+//            }
+//            settingPreferences!!.purchaseCount = settingPreferences!!.purchaseCount + 1
+//        }
+//
+//        private fun reset() {
+//            settingPreferences!!.purchaseCount = 1
+//        }
     }
 
 }

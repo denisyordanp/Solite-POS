@@ -3,13 +3,13 @@ package com.socialite.solite_pos.data.schema.room.helper
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment
-import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPromo
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
-import com.socialite.solite_pos.data.schema.room.new_master.Order
-import com.socialite.solite_pos.data.schema.room.new_master.Payment
-import com.socialite.solite_pos.data.schema.room.new_master.Promo
-import com.socialite.solite_pos.data.schema.room.new_master.Store
+import com.socialite.data.schema.room.new_bridge.OrderPayment
+import com.socialite.data.schema.room.new_bridge.OrderPromo
+import com.socialite.data.schema.room.new_master.Customer
+import com.socialite.data.schema.room.new_master.Order
+import com.socialite.data.schema.room.new_master.Payment
+import com.socialite.data.schema.room.new_master.Promo
+import com.socialite.data.schema.room.new_master.Store
 import java.io.Serializable
 
 data class OrderData(

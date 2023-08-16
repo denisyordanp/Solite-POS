@@ -5,12 +5,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.schema.response.VariantProductResponse
 import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.Product
 import com.socialite.solite_pos.data.schema.room.new_master.Variant
 import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.schema.response.VariantProductResponse
 import java.io.Serializable
 import java.util.UUID
 

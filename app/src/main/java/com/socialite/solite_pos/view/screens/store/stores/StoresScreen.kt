@@ -49,7 +49,7 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.schema.room.new_master.Store
+import com.socialite.data.schema.room.new_master.Store
 import kotlinx.coroutines.launch
 
 @Composable

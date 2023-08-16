@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.data.database.AppDatabase.Companion.REPLACED_UUID
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
 
@@ -19,7 +19,7 @@ data class Store(
         @ColumnInfo(name = ID)
         var id: Long = 0L,
 
-        @ColumnInfo(name = AppDatabase.REPLACED_UUID, defaultValue = "")
+        @ColumnInfo(name = REPLACED_UUID, defaultValue = "")
         val new_id: String,
 
         @ColumnInfo(name = NAME)

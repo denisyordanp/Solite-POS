@@ -5,10 +5,10 @@ import com.socialite.solite_pos.data.schema.helper.Income
 import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.schema.helper.RecapData
-import com.socialite.solite_pos.data.schema.room.master.Order
-import com.socialite.solite_pos.data.repository.OrderDetailsRepository
-import com.socialite.solite_pos.data.repository.OrdersRepository
-import com.socialite.solite_pos.data.repository.OutcomesRepository
+import com.socialite.data.schema.room.master.Order
+import com.socialite.data.repository.OrderDetailsRepository
+import com.socialite.data.repository.OrdersRepository
+import com.socialite.data.repository.OutcomesRepository
 import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +25,7 @@ class GetRecapDataImpl @Inject constructor(
 ) : GetRecapData {
     override fun invoke(parameters: ReportParameter): Flow<RecapData> {
         return flow {
-            val incomes = repository.getOrderList(Order.DONE, parameters).first().map {
+            val incomes = repository.getOrderList(Order.DONE, parameters.toDataReport()).first().map {
                 val products = getProductOrder(it.order.id)
                 val orderWithProduct = OrderWithProduct(it, products)
 
@@ -36,7 +36,7 @@ class GetRecapDataImpl @Inject constructor(
                     isCash = it.payment?.isCash ?: false
                 )
             }
-            val outcomes = outcomesRepository.getOutcomes(parameters).first()
+            val outcomes = outcomesRepository.getOutcomes(parameters.toDataReport()).first()
 
             emit(
                 RecapData(

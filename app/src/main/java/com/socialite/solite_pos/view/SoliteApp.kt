@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.BuildConfig
-import com.socialite.solite_pos.data.repository.SettingRepository
+import com.socialite.data.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import dagger.hilt.android.HiltAndroidApp
 import java.util.Locale

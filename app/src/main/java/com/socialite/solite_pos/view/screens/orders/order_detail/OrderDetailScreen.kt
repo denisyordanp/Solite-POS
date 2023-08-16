@@ -43,7 +43,8 @@ import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.room.new_master.Order
+import com.socialite.data.schema.room.new_master.Order
+import com.socialite.solite_pos.data.schema.Order as OrderUi
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
@@ -302,7 +303,8 @@ private fun Details(
                 OrderFooter(orderWithProduct = orderWithProduct)
             }
         }
-        orderWithProduct.orderData.order.statusToOrderMenu()?.let {
+        val statusToOrderMenu = OrderUi.fromData(orderWithProduct.orderData.order).statusToOrderMenu()
+        statusToOrderMenu?.let {
             ButtonBottomBar(
                 modifier = Modifier
                     .align(Alignment.BottomCenter),
@@ -318,6 +320,7 @@ private fun OrderHeader(
     order: Order,
     onHeaderClicked: () -> Unit
 ) {
+    val uiOrder = OrderUi.fromData(order)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -334,7 +337,7 @@ private fun OrderHeader(
                 .weight(1f)
         ) {
             Text(
-                text = order.timeString,
+                text = uiOrder.timeString,
                 style = MaterialTheme.typography.body2
             )
             Text(
@@ -348,7 +351,7 @@ private fun OrderHeader(
         Text(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            text = order.getQueueNumber(),
+            text = uiOrder.getQueueNumber(),
             style = MaterialTheme.typography.h6
         )
     }

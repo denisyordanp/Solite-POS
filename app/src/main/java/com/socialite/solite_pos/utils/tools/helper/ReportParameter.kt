@@ -5,12 +5,19 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.socialite.solite_pos.utils.config.DateUtils
 import java.io.Serializable
+import com.socialite.data.schema.helper.ReportParameter as DataReport
 
 data class ReportParameter(
     val start: String,
     val end: String,
     val storeId: String
 ) : Serializable {
+
+    fun toDataReport(): DataReport {
+        return DataReport(
+            start, end, storeId
+        )
+    }
 
     fun isTodayOnly() = storeId.isEmpty()
 

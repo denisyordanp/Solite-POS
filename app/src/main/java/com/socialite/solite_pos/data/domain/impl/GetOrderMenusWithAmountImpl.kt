@@ -2,7 +2,7 @@ package com.socialite.solite_pos.data.domain.impl
 
 import com.socialite.solite_pos.data.domain.GetOrderMenusWithAmount
 import com.socialite.solite_pos.data.schema.helper.MenuOrderAmount
-import com.socialite.solite_pos.data.repository.OrdersRepository
+import com.socialite.data.repository.OrdersRepository
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ class GetOrderMenusWithAmountImpl @Inject constructor(
     override fun invoke(parameters: ReportParameter): Flow<List<MenuOrderAmount>> {
         return flow {
             val menus = OrderMenus.values().map {
-                val amount = ordersRepository.getOrderList(it.status, parameters).first().size
+                val amount = ordersRepository.getOrderList(it.status, parameters.toDataReport()).first().size
                 MenuOrderAmount(
                     menu = it,
                     amount = amount

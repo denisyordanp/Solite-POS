@@ -5,11 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.socialite.solite_pos.data.schema.room.EntityData
-import com.socialite.solite_pos.data.schema.room.new_master.Order
-import com.socialite.solite_pos.data.schema.room.new_master.Payment
-import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
-import com.socialite.solite_pos.data.schema.response.OrderPaymentResponse
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.schema.response.OrderPaymentResponse
+import com.socialite.data.schema.room.EntityData
+import com.socialite.data.schema.room.new_master.Order
+import com.socialite.data.schema.room.new_master.Payment
 import java.io.Serializable
 import java.util.UUID
 
@@ -59,11 +59,11 @@ data class OrderPayment(
 
     fun toResponse(): OrderPaymentResponse {
         return OrderPaymentResponse(
-                id = id,
-                pay = pay.toInt(),
-                order = order,
-                payment = payment,
-                isUploaded = true
+            id = id,
+            pay = pay.toInt(),
+            order = order,
+            payment = payment,
+            isUploaded = true
         )
     }
 

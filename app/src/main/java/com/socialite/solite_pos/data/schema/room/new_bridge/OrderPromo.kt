@@ -5,11 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.socialite.data.database.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.data.schema.response.OrderPromoResponse
 import com.socialite.solite_pos.data.schema.room.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.Order
 import com.socialite.solite_pos.data.schema.room.new_master.Promo
-import com.socialite.solite_pos.database.AppDatabase
-import com.socialite.solite_pos.data.schema.response.OrderPromoResponse
 import java.util.UUID
 
 @Entity(
@@ -48,7 +48,7 @@ data class OrderPromo(
     @ColumnInfo(name = PROMO)
     var totalPromo: Long,
 
-    @ColumnInfo(name = AppDatabase.UPLOAD)
+    @ColumnInfo(name = UPLOAD)
     var isUpload: Boolean
 ) : EntityData {
 
