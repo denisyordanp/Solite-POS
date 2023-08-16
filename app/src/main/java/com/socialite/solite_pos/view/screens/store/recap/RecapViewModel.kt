@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.solite_pos.data.domain.GetOrderMenusWithAmount
 import com.socialite.solite_pos.data.domain.GetRecapData
-import com.socialite.solite_pos.data.schema.Store
+import com.socialite.data.schema.room.new_master.Store
 import com.socialite.data.repository.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,9 +28,9 @@ class RecapViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             storeRepository.getStores()
-                .map {stores ->
+                .map {
                     _viewState.value.copy(
-                        stores = stores.map { Store.fromData(it) }
+                        stores = it
                     )
                 }.collect(_viewState)
         }

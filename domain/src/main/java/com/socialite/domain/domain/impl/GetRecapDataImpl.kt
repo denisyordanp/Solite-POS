@@ -9,7 +9,6 @@ import com.socialite.data.schema.room.master.Order
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.OutcomesRepository
-import com.socialite.solite_pos.data.schema.Outcome
 import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import kotlinx.coroutines.flow.Flow
@@ -42,7 +41,7 @@ class GetRecapDataImpl @Inject constructor(
             emit(
                 RecapData(
                     incomes = incomes,
-                    outcomes = outcomes.map { Outcome.fromData(it) }
+                    outcomes = outcomes
                 )
             )
         }

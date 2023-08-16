@@ -2,41 +2,42 @@ package com.socialite.solite_pos.view.screens.order_customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.IsShouldSelectStore
+import com.socialite.solite_pos.data.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.domain.NewOrder
 import com.socialite.solite_pos.data.schema.helper.BucketOrder
 import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
 import com.socialite.solite_pos.data.schema.helper.findExisting
 import com.socialite.data.schema.room.new_master.Customer
+import com.socialite.data.repository.SettingRepository
 import com.socialite.solite_pos.utils.config.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class OrderCustomerViewModel @Inject constructor(
+    private val settingRepository: SettingRepository,
+    private val getProductWithCategories: GetProductWithCategories,
     private val newOrder: NewOrder,
-    private val isShouldSelectStore: IsShouldSelectStore
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(OrderCustomerViewState.idle())
     val viewState = _viewState.asStateFlow()
 
     init {
-        checkShouldSelectStore()
-    }
-
-    fun checkShouldSelectStore() = viewModelScope.launch {
-        isShouldSelectStore()
-            .map {
-                _viewState.value.copy(
-                    isShouldSelectStore = it
-                )
-            }.collect(_viewState)
+        viewModelScope.launch {
+            settingRepository.getNewSelectedStore()
+                .combine(getProductWithCategories()) { selectedStore, categoryWithProducts ->
+                    _viewState.value.copy(
+                        isShouldSelectStore = selectedStore.isEmpty() && categoryWithProducts.isNotEmpty()
+                    )
+                }
+                .collect(_viewState)
+        }
     }
 
     fun addProductToBucket(detail: ProductOrderDetail) {

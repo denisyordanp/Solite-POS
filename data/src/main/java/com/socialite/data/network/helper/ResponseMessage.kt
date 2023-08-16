@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.network.helper
+package com.socialite.data.network.helper
 
 enum class ResponseMessage {
 	Success, Empty, Failed

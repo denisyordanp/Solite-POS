@@ -6,8 +6,11 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase
+import com.socialite.data.schema.response.OrderPromoResponse
+import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Promo
+import java.util.UUID
 
 @Entity(
     tableName = OrderPromo.DB_NAME,
@@ -34,7 +37,7 @@ import com.socialite.data.schema.room.new_master.Promo
 data class OrderPromo(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    var id: String,
+    override var id: String,
 
     @ColumnInfo(name = Order.ID)
     var order: String,
@@ -47,12 +50,34 @@ data class OrderPromo(
 
     @ColumnInfo(name = AppDatabase.UPLOAD)
     var isUpload: Boolean
-) {
+) : EntityData {
+
+    fun toResponse(): OrderPromoResponse {
+        return OrderPromoResponse(
+            id = id,
+            order = order,
+            promo = promo,
+            totalPromo = totalPromo.toInt(),
+            isUploaded = true
+        )
+    }
 
     companion object {
         const val ID = "id_order_promo"
         const val PROMO = "total_promo"
 
         const val DB_NAME = "new_order_promo"
+
+        fun newPromo(
+            orderId: String,
+            promo: String,
+            totalPromo: Long
+        ) = OrderPromo(
+            id = UUID.randomUUID().toString(),
+            order = orderId,
+            promo = promo,
+            totalPromo = totalPromo,
+            isUpload = false
+        )
     }
 }
