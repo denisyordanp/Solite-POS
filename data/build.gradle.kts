@@ -55,8 +55,8 @@ dependencies {
     implementation("com.google.firebase:firebase-config-ktx")
 
     // Database
-    api("androidx.room:room-runtime:${Depedencies.roomVersion}")
-    api("androidx.room:room-ktx:${Depedencies.roomVersion}")
+    implementation("androidx.room:room-runtime:${Depedencies.roomVersion}")
+    implementation("androidx.room:room-ktx:${Depedencies.roomVersion}")
     kapt("org.xerial:sqlite-jdbc:${Depedencies.sqliteJdbc}")
     kapt("androidx.room:room-compiler:${Depedencies.roomVersion}")
 

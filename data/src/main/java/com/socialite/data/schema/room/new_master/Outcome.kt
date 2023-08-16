@@ -5,10 +5,6 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
-import com.socialite.data.schema.response.OutcomeResponse
-import com.socialite.data.schema.room.EntityData
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = Outcome.DB_NAME,
@@ -20,7 +16,7 @@ data class Outcome(
 
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    override val id: String,
+    val id: String,
 
     @ColumnInfo(name = NAME)
     var name: String,
@@ -42,23 +38,7 @@ data class Outcome(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable, EntityData {
-
-    val total: Long
-        get() = price * amount
-
-    fun toResponse(): OutcomeResponse {
-        return OutcomeResponse(
-            id = id,
-            name = name,
-            desc = desc,
-            date = date,
-            amount = amount,
-            price = price.toInt(),
-            store = store,
-            isUploaded = true
-        )
-    }
+) {
 
     companion object {
         const val ID = "id_outcome"
@@ -69,16 +49,5 @@ data class Outcome(
         const val DATE = "date"
 
         const val DB_NAME = "new_outcome"
-
-        fun createNewOutcome(name: String, desc: String, price: Long, date: String) = Outcome(
-            id = UUID.randomUUID().toString(),
-            name = name,
-            desc = desc,
-            price = price,
-            amount = 1,
-            date = date,
-            store = "",
-            isUploaded = false
-        )
     }
 }

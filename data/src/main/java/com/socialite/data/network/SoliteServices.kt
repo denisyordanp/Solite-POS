@@ -1,9 +1,9 @@
 package com.socialite.data.network
 
-import com.socialite.data.schema.response.helper.ApiResponse
 import com.socialite.data.schema.response.SynchronizeParams
 import com.socialite.data.schema.response.SynchronizeResponse
 import com.socialite.data.schema.response.TokenResponse
+import com.socialite.solite_pos.network.helper.ApiResponse
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
