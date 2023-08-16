@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
@@ -51,27 +50,5 @@ data class Promo(
         const val CASH = "cash"
         const val VALUE = "value"
         const val DB_NAME = "promo"
-
-        fun filter(status: Status): SimpleSQLiteQuery {
-            val query = StringBuilder().append("SELECT * FROM ")
-            query.append(DB_NAME)
-            when (status) {
-                Status.ACTIVE -> {
-                    query.append(" WHERE ")
-                        .append(STATUS)
-                        .append(" = ").append(status.code)
-                }
-
-                else -> {
-                    // Do nothing
-                }
-            }
-            return SimpleSQLiteQuery(query.toString())
-        }
-    }
-
-    enum class Status(val code: Int) {
-        ALL(2),
-        ACTIVE(1)
     }
 }

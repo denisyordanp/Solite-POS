@@ -6,13 +6,9 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
-import com.socialite.data.schema.response.VariantProductResponse
-import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.data.schema.room.new_master.Variant
 import com.socialite.data.schema.room.new_master.VariantOption
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = VariantProduct.DB_NAME,
@@ -46,7 +42,7 @@ import java.util.UUID
 data class VariantProduct(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    override var id: String,
+    var id: String,
 
     @ColumnInfo(name = Variant.ID)
     var variant: String,
@@ -60,36 +56,14 @@ data class VariantProduct(
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean,
 
-    @ColumnInfo(name = OrderDetail.DELETED, defaultValue = "0")
+    @ColumnInfo(name = DELETED, defaultValue = "0")
     var isDeleted: Boolean
-) : Serializable, EntityData {
-
-    fun toResponse(): VariantProductResponse {
-        return VariantProductResponse(
-            id = id,
-            product = product,
-            variantOption = variantOption,
-            variant = variant,
-            isUploaded = true
-        )
-    }
+) {
 
     companion object {
         const val ID = "id_variant_product"
         const val DELETED = "deleted"
 
         const val DB_NAME = "new_variant_product"
-
-        fun createNewVariantProduct(
-            variant: String,
-            variantOption: String,
-            product: String) = VariantProduct(
-            id = UUID.randomUUID().toString(),
-            variant = variant,
-            variantOption = variantOption,
-            product = product,
-            isUploaded = false,
-            isDeleted = false
-        )
     }
 }

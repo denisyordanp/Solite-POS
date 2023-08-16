@@ -1,4 +1,4 @@
-package com.socialite.data.network.helper
+package com.socialite.solite_pos.network.helper
 
 data class ApiResponse<T>(
     var message: ResponseMessage,

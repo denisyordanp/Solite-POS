@@ -15,6 +15,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -51,19 +57,15 @@ dependencies {
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
-    api("com.google.firebase:firebase-analytics-ktx")
-    api("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
 
     // Database
-    api("androidx.room:room-runtime:$roomVersion")
-    api("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     kapt("org.xerial:sqlite-jdbc:$sqliteJdbc")
     kapt("androidx.room:room-compiler:$roomVersion")
-
-    // Preferences
-    implementation("androidx.security:security-crypto-ktx:$securityCryptoVersion")
-    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
