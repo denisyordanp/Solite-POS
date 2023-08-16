@@ -1,0 +1,1562 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 4,
+    "identityHash": "741e9a8daabcda3946c89376890759ae",
+    "entities": [
+      {
+        "tableName": "category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_category` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `stock` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_category",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isStock",
+            "columnName": "stock",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_category"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_category_id_category",
+            "unique": false,
+            "columnNames": [
+              "id_category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category_id_category` ON `${TABLE_NAME}` (`id_category`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "customer",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_customer` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `upload` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_customer",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_customer"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_customer_id_customer",
+            "unique": false,
+            "columnNames": [
+              "id_customer"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_customer_id_customer` ON `${TABLE_NAME}` (`id_customer`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "order",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`order_no` TEXT NOT NULL, `id_customer` INTEGER NOT NULL, `order_date` TEXT NOT NULL, `cook_time` TEXT, `take_away` INTEGER NOT NULL, `status` INTEGER NOT NULL, `store` INTEGER NOT NULL, `upload` INTEGER NOT NULL, PRIMARY KEY(`order_no`), FOREIGN KEY(`id_customer`) REFERENCES `customer`(`id_customer`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "orderNo",
+            "columnName": "order_no",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "customer",
+            "columnName": "id_customer",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orderTime",
+            "columnName": "order_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cookTime",
+            "columnName": "cook_time",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isTakeAway",
+            "columnName": "take_away",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "store",
+            "columnName": "store",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "order_no"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_order_id_customer",
+            "unique": false,
+            "columnNames": [
+              "id_customer"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_id_customer` ON `${TABLE_NAME}` (`id_customer`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "customer",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_customer"
+            ],
+            "referencedColumns": [
+              "id_customer"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "purchase",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`purchase_no` TEXT NOT NULL, `id_supplier` INTEGER NOT NULL, `purchase_date` TEXT NOT NULL, `upload` INTEGER NOT NULL, PRIMARY KEY(`purchase_no`))",
+        "fields": [
+          {
+            "fieldPath": "purchaseNo",
+            "columnName": "purchase_no",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idSupplier",
+            "columnName": "id_supplier",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "purchaseTime",
+            "columnName": "purchase_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "purchase_no"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_purchase_purchase_no",
+            "unique": false,
+            "columnNames": [
+              "purchase_no"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_purchase_purchase_no` ON `${TABLE_NAME}` (`purchase_no`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "purchase_product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_purchase_product` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `purchase_no` TEXT NOT NULL, `id_product` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`purchase_no`) REFERENCES `purchase`(`purchase_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_purchase_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "purchaseNo",
+            "columnName": "purchase_no",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idProduct",
+            "columnName": "id_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_purchase_product"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_purchase_product_id_purchase_product",
+            "unique": false,
+            "columnNames": [
+              "id_purchase_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_purchase_product_id_purchase_product` ON `${TABLE_NAME}` (`id_purchase_product`)"
+          },
+          {
+            "name": "index_purchase_product_purchase_no",
+            "unique": false,
+            "columnNames": [
+              "purchase_no"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_purchase_product_purchase_no` ON `${TABLE_NAME}` (`purchase_no`)"
+          },
+          {
+            "name": "index_purchase_product_id_product",
+            "unique": false,
+            "columnNames": [
+              "id_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_purchase_product_id_product` ON `${TABLE_NAME}` (`id_product`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "purchase",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "purchase_no"
+            ],
+            "referencedColumns": [
+              "purchase_no"
+            ]
+          },
+          {
+            "table": "product",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_product"
+            ],
+            "referencedColumns": [
+              "id_product"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "payment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_payment` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `tax` REAL NOT NULL, `cash` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_payment",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tax",
+            "columnName": "tax",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCash",
+            "columnName": "cash",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_payment"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_payment_id_payment",
+            "unique": false,
+            "columnNames": [
+              "id_payment"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_payment_id_payment` ON `${TABLE_NAME}` (`id_payment`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_product` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_category` INTEGER NOT NULL, `image` TEXT NOT NULL, `desc` TEXT NOT NULL, `sell_price` INTEGER NOT NULL, `buy_price` INTEGER NOT NULL, `portion` INTEGER NOT NULL, `stock` INTEGER NOT NULL, `mix` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_category`) REFERENCES `category`(`id_category`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "id_category",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sellPrice",
+            "columnName": "sell_price",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "buyPrice",
+            "columnName": "buy_price",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "portion",
+            "columnName": "portion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stock",
+            "columnName": "stock",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMix",
+            "columnName": "mix",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_product"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_product_id_product",
+            "unique": false,
+            "columnNames": [
+              "id_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_product_id_product` ON `${TABLE_NAME}` (`id_product`)"
+          },
+          {
+            "name": "index_product_id_category",
+            "unique": false,
+            "columnNames": [
+              "id_category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_product_id_category` ON `${TABLE_NAME}` (`id_category`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "category",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_category"
+            ],
+            "referencedColumns": [
+              "id_category"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "variant",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `type` INTEGER NOT NULL, `must` INTEGER, `mix` INTEGER NOT NULL, `upload` INTEGER NOT NULL, `id_variant` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMust",
+            "columnName": "must",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isMix",
+            "columnName": "mix",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id_variant",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_variant"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_variant_id_variant",
+            "unique": false,
+            "columnNames": [
+              "id_variant"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_id_variant` ON `${TABLE_NAME}` (`id_variant`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "outcome",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_outcome` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `price` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL, `store` INTEGER NOT NULL, `upload` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_outcome",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "store",
+            "columnName": "store",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_outcome"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_outcome_id_outcome",
+            "unique": false,
+            "columnNames": [
+              "id_outcome"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_outcome_id_outcome` ON `${TABLE_NAME}` (`id_outcome`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "supplier",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_supplier` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT NOT NULL, `address` TEXT NOT NULL, `desc` TEXT NOT NULL, `upload` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_supplier",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_supplier"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_supplier_id_supplier",
+            "unique": false,
+            "columnNames": [
+              "id_supplier"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_supplier_id_supplier` ON `${TABLE_NAME}` (`id_supplier`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_user` TEXT NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL, `authority` TEXT NOT NULL, PRIMARY KEY(`id_user`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_user",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "authority",
+            "columnName": "authority",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_user"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_user_id_user",
+            "unique": false,
+            "columnNames": [
+              "id_user"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_id_user` ON `${TABLE_NAME}` (`id_user`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "order_detail",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_detail` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order_no` TEXT NOT NULL, `id_product` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_order_detail",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orderNo",
+            "columnName": "order_no",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idProduct",
+            "columnName": "id_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUpload",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_order_detail"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_order_detail_id_order_detail",
+            "unique": false,
+            "columnNames": [
+              "id_order_detail"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_detail_id_order_detail` ON `${TABLE_NAME}` (`id_order_detail`)"
+          },
+          {
+            "name": "index_order_detail_order_no",
+            "unique": false,
+            "columnNames": [
+              "order_no"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_detail_order_no` ON `${TABLE_NAME}` (`order_no`)"
+          },
+          {
+            "name": "index_order_detail_id_product",
+            "unique": false,
+            "columnNames": [
+              "id_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_detail_id_product` ON `${TABLE_NAME}` (`id_product`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "order",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "order_no"
+            ],
+            "referencedColumns": [
+              "order_no"
+            ]
+          },
+          {
+            "table": "product",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_product"
+            ],
+            "referencedColumns": [
+              "id_product"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "order_payment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_payment` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `order_no` TEXT NOT NULL, `id_payment` INTEGER NOT NULL, `pay` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`order_no`) REFERENCES `order`(`order_no`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_payment`) REFERENCES `payment`(`id_payment`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_order_payment",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orderNO",
+            "columnName": "order_no",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idPayment",
+            "columnName": "id_payment",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pay",
+            "columnName": "pay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUpload",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_order_payment"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_order_payment_id_order_payment",
+            "unique": false,
+            "columnNames": [
+              "id_order_payment"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_payment_id_order_payment` ON `${TABLE_NAME}` (`id_order_payment`)"
+          },
+          {
+            "name": "index_order_payment_order_no",
+            "unique": false,
+            "columnNames": [
+              "order_no"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_payment_order_no` ON `${TABLE_NAME}` (`order_no`)"
+          },
+          {
+            "name": "index_order_payment_id_payment",
+            "unique": false,
+            "columnNames": [
+              "id_payment"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_payment_id_payment` ON `${TABLE_NAME}` (`id_payment`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "order",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "order_no"
+            ],
+            "referencedColumns": [
+              "order_no"
+            ]
+          },
+          {
+            "table": "payment",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_payment"
+            ],
+            "referencedColumns": [
+              "id_payment"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "order_product_variant",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_product_variant` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_order_detail` INTEGER NOT NULL, `id_variant_option` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_order_detail`) REFERENCES `order_detail`(`id_order_detail`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_variant_option`) REFERENCES `variant_option`(`id_variant_option`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_order_product_variant",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idOrderDetail",
+            "columnName": "id_order_detail",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idVariantOption",
+            "columnName": "id_variant_option",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUpload",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_order_product_variant"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_order_product_variant_id_order_product_variant",
+            "unique": false,
+            "columnNames": [
+              "id_order_product_variant"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_product_variant_id_order_product_variant` ON `${TABLE_NAME}` (`id_order_product_variant`)"
+          },
+          {
+            "name": "index_order_product_variant_id_order_detail",
+            "unique": false,
+            "columnNames": [
+              "id_order_detail"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_product_variant_id_order_detail` ON `${TABLE_NAME}` (`id_order_detail`)"
+          },
+          {
+            "name": "index_order_product_variant_id_variant_option",
+            "unique": false,
+            "columnNames": [
+              "id_variant_option"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_product_variant_id_variant_option` ON `${TABLE_NAME}` (`id_variant_option`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "order_detail",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_order_detail"
+            ],
+            "referencedColumns": [
+              "id_order_detail"
+            ]
+          },
+          {
+            "table": "variant_option",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_variant_option"
+            ],
+            "referencedColumns": [
+              "id_variant_option"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "order_product_variant_mix",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_product_variant_mix` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_order_detail` INTEGER NOT NULL, `id_product` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_order_detail`) REFERENCES `order_detail`(`id_order_detail`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_order_product_variant_mix",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idOrderDetail",
+            "columnName": "id_order_detail",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idProduct",
+            "columnName": "id_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUpload",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_order_product_variant_mix"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_order_product_variant_mix_id_order_product_variant_mix",
+            "unique": false,
+            "columnNames": [
+              "id_order_product_variant_mix"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_product_variant_mix_id_order_product_variant_mix` ON `${TABLE_NAME}` (`id_order_product_variant_mix`)"
+          },
+          {
+            "name": "index_order_product_variant_mix_id_order_detail",
+            "unique": false,
+            "columnNames": [
+              "id_order_detail"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_product_variant_mix_id_order_detail` ON `${TABLE_NAME}` (`id_order_detail`)"
+          },
+          {
+            "name": "index_order_product_variant_mix_id_product",
+            "unique": false,
+            "columnNames": [
+              "id_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_product_variant_mix_id_product` ON `${TABLE_NAME}` (`id_product`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "order_detail",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_order_detail"
+            ],
+            "referencedColumns": [
+              "id_order_detail"
+            ]
+          },
+          {
+            "table": "product",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_product"
+            ],
+            "referencedColumns": [
+              "id_product"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "order_mix_product_variant",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_order_mix_product_variant` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_order_product_variant_mix` INTEGER NOT NULL, `id_variant_option` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_order_product_variant_mix`) REFERENCES `order_product_variant_mix`(`id_order_product_variant_mix`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_variant_option`) REFERENCES `variant_option`(`id_variant_option`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_order_mix_product_variant",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idOrderProductMixVariant",
+            "columnName": "id_order_product_variant_mix",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idVariantOption",
+            "columnName": "id_variant_option",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUpload",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_order_mix_product_variant"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_order_mix_product_variant_id_order_mix_product_variant",
+            "unique": false,
+            "columnNames": [
+              "id_order_mix_product_variant"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_mix_product_variant_id_order_mix_product_variant` ON `${TABLE_NAME}` (`id_order_mix_product_variant`)"
+          },
+          {
+            "name": "index_order_mix_product_variant_id_order_product_variant_mix",
+            "unique": false,
+            "columnNames": [
+              "id_order_product_variant_mix"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_mix_product_variant_id_order_product_variant_mix` ON `${TABLE_NAME}` (`id_order_product_variant_mix`)"
+          },
+          {
+            "name": "index_order_mix_product_variant_id_variant_option",
+            "unique": false,
+            "columnNames": [
+              "id_variant_option"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_order_mix_product_variant_id_variant_option` ON `${TABLE_NAME}` (`id_variant_option`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "order_product_variant_mix",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_order_product_variant_mix"
+            ],
+            "referencedColumns": [
+              "id_order_product_variant_mix"
+            ]
+          },
+          {
+            "table": "variant_option",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_variant_option"
+            ],
+            "referencedColumns": [
+              "id_variant_option"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "variant_mix",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_variant_mix` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_variant` INTEGER NOT NULL, `id_product` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_variant`) REFERENCES `variant`(`id_variant`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_variant_mix",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idVariant",
+            "columnName": "id_variant",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idProduct",
+            "columnName": "id_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_variant_mix"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_variant_mix_id_variant_mix",
+            "unique": false,
+            "columnNames": [
+              "id_variant_mix"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_mix_id_variant_mix` ON `${TABLE_NAME}` (`id_variant_mix`)"
+          },
+          {
+            "name": "index_variant_mix_id_variant",
+            "unique": false,
+            "columnNames": [
+              "id_variant"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_mix_id_variant` ON `${TABLE_NAME}` (`id_variant`)"
+          },
+          {
+            "name": "index_variant_mix_id_product",
+            "unique": false,
+            "columnNames": [
+              "id_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_mix_id_product` ON `${TABLE_NAME}` (`id_product`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "variant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_variant"
+            ],
+            "referencedColumns": [
+              "id_variant"
+            ]
+          },
+          {
+            "table": "product",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_product"
+            ],
+            "referencedColumns": [
+              "id_product"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "variant_product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_variant_product` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_variant` INTEGER NOT NULL, `id_variant_option` INTEGER NOT NULL, `id_product` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_variant_option`) REFERENCES `variant_option`(`id_variant_option`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_variant`) REFERENCES `variant`(`id_variant`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_product`) REFERENCES `product`(`id_product`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_variant_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idVariant",
+            "columnName": "id_variant",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idVariantOption",
+            "columnName": "id_variant_option",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idProduct",
+            "columnName": "id_product",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_variant_product"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_variant_product_id_variant_product",
+            "unique": false,
+            "columnNames": [
+              "id_variant_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_product_id_variant_product` ON `${TABLE_NAME}` (`id_variant_product`)"
+          },
+          {
+            "name": "index_variant_product_id_variant",
+            "unique": false,
+            "columnNames": [
+              "id_variant"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_product_id_variant` ON `${TABLE_NAME}` (`id_variant`)"
+          },
+          {
+            "name": "index_variant_product_id_variant_option",
+            "unique": false,
+            "columnNames": [
+              "id_variant_option"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_product_id_variant_option` ON `${TABLE_NAME}` (`id_variant_option`)"
+          },
+          {
+            "name": "index_variant_product_id_product",
+            "unique": false,
+            "columnNames": [
+              "id_product"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_product_id_product` ON `${TABLE_NAME}` (`id_product`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "variant_option",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_variant_option"
+            ],
+            "referencedColumns": [
+              "id_variant_option"
+            ]
+          },
+          {
+            "table": "variant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_variant"
+            ],
+            "referencedColumns": [
+              "id_variant"
+            ]
+          },
+          {
+            "table": "product",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_product"
+            ],
+            "referencedColumns": [
+              "id_product"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "variant_option",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_variant_option` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_variant` INTEGER NOT NULL, `name` TEXT NOT NULL, `desc` TEXT NOT NULL, `count` INTEGER NOT NULL, `status` INTEGER NOT NULL, `upload` INTEGER NOT NULL, FOREIGN KEY(`id_variant`) REFERENCES `variant`(`id_variant`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_variant_option",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idVariant",
+            "columnName": "id_variant",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCount",
+            "columnName": "count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUploaded",
+            "columnName": "upload",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_variant_option"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_variant_option_id_variant_option",
+            "unique": false,
+            "columnNames": [
+              "id_variant_option"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_option_id_variant_option` ON `${TABLE_NAME}` (`id_variant_option`)"
+          },
+          {
+            "name": "index_variant_option_id_variant",
+            "unique": false,
+            "columnNames": [
+              "id_variant"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_variant_option_id_variant` ON `${TABLE_NAME}` (`id_variant`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "variant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_variant"
+            ],
+            "referencedColumns": [
+              "id_variant"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "store",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_store` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id_store",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id_store"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_store_id_store",
+            "unique": false,
+            "columnNames": [
+              "id_store"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_store_id_store` ON `${TABLE_NAME}` (`id_store`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '741e9a8daabcda3946c89376890759ae')"
+    ]
+  }
+}
