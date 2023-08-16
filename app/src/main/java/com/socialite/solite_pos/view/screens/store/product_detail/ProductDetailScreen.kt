@@ -40,7 +40,7 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
-import com.socialite.solite_pos.data.schema.Category
+import com.socialite.data.schema.room.new_master.Category
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
@@ -113,10 +113,7 @@ private fun DetailContent(
             mutableStateOf(false)
         }
         var selectedCategory by remember {
-            val category = product?.category?.let {
-                Category.fromData(it)
-            }
-            mutableStateOf(category)
+            mutableStateOf(product?.category)
         }
         var isError by remember { mutableStateOf(false) }
 
@@ -128,9 +125,7 @@ private fun DetailContent(
             name = product?.product?.name ?: ""
             desc = product?.product?.desc ?: ""
             price = product?.product?.price ?: 0L
-            selectedCategory = product?.category?.let {
-                Category.fromData(it)
-            }
+            selectedCategory = product?.category
         }
 
         Column(

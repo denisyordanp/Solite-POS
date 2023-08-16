@@ -6,9 +6,12 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.schema.response.OrderDetailResponse
+import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Product
 import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = OrderDetail.DB_NAME,
@@ -35,7 +38,7 @@ import java.io.Serializable
 data class OrderDetail(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    var id: String,
+    override var id: String,
 
     @ColumnInfo(name = Order.ID)
     var order: String,
@@ -51,11 +54,36 @@ data class OrderDetail(
 
     @ColumnInfo(name = DELETED, defaultValue = "0")
     var isDeleted: Boolean
-) : Serializable {
+) : Serializable, EntityData {
+
+    fun toResponse(): OrderDetailResponse {
+        return OrderDetailResponse(
+            id = id,
+            amount = amount,
+            order = order,
+            product = product,
+            isUploaded = true
+        )
+    }
+
     companion object {
         const val ID = "id_order_detail"
         const val AMOUNT = "amount"
         const val DELETED = "deleted"
+
         const val DB_NAME = "new_order_detail"
+
+        fun createNewOrderDetail(
+            orderId: String,
+            idProduct: String,
+            amount: Int
+        ) = OrderDetail(
+            id = UUID.randomUUID().toString(),
+            order = orderId,
+            product = idProduct,
+            amount = amount,
+            isUpload = false,
+            isDeleted = false
+        )
     }
 }

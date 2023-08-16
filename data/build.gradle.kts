@@ -10,7 +10,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 23
         targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -66,6 +66,10 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     kapt("org.xerial:sqlite-jdbc:$sqliteJdbc")
     kapt("androidx.room:room-compiler:$roomVersion")
+
+    // Preferences
+    implementation("androidx.security:security-crypto-ktx:$securityCryptoVersion")
+    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

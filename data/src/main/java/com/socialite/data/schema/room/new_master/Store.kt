@@ -5,6 +5,10 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase
+import com.socialite.data.schema.response.StoreResponse
+import com.socialite.data.schema.room.EntityData
+import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Store.DB_NAME,
@@ -15,7 +19,7 @@ import com.socialite.data.database.AppDatabase
 data class Store(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+    override val id: String,
 
     @ColumnInfo(name = NAME)
     var name: String,
@@ -25,12 +29,39 @@ data class Store(
 
     @ColumnInfo(name = AppDatabase.UPLOAD)
     var isUploaded: Boolean
-) {
+) : Serializable, EntityData {
+
+    fun isNewStore() = id == ID_ADD
+
+    fun asNewStore() = this.copy(
+        id = UUID.randomUUID().toString()
+    )
+
+    fun toResponse(): StoreResponse {
+        return StoreResponse(
+            id = id,
+            name = name,
+            address = address,
+            isUploaded = true
+        )
+    }
+
     companion object {
         const val ID = "id_store"
         const val NAME = "name"
         const val ADDRESS = "address"
 
         const val DB_NAME = "new_store"
+        const val ID_ADD = "add_id"
+
+        fun add(name: String, address: String): Store {
+            return Store(
+                id = ID_ADD,
+                name = name,
+                address = address,
+                isUploaded = false
+            )
+        }
     }
 }
+

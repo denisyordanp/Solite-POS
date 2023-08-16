@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
@@ -47,5 +48,25 @@ data class Category(
         const val DESC = "desc"
 
         const val DB_NAME = "category"
+
+        const val ALL = 2
+        const val ACTIVE = 1
+
+        fun getFilter(state: Int): SimpleSQLiteQuery {
+            return filter(state)
+        }
+
+        private fun filter(state: Int): SimpleSQLiteQuery {
+            val query = StringBuilder().append("SELECT * FROM ")
+            query.append(DB_NAME)
+            when (state) {
+                ACTIVE -> {
+                    query.append(" WHERE ")
+                        .append(STATUS)
+                        .append(" = ").append(ACTIVE)
+                }
+            }
+            return SimpleSQLiteQuery(query.toString())
+        }
     }
 }

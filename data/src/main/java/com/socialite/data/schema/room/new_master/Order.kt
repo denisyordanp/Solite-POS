@@ -6,6 +6,10 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
+import com.socialite.data.schema.response.OrderResponse
+import com.socialite.data.schema.room.EntityData
+import java.io.Serializable
+import java.util.UUID
 
 @Entity(
     tableName = Order.DB_NAME,
@@ -25,7 +29,7 @@ import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 data class Order(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    val id: String,
+    override val id: String,
 
     @ColumnInfo(name = NO)
     var orderNo: String,
@@ -47,7 +51,22 @@ data class Order(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) {
+) : Serializable, EntityData {
+
+    fun isEditable() = status == ON_PROCESS || status == NEED_PAY
+
+    fun toResponse(): OrderResponse {
+        return OrderResponse(
+            id = id,
+            orderNo = orderNo,
+            customer = customer,
+            orderTime = orderTime,
+            status = status,
+            store = store,
+            isTakeAway = isTakeAway,
+            isUploaded = true
+        )
+    }
 
     companion object {
 
@@ -63,5 +82,22 @@ data class Order(
         const val NEED_PAY = 1
         const val CANCEL = 2
         const val DONE = 3
+
+        fun createNew(
+            orderNo: String,
+            customer: String,
+            orderTime: String,
+            store: String,
+            isTakeAway: Boolean
+        ) = Order(
+            id = UUID.randomUUID().toString(),
+            orderNo = orderNo,
+            customer = customer,
+            orderTime = orderTime,
+            isTakeAway = isTakeAway,
+            status = ON_PROCESS,
+            store = store,
+            isUploaded = false
+        )
     }
 }

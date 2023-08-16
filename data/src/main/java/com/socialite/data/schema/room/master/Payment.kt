@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
@@ -49,5 +50,21 @@ data class Payment(
         const val CASH = "cash"
         const val TAX = "tax"
         const val DB_NAME = "payment"
+
+        const val ALL = 2
+        const val ACTIVE = 1
+
+        fun filter(state: Int): SimpleSQLiteQuery {
+            val query = StringBuilder().append("SELECT * FROM ")
+            query.append(DB_NAME)
+            when (state) {
+                ACTIVE -> {
+                    query.append(" WHERE ")
+                        .append(STATUS)
+                        .append(" = ").append(ACTIVE)
+                }
+            }
+            return SimpleSQLiteQuery(query.toString())
+        }
     }
 }
