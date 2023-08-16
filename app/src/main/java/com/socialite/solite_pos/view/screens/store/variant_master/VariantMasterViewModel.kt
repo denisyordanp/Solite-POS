@@ -2,11 +2,11 @@ package com.socialite.solite_pos.view.screens.store.variant_master
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetVariantsWithOptions
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Variant
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.VariantOption
-import com.socialite.solite_pos.data.source.repository.VariantOptionsRepository
-import com.socialite.solite_pos.data.source.repository.VariantsRepository
+import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
+import com.socialite.solite_pos.data.schema.room.new_master.Variant
+import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
+import com.socialite.solite_pos.data.repository.VariantOptionsRepository
+import com.socialite.solite_pos.data.repository.VariantsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

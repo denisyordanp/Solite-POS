@@ -33,7 +33,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.solite_pos.data.source.local.entity.helper.GeneralMenuBadge
+import com.socialite.solite_pos.data.schema.helper.GeneralMenuBadge
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent
 import com.socialite.solite_pos.view.ui.SettingMenus

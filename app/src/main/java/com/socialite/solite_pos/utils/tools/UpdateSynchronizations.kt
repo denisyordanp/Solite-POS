@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.utils.tools
 
-import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
-import com.socialite.solite_pos.data.source.repository.SyncRepository
+import com.socialite.solite_pos.data.schema.room.EntityData
+import com.socialite.solite_pos.data.repository.SyncRepository
 
 open class UpdateSynchronizations(
     private val repository: SyncRepository<EntityData>

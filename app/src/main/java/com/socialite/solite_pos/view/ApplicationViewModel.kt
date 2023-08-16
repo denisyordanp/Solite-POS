@@ -3,7 +3,7 @@ package com.socialite.solite_pos.view
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.repository.SettingRepository
+import com.socialite.solite_pos.data.repository.SettingRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.socialite.solite_pos.data.source.preference.SettingPreferences
-import com.socialite.solite_pos.data.source.preference.impl.UserPreferencesImpl
+import com.socialite.solite_pos.data.preference.SettingPreferences
+import com.socialite.solite_pos.data.preference.impl.UserPreferencesImpl
 
 class PreferencesFactory(
     private val context: Context

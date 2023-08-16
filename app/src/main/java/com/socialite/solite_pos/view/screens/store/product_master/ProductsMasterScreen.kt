@@ -52,9 +52,9 @@ import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.local.entity.helper.ProductVariantCount
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Category
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Product
+import com.socialite.solite_pos.data.schema.helper.ProductVariantCount
+import com.socialite.solite_pos.data.schema.room.new_master.Category
+import com.socialite.solite_pos.data.schema.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
 import kotlinx.coroutines.launch
 

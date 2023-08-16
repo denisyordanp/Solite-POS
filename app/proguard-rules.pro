@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.socialite.solite_pos.data.source.remote.response.** { *; }
+-keep class com.socialite.solite_pos.data.schema.response.** { *; }

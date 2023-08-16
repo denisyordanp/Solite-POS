@@ -2,15 +2,15 @@ package com.socialite.solite_pos.view.screens.orders.order_payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.source.domain.GetOrderWithProduct
-import com.socialite.solite_pos.data.source.domain.PayOrder
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.entity.room.new_bridge.OrderPromo
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Order
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Payment
-import com.socialite.solite_pos.data.source.local.entity.room.new_master.Promo
-import com.socialite.solite_pos.data.source.repository.PaymentsRepository
-import com.socialite.solite_pos.data.source.repository.PromosRepository
+import com.socialite.solite_pos.data.domain.GetOrderWithProduct
+import com.socialite.solite_pos.data.domain.PayOrder
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment
+import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPromo
+import com.socialite.solite_pos.data.schema.room.new_master.Order
+import com.socialite.solite_pos.data.schema.room.new_master.Payment
+import com.socialite.solite_pos.data.schema.room.new_master.Promo
+import com.socialite.solite_pos.data.repository.PaymentsRepository
+import com.socialite.solite_pos.data.repository.PromosRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

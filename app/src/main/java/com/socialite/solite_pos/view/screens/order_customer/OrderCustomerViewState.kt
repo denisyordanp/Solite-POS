@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.order_customer
 
-import com.socialite.solite_pos.data.source.local.entity.helper.BucketOrder
+import com.socialite.solite_pos.data.schema.helper.BucketOrder
 
 data class OrderCustomerViewState(
     val isShouldSelectStore: Boolean,

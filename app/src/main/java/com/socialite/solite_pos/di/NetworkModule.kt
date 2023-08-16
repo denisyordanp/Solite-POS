@@ -2,8 +2,8 @@ package com.socialite.solite_pos.di
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
-import com.socialite.solite_pos.data.source.preference.UserPreferences
-import com.socialite.solite_pos.data.source.remote.SoliteServices
+import com.socialite.solite_pos.data.preference.UserPreferences
+import com.socialite.solite_pos.network.SoliteServices
 import com.socialite.solite_pos.utils.config.NetworkConfig
 import dagger.Module
 import dagger.Provides
