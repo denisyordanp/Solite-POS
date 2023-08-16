@@ -3,9 +3,9 @@ package com.socialite.solite_pos.data.repository.impl
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.Product
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.CategoriesDao
-import com.socialite.solite_pos.data.source.local.room.ProductsDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.CategoriesDao
+import com.socialite.solite_pos.database.dao.ProductsDao
 import com.socialite.solite_pos.data.repository.ProductsRepository
 import com.socialite.solite_pos.data.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations

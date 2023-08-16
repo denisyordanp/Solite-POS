@@ -5,8 +5,8 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.master.Category
 import com.socialite.solite_pos.data.schema.room.new_master.Category as NewCategory
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.CategoriesDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.CategoriesDao
 import com.socialite.solite_pos.data.repository.CategoriesRepository
 import com.socialite.solite_pos.data.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations

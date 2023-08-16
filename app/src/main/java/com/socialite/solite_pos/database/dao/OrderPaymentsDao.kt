@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.local.room
+package com.socialite.solite_pos.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.socialite.solite_pos.data.schema.room.bridge.OrderPayment
+import com.socialite.solite_pos.database.AppDatabase
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment as NewOrderPayment
 
 @Dao

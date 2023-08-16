@@ -3,10 +3,10 @@ package com.socialite.solite_pos.data.repository.impl
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.OrderPaymentsDao
-import com.socialite.solite_pos.data.source.local.room.OrdersDao
-import com.socialite.solite_pos.data.source.local.room.PaymentsDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.OrderPaymentsDao
+import com.socialite.solite_pos.database.dao.OrdersDao
+import com.socialite.solite_pos.database.dao.PaymentsDao
 import com.socialite.solite_pos.data.repository.OrderPaymentsRepository
 import com.socialite.solite_pos.data.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations

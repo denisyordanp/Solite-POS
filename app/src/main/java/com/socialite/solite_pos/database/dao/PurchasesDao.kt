@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.local.room
+package com.socialite.solite_pos.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

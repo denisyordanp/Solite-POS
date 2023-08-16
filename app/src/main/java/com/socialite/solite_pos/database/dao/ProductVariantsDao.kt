@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.local.room
+package com.socialite.solite_pos.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,6 +10,7 @@ import com.socialite.solite_pos.data.schema.room.bridge.VariantProduct
 import com.socialite.solite_pos.data.schema.room.helper.VariantProductWithOption
 import com.socialite.solite_pos.data.schema.room.new_master.Product
 import com.socialite.solite_pos.data.schema.room.new_master.Variant
+import com.socialite.solite_pos.database.AppDatabase
 import kotlinx.coroutines.flow.Flow
 import com.socialite.solite_pos.data.schema.room.new_bridge.VariantProduct as NewVariantProduct
 

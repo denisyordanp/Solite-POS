@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.schema.room.master.Product
 import com.socialite.solite_pos.data.schema.room.master.Variant
 import com.socialite.solite_pos.data.schema.room.master.VariantOption
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
 import java.io.Serializable
 
 @Entity(

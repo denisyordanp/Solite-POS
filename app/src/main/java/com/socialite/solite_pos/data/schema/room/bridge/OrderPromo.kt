@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.schema.room.master.Order
 import com.socialite.solite_pos.data.schema.room.master.Promo
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
+import com.socialite.solite_pos.database.AppDatabase
 
 @Entity(
         tableName = OrderPromo.DB_NAME,

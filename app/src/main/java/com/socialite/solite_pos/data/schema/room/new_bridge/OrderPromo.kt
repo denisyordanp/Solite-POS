@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.Order
 import com.socialite.solite_pos.data.schema.room.new_master.Promo
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
+import com.socialite.solite_pos.database.AppDatabase
 import com.socialite.solite_pos.data.schema.response.OrderPromoResponse
 import java.util.UUID
 

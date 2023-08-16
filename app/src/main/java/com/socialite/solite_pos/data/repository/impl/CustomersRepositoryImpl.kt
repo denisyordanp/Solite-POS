@@ -3,8 +3,8 @@ package com.socialite.solite_pos.data.repository.impl
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.Customer
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.CustomersDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.CustomersDao
 import com.socialite.solite_pos.data.repository.CustomersRepository
 import com.socialite.solite_pos.data.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations

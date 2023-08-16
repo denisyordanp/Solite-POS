@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
-import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.schema.response.PaymentResponse
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable

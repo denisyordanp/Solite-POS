@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.local.room
+package com.socialite.solite_pos.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.socialite.solite_pos.data.schema.room.bridge.OrderDetail
 import com.socialite.solite_pos.data.schema.room.helper.DetailWithVariantOption
+import com.socialite.solite_pos.database.AppDatabase
 import kotlinx.coroutines.flow.Flow
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail as NewOrderDetail
 import com.socialite.solite_pos.data.schema.room.new_master.Order as NewOrder

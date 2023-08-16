@@ -4,8 +4,8 @@ import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.master.Payment
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.PaymentsDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.PaymentsDao
 import com.socialite.solite_pos.data.repository.PaymentsRepository
 import com.socialite.solite_pos.data.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations

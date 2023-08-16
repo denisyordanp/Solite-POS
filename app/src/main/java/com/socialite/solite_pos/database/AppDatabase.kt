@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.data.source.local.room
+package com.socialite.solite_pos.database
 
 import android.content.Context
 import androidx.room.AutoMigration
@@ -9,6 +9,24 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.socialite.solite_pos.data.schema.room.bridge.*
 import com.socialite.solite_pos.data.schema.room.master.*
+import com.socialite.solite_pos.database.dao.CategoriesDao
+import com.socialite.solite_pos.database.dao.CustomersDao
+import com.socialite.solite_pos.database.dao.OrderDetailsDao
+import com.socialite.solite_pos.database.dao.OrderPaymentsDao
+import com.socialite.solite_pos.database.dao.OrderProductVariantsDao
+import com.socialite.solite_pos.database.dao.OrderPromosDao
+import com.socialite.solite_pos.database.dao.OrdersDao
+import com.socialite.solite_pos.database.dao.OutcomesDao
+import com.socialite.solite_pos.database.dao.PaymentsDao
+import com.socialite.solite_pos.database.dao.ProductVariantsDao
+import com.socialite.solite_pos.database.dao.ProductsDao
+import com.socialite.solite_pos.database.dao.PromosDao
+import com.socialite.solite_pos.database.dao.PurchasesDao
+import com.socialite.solite_pos.database.dao.StoreDao
+import com.socialite.solite_pos.database.dao.SuppliersDao
+import com.socialite.solite_pos.database.dao.VariantMixesDao
+import com.socialite.solite_pos.database.dao.VariantOptionsDao
+import com.socialite.solite_pos.database.dao.VariantsDao
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderDetail as NewOrderDetail
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderPayment as NewOrderPayment
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant as NewOrderProductVariant
@@ -106,7 +124,7 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL(
                     "CREATE TABLE IF NOT EXISTS `${Promo.DB_NAME}` (`${Promo.ID}` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `${Promo.NAME}` TEXT NOT NULL, " +
                             "`${Promo.DESC}` TEXT NOT NULL, `${Promo.CASH}` INTEGER DEFAULT 0 NOT NULL, `${Promo.VALUE}` INTEGER," +
-                            "`${Promo.STATUS}` INTEGER DEFAULT 0 NOT NULL, `${UPLOAD}` INTEGER DEFAULT 0 NOT NULL)"
+                            "`${Promo.STATUS}` INTEGER DEFAULT 0 NOT NULL, `$UPLOAD` INTEGER DEFAULT 0 NOT NULL)"
                 )
                 database.execSQL("CREATE INDEX IF NOT EXISTS `index_promo_id_promo` ON `${Promo.DB_NAME}` (`${Promo.ID}`)")
             }

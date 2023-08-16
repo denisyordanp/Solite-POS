@@ -4,10 +4,10 @@ import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.helper.OrderData
 import com.socialite.solite_pos.data.schema.room.new_master.Order
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.CustomersDao
-import com.socialite.solite_pos.data.source.local.room.OrdersDao
-import com.socialite.solite_pos.data.source.local.room.StoreDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.CustomersDao
+import com.socialite.solite_pos.database.dao.OrdersDao
+import com.socialite.solite_pos.database.dao.StoreDao
 import com.socialite.solite_pos.data.repository.OrdersRepository
 import com.socialite.solite_pos.data.repository.SettingRepository
 import com.socialite.solite_pos.data.repository.SyncRepository

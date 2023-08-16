@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
-import com.socialite.solite_pos.data.source.local.room.AppDatabase.Companion.UPLOAD
+import com.socialite.solite_pos.database.AppDatabase.Companion.UPLOAD
 import com.socialite.solite_pos.data.schema.response.OrderProductVariantResponse
 import java.io.Serializable
 import java.util.UUID

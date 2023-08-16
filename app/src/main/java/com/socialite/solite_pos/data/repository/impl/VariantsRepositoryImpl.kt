@@ -3,8 +3,8 @@ package com.socialite.solite_pos.data.repository.impl
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.new_master.Variant
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.VariantsDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.VariantsDao
 import com.socialite.solite_pos.data.repository.SyncRepository
 import com.socialite.solite_pos.data.repository.VariantsRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations

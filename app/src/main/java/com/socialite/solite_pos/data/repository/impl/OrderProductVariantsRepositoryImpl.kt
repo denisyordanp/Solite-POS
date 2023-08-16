@@ -3,10 +3,10 @@ package com.socialite.solite_pos.data.repository.impl
 import androidx.room.withTransaction
 import com.socialite.solite_pos.data.source.local.entity.helper.EntityData
 import com.socialite.solite_pos.data.schema.room.new_bridge.OrderProductVariant
-import com.socialite.solite_pos.data.source.local.room.AppDatabase
-import com.socialite.solite_pos.data.source.local.room.OrderDetailsDao
-import com.socialite.solite_pos.data.source.local.room.OrderProductVariantsDao
-import com.socialite.solite_pos.data.source.local.room.VariantOptionsDao
+import com.socialite.solite_pos.database.AppDatabase
+import com.socialite.solite_pos.database.dao.OrderDetailsDao
+import com.socialite.solite_pos.database.dao.OrderProductVariantsDao
+import com.socialite.solite_pos.database.dao.VariantOptionsDao
 import com.socialite.solite_pos.data.repository.OrderProductVariantsRepository
 import com.socialite.solite_pos.data.repository.SyncRepository
 import com.socialite.solite_pos.utils.tools.UpdateSynchronizations
