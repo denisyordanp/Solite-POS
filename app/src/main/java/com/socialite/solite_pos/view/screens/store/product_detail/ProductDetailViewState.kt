@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.store.product_detail
 
-import com.socialite.data.schema.room.new_master.Category
+import com.socialite.solite_pos.data.schema.Category
 
 data class ProductDetailViewState(
     val categories: List<Category>,
