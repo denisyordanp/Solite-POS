@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# TODO: Add response pro guard
+-keep class com.socialite.data.schema.response.** { *; }
