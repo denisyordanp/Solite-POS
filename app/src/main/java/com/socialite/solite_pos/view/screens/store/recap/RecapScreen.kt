@@ -33,7 +33,7 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.data.schema.helper.MenuOrderAmount
 import com.socialite.solite_pos.data.schema.helper.RecapData
-import com.socialite.data.schema.room.new_master.Store
+import com.socialite.solite_pos.data.schema.Store
 import com.socialite.solite_pos.utils.config.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter

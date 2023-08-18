@@ -43,20 +43,6 @@ data class Promo(
 
     fun isNewPromo() = id == ID_ADD
 
-    fun isManualInput() = isCash && value == null
-
-    fun calculatePromo(total: Long, manualInput: Long?): Long {
-        return if (isCash) {
-            if (isManualInput()) {
-                manualInput ?: 0L
-            } else {
-                value?.toLong() ?: 0L
-            }
-        } else {
-            ((value!!.toFloat() / 100) * total).toLong()
-        }
-    }
-
     fun asNewPromo() = this.copy(
         id = UUID.randomUUID().toString()
     )
