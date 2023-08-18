@@ -10,6 +10,7 @@ import com.socialite.solite_pos.data.domain.GetProductWithCategories
 import com.socialite.solite_pos.data.domain.GetProductWithVariantOptions
 import com.socialite.solite_pos.data.domain.GetRecapData
 import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
+import com.socialite.solite_pos.data.domain.IsShouldSelectStore
 import com.socialite.solite_pos.data.domain.LoginUser
 import com.socialite.solite_pos.data.domain.MigrateToUUID
 import com.socialite.solite_pos.data.domain.NewOrder
@@ -28,6 +29,7 @@ import com.socialite.solite_pos.data.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.solite_pos.data.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.solite_pos.data.domain.impl.GetRecapDataImpl
 import com.socialite.solite_pos.data.domain.impl.GetVariantsWithOptionsImpl
+import com.socialite.solite_pos.data.domain.impl.IsShouldSelectStoreImpl
 import com.socialite.solite_pos.data.domain.impl.LoginUserImpl
 import com.socialite.solite_pos.data.domain.impl.MigrateToUUIDImpl
 import com.socialite.solite_pos.data.domain.impl.NewOrderImpl
@@ -134,4 +136,9 @@ abstract class DomainModule {
     abstract fun bindRegisterUser(
         registerUser: RegisterUserImpl
     ): RegisterUser
+
+    @Binds
+    abstract fun bindIsShouldSelectStore(
+        isShouldSelectStoreImpl: IsShouldSelectStoreImpl
+    ): IsShouldSelectStore
 }
