@@ -9,6 +9,8 @@ import com.socialite.data.schema.room.new_bridge.OrderPromo
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Payment
 import com.socialite.data.schema.room.new_master.Promo
+import com.socialite.solite_pos.data.schema.Promo as UiPromo
+import com.socialite.solite_pos.data.schema.Payment as UiPayment
 import com.socialite.data.repository.PaymentsRepository
 import com.socialite.data.repository.PromosRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
@@ -38,8 +40,8 @@ class OrderPaymentViewModel @Inject constructor(
                 promosRepository.getPromos(Promo.filter(Promo.Status.ACTIVE))
             ) { payments, promos ->
                 _viewState.value.copy(
-                    promos = promos,
-                    payments = payments
+                    promos = promos.map { UiPromo.fromData(it) },
+                    payments = payments.map { UiPayment.fromData(it) }
                 )
             }.collect(_viewState)
         }
@@ -79,7 +81,7 @@ class OrderPaymentViewModel @Inject constructor(
         }
     }
 
-    fun payOrder(order: Order, payment: Payment, pay: Long, promo: Promo?, totalPromo: Long?) {
+    fun payOrder(order: Order, payment: UiPayment, pay: Long, promo: UiPromo?, totalPromo: Long?) {
         viewModelScope.launch {
             val newPromo = if (promo != null && totalPromo != null) {
                 OrderPromo.newPromo(
