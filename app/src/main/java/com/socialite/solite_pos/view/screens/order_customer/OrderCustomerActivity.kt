@@ -41,6 +41,11 @@ class OrderCustomerActivity : SoliteActivity() {
 
     private val viewModel: OrderCustomerViewModel by viewModels()
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkShouldSelectStore()
+    }
+
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     @ExperimentalComposeUiApi
