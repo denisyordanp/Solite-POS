@@ -114,26 +114,8 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
-    // Database
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    kapt("org.xerial:sqlite-jdbc:$sqliteJdbc")
-    kapt("androidx.room:room-compiler:$roomVersion")
-
     // Utils
     implementation("pub.devrel:easypermissions:$easyPermissionVersion")
-    implementation("androidx.security:security-crypto-ktx:$securityCryptoVersion")
-
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-config-ktx")
-
-    // Network
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpLoggingVersion")
 
     // Play In App Update
     implementation("com.google.android.play:app-update:$googlePlayVersion")
