@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:69502937231:android:60fa66fcd6fef8775468fa",
+        "mobilesdk_app_id": "1:69502937231:android:2f916324f6d8277f5468fa",
         "android_client_info": {
-          "package_name": "com.socialite.solite_pos"
+          "package_name": "com.socialite.solite_pos.debug"
         }
       },
       "oauth_client": [

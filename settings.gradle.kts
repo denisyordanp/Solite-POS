@@ -9,4 +9,4 @@ pluginManagement {
 
 rootProject.name = "Solite-POS"
 include("app")
-include(":data")
+include("data")

@@ -3,8 +3,8 @@ package com.socialite.data.repository.impl
 import com.socialite.data.di.NonAuthorizationService
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.schema.response.TokenResponse
-import com.socialite.data.network.helper.ApiResponse
-import com.socialite.data.network.helper.ResponseHandler.handleErrorMessage
+import com.socialite.data.schema.helper.ResponseHandler.handleErrorMessage
+import com.socialite.data.schema.response.helper.ApiResponse
 import com.socialite.data.repository.AccountRepository
 import javax.inject.Inject
 
@@ -32,7 +32,9 @@ class AccountRepositoryImpl @Inject constructor(
     }
 
     private fun ApiResponse<TokenResponse>.getTokenOrError(): String {
-        check(this.error.isNullOrEmpty())
+        check(this.error.isNullOrEmpty()) {
+            this.error ?: ""
+        }
 
         val token = this.data?.token
         check(!token.isNullOrEmpty()) {
