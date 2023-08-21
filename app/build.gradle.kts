@@ -9,15 +9,15 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = AppConfig.compileSdk
     namespace = "com.socialite.solite_pos"
 
     defaultConfig {
         applicationId = "com.socialite.solite_pos"
-        minSdk = 23
-        targetSdk = 33
-        versionCode = 40
-        versionName = "3.3.5"
+        minSdk = AppConfig.minSdk
+        targetSdk = AppConfig.targetSdk
+        versionCode = Versions.getVersionCode()
+        versionName = Versions.getVersionName()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -37,16 +37,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = AppConfig.jvmTarget
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.0"
+        kotlinCompilerExtensionVersion = AppConfig.kotlinCompilerExtensionVersion
     }
 	buildFeatures{
 		viewBinding = true
         compose = true
 	}
-    buildToolsVersion = "30.0.3"
+    buildToolsVersion = AppConfig.buildToolsVersion
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -66,55 +66,55 @@ dependencies {
     implementation(project(":data"))
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("androidx.core:core-ktx:$kotlinCoreVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion")
+    implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
 
     // UI
-    implementation("com.google.android.material:material:$materialVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.appcompat:appcompat:$appCompatVersion")
-    implementation("androidx.recyclerview:recyclerview:$recycleViewVersion")
-    implementation("androidx.cardview:cardview:$cardViewVersion")
-    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionVersion")
+    implementation("com.google.android.material:material:${Depedencies.materialVersion}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Depedencies.lifecycleVersion}")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Depedencies.lifecycleVersion}")
+    implementation("androidx.appcompat:appcompat:${Depedencies.appCompatVersion}")
+    implementation("androidx.recyclerview:recyclerview:${Depedencies.recycleViewVersion}")
+    implementation("androidx.cardview:cardview:${Depedencies.cardViewVersion}")
+    implementation("androidx.lifecycle:lifecycle-extensions:${Depedencies.lifecycleExtensionVersion}")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    implementation(platform("androidx.compose:compose-bom:${Depedencies.composeBomVersion}"))
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material:material")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Depedencies.lifecycleVersion}")
 
-    implementation("androidx.activity:activity-compose:$activityComposeVersion")
-    implementation("androidx.constraintlayout:constraintlayout-compose:$constraintComposeVersion")
-    implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
-    implementation("com.google.accompanist:accompanist-pager:$accompanistPagerVersion")
-    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistPagerVersion")
-    implementation("com.google.accompanist:accompanist-insets:$accompanistPagerVersion")
+    implementation("androidx.activity:activity-compose:${Depedencies.activityComposeVersion}")
+    implementation("androidx.constraintlayout:constraintlayout-compose:${Depedencies.constraintComposeVersion}")
+    implementation("androidx.navigation:navigation-compose:${Depedencies.navigationComposeVersion}")
+    implementation("com.google.accompanist:accompanist-pager:${Depedencies.accompanistPagerVersion}")
+    implementation("com.google.accompanist:accompanist-pager-indicators:${Depedencies.accompanistPagerVersion}")
+    implementation("com.google.accompanist:accompanist-insets:${Depedencies.accompanistPagerVersion}")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
+    implementation(platform("com.google.firebase:firebase-bom:${Depedencies.firebaseBomVersion}"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")
+    implementation("androidx.hilt:hilt-navigation-compose:${Depedencies.hiltNavigationComposeVersion}")
+    kapt("com.google.dagger:hilt-compiler:${Depedencies.hiltVersion}")
 
     // Utils
-    implementation("pub.devrel:easypermissions:$easyPermissionVersion")
+    implementation("pub.devrel:easypermissions:${Depedencies.easyPermissionVersion}")
 
     // Play In App Update
-    implementation("com.google.android.play:app-update:$googlePlayVersion")
-    implementation("com.google.android.play:app-update-ktx:$googlePlayVersion")
+    implementation("com.google.android.play:app-update:${Depedencies.googlePlayVersion}")
+    implementation("com.google.android.play:app-update-ktx:${Depedencies.googlePlayVersion}")
 
     // Test
-    testImplementation("junit:junit:$junitVersion")
-    androidTestImplementation("androidx.test.ext:junit:$junitExtVersion")
-    androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
+    testImplementation("junit:junit:${Depedencies.junitVersion}")
+    androidTestImplementation("androidx.test.ext:junit:${Depedencies.junitExtVersion}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Depedencies.espressoVersion}")
 }
 
 kapt {

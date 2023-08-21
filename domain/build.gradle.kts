@@ -31,7 +31,6 @@ android {
 }
 
 dependencies {
-    api(project(":data"))
 
     implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")

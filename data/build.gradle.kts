@@ -7,11 +7,11 @@ plugins {
 
 android {
     namespace = "com.socialite.data"
-    compileSdk = 33
+    compileSdk = AppConfig.compileSdk
 
     defaultConfig {
-        minSdk = 23
-        targetSdk = 33
+        minSdk = AppConfig.minSdk
+        targetSdk = AppConfig.targetSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -32,41 +32,40 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = AppConfig.jvmTarget
     }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:$kotlinCoreVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion")
+    implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")
+    kapt("com.google.dagger:hilt-compiler:${Depedencies.hiltVersion}")
 
     // Network
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpLoggingVersion")
+    implementation("com.squareup.retrofit2:retrofit:${Depedencies.retrofitVersion}")
+    implementation("com.squareup.retrofit2:converter-gson:${Depedencies.retrofitVersion}")
+    implementation("com.squareup.okhttp3:logging-interceptor:${Depedencies.okhttpLoggingVersion}")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
+    implementation(platform("com.google.firebase:firebase-bom:${Depedencies.firebaseBomVersion}"))
     implementation("com.google.firebase:firebase-config-ktx")
 
     // Database
-    api("androidx.room:room-runtime:$roomVersion")
-    api("androidx.room:room-ktx:$roomVersion")
-    kapt("org.xerial:sqlite-jdbc:$sqliteJdbc")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    api("androidx.room:room-runtime:${Depedencies.roomVersion}")
+    api("androidx.room:room-ktx:${Depedencies.roomVersion}")
+    kapt("org.xerial:sqlite-jdbc:${Depedencies.sqliteJdbc}")
+    kapt("androidx.room:room-compiler:${Depedencies.roomVersion}")
 
     // Preferences
-    implementation("androidx.security:security-crypto-ktx:$securityCryptoVersion")
-    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+    implementation("androidx.security:security-crypto-ktx:${Depedencies.securityCryptoVersion}")
+    implementation("androidx.datastore:datastore-preferences:${Depedencies.dataStoreVersion}")
 
     // Test
-    testImplementation("junit:junit:$junitVersion")
-    androidTestImplementation("androidx.test.ext:junit:$junitExtVersion")
-    androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
+    testImplementation("junit:junit:${Depedencies.junitVersion}")
+    androidTestImplementation("androidx.test.ext:junit:${Depedencies.junitExtVersion}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Depedencies.espressoVersion}")
 }
