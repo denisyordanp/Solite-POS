@@ -3,7 +3,7 @@ package com.socialite.data.network
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.socialite.solite_pos.data.BuildConfig
+import com.socialite.data.BuildConfig
 
 object NetworkConfig {
 
