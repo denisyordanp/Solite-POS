@@ -53,13 +53,11 @@ dependencies {
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
 
     // Database
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    api("androidx.room:room-runtime:$roomVersion")
+    api("androidx.room:room-ktx:$roomVersion")
     kapt("org.xerial:sqlite-jdbc:$sqliteJdbc")
     kapt("androidx.room:room-compiler:$roomVersion")
 

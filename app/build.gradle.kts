@@ -27,7 +27,6 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -94,6 +93,11 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:$accompanistPagerVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistPagerVersion")
     implementation("com.google.accompanist:accompanist-insets:$accompanistPagerVersion")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:$hiltVersion")
