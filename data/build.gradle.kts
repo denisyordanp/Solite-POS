@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.denisyordanp.data"
+    namespace = "com.socialite.solite_pos.data"
     compileSdk = 33
 
     defaultConfig {
@@ -14,7 +14,6 @@ android {
         targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -26,10 +25,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
         }
     }
     compileOptions {
@@ -43,7 +38,8 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.core:core-ktx:$kotlinCoreVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:$hiltVersion")
@@ -71,7 +67,8 @@ dependencies {
     implementation("androidx.security:security-crypto-ktx:$securityCryptoVersion")
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Test
+    testImplementation("junit:junit:$junitVersion")
+    androidTestImplementation("androidx.test.ext:junit:$junitExtVersion")
+    androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
 }

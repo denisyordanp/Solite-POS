@@ -20,18 +20,17 @@ android {
         versionName = "3.3.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
-            }
-        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
+        }
+        debug {
+            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
@@ -65,8 +64,9 @@ sonarqube {
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(project(":data"))
+
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("androidx.core:core-ktx:$kotlinCoreVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion")
 
@@ -78,7 +78,6 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:$recycleViewVersion")
     implementation("androidx.cardview:cardview:$cardViewVersion")
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionVersion")
-    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
     // Compose
     implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))

@@ -1,6 +1,9 @@
 package com.socialite.data.network
 
-import com.denisyordanp.data.BuildConfig
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.socialite.solite_pos.data.BuildConfig
 
 object NetworkConfig {
 
@@ -10,4 +13,8 @@ object NetworkConfig {
         "https://api-solite-develop.denisyordanp.com/" else "https://api-solite-release.denisyordanp.com/"
 
     fun timeout(): Long = 60
+
+    fun gson(): Gson = GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .create()
 }
