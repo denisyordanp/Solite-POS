@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.socialite.solite_pos.data"
+    namespace = "com.socialite.data"
     compileSdk = 33
 
     defaultConfig {
