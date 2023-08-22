@@ -1,8 +1,6 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
-import com.socialite.solite_pos.data.domain.NewOrder
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
+import com.socialite.domain.domain.NewOrder
 import com.socialite.data.schema.room.helper.OrderData
 import com.socialite.data.schema.room.new_bridge.OrderDetail
 import com.socialite.data.schema.room.new_bridge.OrderProductVariant
@@ -14,7 +12,9 @@ import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.StoreRepository
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.helper.DateUtils
+import com.socialite.domain.schema.helper.OrderWithProduct
+import com.socialite.domain.schema.helper.ProductOrderDetail
 import javax.inject.Inject
 
 class NewOrderImpl @Inject constructor(

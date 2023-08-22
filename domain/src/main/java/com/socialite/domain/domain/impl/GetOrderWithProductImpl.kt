@@ -1,10 +1,10 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
-import com.socialite.solite_pos.data.domain.GetOrderWithProduct
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
+import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
-import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
+import com.socialite.domain.helper.ProductOrderDetailConverter
+import com.socialite.domain.schema.helper.OrderWithProduct
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

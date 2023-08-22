@@ -39,8 +39,8 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
-import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
-import com.socialite.solite_pos.data.schema.Category
+import com.socialite.domain.schema.helper.VariantWithOptions
+import com.socialite.solite_pos.schema.Category
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation

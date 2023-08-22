@@ -1,8 +1,8 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
 import com.socialite.data.di.AuthorizationService
 import com.socialite.data.network.SoliteServices
-import com.socialite.solite_pos.data.domain.Synchronize
+import com.socialite.domain.domain.Synchronize
 import com.socialite.data.schema.response.SynchronizeParamItem
 import com.socialite.data.schema.response.SynchronizeParams
 import com.socialite.data.schema.response.SynchronizeResponse

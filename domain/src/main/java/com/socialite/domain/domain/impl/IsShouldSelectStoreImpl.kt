@@ -1,7 +1,7 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
-import com.socialite.solite_pos.data.domain.GetProductWithCategories
-import com.socialite.solite_pos.data.domain.IsShouldSelectStore
+import com.socialite.domain.domain.GetProductWithCategories
+import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
 import kotlinx.coroutines.flow.Flow

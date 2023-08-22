@@ -1,13 +1,13 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
-import com.socialite.solite_pos.data.domain.GetOrdersMenuWithOrders
-import com.socialite.solite_pos.data.schema.helper.OrderMenuWithOrders
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
+import com.socialite.domain.domain.GetOrdersMenuWithOrders
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
-import com.socialite.solite_pos.utils.tools.ProductOrderDetailConverter
-import com.socialite.solite_pos.utils.tools.helper.ReportParameter
-import com.socialite.solite_pos.view.ui.OrderMenus
+import com.socialite.domain.helper.ProductOrderDetailConverter
+import com.socialite.domain.menu.OrderMenus
+import com.socialite.domain.schema.ReportParameter
+import com.socialite.domain.schema.helper.OrderMenuWithOrders
+import com.socialite.domain.schema.helper.OrderWithProduct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf

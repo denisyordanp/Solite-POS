@@ -1,6 +1,6 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
-import com.socialite.solite_pos.data.domain.NewOutcome
+import com.socialite.domain.domain.NewOutcome
 import com.socialite.data.schema.room.new_master.Outcome
 import com.socialite.data.repository.OutcomesRepository
 import com.socialite.data.repository.SettingRepository

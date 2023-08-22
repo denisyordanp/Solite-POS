@@ -1,9 +1,9 @@
 package com.socialite.solite_pos.view.screens.store.recap
 
-import com.socialite.solite_pos.data.schema.helper.MenuOrderAmount
-import com.socialite.solite_pos.data.schema.helper.RecapData
-import com.socialite.solite_pos.data.schema.Store
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.schema.helper.RecapData
+import com.socialite.solite_pos.schema.Store
+import com.socialite.domain.helper.DateUtils
+import com.socialite.solite_pos.schema.MenuOrderAmount
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 
 data class RecapViewState(

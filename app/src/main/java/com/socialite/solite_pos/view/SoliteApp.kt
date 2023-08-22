@@ -7,7 +7,7 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.socialite.solite_pos.BuildConfig
 import com.socialite.data.repository.SettingRepository
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.helper.DateUtils
 import dagger.hilt.android.HiltAndroidApp
 import java.util.Locale
 import javax.inject.Inject

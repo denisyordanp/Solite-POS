@@ -1,6 +1,6 @@
-package com.socialite.solite_pos.data.schema.helper
+package com.socialite.domain.schema.helper
 
-import com.socialite.solite_pos.data.schema.Outcome
+import com.socialite.domain.schema.Outcome
 
 data class RecapData(
     val incomes: List<Income>,

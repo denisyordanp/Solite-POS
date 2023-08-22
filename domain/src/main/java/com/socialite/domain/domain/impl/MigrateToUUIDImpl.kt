@@ -1,6 +1,6 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
-import com.socialite.solite_pos.data.domain.MigrateToUUID
+import com.socialite.domain.domain.MigrateToUUID
 import com.socialite.data.repository.CategoriesRepository
 import com.socialite.data.repository.CustomersRepository
 import com.socialite.data.repository.OrderDetailsRepository

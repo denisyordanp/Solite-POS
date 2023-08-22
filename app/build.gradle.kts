@@ -63,7 +63,7 @@ sonarqube {
 }
 
 dependencies {
-    implementation(project(":data"))
+    implementation(project(":domain"))
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")

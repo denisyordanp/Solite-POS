@@ -1,10 +1,10 @@
-package com.socialite.solite_pos.data.domain.impl
+package com.socialite.domain.domain.impl
 
-import com.socialite.solite_pos.data.domain.GetProductWithVariantOptions
-import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
+import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.data.schema.room.helper.VariantProductWithOption
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
+import com.socialite.domain.schema.helper.VariantWithOptions
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 

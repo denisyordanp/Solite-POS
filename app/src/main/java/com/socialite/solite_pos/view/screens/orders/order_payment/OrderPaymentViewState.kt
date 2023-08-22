@@ -1,8 +1,8 @@
 package com.socialite.solite_pos.view.screens.orders.order_payment
 
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
-import com.socialite.solite_pos.data.schema.Promo
-import com.socialite.solite_pos.data.schema.Payment
+import com.socialite.domain.schema.helper.OrderWithProduct
+import com.socialite.solite_pos.schema.Promo
+import com.socialite.solite_pos.schema.Payment
 
 data class OrderPaymentViewState(
     val promos: List<Promo>,

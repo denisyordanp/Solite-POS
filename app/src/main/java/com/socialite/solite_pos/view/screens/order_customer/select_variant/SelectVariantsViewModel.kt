@@ -2,9 +2,9 @@ package com.socialite.solite_pos.view.screens.order_customer.select_variant
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetProductWithVariantOptions
+import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.data.schema.room.new_master.VariantOption
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
+import com.socialite.domain.schema.helper.ProductOrderDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

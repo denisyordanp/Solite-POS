@@ -3,9 +3,10 @@ package com.socialite.solite_pos.utils.tools.helper
 import android.os.Bundle
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.helper.DateUtils
 import java.io.Serializable
 import com.socialite.data.schema.helper.ReportParameter as DataReport
+import com.socialite.domain.schema.ReportParameter as DomainReport
 
 data class ReportParameter(
     val start: String,
@@ -15,6 +16,12 @@ data class ReportParameter(
 
     fun toDataReport(): DataReport {
         return DataReport(
+            start, end, storeId
+        )
+    }
+
+    fun toDomainReport(): DomainReport {
+        return DomainReport(
             start, end, storeId
         )
     }
