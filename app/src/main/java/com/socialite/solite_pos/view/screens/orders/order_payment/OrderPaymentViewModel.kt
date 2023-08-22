@@ -2,15 +2,15 @@ package com.socialite.solite_pos.view.screens.orders.order_payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetOrderWithProduct
-import com.socialite.solite_pos.data.domain.PayOrder
+import com.socialite.domain.domain.GetOrderWithProduct
+import com.socialite.domain.domain.PayOrder
 import com.socialite.data.schema.room.new_bridge.OrderPayment
 import com.socialite.data.schema.room.new_bridge.OrderPromo
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Payment
 import com.socialite.data.schema.room.new_master.Promo
-import com.socialite.solite_pos.data.schema.Promo as UiPromo
-import com.socialite.solite_pos.data.schema.Payment as UiPayment
+import com.socialite.solite_pos.schema.Promo as UiPromo
+import com.socialite.solite_pos.schema.Payment as UiPayment
 import com.socialite.data.repository.PaymentsRepository
 import com.socialite.data.repository.PromosRepository
 import com.socialite.solite_pos.utils.config.CashAmounts
@@ -40,8 +40,8 @@ class OrderPaymentViewModel @Inject constructor(
                 promosRepository.getPromos(Promo.filter(Promo.Status.ACTIVE))
             ) { payments, promos ->
                 _viewState.value.copy(
-                    promos = promos.map { UiPromo.fromData(it) },
-                    payments = payments.map { UiPayment.fromData(it) }
+                    promos = promos.map { com.socialite.solite_pos.schema.Promo.fromData(it) },
+                    payments = payments.map { com.socialite.solite_pos.schema.Payment.fromData(it) }
                 )
             }.collect(_viewState)
         }

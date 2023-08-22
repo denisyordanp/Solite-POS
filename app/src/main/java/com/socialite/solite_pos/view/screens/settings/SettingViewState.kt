@@ -1,6 +1,7 @@
 package com.socialite.solite_pos.view.screens.settings
 
-import com.socialite.solite_pos.data.schema.helper.GeneralMenuBadge
+import com.socialite.solite_pos.schema.GeneralMenuBadge
+
 
 data class SettingViewState(
     val isDarkMode: Boolean,

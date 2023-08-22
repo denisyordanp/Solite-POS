@@ -22,7 +22,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
+import com.socialite.domain.schema.helper.ProductOrderDetail
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.screens.order_customer.select_customer.SelectCustomersScreen
 import com.socialite.solite_pos.view.screens.order_customer.select_items.SelectItemsScreen

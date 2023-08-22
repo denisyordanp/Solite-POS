@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.store.variant_product
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
+import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.data.schema.room.new_bridge.VariantProduct
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository

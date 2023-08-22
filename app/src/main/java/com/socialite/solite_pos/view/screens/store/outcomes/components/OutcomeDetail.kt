@@ -27,7 +27,7 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.data.schema.room.new_master.Outcome
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 
 @Composable

@@ -2,7 +2,8 @@ package com.socialite.solite_pos.view.screens.store
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetOrdersGeneralMenuBadge
+import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
+import com.socialite.solite_pos.schema.GeneralMenuBadge
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +21,9 @@ class StoreViewModel @Inject constructor(
 
     fun loadBadges(date: String) {
         viewModelScope.launch {
-            getOrdersGeneralMenuBadge(date = date)
+            getOrdersGeneralMenuBadge(date = date).map { menus ->
+                menus.map { GeneralMenuBadge.fromDomain(it) }
+            }
                 .map {
                     _viewState.value.copy(
                         badges = it

@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.view.screens.order_customer.select_variant
 
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
+import com.socialite.domain.schema.helper.ProductOrderDetail
+import com.socialite.domain.schema.helper.VariantWithOptions
 
 data class SelectVariantsViewState(
     val selectedProductVariantOptions: List<VariantWithOptions>?,

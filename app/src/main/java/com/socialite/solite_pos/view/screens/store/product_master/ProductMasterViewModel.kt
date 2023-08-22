@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.store.product_master
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetCategoryProductVariantCount
+import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.data.repository.ProductsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
