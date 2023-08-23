@@ -117,9 +117,6 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:${Depedencies.hiltNavigationComposeVersion}")
     kapt("com.google.dagger:hilt-compiler:${Depedencies.hiltVersion}")
 
-    // Utils
-    implementation("pub.devrel:easypermissions:${Depedencies.easyPermissionVersion}")
-
     // Play In App Update
     implementation("com.google.android.play:app-update:${Depedencies.googlePlayVersion}")
     implementation("com.google.android.play:app-update-ktx:${Depedencies.googlePlayVersion}")
