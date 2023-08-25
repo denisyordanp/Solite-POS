@@ -3,10 +3,12 @@ package com.socialite.solite_pos.view.screens.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
+import com.socialite.domain.domain.IsDarkModeActive
+import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.MigrateToUUID
+import com.socialite.domain.domain.SetDarkMode
+import com.socialite.domain.domain.SetNewToken
 import com.socialite.domain.domain.Synchronize
-import com.socialite.data.repository.RemoteConfigRepository
-import com.socialite.data.repository.SettingRepository
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +24,10 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     private val synchronize: Synchronize,
     private val migrateToUUID: MigrateToUUID,
-    private val settingRepository: SettingRepository,
-    private val remoteConfigRepository: RemoteConfigRepository,
+    private val setNewToken: SetNewToken,
+    private val setDarkMode: SetDarkMode,
+    private val isDarkModeActive: IsDarkModeActive,
+    private val isServerActive: IsServerActive,
     private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
 ) : ViewModel() {
 
@@ -32,14 +36,13 @@ class SettingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val isServerActive = remoteConfigRepository.isServerActive()
             _viewState.emit(
                 _viewState.value.copy(
-                    isServerActive = isServerActive
+                    isServerActive = isServerActive()
                 )
             )
 
-            settingRepository.getIsDarkModeActive()
+            isDarkModeActive()
                 .map {
                     _viewState.value.copy(
                         isDarkMode = it
@@ -65,7 +68,7 @@ class SettingViewModel @Inject constructor(
 
     fun setDarkMode(isActive: Boolean) {
         viewModelScope.launch {
-            settingRepository.setDarkMode(isActive)
+            setDarkMode.invoke(isActive)
         }
     }
 
@@ -91,7 +94,7 @@ class SettingViewModel @Inject constructor(
     }
 
     fun logout() {
-        settingRepository.insertToken("")
+        setNewToken("")
     }
 
     fun resetSynchronizeStatus() {

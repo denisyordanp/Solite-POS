@@ -12,6 +12,7 @@ import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetVariantsWithOptions
+import com.socialite.domain.domain.IsDarkModeActive
 import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.domain.domain.LoginUser
@@ -20,7 +21,9 @@ import com.socialite.domain.domain.NewOrder
 import com.socialite.domain.domain.NewOutcome
 import com.socialite.domain.domain.PayOrder
 import com.socialite.domain.domain.RegisterUser
+import com.socialite.domain.domain.SetDarkMode
 import com.socialite.domain.domain.SetNewPrinterAddress
+import com.socialite.domain.domain.SetNewToken
 import com.socialite.domain.domain.Synchronize
 import com.socialite.domain.domain.UpdateOrderProducts
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
@@ -35,6 +38,7 @@ import com.socialite.domain.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetRecapDataImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
+import com.socialite.domain.domain.impl.IsDarkModeActiveImpl
 import com.socialite.domain.domain.impl.IsServerActiveImpl
 import com.socialite.domain.domain.impl.IsShouldSelectStoreImpl
 import com.socialite.domain.domain.impl.LoginUserImpl
@@ -43,7 +47,9 @@ import com.socialite.domain.domain.impl.NewOrderImpl
 import com.socialite.domain.domain.impl.NewOutcomeImpl
 import com.socialite.domain.domain.impl.PayOrderImpl
 import com.socialite.domain.domain.impl.RegisterUserImpl
+import com.socialite.domain.domain.impl.SetDarkModeImpl
 import com.socialite.domain.domain.impl.SetNewPrinterAddressImpl
+import com.socialite.domain.domain.impl.SetNewTokenImpl
 import com.socialite.domain.domain.impl.SynchronizeImpl
 import com.socialite.domain.domain.impl.UpdateOrderProductsImpl
 import dagger.Binds
@@ -169,4 +175,19 @@ abstract class DomainModule {
     abstract fun bindSetNewPrinterAddress(
         setNewPrinterAddressImpl: SetNewPrinterAddressImpl
     ): SetNewPrinterAddress
+
+    @Binds
+    abstract fun bindSetNewToken(
+        setNewTokenImpl: SetNewTokenImpl
+    ): SetNewToken
+
+    @Binds
+    abstract fun bindSetDarkMode(
+        setDarkModeImpl: SetDarkModeImpl
+    ): SetDarkMode
+
+    @Binds
+    abstract fun bindIsDarkModeActive(
+        isDarkModeActiveImpl: IsDarkModeActiveImpl
+    ): IsDarkModeActive
 }
