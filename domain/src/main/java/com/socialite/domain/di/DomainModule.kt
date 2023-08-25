@@ -2,6 +2,7 @@ package com.socialite.domain.di
 
 import com.socialite.domain.domain.FetchRemoteConfig
 import com.socialite.domain.domain.GetCategoryProductVariantCount
+import com.socialite.domain.domain.GetCustomers
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
@@ -17,6 +18,7 @@ import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.domain.domain.LoginUser
 import com.socialite.domain.domain.MigrateToUUID
+import com.socialite.domain.domain.NewCustomer
 import com.socialite.domain.domain.NewOrder
 import com.socialite.domain.domain.NewOutcome
 import com.socialite.domain.domain.PayOrder
@@ -28,6 +30,7 @@ import com.socialite.domain.domain.Synchronize
 import com.socialite.domain.domain.UpdateOrderProducts
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
+import com.socialite.domain.domain.impl.GetCustomersImpl
 import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.domain.domain.impl.GetOrderWithProductImpl
 import com.socialite.domain.domain.impl.GetOrdersGeneralMenuBadgeImpl
@@ -43,6 +46,7 @@ import com.socialite.domain.domain.impl.IsServerActiveImpl
 import com.socialite.domain.domain.impl.IsShouldSelectStoreImpl
 import com.socialite.domain.domain.impl.LoginUserImpl
 import com.socialite.domain.domain.impl.MigrateToUUIDImpl
+import com.socialite.domain.domain.impl.NewCustomerImpl
 import com.socialite.domain.domain.impl.NewOrderImpl
 import com.socialite.domain.domain.impl.NewOutcomeImpl
 import com.socialite.domain.domain.impl.PayOrderImpl
@@ -190,4 +194,14 @@ abstract class DomainModule {
     abstract fun bindIsDarkModeActive(
         isDarkModeActiveImpl: IsDarkModeActiveImpl
     ): IsDarkModeActive
+
+    @Binds
+    abstract fun bindNewCustomer(
+        newCustomerImpl: NewCustomerImpl
+    ): NewCustomer
+
+    @Binds
+    abstract fun bindGetCustomers(
+        getCustomersImpl: GetCustomersImpl
+    ): GetCustomers
 }
