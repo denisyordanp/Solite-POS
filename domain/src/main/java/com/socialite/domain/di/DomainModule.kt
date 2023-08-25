@@ -27,6 +27,7 @@ import com.socialite.domain.domain.SetDarkMode
 import com.socialite.domain.domain.SetNewPrinterAddress
 import com.socialite.domain.domain.SetNewToken
 import com.socialite.domain.domain.Synchronize
+import com.socialite.domain.domain.UpdateOrder
 import com.socialite.domain.domain.UpdateOrderProducts
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
@@ -55,6 +56,7 @@ import com.socialite.domain.domain.impl.SetDarkModeImpl
 import com.socialite.domain.domain.impl.SetNewPrinterAddressImpl
 import com.socialite.domain.domain.impl.SetNewTokenImpl
 import com.socialite.domain.domain.impl.SynchronizeImpl
+import com.socialite.domain.domain.impl.UpdateOrderImpl
 import com.socialite.domain.domain.impl.UpdateOrderProductsImpl
 import dagger.Binds
 import dagger.Module
@@ -204,4 +206,9 @@ abstract class DomainModule {
     abstract fun bindGetCustomers(
         getCustomersImpl: GetCustomersImpl
     ): GetCustomers
+
+    @Binds
+    abstract fun bindUpdateOrder(
+        updateOrderImpl: UpdateOrderImpl
+    ): UpdateOrder
 }
