@@ -1,5 +1,6 @@
 package com.socialite.domain.di
 
+import com.socialite.domain.domain.FetchRemoteConfig
 import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetOrderWithProduct
@@ -9,7 +10,9 @@ import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.domain.domain.GetProductWithCategories
 import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.domain.domain.GetRecapData
+import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetVariantsWithOptions
+import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.domain.domain.LoginUser
 import com.socialite.domain.domain.MigrateToUUID
@@ -19,6 +22,7 @@ import com.socialite.domain.domain.PayOrder
 import com.socialite.domain.domain.RegisterUser
 import com.socialite.domain.domain.Synchronize
 import com.socialite.domain.domain.UpdateOrderProducts
+import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.domain.domain.impl.GetOrderWithProductImpl
@@ -28,7 +32,9 @@ import com.socialite.domain.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.domain.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetRecapDataImpl
+import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
+import com.socialite.domain.domain.impl.IsServerActiveImpl
 import com.socialite.domain.domain.impl.IsShouldSelectStoreImpl
 import com.socialite.domain.domain.impl.LoginUserImpl
 import com.socialite.domain.domain.impl.MigrateToUUIDImpl
@@ -141,4 +147,19 @@ abstract class DomainModule {
     abstract fun bindIsShouldSelectStore(
         isShouldSelectStoreImpl: IsShouldSelectStoreImpl
     ): IsShouldSelectStore
+
+    @Binds
+    abstract fun bindGetToken(
+        getTokenImpl: GetTokenImpl
+    ): GetToken
+
+    @Binds
+    abstract fun bindFetchRemoteConfig(
+        fetchRemoteConfigImpl: FetchRemoteConfigImpl
+    ): FetchRemoteConfig
+
+    @Binds
+    abstract fun bindIsServerActive(
+        isServerActiveImpl: IsServerActiveImpl
+    ): IsServerActive
 }
