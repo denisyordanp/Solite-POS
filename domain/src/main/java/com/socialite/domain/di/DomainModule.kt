@@ -20,6 +20,7 @@ import com.socialite.domain.domain.NewOrder
 import com.socialite.domain.domain.NewOutcome
 import com.socialite.domain.domain.PayOrder
 import com.socialite.domain.domain.RegisterUser
+import com.socialite.domain.domain.SetNewPrinterAddress
 import com.socialite.domain.domain.Synchronize
 import com.socialite.domain.domain.UpdateOrderProducts
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
@@ -42,6 +43,7 @@ import com.socialite.domain.domain.impl.NewOrderImpl
 import com.socialite.domain.domain.impl.NewOutcomeImpl
 import com.socialite.domain.domain.impl.PayOrderImpl
 import com.socialite.domain.domain.impl.RegisterUserImpl
+import com.socialite.domain.domain.impl.SetNewPrinterAddressImpl
 import com.socialite.domain.domain.impl.SynchronizeImpl
 import com.socialite.domain.domain.impl.UpdateOrderProductsImpl
 import dagger.Binds
@@ -162,4 +164,9 @@ abstract class DomainModule {
     abstract fun bindIsServerActive(
         isServerActiveImpl: IsServerActiveImpl
     ): IsServerActive
+
+    @Binds
+    abstract fun bindSetNewPrinterAddress(
+        setNewPrinterAddressImpl: SetNewPrinterAddressImpl
+    ): SetNewPrinterAddress
 }
