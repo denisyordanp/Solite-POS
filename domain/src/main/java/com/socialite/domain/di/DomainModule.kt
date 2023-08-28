@@ -3,6 +3,7 @@ package com.socialite.domain.di
 import com.socialite.domain.domain.AddNewCategory
 import com.socialite.domain.domain.AddNewPayment
 import com.socialite.domain.domain.AddNewProduct
+import com.socialite.domain.domain.AddNewPromo
 import com.socialite.domain.domain.FetchRemoteConfig
 import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetCategoryProductVariantCount
@@ -41,9 +42,11 @@ import com.socialite.domain.domain.UpdateOrder
 import com.socialite.domain.domain.UpdateOrderProducts
 import com.socialite.domain.domain.UpdatePayment
 import com.socialite.domain.domain.UpdateProduct
+import com.socialite.domain.domain.UpdatePromo
 import com.socialite.domain.domain.impl.AddNewCategoryImpl
 import com.socialite.domain.domain.impl.AddNewPaymentImpl
 import com.socialite.domain.domain.impl.AddNewProductImpl
+import com.socialite.domain.domain.impl.AddNewPromoImpl
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
 import com.socialite.domain.domain.impl.GetCategoriesImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
@@ -82,6 +85,7 @@ import com.socialite.domain.domain.impl.UpdateOrderImpl
 import com.socialite.domain.domain.impl.UpdateOrderProductsImpl
 import com.socialite.domain.domain.impl.UpdatePaymentImpl
 import com.socialite.domain.domain.impl.UpdateProductImpl
+import com.socialite.domain.domain.impl.UpdatePromoImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -295,4 +299,14 @@ abstract class DomainModule {
     abstract fun bindAddNewProduct(
         addNewProductImpl: AddNewProductImpl
     ): AddNewProduct
+
+    @Binds
+    abstract fun bindAddNewPromo(
+        addNewPromoImpl: AddNewPromoImpl
+    ): AddNewPromo
+
+    @Binds
+    abstract fun bindUpdatePromo(
+        updatePromoImpl: UpdatePromoImpl
+    ): UpdatePromo
 }
