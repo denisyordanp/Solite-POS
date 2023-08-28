@@ -7,9 +7,11 @@ import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
 import com.socialite.domain.domain.GetOrdersMenuWithOrders
+import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.domain.domain.GetProductWithCategories
 import com.socialite.domain.domain.GetProductWithVariantOptions
+import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetVariantsWithOptions
@@ -36,9 +38,11 @@ import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.domain.domain.impl.GetOrderWithProductImpl
 import com.socialite.domain.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.domain.domain.impl.GetOrdersMenuWithOrdersImpl
+import com.socialite.domain.domain.impl.GetPaymentsImpl
 import com.socialite.domain.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.domain.domain.impl.GetProductWithVariantOptionsImpl
+import com.socialite.domain.domain.impl.GetPromosImpl
 import com.socialite.domain.domain.impl.GetRecapDataImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
@@ -211,4 +215,14 @@ abstract class DomainModule {
     abstract fun bindUpdateOrder(
         updateOrderImpl: UpdateOrderImpl
     ): UpdateOrder
+
+    @Binds
+    abstract fun bindGetPromos(
+        getPromosImpl: GetPromosImpl
+    ): GetPromos
+
+    @Binds
+    abstract fun bindGetPayments(
+        getPaymentsImpl: GetPaymentsImpl
+    ): GetPayments
 }
