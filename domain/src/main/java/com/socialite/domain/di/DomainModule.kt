@@ -7,6 +7,7 @@ import com.socialite.domain.domain.AddNewPromo
 import com.socialite.domain.domain.AddNewStore
 import com.socialite.domain.domain.AddNewVariant
 import com.socialite.domain.domain.AddNewVariantOption
+import com.socialite.domain.domain.AddNewVariantProduct
 import com.socialite.domain.domain.FetchRemoteConfig
 import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetCategoryProductVariantCount
@@ -18,6 +19,7 @@ import com.socialite.domain.domain.GetOrdersMenuWithOrders
 import com.socialite.domain.domain.GetOutcomes
 import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.domain.GetPrinterDevice
+import com.socialite.domain.domain.GetProductById
 import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.domain.domain.GetProductWithCategories
 import com.socialite.domain.domain.GetProductWithCategoryById
@@ -27,6 +29,7 @@ import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetSelectedStore
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetToken
+import com.socialite.domain.domain.GetVariantsProductById
 import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.IsDarkModeActive
 import com.socialite.domain.domain.IsServerActive
@@ -38,6 +41,7 @@ import com.socialite.domain.domain.NewOrder
 import com.socialite.domain.domain.NewOutcome
 import com.socialite.domain.domain.PayOrder
 import com.socialite.domain.domain.RegisterUser
+import com.socialite.domain.domain.RemoveVariantProduct
 import com.socialite.domain.domain.SelectStore
 import com.socialite.domain.domain.SetDarkMode
 import com.socialite.domain.domain.SetNewPrinterAddress
@@ -59,6 +63,7 @@ import com.socialite.domain.domain.impl.AddNewPromoImpl
 import com.socialite.domain.domain.impl.AddNewStoreImpl
 import com.socialite.domain.domain.impl.AddNewVariantImpl
 import com.socialite.domain.domain.impl.AddNewVariantOptionImpl
+import com.socialite.domain.domain.impl.AddNewVariantProductImpl
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
 import com.socialite.domain.domain.impl.GetCategoriesImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
@@ -70,6 +75,7 @@ import com.socialite.domain.domain.impl.GetOrdersMenuWithOrdersImpl
 import com.socialite.domain.domain.impl.GetOutcomesImpl
 import com.socialite.domain.domain.impl.GetPaymentsImpl
 import com.socialite.domain.domain.impl.GetPrinterDeviceImpl
+import com.socialite.domain.domain.impl.GetProductByIdImpl
 import com.socialite.domain.domain.impl.GetProductVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetProductWithCategoriesImpl
 import com.socialite.domain.domain.impl.GetProductWithCategoryByIdImpl
@@ -79,6 +85,7 @@ import com.socialite.domain.domain.impl.GetRecapDataImpl
 import com.socialite.domain.domain.impl.GetSelectedStoreImpl
 import com.socialite.domain.domain.impl.GetStoresImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
+import com.socialite.domain.domain.impl.GetVariantsProductByIdImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
 import com.socialite.domain.domain.impl.IsDarkModeActiveImpl
 import com.socialite.domain.domain.impl.IsServerActiveImpl
@@ -90,6 +97,7 @@ import com.socialite.domain.domain.impl.NewOrderImpl
 import com.socialite.domain.domain.impl.NewOutcomeImpl
 import com.socialite.domain.domain.impl.PayOrderImpl
 import com.socialite.domain.domain.impl.RegisterUserImpl
+import com.socialite.domain.domain.impl.RemoveVariantProductImpl
 import com.socialite.domain.domain.impl.SelectStoreImpl
 import com.socialite.domain.domain.impl.SetDarkModeImpl
 import com.socialite.domain.domain.impl.SetNewPrinterAddressImpl
@@ -372,4 +380,24 @@ abstract class DomainModule {
     abstract fun bindUpdateVariantOption(
         updateVariantOptionImpl: UpdateVariantOptionImpl
     ): UpdateVariantOption
+
+    @Binds
+    abstract fun bindGetProductById(
+        getProductByIdImpl: GetProductByIdImpl
+    ): GetProductById
+
+    @Binds
+    abstract fun bindGetVariantsProductById(
+        getVariantsProductByIdImpl: GetVariantsProductByIdImpl
+    ): GetVariantsProductById
+
+    @Binds
+    abstract fun bindAddNewVariantProduct(
+        addNewVariantProductImpl: AddNewVariantProductImpl
+    ): AddNewVariantProduct
+
+    @Binds
+    abstract fun bindRemoveVariantProduct(
+        removeVariantProductImpl: RemoveVariantProductImpl
+    ): RemoveVariantProduct
 }
