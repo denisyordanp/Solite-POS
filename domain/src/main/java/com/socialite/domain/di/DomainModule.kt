@@ -1,6 +1,8 @@
 package com.socialite.domain.di
 
+import com.socialite.domain.domain.AddNewCategory
 import com.socialite.domain.domain.FetchRemoteConfig
+import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.domain.GetCustomers
 import com.socialite.domain.domain.GetOrderMenusWithAmount
@@ -30,9 +32,12 @@ import com.socialite.domain.domain.SetDarkMode
 import com.socialite.domain.domain.SetNewPrinterAddress
 import com.socialite.domain.domain.SetNewToken
 import com.socialite.domain.domain.Synchronize
+import com.socialite.domain.domain.UpdateCategory
 import com.socialite.domain.domain.UpdateOrder
 import com.socialite.domain.domain.UpdateOrderProducts
+import com.socialite.domain.domain.impl.AddNewCategoryImpl
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
+import com.socialite.domain.domain.impl.GetCategoriesImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.domain.domain.impl.GetCustomersImpl
 import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
@@ -62,6 +67,7 @@ import com.socialite.domain.domain.impl.SetDarkModeImpl
 import com.socialite.domain.domain.impl.SetNewPrinterAddressImpl
 import com.socialite.domain.domain.impl.SetNewTokenImpl
 import com.socialite.domain.domain.impl.SynchronizeImpl
+import com.socialite.domain.domain.impl.UpdateCategoryImpl
 import com.socialite.domain.domain.impl.UpdateOrderImpl
 import com.socialite.domain.domain.impl.UpdateOrderProductsImpl
 import dagger.Binds
@@ -232,4 +238,19 @@ abstract class DomainModule {
     abstract fun bindGetPrinterDevice(
         getPrinterDeviceImpl: GetPrinterDeviceImpl
     ): GetPrinterDevice
+
+    @Binds
+    abstract fun bindGetCategories(
+        getCategoriesImpl: GetCategoriesImpl
+    ): GetCategories
+
+    @Binds
+    abstract fun bindAddNewCategory(
+        addNewCategoryImpl: AddNewCategoryImpl
+    ): AddNewCategory
+
+    @Binds
+    abstract fun bindUpdateCategory(
+        updateCategoryImpl: UpdateCategoryImpl
+    ): UpdateCategory
 }
