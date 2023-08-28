@@ -2,11 +2,13 @@ package com.socialite.solite_pos.view.screens.store.product_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.data.schema.room.new_master.Category
 import com.socialite.data.schema.room.new_master.Product
-import com.socialite.data.repository.CategoriesRepository
-import com.socialite.data.repository.ProductsRepository
+import com.socialite.domain.domain.AddNewProduct
+import com.socialite.domain.domain.GetCategories
+import com.socialite.domain.domain.GetProductVariantOptions
+import com.socialite.domain.domain.GetProductWithCategoryById
+import com.socialite.domain.domain.UpdateProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,8 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
-    private val categoriesRepository: CategoriesRepository,
-    private val productsRepository: ProductsRepository,
+    private val getCategories: GetCategories,
+    private val updateProduct: UpdateProduct,
+    private val addNewProduct: AddNewProduct,
+    private val getProductWithCategoryById: GetProductWithCategoryById,
     private val getProductVariantOptions: GetProductVariantOptions
 ) : ViewModel() {
 
@@ -27,10 +31,14 @@ class ProductDetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            categoriesRepository.getCategories(Category.getFilter(Category.ALL))
-                .map {categories ->
+            getCategories(Category.getFilter(Category.ALL))
+                .map { categories ->
                     _viewState.value.copy(
-                        categories = categories.map { com.socialite.solite_pos.schema.Category.fromData(it) }
+                        categories = categories.map {
+                            com.socialite.solite_pos.schema.Category.fromData(
+                                it
+                            )
+                        }
                     )
                 }.collect(_viewState)
         }
@@ -38,7 +46,7 @@ class ProductDetailViewModel @Inject constructor(
 
     fun loadProduct(productId: String) {
         viewModelScope.launch {
-            productsRepository.getProductWithCategory(productId)
+            getProductWithCategoryById(productId)
                 .combine(getProductVariantOptions(productId)) { product, variants ->
                     product?.let {
                         ProductVariantOptions(
@@ -57,13 +65,13 @@ class ProductDetailViewModel @Inject constructor(
 
     fun updateProduct(data: Product) {
         viewModelScope.launch {
-            productsRepository.updateProduct(data)
+            updateProduct.invoke(data)
         }
     }
 
     fun insertProduct(data: Product) {
         viewModelScope.launch {
-            productsRepository.insertProduct(data)
+            addNewProduct(data)
         }
     }
 }
