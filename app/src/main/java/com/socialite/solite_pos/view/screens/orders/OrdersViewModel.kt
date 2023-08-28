@@ -7,7 +7,7 @@ import com.socialite.domain.domain.UpdateOrderProducts
 import com.socialite.domain.schema.helper.BucketOrder
 import com.socialite.domain.schema.helper.ProductOrderDetail
 import com.socialite.domain.schema.helper.findExisting
-import com.socialite.data.preference.SettingPreferences
+import com.socialite.domain.domain.GetPrinterDevice
 import com.socialite.domain.helper.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,13 +21,13 @@ import javax.inject.Inject
 class OrdersViewModel @Inject constructor(
     private val updateOrderProducts: UpdateOrderProducts,
     private val getOrderWithProduct: GetOrderWithProduct,
-    private val settingPreferences: SettingPreferences
+    private val getPrinterDevice: GetPrinterDevice,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(OrdersViewState.idle())
     val viewState = _viewState.asStateFlow()
 
-    val defaultPrinterAddress get() = settingPreferences.printerDevice
+    val defaultPrinterAddress get() = getPrinterDevice()
 
     fun setDefaultPage(page: Int) {
         viewModelScope.launch {
