@@ -9,6 +9,7 @@ import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
 import com.socialite.domain.domain.GetOrdersMenuWithOrders
+import com.socialite.domain.domain.GetOutcomes
 import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.domain.GetPrinterDevice
 import com.socialite.domain.domain.GetProductVariantOptions
@@ -44,6 +45,7 @@ import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.domain.domain.impl.GetOrderWithProductImpl
 import com.socialite.domain.domain.impl.GetOrdersGeneralMenuBadgeImpl
 import com.socialite.domain.domain.impl.GetOrdersMenuWithOrdersImpl
+import com.socialite.domain.domain.impl.GetOutcomesImpl
 import com.socialite.domain.domain.impl.GetPaymentsImpl
 import com.socialite.domain.domain.impl.GetPrinterDeviceImpl
 import com.socialite.domain.domain.impl.GetProductVariantOptionsImpl
@@ -253,4 +255,9 @@ abstract class DomainModule {
     abstract fun bindUpdateCategory(
         updateCategoryImpl: UpdateCategoryImpl
     ): UpdateCategory
+
+    @Binds
+    abstract fun bindGetOutcomes(
+        getOutcomesImpl: GetOutcomesImpl
+    ): GetOutcomes
 }
