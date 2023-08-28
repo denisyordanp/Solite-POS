@@ -21,6 +21,7 @@ import com.socialite.domain.domain.GetProductWithCategoryById
 import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.GetRecapData
+import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.IsDarkModeActive
@@ -64,6 +65,7 @@ import com.socialite.domain.domain.impl.GetProductWithCategoryByIdImpl
 import com.socialite.domain.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetPromosImpl
 import com.socialite.domain.domain.impl.GetRecapDataImpl
+import com.socialite.domain.domain.impl.GetStoresImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
 import com.socialite.domain.domain.impl.IsDarkModeActiveImpl
@@ -309,4 +311,9 @@ abstract class DomainModule {
     abstract fun bindUpdatePromo(
         updatePromoImpl: UpdatePromoImpl
     ): UpdatePromo
+
+    @Binds
+    abstract fun bindGetStores(
+        getStoresImpl: GetStoresImpl
+    ): GetStores
 }
