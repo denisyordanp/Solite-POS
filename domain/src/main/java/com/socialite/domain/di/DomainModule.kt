@@ -4,6 +4,7 @@ import com.socialite.domain.domain.AddNewCategory
 import com.socialite.domain.domain.AddNewPayment
 import com.socialite.domain.domain.AddNewProduct
 import com.socialite.domain.domain.AddNewPromo
+import com.socialite.domain.domain.AddNewStore
 import com.socialite.domain.domain.FetchRemoteConfig
 import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetCategoryProductVariantCount
@@ -21,6 +22,7 @@ import com.socialite.domain.domain.GetProductWithCategoryById
 import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.GetRecapData
+import com.socialite.domain.domain.GetSelectedStore
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetVariantsWithOptions
@@ -34,6 +36,7 @@ import com.socialite.domain.domain.NewOrder
 import com.socialite.domain.domain.NewOutcome
 import com.socialite.domain.domain.PayOrder
 import com.socialite.domain.domain.RegisterUser
+import com.socialite.domain.domain.SelectStore
 import com.socialite.domain.domain.SetDarkMode
 import com.socialite.domain.domain.SetNewPrinterAddress
 import com.socialite.domain.domain.SetNewToken
@@ -44,10 +47,12 @@ import com.socialite.domain.domain.UpdateOrderProducts
 import com.socialite.domain.domain.UpdatePayment
 import com.socialite.domain.domain.UpdateProduct
 import com.socialite.domain.domain.UpdatePromo
+import com.socialite.domain.domain.UpdateStore
 import com.socialite.domain.domain.impl.AddNewCategoryImpl
 import com.socialite.domain.domain.impl.AddNewPaymentImpl
 import com.socialite.domain.domain.impl.AddNewProductImpl
 import com.socialite.domain.domain.impl.AddNewPromoImpl
+import com.socialite.domain.domain.impl.AddNewStoreImpl
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
 import com.socialite.domain.domain.impl.GetCategoriesImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
@@ -65,6 +70,7 @@ import com.socialite.domain.domain.impl.GetProductWithCategoryByIdImpl
 import com.socialite.domain.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetPromosImpl
 import com.socialite.domain.domain.impl.GetRecapDataImpl
+import com.socialite.domain.domain.impl.GetSelectedStoreImpl
 import com.socialite.domain.domain.impl.GetStoresImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
@@ -78,6 +84,7 @@ import com.socialite.domain.domain.impl.NewOrderImpl
 import com.socialite.domain.domain.impl.NewOutcomeImpl
 import com.socialite.domain.domain.impl.PayOrderImpl
 import com.socialite.domain.domain.impl.RegisterUserImpl
+import com.socialite.domain.domain.impl.SelectStoreImpl
 import com.socialite.domain.domain.impl.SetDarkModeImpl
 import com.socialite.domain.domain.impl.SetNewPrinterAddressImpl
 import com.socialite.domain.domain.impl.SetNewTokenImpl
@@ -88,6 +95,7 @@ import com.socialite.domain.domain.impl.UpdateOrderProductsImpl
 import com.socialite.domain.domain.impl.UpdatePaymentImpl
 import com.socialite.domain.domain.impl.UpdateProductImpl
 import com.socialite.domain.domain.impl.UpdatePromoImpl
+import com.socialite.domain.domain.impl.UpdateStoreImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -316,4 +324,24 @@ abstract class DomainModule {
     abstract fun bindGetStores(
         getStoresImpl: GetStoresImpl
     ): GetStores
+
+    @Binds
+    abstract fun bindGetSelectedStore(
+        getSelectedStoreImpl: GetSelectedStoreImpl
+    ): GetSelectedStore
+
+    @Binds
+    abstract fun bindSelectStore(
+        selectStoreImpl: SelectStoreImpl
+    ): SelectStore
+
+    @Binds
+    abstract fun bindAddNewStore(
+        addNewStoreImpl: AddNewStoreImpl
+    ): AddNewStore
+
+    @Binds
+    abstract fun bindUpdateStore(
+        updateStoreImpl: UpdateStoreImpl
+    ): UpdateStore
 }
