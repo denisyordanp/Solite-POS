@@ -2,6 +2,7 @@ package com.socialite.solite_pos.network.helper
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.socialite.solite_pos.data.schema.response.ApiResponse
 import retrofit2.HttpException
 
 object ResponseHandler {

@@ -2,7 +2,7 @@ package com.socialite.solite_pos.data.repository.impl
 
 import com.socialite.solite_pos.network.SoliteServices
 import com.socialite.solite_pos.data.schema.response.TokenResponse
-import com.socialite.solite_pos.network.helper.ApiResponse
+import com.socialite.solite_pos.data.schema.response.ApiResponse
 import com.socialite.solite_pos.network.helper.ResponseHandler.handleErrorMessage
 import com.socialite.solite_pos.data.repository.AccountRepository
 import com.socialite.solite_pos.di.NonAuthorizationService

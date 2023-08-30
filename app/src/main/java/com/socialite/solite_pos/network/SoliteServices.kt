@@ -3,7 +3,7 @@ package com.socialite.solite_pos.network
 import com.socialite.solite_pos.data.schema.response.SynchronizeParams
 import com.socialite.solite_pos.data.schema.response.SynchronizeResponse
 import com.socialite.solite_pos.data.schema.response.TokenResponse
-import com.socialite.solite_pos.network.helper.ApiResponse
+import com.socialite.solite_pos.data.schema.response.ApiResponse
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
