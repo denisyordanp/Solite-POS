@@ -5,9 +5,9 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
-import com.socialite.solite_pos.BuildConfig
-import com.socialite.data.repository.SettingRepository
+import com.socialite.domain.domain.IsDarkModeActive
 import com.socialite.domain.helper.DateUtils
+import com.socialite.solite_pos.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import java.util.Locale
 import javax.inject.Inject
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SoliteApp : Application() {
 
     @Inject
-    lateinit var settingRepository: SettingRepository
+    lateinit var isDarkModeActive: IsDarkModeActive
 
     private lateinit var viewModel: ApplicationViewModel
 
@@ -30,7 +30,7 @@ class SoliteApp : Application() {
     }
 
     private fun setupViewModel() {
-        viewModel = ApplicationViewModel(this, settingRepository)
+        viewModel = ApplicationViewModel(this, isDarkModeActive)
     }
 
     private fun setupTheme() {
