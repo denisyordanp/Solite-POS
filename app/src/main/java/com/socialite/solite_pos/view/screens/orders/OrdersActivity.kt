@@ -25,8 +25,8 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
-import com.socialite.domain.schema.helper.OrderWithProduct
-import com.socialite.domain.schema.helper.ProductOrderDetail
+import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.domain.schema.ProductOrderDetail
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.printer.PrinterConnection
 import com.socialite.solite_pos.utils.printer.PrinterUtils

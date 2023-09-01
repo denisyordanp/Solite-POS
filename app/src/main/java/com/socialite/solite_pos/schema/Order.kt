@@ -3,7 +3,6 @@ package com.socialite.solite_pos.schema
 import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.view.ui.OrderMenus
 import java.io.Serializable
-import com.socialite.data.schema.room.new_master.Order as OrderData
 
 data class Order(
     val id: String,
@@ -26,19 +25,4 @@ data class Order(
         }
 
     fun statusToOrderMenu() = OrderMenus.values().find { it.status == status }
-
-    companion object {
-        fun fromData(order: OrderData): Order {
-            return Order(
-                order.id,
-                order.orderNo,
-                order.customer,
-                order.orderTime,
-                order.isTakeAway,
-                order.status,
-                order.store,
-                order.isUploaded
-            )
-        }
-    }
 }

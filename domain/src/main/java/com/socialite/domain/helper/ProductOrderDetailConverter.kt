@@ -1,6 +1,6 @@
 package com.socialite.domain.helper
 
-import com.socialite.domain.schema.helper.ProductOrderDetail
+import com.socialite.domain.schema.ProductOrderDetail
 import com.socialite.data.schema.room.new_bridge.OrderDetail
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.ProductsRepository
@@ -16,12 +16,12 @@ class ProductOrderDetailConverter @Inject constructor(
     suspend fun convert(listDetail: List<OrderDetail>): List<ProductOrderDetail> {
         val products = mutableListOf<ProductOrderDetail>()
         for (item2 in listDetail) {
-            val product = productsRepository.getProductById(item2.product).firstOrNull()
+            val product = productsRepository.getProductById(item2.product).firstOrNull()?.toDomain()
             val variants = orderDetailRepository.getOrderDetailWithVariants(item2.id)
             products.add(
                 ProductOrderDetail.createProduct(
                     product,
-                    variants.options,
+                    variants.options.map { it.toDomain() },
                     item2.amount
                 )
             )

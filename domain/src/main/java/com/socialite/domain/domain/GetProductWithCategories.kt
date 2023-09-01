@@ -1,7 +1,7 @@
 package com.socialite.domain.domain
 
-import com.socialite.data.schema.room.helper.ProductWithCategory
-import com.socialite.data.schema.room.new_master.Category
+import com.socialite.domain.schema.ProductWithCategory
+import com.socialite.domain.schema.main.Category
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetProductWithCategories {

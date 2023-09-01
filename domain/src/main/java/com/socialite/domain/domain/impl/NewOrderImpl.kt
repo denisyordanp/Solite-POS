@@ -4,7 +4,6 @@ import com.socialite.domain.domain.NewOrder
 import com.socialite.data.schema.room.helper.OrderData
 import com.socialite.data.schema.room.new_bridge.OrderDetail
 import com.socialite.data.schema.room.new_bridge.OrderProductVariant
-import com.socialite.data.schema.room.new_master.Customer
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Store
 import com.socialite.data.preference.SettingPreferences
@@ -13,8 +12,11 @@ import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.StoreRepository
 import com.socialite.domain.helper.DateUtils
-import com.socialite.domain.schema.helper.OrderWithProduct
-import com.socialite.domain.schema.helper.ProductOrderDetail
+import com.socialite.domain.helper.toData
+import com.socialite.domain.helper.toDomain
+import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.domain.schema.ProductOrderDetail
+import com.socialite.domain.schema.main.Customer
 import javax.inject.Inject
 
 class NewOrderImpl @Inject constructor(
@@ -33,10 +35,10 @@ class NewOrderImpl @Inject constructor(
         val selectedStore = storeRepository.getActiveStore()!!
         val orderData = generateOrder(customer, selectedStore, isTakeAway, currentTime)
         val orderWithProducts = OrderWithProduct(
-            orderData = orderData,
+            orderData = orderData.toDomain(),
             products = products
         )
-        ordersRepository.insertOrder(orderWithProducts.orderData.order)
+        ordersRepository.insertOrder(orderWithProducts.orderData.order.toData())
         insertOrderProduct(orderWithProducts)
         increaseOrderQueue()
     }
@@ -56,7 +58,7 @@ class NewOrderImpl @Inject constructor(
         )
         return OrderData.newOrder(
             order = order,
-            customer = customer,
+            customer = customer.toData(),
             store = store
         )
     }

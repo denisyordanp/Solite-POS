@@ -1,8 +1,7 @@
 package com.socialite.solite_pos.utils.printer
 
-import com.socialite.solite_pos.schema.Order
-import com.socialite.domain.schema.helper.OrderWithProduct
-import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.domain.schema.main.VariantOption
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import java.io.IOException
@@ -64,7 +63,7 @@ object PrintBill {
             PrinterUtils.TextAlign.LEFT
         )
         printNewLine()
-        val queueNumber = Order.fromData(order.orderData.order).getQueueNumber()
+        val queueNumber = order.orderData.order.getQueueNumber()
         printCustom(
             "No  : $queueNumber",
             PrinterUtils.TextType.NORMAL,
@@ -76,7 +75,7 @@ object PrintBill {
 
     private fun OutputStream.setHeaderQueue(order: OrderWithProduct) {
         printNewLine()
-        val queueNumber = Order.fromData(order.orderData.order).getQueueNumber()
+        val queueNumber = order.orderData.order.getQueueNumber()
         printCustom(
             queueNumber,
             PrinterUtils.TextType.BOLD_LARGE,

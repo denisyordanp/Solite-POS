@@ -41,12 +41,13 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
-import com.socialite.domain.schema.helper.OrderWithProduct
-import com.socialite.domain.schema.helper.ProductOrderDetail
-import com.socialite.data.schema.room.new_master.Order
+import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.domain.schema.ProductOrderDetail
 import com.socialite.domain.helper.DateUtils
+import com.socialite.domain.schema.main.Order
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.screens.orders.OrderButtonType
 import com.socialite.solite_pos.view.ui.OrderMenus
 
@@ -302,12 +303,12 @@ private fun Details(
                 OrderFooter(orderWithProduct = orderWithProduct)
             }
         }
-        val statusToOrderMenu = com.socialite.solite_pos.schema.Order.fromData(orderWithProduct.orderData.order).statusToOrderMenu()
+        val statusToOrderMenu = orderWithProduct.orderData.order.statusToOrderMenu()
         statusToOrderMenu?.let {
             ButtonBottomBar(
                 modifier = Modifier
                     .align(Alignment.BottomCenter),
-                orderStatus = it,
+                orderStatus = it.toUi(),
                 onMenuClicked = onMenuClicked
             )
         }
@@ -319,7 +320,6 @@ private fun OrderHeader(
     order: Order,
     onHeaderClicked: () -> Unit
 ) {
-    val uiOrder = com.socialite.solite_pos.schema.Order.fromData(order)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -336,7 +336,7 @@ private fun OrderHeader(
                 .weight(1f)
         ) {
             Text(
-                text = uiOrder.timeString,
+                text = order.timeString,
                 style = MaterialTheme.typography.body2
             )
             Text(
@@ -350,7 +350,7 @@ private fun OrderHeader(
         Text(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            text = uiOrder.getQueueNumber(),
+            text = order.getQueueNumber(),
             style = MaterialTheme.typography.h6
         )
     }

@@ -5,7 +5,7 @@ import com.socialite.data.schema.room.new_bridge.OrderDetail
 import com.socialite.data.schema.room.new_bridge.OrderProductVariant
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrderProductVariantsRepository
-import com.socialite.domain.schema.helper.ProductOrderDetail
+import com.socialite.domain.schema.ProductOrderDetail
 import javax.inject.Inject
 
 class UpdateOrderProductsImpl @Inject constructor(

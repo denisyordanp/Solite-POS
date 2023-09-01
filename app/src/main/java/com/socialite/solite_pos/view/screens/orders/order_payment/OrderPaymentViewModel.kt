@@ -2,16 +2,17 @@ package com.socialite.solite_pos.view.screens.orders.order_payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.data.schema.room.new_bridge.OrderPayment
-import com.socialite.data.schema.room.new_bridge.OrderPromo
-import com.socialite.data.schema.room.new_master.Order
-import com.socialite.data.schema.room.new_master.Payment
-import com.socialite.data.schema.room.new_master.Promo
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.PayOrder
+import com.socialite.domain.schema.main.Order
+import com.socialite.domain.schema.main.OrderPayment
+import com.socialite.domain.schema.main.OrderPromo
+import com.socialite.domain.schema.main.Payment
+import com.socialite.domain.schema.main.Promo
 import com.socialite.solite_pos.utils.config.CashAmounts
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,12 +37,12 @@ class OrderPaymentViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             combine(
-                getPayments(Payment.filter(Payment.ACTIVE)),
-                getPromos(Promo.filter(Promo.Status.ACTIVE))
+                getPayments(Payment.Status.ACTIVE),
+                getPromos(Promo.Status.ACTIVE)
             ) { payments, promos ->
                 _viewState.value.copy(
-                    promos = promos.map { com.socialite.solite_pos.schema.Promo.fromData(it) },
-                    payments = payments.map { com.socialite.solite_pos.schema.Payment.fromData(it) }
+                    promos = promos.map { it.toUi() },
+                    payments = payments.map { it.toUi() }
                 )
             }.collect(_viewState)
         }

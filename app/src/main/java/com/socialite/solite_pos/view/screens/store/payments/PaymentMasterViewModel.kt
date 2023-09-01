@@ -2,11 +2,10 @@ package com.socialite.solite_pos.view.screens.store.payments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.data.schema.room.new_master.Payment
 import com.socialite.domain.domain.AddNewPayment
 import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.domain.UpdatePayment
+import com.socialite.domain.schema.main.Payment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +17,7 @@ class PaymentMasterViewModel @Inject constructor(
     private val updatePayment: UpdatePayment,
 ) : ViewModel() {
 
-    fun getPayments(query: SupportSQLiteQuery) = getPayments.invoke(query)
+    fun getAllPayments() = getPayments.invoke(Payment.Status.ALL)
 
     fun insertPayment(data: Payment) {
         viewModelScope.launch {

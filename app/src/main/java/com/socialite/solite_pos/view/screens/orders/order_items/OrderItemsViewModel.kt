@@ -6,6 +6,7 @@ import com.socialite.domain.domain.GetOrdersMenuWithOrders
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 import com.socialite.solite_pos.schema.OrderMenuWithOrders
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
+import com.socialite.solite_pos.utils.tools.mapper.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -16,7 +17,7 @@ class OrderItemsViewModel @Inject constructor(
     private val getOrdersGeneralMenuBadge: GetOrdersGeneralMenuBadge,
 ) : ViewModel() {
 
-    fun getOrders(parameter: ReportParameter) = getOrdersMenuWithOrders(parameter.toDomainReport())
+    fun getOrders(parameter: ReportParameter) = getOrdersMenuWithOrders(parameter.toDomain())
         .map {orders ->
             orders.map {
                 OrderMenuWithOrders.fromDomain(it)

@@ -2,10 +2,10 @@ package com.socialite.solite_pos.view.screens.store.promo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.data.schema.room.new_master.Promo
 import com.socialite.domain.domain.AddNewPromo
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.UpdatePromo
+import com.socialite.domain.schema.main.Promo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class PromoMasterViewModel @Inject constructor(
     private val updatePromo: UpdatePromo,
 ) : ViewModel() {
 
-    fun getPromos(status: Promo.Status) = getPromos.invoke(Promo.filter(status))
+    fun getAllPromos() = getPromos.invoke(Promo.Status.ALL)
 
     fun insertPromo(data: Promo) {
         viewModelScope.launch {

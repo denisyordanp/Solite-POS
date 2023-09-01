@@ -1,10 +1,11 @@
 package com.socialite.domain.domain.impl
 
 import com.socialite.domain.domain.GetCategoryProductVariantCount
-import com.socialite.data.schema.room.new_master.Category
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
-import com.socialite.domain.schema.helper.ProductVariantCount
+import com.socialite.domain.helper.toDomain
+import com.socialite.domain.schema.ProductVariantCount
+import com.socialite.domain.schema.main.Category
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -18,7 +19,7 @@ class GetCategoryProductVariantCountImpl @Inject constructor(
         return productsRepository.getAllProductsWithCategory()
             .map {
                 it.groupBy { product ->
-                    product.category
+                    product.category.toDomain()
                 }.filterKeys { category ->
                     category.isActive
                 }.toList()
@@ -32,7 +33,7 @@ class GetCategoryProductVariantCountImpl @Inject constructor(
                             val currentOptions =
                                 options.filter { it.variantProduct.product == product.product.id }.size
                             ProductVariantCount(
-                                product = product.product,
+                                product = product.product.toDomain(),
                                 variantCount = currentOptions
                             )
                         }

@@ -2,12 +2,12 @@ package com.socialite.solite_pos.view.screens.store.stores
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.data.schema.room.new_master.Store
 import com.socialite.domain.domain.AddNewStore
 import com.socialite.domain.domain.GetSelectedStore
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.SelectStore
 import com.socialite.domain.domain.UpdateStore
+import com.socialite.domain.schema.main.Store
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

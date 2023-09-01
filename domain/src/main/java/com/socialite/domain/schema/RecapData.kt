@@ -1,6 +1,4 @@
-package com.socialite.domain.schema.helper
-
-import com.socialite.domain.schema.Outcome
+package com.socialite.domain.schema
 
 data class RecapData(
     val incomes: List<Income>,

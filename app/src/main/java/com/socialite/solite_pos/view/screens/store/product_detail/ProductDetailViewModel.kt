@@ -2,13 +2,14 @@ package com.socialite.solite_pos.view.screens.store.product_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.data.schema.room.new_master.Category
-import com.socialite.data.schema.room.new_master.Product
 import com.socialite.domain.domain.AddNewProduct
 import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.domain.domain.GetProductWithCategoryById
 import com.socialite.domain.domain.UpdateProduct
+import com.socialite.domain.schema.main.Category
+import com.socialite.domain.schema.main.Product
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,13 +32,11 @@ class ProductDetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getCategories(Category.getFilter(Category.ALL))
+            getCategories(Category.Status.ALL)
                 .map { categories ->
                     _viewState.value.copy(
                         categories = categories.map {
-                            com.socialite.solite_pos.schema.Category.fromData(
-                                it
-                            )
+                            it.toUi()
                         }
                     )
                 }.collect(_viewState)

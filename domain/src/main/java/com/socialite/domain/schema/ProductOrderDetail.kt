@@ -1,7 +1,7 @@
-package com.socialite.domain.schema.helper
+package com.socialite.domain.schema
 
-import com.socialite.data.schema.room.new_master.Product
-import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.domain.schema.main.Product
+import com.socialite.domain.schema.main.VariantOption
 import java.io.Serializable
 
 data class ProductOrderDetail(

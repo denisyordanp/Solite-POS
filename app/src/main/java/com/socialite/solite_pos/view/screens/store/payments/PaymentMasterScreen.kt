@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.socialite.domain.schema.main.Payment
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicCheckBox
@@ -49,7 +50,6 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.data.schema.room.new_master.Payment
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,7 +61,7 @@ fun PaymentMasterScreen(
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
-    val payments = currentViewModel.getPayments(Payment.filter(Payment.ALL))
+    val payments = currentViewModel.getAllPayments()
         .collectAsState(initial = emptyList()).value
     var selectedPayment by remember { mutableStateOf<Payment?>(null) }
 

@@ -2,7 +2,7 @@ package com.socialite.solite_pos.schema
 
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.ui.OrderMenus
-import com.socialite.domain.schema.helper.MenuOrderAmount as DomainMenuAmount
+import com.socialite.domain.schema.MenuOrderAmount as DomainMenuAmount
 
 data class MenuOrderAmount(
     val menu: OrderMenus,

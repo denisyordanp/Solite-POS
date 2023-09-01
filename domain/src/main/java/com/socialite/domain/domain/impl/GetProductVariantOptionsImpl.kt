@@ -3,7 +3,8 @@ package com.socialite.domain.domain.impl
 import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.data.schema.room.helper.VariantProductWithOption
 import com.socialite.data.repository.ProductVariantsRepository
-import com.socialite.domain.schema.helper.VariantWithOptions
+import com.socialite.domain.helper.toDomain
+import com.socialite.domain.schema.VariantWithOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -20,9 +21,9 @@ class GetProductVariantOptionsImpl @Inject constructor(
         this.groupBy { it.variant }
             .map {
                 VariantWithOptions(
-                    variant = it.key,
+                    variant = it.key.toDomain(),
                     options = it.value.map { option ->
-                        option.option
+                        option.option.toDomain()
                     }
                 )
             }

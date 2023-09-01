@@ -70,14 +70,17 @@ data class Promo(
         const val DB_NAME = "new_promo"
         const val ID_ADD = "add_id"
 
-        fun filter(status: Status): SimpleSQLiteQuery {
+        const val ALL = 2
+        const val ACTIVE = 1
+
+        fun filter(status: Int): SimpleSQLiteQuery {
             val query = StringBuilder().append("SELECT * FROM ")
             query.append(DB_NAME)
             when (status) {
-                Status.ACTIVE -> {
+                ACTIVE -> {
                     query.append(" WHERE ")
                         .append(STATUS)
-                        .append(" = ").append(status.code)
+                        .append(" = ").append(status)
                 }
 
                 else -> {
@@ -101,10 +104,5 @@ data class Promo(
             isActive = true,
             isUploaded = false
         )
-    }
-
-    enum class Status(val code: Int) {
-        ALL(2),
-        ACTIVE(1)
     }
 }

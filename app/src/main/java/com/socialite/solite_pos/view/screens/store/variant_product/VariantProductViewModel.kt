@@ -2,12 +2,12 @@ package com.socialite.solite_pos.view.screens.store.variant_product
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.data.schema.room.new_bridge.VariantProduct
 import com.socialite.domain.domain.AddNewVariantProduct
 import com.socialite.domain.domain.GetProductById
 import com.socialite.domain.domain.GetVariantsProductById
 import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.RemoveVariantProduct
+import com.socialite.domain.schema.main.VariantProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

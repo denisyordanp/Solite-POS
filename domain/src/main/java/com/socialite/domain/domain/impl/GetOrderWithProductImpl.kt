@@ -4,7 +4,8 @@ import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.domain.helper.ProductOrderDetailConverter
-import com.socialite.domain.schema.helper.OrderWithProduct
+import com.socialite.domain.helper.toDomain
+import com.socialite.domain.schema.OrderWithProduct
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class GetOrderWithProductImpl @Inject constructor(
         ) { order, details ->
             order?.let {
                 OrderWithProduct(
-                    orderData = order,
+                    orderData = order.toDomain(),
                     products = details
                 )
             }

@@ -1,7 +1,7 @@
 package com.socialite.domain.schema
 
 import com.socialite.domain.helper.DateUtils
-import com.socialite.data.schema.room.new_master.Outcome as DataOutcome
+import java.util.UUID
 
 data class Outcome(
     val id: String,
@@ -22,17 +22,17 @@ data class Outcome(
         get() = price * amount
 
     companion object {
-        fun fromData(data: DataOutcome) : Outcome {
-            return Outcome(
-                data.id,
-                data.name,
-                data.desc,
-                data.price,
-                data.amount,
-                data.date,
-                data.store,
-                data.isUploaded
+
+        fun createNewOutcome(name: String, desc: String, price: Long, date: String) =
+            Outcome(
+                id = UUID.randomUUID().toString(),
+                name = name,
+                desc = desc,
+                price = price,
+                amount = 1,
+                date = date,
+                store = "",
+                isUploaded = false
             )
-        }
     }
 }

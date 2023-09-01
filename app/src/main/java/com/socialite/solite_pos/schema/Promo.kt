@@ -2,7 +2,6 @@ package com.socialite.solite_pos.schema
 
 import com.socialite.solite_pos.view.ui.DropdownItem
 import java.io.Serializable
-import com.socialite.data.schema.room.new_master.Promo as DataPromo
 
 data class Promo(
     val id: String,
@@ -25,20 +24,6 @@ data class Promo(
             }
         } else {
             ((value!!.toFloat() / 100) * total).toLong()
-        }
-    }
-
-    companion object {
-        fun fromData(data: DataPromo): Promo {
-            return Promo(
-                data.id,
-                data.name,
-                data.desc,
-                data.isCash,
-                data.value,
-                data.isActive,
-                data.isUploaded
-            )
         }
     }
 }

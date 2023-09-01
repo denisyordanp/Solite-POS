@@ -1,9 +1,9 @@
 package com.socialite.solite_pos.schema
 
-import com.socialite.domain.schema.helper.OrderWithProduct
+import com.socialite.domain.schema.OrderWithProduct
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.ui.OrderMenus
-import com.socialite.domain.schema.helper.OrderMenuWithOrders as DomainOrders
+import com.socialite.domain.schema.OrderMenuWithOrders as DomainOrders
 
 data class OrderMenuWithOrders(
     val menu: OrderMenus,

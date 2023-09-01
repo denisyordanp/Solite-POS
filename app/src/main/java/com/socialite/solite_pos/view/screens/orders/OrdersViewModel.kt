@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.UpdateOrderProducts
-import com.socialite.domain.schema.helper.BucketOrder
-import com.socialite.domain.schema.helper.ProductOrderDetail
-import com.socialite.domain.schema.helper.findExisting
+import com.socialite.domain.schema.BucketOrder
+import com.socialite.domain.schema.ProductOrderDetail
+import com.socialite.domain.schema.findExisting
 import com.socialite.domain.domain.GetPrinterDevice
 import com.socialite.domain.helper.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel

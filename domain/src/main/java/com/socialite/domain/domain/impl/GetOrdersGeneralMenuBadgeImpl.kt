@@ -4,7 +4,7 @@ import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
 import com.socialite.data.schema.room.master.Order
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.domain.menu.GeneralMenus
-import com.socialite.domain.schema.helper.GeneralMenuBadge
+import com.socialite.domain.schema.GeneralMenuBadge
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf

@@ -2,13 +2,13 @@ package com.socialite.solite_pos.view.screens.store.variant_master
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.data.schema.room.new_master.Variant
-import com.socialite.data.schema.room.new_master.VariantOption
 import com.socialite.domain.domain.AddNewVariant
 import com.socialite.domain.domain.AddNewVariantOption
 import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.UpdateVariant
 import com.socialite.domain.domain.UpdateVariantOption
+import com.socialite.domain.schema.main.Variant
+import com.socialite.domain.schema.main.VariantOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

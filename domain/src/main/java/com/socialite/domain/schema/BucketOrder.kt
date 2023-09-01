@@ -1,4 +1,4 @@
-package com.socialite.domain.schema.helper
+package com.socialite.domain.schema
 
 data class BucketOrder(
     val time: Long?,

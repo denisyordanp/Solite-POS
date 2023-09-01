@@ -53,9 +53,9 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.OptionItem
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.domain.schema.helper.VariantWithOptions
-import com.socialite.data.schema.room.new_master.Variant
-import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.domain.schema.VariantWithOptions
+import com.socialite.domain.schema.main.Variant
+import com.socialite.domain.schema.main.VariantOption
 import com.socialite.solite_pos.view.ui.ModalContent
 import kotlinx.coroutines.launch
 

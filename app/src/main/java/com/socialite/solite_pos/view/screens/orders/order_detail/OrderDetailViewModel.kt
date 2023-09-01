@@ -3,8 +3,8 @@ package com.socialite.solite_pos.view.screens.orders.order_detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetOrderWithProduct
-import com.socialite.data.schema.room.new_master.Order
 import com.socialite.domain.domain.UpdateOrder
+import com.socialite.domain.schema.main.Order
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

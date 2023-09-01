@@ -1,6 +1,5 @@
-package com.socialite.domain.schema.helper
+package com.socialite.domain.schema
 
-import com.socialite.data.schema.room.helper.OrderData
 import java.io.Serializable
 
 data class OrderWithProduct(

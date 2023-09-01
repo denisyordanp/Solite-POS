@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.helper.GeneralMenuBadge
+import com.socialite.domain.schema.GeneralMenuBadge
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetOrdersGeneralMenuBadge {

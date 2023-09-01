@@ -7,6 +7,8 @@ import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetStores
 import com.socialite.solite_pos.schema.MenuOrderAmount
 import com.socialite.solite_pos.schema.Store
+import com.socialite.solite_pos.utils.tools.mapper.toDomain
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,16 +33,16 @@ class RecapViewModel @Inject constructor(
             getStores()
                 .map { stores ->
                     _viewState.value.copy(
-                        stores = stores.map { Store.fromData(it) }
+                        stores = stores.map { it.toUi() }
                     )
                 }.collect(_viewState)
         }
 
         _viewState.onEach {
             val parameters = it.getParameters()
-            val recap = getRecapData(parameters.toDomainReport()).first()
+            val recap = getRecapData(parameters.toDomain()).first()
             val menusWithAmount =
-                getOrderMenusWithAmount(parameters.toDomainReport()).first().map { menu ->
+                getOrderMenusWithAmount(parameters.toDomain()).first().map { menu ->
                     MenuOrderAmount.fromDomain(menu)
                 }
             _viewState.emit(

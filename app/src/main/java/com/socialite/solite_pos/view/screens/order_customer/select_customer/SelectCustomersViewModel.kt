@@ -2,9 +2,9 @@ package com.socialite.solite_pos.view.screens.order_customer.select_customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.data.schema.room.new_master.Customer
 import com.socialite.domain.domain.GetCustomers
 import com.socialite.domain.domain.NewCustomer
+import com.socialite.domain.schema.main.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,9 +24,9 @@ class SelectCustomersViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getCustomers()
-                .map {
+                .map { customers ->
                     _viewState.value.copy(
-                        customers = it
+                        customers = customers
                     )
                 }
                 .collect(_viewState)

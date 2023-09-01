@@ -1,12 +1,13 @@
 package com.socialite.domain.domain.impl
 
 import com.socialite.domain.domain.PayOrder
-import com.socialite.data.schema.room.new_bridge.OrderPayment
-import com.socialite.data.schema.room.new_bridge.OrderPromo
-import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.repository.OrderPaymentsRepository
 import com.socialite.data.repository.OrderPromosRepository
 import com.socialite.data.repository.OrdersRepository
+import com.socialite.domain.helper.toData
+import com.socialite.domain.schema.main.Order
+import com.socialite.domain.schema.main.OrderPayment
+import com.socialite.domain.schema.main.OrderPromo
 import javax.inject.Inject
 
 class PayOrderImpl @Inject constructor(
@@ -15,12 +16,12 @@ class PayOrderImpl @Inject constructor(
     private val orderPromosRepository: OrderPromosRepository,
 ) : PayOrder {
     override suspend fun invoke(order: Order, payment: OrderPayment, promo: OrderPromo?) {
-        promo?.let {
-            orderPromosRepository.insertNewPromoOrder(promo)
+        promo?.toData()?.let {
+            orderPromosRepository.insertNewPromoOrder(it)
         }
-        orderPaymentsRepository.insertNewPaymentOrder(payment)
+        orderPaymentsRepository.insertNewPaymentOrder(payment.toData())
         ordersRepository.updateOrder(order.copy(
             status = Order.DONE
-        ))
+        ).toData())
     }
 }

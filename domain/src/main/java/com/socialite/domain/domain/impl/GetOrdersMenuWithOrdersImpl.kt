@@ -4,10 +4,12 @@ import com.socialite.domain.domain.GetOrdersMenuWithOrders
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.domain.helper.ProductOrderDetailConverter
+import com.socialite.domain.helper.toData
+import com.socialite.domain.helper.toDomain
 import com.socialite.domain.menu.OrderMenus
 import com.socialite.domain.schema.ReportParameter
-import com.socialite.domain.schema.helper.OrderMenuWithOrders
-import com.socialite.domain.schema.helper.OrderWithProduct
+import com.socialite.domain.schema.OrderMenuWithOrders
+import com.socialite.domain.schema.OrderWithProduct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
@@ -21,7 +23,7 @@ class GetOrdersMenuWithOrdersImpl @Inject constructor(
     override fun invoke(parameter: ReportParameter): Flow<List<OrderMenuWithOrders>> {
         return combine(
             flowOf(OrderMenus.values()),
-            orderRepository.getAllOrderList(parameter.toDataReport()),
+            orderRepository.getAllOrderList(parameter.toData()),
             orderDetailRepository.getOrderDetail()
         ) { menus, orders, details ->
             menus.map { menu ->
@@ -30,7 +32,7 @@ class GetOrdersMenuWithOrdersImpl @Inject constructor(
                         val filteredDetails = details.filter { it.order == order.order.id }
                         val productDetails = converter.convert(filteredDetails)
                         OrderWithProduct(
-                            orderData = order,
+                            orderData = order.toDomain(),
                             products = productDetails
                         )
                     }

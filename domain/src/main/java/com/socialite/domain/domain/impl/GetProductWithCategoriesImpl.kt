@@ -3,6 +3,7 @@ package com.socialite.domain.domain.impl
 import com.socialite.domain.domain.GetProductWithCategories
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
+import com.socialite.domain.helper.toDomain
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class GetProductWithCategoriesImpl @Inject constructor(
                     .isProductHasVariants(product.product.id)
                 product.copy(
                     hasVariant = hasVariant
-                )
+                ).toDomain()
             }.groupBy { product ->
                 product.category
             }.filterKeys { category ->

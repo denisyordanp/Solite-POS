@@ -1,7 +1,7 @@
-package com.socialite.domain.schema.helper
+package com.socialite.domain.schema
 
-import com.socialite.data.schema.room.new_master.Variant
-import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.domain.schema.main.Variant
+import com.socialite.domain.schema.main.VariantOption
 
 data class VariantWithOptions(
     val variant: Variant,

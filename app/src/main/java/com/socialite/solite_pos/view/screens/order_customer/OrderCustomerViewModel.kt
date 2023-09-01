@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.domain.domain.NewOrder
-import com.socialite.domain.schema.helper.BucketOrder
-import com.socialite.domain.schema.helper.ProductOrderDetail
-import com.socialite.domain.schema.helper.findExisting
-import com.socialite.data.schema.room.new_master.Customer
+import com.socialite.domain.schema.BucketOrder
+import com.socialite.domain.schema.ProductOrderDetail
+import com.socialite.domain.schema.findExisting
 import com.socialite.domain.helper.DateUtils
+import com.socialite.domain.schema.main.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

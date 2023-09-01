@@ -31,7 +31,6 @@ import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetVariantsProductById
 import com.socialite.domain.domain.GetVariantsWithOptions
-import com.socialite.domain.domain.IsDarkModeActive
 import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.domain.domain.LoginUser
@@ -87,7 +86,6 @@ import com.socialite.domain.domain.impl.GetStoresImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetVariantsProductByIdImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
-import com.socialite.domain.domain.impl.IsDarkModeActiveImpl
 import com.socialite.domain.domain.impl.IsServerActiveImpl
 import com.socialite.domain.domain.impl.IsShouldSelectStoreImpl
 import com.socialite.domain.domain.impl.LoginUserImpl
@@ -245,11 +243,6 @@ abstract class DomainModule {
     abstract fun bindSetDarkMode(
         setDarkModeImpl: SetDarkModeImpl
     ): SetDarkMode
-
-    @Binds
-    abstract fun bindIsDarkModeActive(
-        isDarkModeActiveImpl: IsDarkModeActiveImpl
-    ): IsDarkModeActive
 
     @Binds
     abstract fun bindNewCustomer(
