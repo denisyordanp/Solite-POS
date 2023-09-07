@@ -14,4 +14,13 @@ interface SettingRepository {
     suspend fun setMigrationPhase2(isMigrate: Boolean)
     fun insertToken(token: String)
     fun getToken(): String
+
+    fun getPrinterDeviceAddress(): String?
+    fun setPrinterDeviceAddress(address: String)
+
+    fun setOrderCount(count: Int)
+    fun getOrderCount(): Int
+
+    fun setLastOrderDate(date: String)
+    fun getLastOrderDate(): String
 }

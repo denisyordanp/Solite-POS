@@ -22,34 +22,6 @@ class ProductVariantsRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : ProductVariantsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: ProductVariantsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: ProductVariantsDao,
-            variantsDao: VariantsDao,
-            variantOptionsDao: VariantOptionsDao,
-            productsDao: ProductsDao,
-            db: AppDatabase
-        ): ProductVariantsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(ProductVariantsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = ProductVariantsRepositoryImpl(
-                            dao = dao,
-                            db = db,
-                            variantsDao = variantsDao,
-                            variantOptionsDao = variantOptionsDao,
-                            productsDao = productsDao
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override fun getVariantOptions(productId: String) = dao.getVariantProducts(productId)
     override fun getAllVariantOptions() = dao.getAllVariantProducts()
 

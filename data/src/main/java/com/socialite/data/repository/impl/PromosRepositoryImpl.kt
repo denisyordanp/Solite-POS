@@ -19,25 +19,6 @@ class PromosRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : PromosRepository, SyncRepository<NewPromo> {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: PromosRepositoryImpl? = null
-
-        fun getInstance(
-            dao: PromosDao,
-            db: AppDatabase
-        ): PromosRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(PromosRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = PromosRepositoryImpl(dao = dao, db = db)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override suspend fun insertPromo(data: NewPromo) = dao.insertNewPromo(data)
     override suspend fun updatePromo(data: NewPromo) = dao.updateNewPromo(data.copy(
         isUploaded = false

@@ -20,25 +20,6 @@ class CategoriesRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : CategoriesRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: CategoriesRepositoryImpl? = null
-
-        fun getInstance(
-            dao: CategoriesDao,
-            db: AppDatabase
-        ): CategoriesRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(CategoriesRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = CategoriesRepositoryImpl(dao = dao, db = db)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override fun getCategories(query: SimpleSQLiteQuery) = dao.getNewCategories(query)
     override suspend fun getNeedUploadCategories() = dao.getNeedUploadCategories()
     override suspend fun insertCategory(data: NewCategory) {

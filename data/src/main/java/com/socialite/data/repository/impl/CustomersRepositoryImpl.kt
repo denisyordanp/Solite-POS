@@ -18,25 +18,6 @@ class CustomersRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : CustomersRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: CustomersRepositoryImpl? = null
-
-        fun getInstance(
-            dao: CustomersDao,
-            db: AppDatabase
-        ): CustomersRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(CustomersRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = CustomersRepositoryImpl(dao = dao, db = db)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override fun getCustomers() = dao.getNewCustomers()
     override suspend fun getNeedUploadCustomers() = dao.getNeedUploadCustomers()
     override suspend fun getItems() = dao.getNewCustomers().first()

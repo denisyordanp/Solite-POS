@@ -27,34 +27,6 @@ class OrdersRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : OrdersRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: OrdersRepositoryImpl? = null
-
-        fun getInstance(
-            dao: OrdersDao,
-            customersDao: CustomersDao,
-            storesDao: StoreDao,
-            settingRepository: SettingRepository,
-            db: AppDatabase
-        ): OrdersRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(OrdersRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = OrdersRepositoryImpl(
-                            dao = dao,
-                            customersDao = customersDao,
-                            storesDao = storesDao,
-                            settingRepository = settingRepository,
-                            db = db
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override fun getOrderList(status: Int, date: String) = dao.getOrdersByStatus(status, date)
 
     @FlowPreview

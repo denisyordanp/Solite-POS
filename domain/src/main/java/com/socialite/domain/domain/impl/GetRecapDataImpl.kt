@@ -2,7 +2,7 @@ package com.socialite.domain.domain.impl
 
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
-import com.socialite.data.repository.OutcomesRepository
+import com.socialite.domain.domain.GetOutcomes
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.helper.ProductOrderDetailConverter
 import com.socialite.domain.helper.toData
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class GetRecapDataImpl @Inject constructor(
     private val repository: OrdersRepository,
-    private val outcomesRepository: OutcomesRepository,
+    private val getOutcomes: GetOutcomes,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val converter: ProductOrderDetailConverter
 ) : GetRecapData {
@@ -38,12 +38,12 @@ class GetRecapDataImpl @Inject constructor(
                     isCash = it.payment?.isCash ?: false
                 )
             }
-            val outcomes = outcomesRepository.getOutcomes(parameters.toData()).first()
+            val outcomes = getOutcomes(parameters).first()
 
             emit(
                 RecapData(
                     incomes = incomes,
-                    outcomes = outcomes.map { it.toDomain() }
+                    outcomes = outcomes
                 )
             )
         }

@@ -5,57 +5,21 @@ import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.OutcomesDao
 import com.socialite.data.database.dao.StoreDao
 import com.socialite.data.repository.OutcomesRepository
-import com.socialite.data.repository.SettingRepository
+import com.socialite.data.repository.SyncRepository
+import com.socialite.data.schema.helper.UpdateSynchronizations
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Outcome
-import com.socialite.data.repository.SyncRepository
-import com.socialite.data.schema.helper.ReportParameter
-import com.socialite.data.schema.helper.UpdateSynchronizations
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.flatMapConcat
 import java.util.UUID
 import javax.inject.Inject
 
 class OutcomesRepositoryImpl @Inject constructor(
     private val dao: OutcomesDao,
     private val storesDao: StoreDao,
-    private val settingRepository: SettingRepository,
     private val db: AppDatabase
 ) : OutcomesRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: OutcomesRepositoryImpl? = null
-
-        fun getInstance(
-            dao: OutcomesDao,
-            storesDao: StoreDao,
-            settingRepository: SettingRepository,
-            db: AppDatabase
-        ): OutcomesRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(OutcomesRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = OutcomesRepositoryImpl(
-                                dao = dao,
-                                storesDao = storesDao,
-                                settingRepository = settingRepository,
-                                db = db
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-    @FlowPreview
-    override fun getOutcomes(parameters: ReportParameter) = if (parameters.isTodayOnly()) {
-        settingRepository.getNewSelectedStore().flatMapConcat {
-            dao.getOutcome(parameters.start, parameters.end, it)
-        }
-    } else {
-        dao.getOutcome(parameters.start, parameters.end, parameters.storeId)
-    }
+    override fun getOutcomes(from: String, until: String, store: String) =
+        dao.getOutcome(from, until, store)
 
     override suspend fun insertOutcome(data: Outcome) {
         dao.insertNewOutcome(data)
@@ -67,7 +31,7 @@ class OutcomesRepositoryImpl @Inject constructor(
             for (outcome in outcomes) {
                 val uuid = outcome.new_id.ifEmpty {
                     val updatedOutcome = outcome.copy(
-                            new_id = UUID.randomUUID().toString()
+                        new_id = UUID.randomUUID().toString()
                     )
                     dao.updateOutcome(updatedOutcome)
                     updatedOutcome.new_id
@@ -76,14 +40,14 @@ class OutcomesRepositoryImpl @Inject constructor(
                 val store = storesDao.getStore(outcome.store)
                 if (store != null) {
                     val newOutcome = Outcome(
-                            id = uuid,
-                            name = outcome.name,
-                            desc = outcome.desc,
-                            price = outcome.price,
-                            amount = outcome.amount,
-                            date = outcome.date,
-                            store = store.new_id,
-                            isUploaded = outcome.isUploaded
+                        id = uuid,
+                        name = outcome.name,
+                        desc = outcome.desc,
+                        price = outcome.price,
+                        amount = outcome.amount,
+                        date = outcome.date,
+                        store = store.new_id,
+                        isUploaded = outcome.isUploaded
                     )
                     dao.insertNewOutcome(newOutcome)
                 }

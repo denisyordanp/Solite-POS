@@ -20,32 +20,6 @@ class OrderPaymentsRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : OrderPaymentsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: OrderPaymentsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: OrderPaymentsDao,
-            ordersDao: OrdersDao,
-            paymentDao: PaymentsDao,
-            db: AppDatabase
-        ): OrderPaymentsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(OrderPaymentsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = OrderPaymentsRepositoryImpl(
-                            dao = dao,
-                            ordersDao = ordersDao,
-                            paymentDao = paymentDao,
-                            db = db
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override suspend fun getNeedUploadOrderPayments() = dao.getNeedUploadOrderPayments()
 
     override suspend fun insertNewPaymentOrder(payment: OrderPayment) =

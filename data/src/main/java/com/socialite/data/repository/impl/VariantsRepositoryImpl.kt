@@ -18,25 +18,6 @@ class VariantsRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : VariantsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: VariantsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: VariantsDao,
-            db: AppDatabase
-        ): VariantsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(VariantsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = VariantsRepositoryImpl(dao = dao, db = db)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override fun getVariants() = dao.getNewVariants()
     override suspend fun getNeedUploadVariants() = dao.getNeedUploadVariants()
     override suspend fun insertVariant(data: Variant) {

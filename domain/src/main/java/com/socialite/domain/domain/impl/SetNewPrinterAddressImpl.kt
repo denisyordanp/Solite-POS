@@ -1,13 +1,13 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.data.preference.SettingPreferences
+import com.socialite.data.repository.SettingRepository
 import com.socialite.domain.domain.SetNewPrinterAddress
 import javax.inject.Inject
 
 class SetNewPrinterAddressImpl @Inject constructor(
-    private val settingPreferences: SettingPreferences
+    private val settingRepository: SettingRepository
 ) : SetNewPrinterAddress {
     override fun invoke(address: String) {
-        settingPreferences.printerDevice = address
+        settingRepository.setPrinterDeviceAddress(address)
     }
 }

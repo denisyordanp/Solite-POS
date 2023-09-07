@@ -13,8 +13,6 @@ class SettingPreferences @Inject constructor(
 
 	companion object{
 		private const val PRINTER_DEVICE = "printer_device"
-		private const val PURCHASE_DATE = "purchase_date"
-		private const val PURCHASE_ID = "purchase_id"
 		private const val ORDER_DATE = "order_date"
 		private const val ORDER_ID = "order_id"
 	}
@@ -31,24 +29,6 @@ class SettingPreferences @Inject constructor(
 			editor.apply()
 		}
 
-	var purchaseCount: Int
-		get() {
-			return preferences.getInt(PURCHASE_ID, 1)
-		}
-		set(value) {
-			editor.putInt(PURCHASE_ID, value)
-			editor.apply()
-		}
-
-	var purchaseDate: String?
-		get() {
-			return preferences.getString(PURCHASE_DATE, "")
-		}
-		set(value) {
-			editor.putString(PURCHASE_DATE, value)
-			editor.apply()
-		}
-
 	var orderCount: Int
 		get() {
 			return preferences.getInt(ORDER_ID, 1)
@@ -58,9 +38,9 @@ class SettingPreferences @Inject constructor(
 			editor.apply()
 		}
 
-	var orderDate: String?
+	var orderDate: String
 		get() {
-			return preferences.getString(ORDER_DATE, "")
+			return preferences.getString(ORDER_DATE, "") ?: ""
 		}
 		set(value) {
 			editor.putString(ORDER_DATE, value)

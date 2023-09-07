@@ -19,43 +19,14 @@ class StoreRepositoryImpl @Inject constructor(
     private val settingRepository: SettingRepository,
     private val db: AppDatabase
 ) : StoreRepository {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: StoreRepositoryImpl? = null
-
-        fun getInstance(
-            dao: StoreDao,
-            settingRepository: SettingRepository,
-            db: AppDatabase
-        ): StoreRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(StoreRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = StoreRepositoryImpl(
-                            dao = dao,
-                            db = db,
-                            settingRepository = settingRepository
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
-    override suspend fun getActiveStore(): Store? {
-        val selectedStore = settingRepository.getNewSelectedStore().first()
-        return dao.getNewStore(selectedStore)
+    override suspend fun getStore(id: String): Store? {
+        return dao.getNewStore(id)
     }
 
     override fun getStores() = dao.getNewStores()
     override suspend fun getNeedUploadStores() = dao.getNeedUploadStores()
     override suspend fun insertStore(store: Store) {
         dao.insertStore(store)
-        if (settingRepository.getNewSelectedStore().first().isEmpty()) {
-            settingRepository.selectNewStore(store.id)
-        }
     }
     override suspend fun updateStore(store: Store) = dao.updateNewStore(store)
     override suspend fun migrateToUUID() {

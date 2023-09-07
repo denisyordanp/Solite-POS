@@ -1,14 +1,14 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.domain.domain.NewOrder
-import com.socialite.data.schema.room.new_bridge.OrderDetail
-import com.socialite.data.schema.room.new_bridge.OrderProductVariant
-import com.socialite.data.schema.room.new_master.Store
-import com.socialite.data.preference.SettingPreferences
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.data.repository.OrdersRepository
+import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
+import com.socialite.data.schema.room.new_bridge.OrderDetail
+import com.socialite.data.schema.room.new_bridge.OrderProductVariant
+import com.socialite.data.schema.room.new_master.Store
+import com.socialite.domain.domain.NewOrder
 import com.socialite.domain.helper.DateUtils
 import com.socialite.domain.helper.toData
 import com.socialite.domain.helper.toDomain
@@ -17,10 +17,11 @@ import com.socialite.domain.schema.OrderWithProduct
 import com.socialite.domain.schema.ProductOrderDetail
 import com.socialite.domain.schema.main.Customer
 import com.socialite.domain.schema.main.Order
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class NewOrderImpl @Inject constructor(
-    private val settingPreferences: SettingPreferences,
+    private val settingRepository: SettingRepository,
     private val ordersRepository: OrdersRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
@@ -32,7 +33,8 @@ class NewOrderImpl @Inject constructor(
         products: List<ProductOrderDetail>,
         currentTime: String
     ) {
-        val selectedStore = storeRepository.getActiveStore()!!
+        val selectedStoreId = settingRepository.getNewSelectedStore().first()
+        val selectedStore = storeRepository.getStore(selectedStoreId)!!
         val orderData = generateOrder(customer, selectedStore, isTakeAway, currentTime)
         val orderWithProducts = OrderWithProduct(
             orderData = orderData,
@@ -67,16 +69,17 @@ class NewOrderImpl @Inject constructor(
         currentTime: String
     ): String {
         val time = generateOrderNoFromDate(currentTime)
-        if (time != settingPreferences.orderDate) {
+        val lastOrderDate = settingRepository.getLastOrderDate()
+        if (time != lastOrderDate) {
             saveDate(time)
         }
-        val count = settingPreferences.orderCount
-        return "${settingPreferences.orderDate}${generateQueueNumber(count)}"
+        val count = settingRepository.getOrderCount()
+        return "${lastOrderDate}${generateQueueNumber(count)}"
     }
 
     private fun saveDate(time: String) {
-        settingPreferences.orderDate = time
-        settingPreferences.orderCount = 1
+        settingRepository.setLastOrderDate(time)
+        settingRepository.setOrderCount(1)
     }
 
     private fun generateOrderNoFromDate(time: String) =
@@ -92,7 +95,8 @@ class NewOrderImpl @Inject constructor(
     }
 
     private fun increaseOrderQueue() {
-        settingPreferences.orderCount = settingPreferences.orderCount + 1
+        val currentCount = settingRepository.getOrderCount()
+        settingRepository.setOrderCount(currentCount + 1)
     }
 
     private suspend fun insertOrderProduct(order: OrderWithProduct) {

@@ -18,26 +18,6 @@ class ProductsRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : ProductsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: ProductsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: ProductsDao,
-            categoryDao: CategoriesDao,
-            db: AppDatabase
-        ): ProductsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(ProductsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE =
-                            ProductsRepositoryImpl(dao = dao, db = db, categoryDao = categoryDao)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
     override fun getActiveProductsWithCategory() = dao.getActiveProductsWithCategory()
     override fun getAllProductsWithCategory() = dao.getAllProductsWithCategory()
     override fun getProductWithCategory(productId: String) = dao.getProductWithCategory(productId)

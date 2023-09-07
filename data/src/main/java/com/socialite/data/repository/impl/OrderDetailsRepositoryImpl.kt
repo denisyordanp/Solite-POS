@@ -22,34 +22,6 @@ class OrderDetailsRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : OrderDetailsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: OrderDetailsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: OrderDetailsDao,
-            ordersDao: OrdersDao,
-            orderProductVariantsDao: OrderProductVariantsDao,
-            productsDao: ProductsDao,
-            db: AppDatabase
-        ): OrderDetailsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(OrderDetailsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = OrderDetailsRepositoryImpl(
-                            dao = dao,
-                            ordersDao = ordersDao,
-                            orderProductVariantsDao = orderProductVariantsDao,
-                            productsDao = productsDao,
-                            db = db
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override suspend fun getNeedUploadOrderDetails() = dao.getNeedUploadOrderDetails()
 
     override suspend fun insertOrderDetail(orderDetail: OrderDetail) {
