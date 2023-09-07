@@ -24,11 +24,19 @@ class GetProductWithVariantOptionsImpl @Inject constructor(
     private fun List<VariantProductWithOption>.handleVariants() =
         this.groupBy { it.variant }
             .map {
-                VariantWithOptions(
-                    variant = it.key.toDomain(),
-                    options = it.value.map { option ->
+                val activeOptions = it.value
+                    .filter { option ->
+                        option.option.isActive
+                    }
+                    .map { option ->
                         option.option.toDomain()
                     }
+
+                VariantWithOptions(
+                    variant = it.key.toDomain(),
+                    options = activeOptions
                 )
+            }.filter {
+                it.options.isNotEmpty()
             }
 }
