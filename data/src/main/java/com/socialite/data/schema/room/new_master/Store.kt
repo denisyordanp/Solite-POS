@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.schema.response.StoreResponse
 import com.socialite.data.schema.room.EntityData
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = Store.DB_NAME,
@@ -29,13 +27,7 @@ data class Store(
 
     @ColumnInfo(name = AppDatabase.UPLOAD)
     var isUploaded: Boolean
-) : Serializable, EntityData {
-
-    fun isNewStore() = id == ID_ADD
-
-    fun asNewStore() = this.copy(
-        id = UUID.randomUUID().toString()
-    )
+) : EntityData {
 
     fun toResponse(): StoreResponse {
         return StoreResponse(
@@ -53,15 +45,6 @@ data class Store(
 
         const val DB_NAME = "new_store"
         const val ID_ADD = "add_id"
-
-        fun add(name: String, address: String): Store {
-            return Store(
-                id = ID_ADD,
-                name = name,
-                address = address,
-                isUploaded = false
-            )
-        }
     }
 }
 

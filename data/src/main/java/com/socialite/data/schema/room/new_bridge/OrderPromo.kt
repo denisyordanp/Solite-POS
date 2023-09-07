@@ -10,7 +10,6 @@ import com.socialite.data.schema.response.OrderPromoResponse
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Promo
-import java.util.UUID
 
 @Entity(
     tableName = OrderPromo.DB_NAME,
@@ -67,17 +66,5 @@ data class OrderPromo(
         const val PROMO = "total_promo"
 
         const val DB_NAME = "new_order_promo"
-
-        fun newPromo(
-            orderId: String,
-            promo: String,
-            totalPromo: Long
-        ) = OrderPromo(
-            id = UUID.randomUUID().toString(),
-            order = orderId,
-            promo = promo,
-            totalPromo = totalPromo,
-            isUpload = false
-        )
     }
 }

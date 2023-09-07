@@ -10,8 +10,6 @@ import com.socialite.data.schema.response.OrderPaymentResponse
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Payment
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = OrderPayment.DB_NAME,
@@ -51,11 +49,7 @@ data class OrderPayment(
 
     @ColumnInfo(name = UPLOAD)
     var isUpload: Boolean
-) : Serializable, EntityData {
-
-    fun inReturn(total: Long): Long {
-        return pay - total
-    }
+) : EntityData {
 
     fun toResponse(): OrderPaymentResponse {
         return OrderPaymentResponse(
@@ -72,15 +66,5 @@ data class OrderPayment(
         const val PAY = "pay"
 
         const val DB_NAME = "new_order_payment"
-
-        fun createNew(
-            order: String, payment: String, pay: Long
-        ) = OrderPayment(
-            id = UUID.randomUUID().toString(),
-            order = order,
-            payment = payment,
-            pay = pay,
-            isUpload = false
-        )
     }
 }

@@ -9,8 +9,6 @@ import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.data.schema.response.ProductResponse
 import com.socialite.data.schema.room.EntityData
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = Product.DB_NAME,
@@ -51,7 +49,7 @@ data class Product(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable, EntityData {
+) : EntityData {
 
     fun toResponse(): ProductResponse {
         return ProductResponse(
@@ -65,6 +63,7 @@ data class Product(
             isUploaded = true
         )
     }
+
     companion object {
         const val PRICE = "price"
         const val ID = "id_product"
@@ -74,21 +73,5 @@ data class Product(
         const val DESC = "desc"
 
         const val DB_NAME = "new_product"
-
-        fun createNewProduct(
-            name: String,
-            desc: String,
-            price: Long,
-            category: String
-        ) = Product(
-            id = UUID.randomUUID().toString(),
-            name = name,
-            desc = desc,
-            price = price,
-            category = category,
-            image = "",
-            isActive = true,
-            isUploaded = false
-        )
     }
 }

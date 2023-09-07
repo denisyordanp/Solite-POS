@@ -18,10 +18,6 @@ data class VariantOption(
     )
 
     companion object {
-
-        const val ALL = 2
-        const val ACTIVE = 1
-
         const val ID_ADD = "add_id"
 
         fun createNew(

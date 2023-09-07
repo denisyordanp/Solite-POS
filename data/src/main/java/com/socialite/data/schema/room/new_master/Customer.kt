@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.data.schema.response.CustomerResponse
 import com.socialite.data.schema.room.EntityData
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = Customer.DB_NAME,
@@ -27,8 +25,7 @@ data class Customer(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable, EntityData {
-    fun isAdd() = id == ID_ADD
+) : EntityData {
 
     fun toResponse(): CustomerResponse {
         return CustomerResponse(
@@ -48,12 +45,6 @@ data class Customer(
 
         fun add(name: String) = Customer(
             id = ID_ADD,
-            name = name,
-            isUploaded = false
-        )
-
-        fun createNew(name: String) = Customer(
-            id = UUID.randomUUID().toString(),
             name = name,
             isUploaded = false
         )

@@ -3,7 +3,6 @@ package com.socialite.domain.domain.impl
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.OutcomesRepository
-import com.socialite.data.schema.room.new_master.Order
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.helper.ProductOrderDetailConverter
 import com.socialite.domain.helper.toData
@@ -13,6 +12,7 @@ import com.socialite.domain.schema.OrderWithProduct
 import com.socialite.domain.schema.ProductOrderDetail
 import com.socialite.domain.schema.RecapData
 import com.socialite.domain.schema.ReportParameter
+import com.socialite.domain.schema.main.Order
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

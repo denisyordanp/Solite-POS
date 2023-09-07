@@ -9,8 +9,6 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.data.schema.response.VariantOptionResponse
 import com.socialite.data.schema.room.EntityData
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = VariantOption.DB_NAME,
@@ -46,13 +44,7 @@ data class VariantOption(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable, EntityData {
-
-    fun isAdd() = id == ID_ADD
-
-    fun asNewVariantOption() = this.copy(
-        id = UUID.randomUUID().toString()
-    )
+) : EntityData {
 
     fun toResponse(): VariantOptionResponse {
         return VariantOptionResponse(
@@ -91,19 +83,5 @@ data class VariantOption(
             }
             return SimpleSQLiteQuery(query.toString())
         }
-
-        fun createNew(
-            variant: String,
-            name: String,
-            desc: String,
-            isActive: Boolean
-        ) = VariantOption(
-            id = ID_ADD,
-            variant = variant,
-            name = name,
-            desc = desc,
-            isActive = isActive,
-            isUploaded = false
-        )
     }
 }

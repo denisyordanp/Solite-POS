@@ -16,11 +16,6 @@ data class Store(
     )
 
     companion object {
-        const val ID = "id_store"
-        const val NAME = "name"
-        const val ADDRESS = "address"
-
-        const val DB_NAME = "new_store"
         const val ID_ADD = "add_id"
 
         fun add(name: String, address: String): Store {

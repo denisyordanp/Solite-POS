@@ -2,12 +2,9 @@
 <resources>
 	<dimen name="baseMargin">16dp</dimen>
 
-	<dimen name="SMargin">4dp</dimen>
 	<dimen name="MMargin">8dp</dimen>
 	<dimen name="LMargin">12dp</dimen>
-	<dimen name="RvLine">0.5dp</dimen>
 
-	<dimen name="MText">18sp</dimen>
 	<dimen name="LText">24sp</dimen>
 	<dimen name="LLText">30sp</dimen>
 </resources>

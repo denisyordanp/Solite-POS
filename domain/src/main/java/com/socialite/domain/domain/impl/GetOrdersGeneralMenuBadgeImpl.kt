@@ -1,10 +1,10 @@
 package com.socialite.domain.domain.impl
 
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
-import com.socialite.data.schema.room.master.Order
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.domain.menu.GeneralMenus
 import com.socialite.domain.schema.GeneralMenuBadge
+import com.socialite.domain.schema.main.Order
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf

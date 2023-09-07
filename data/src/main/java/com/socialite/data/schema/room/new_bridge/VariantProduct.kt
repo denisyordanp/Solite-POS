@@ -11,8 +11,6 @@ import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.data.schema.room.new_master.Variant
 import com.socialite.data.schema.room.new_master.VariantOption
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = VariantProduct.DB_NAME,
@@ -62,7 +60,7 @@ data class VariantProduct(
 
     @ColumnInfo(name = OrderDetail.DELETED, defaultValue = "0")
     var isDeleted: Boolean
-) : Serializable, EntityData {
+) : EntityData {
 
     fun toResponse(): VariantProductResponse {
         return VariantProductResponse(
@@ -79,17 +77,5 @@ data class VariantProduct(
         const val DELETED = "deleted"
 
         const val DB_NAME = "new_variant_product"
-
-        fun createNewVariantProduct(
-            variant: String,
-            variantOption: String,
-            product: String) = VariantProduct(
-            id = UUID.randomUUID().toString(),
-            variant = variant,
-            variantOption = variantOption,
-            product = product,
-            isUploaded = false,
-            isDeleted = false
-        )
     }
 }

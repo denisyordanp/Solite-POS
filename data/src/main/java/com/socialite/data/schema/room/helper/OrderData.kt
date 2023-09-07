@@ -10,7 +10,6 @@ import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Payment
 import com.socialite.data.schema.room.new_master.Promo
 import com.socialite.data.schema.room.new_master.Store
-import java.io.Serializable
 
 data class OrderData(
     @Embedded
@@ -49,17 +48,4 @@ data class OrderData(
             entityColumn = Promo.ID
         )
     ) val promo: Promo?,
-) : Serializable {
-
-    companion object {
-        fun newOrder(order: Order, customer: Customer, store: Store) = OrderData(
-            order = order,
-            customer = customer,
-            store = store,
-            orderPayment = null,
-            payment = null,
-            orderPromo = null,
-            promo = null
-        )
-    }
-}
+)

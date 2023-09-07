@@ -6,7 +6,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
-import java.io.Serializable
 
 @Entity(
         tableName = Order.DB_NAME,
@@ -50,7 +49,7 @@ data class Order(
 
         @ColumnInfo(name = UPLOAD)
         var isUploaded: Boolean
-) : Serializable {
+) {
     companion object {
         const val ORDER_DATE = "order_date"
         const val COOK_TIME = "cook_time"
@@ -59,10 +58,5 @@ data class Order(
         const val STORE = "store"
         const val NO = "order_no"
         const val DB_NAME = "order"
-
-        const val ON_PROCESS = 0
-        const val NEED_PAY = 1
-        const val CANCEL = 2
-        const val DONE = 3
     }
 }

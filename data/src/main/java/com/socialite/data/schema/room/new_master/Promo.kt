@@ -8,8 +8,6 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.data.schema.response.PromoResponse
 import com.socialite.data.schema.room.EntityData
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = Promo.DB_NAME,
@@ -39,13 +37,7 @@ data class Promo(
 
     @ColumnInfo(name = UPLOAD)
     val isUploaded: Boolean
-) : Serializable, EntityData {
-
-    fun isNewPromo() = id == ID_ADD
-
-    fun asNewPromo() = this.copy(
-        id = UUID.randomUUID().toString()
-    )
+) : EntityData {
 
     fun toResponse(): PromoResponse {
         return PromoResponse(
@@ -89,20 +81,5 @@ data class Promo(
             }
             return SimpleSQLiteQuery(query.toString())
         }
-
-        fun createNewPromo(
-            name: String,
-            desc: String,
-            isCash: Boolean,
-            value: Int?
-        ) = Promo(
-            id = ID_ADD,
-            name = name,
-            desc = desc,
-            isCash = isCash,
-            value = value,
-            isActive = true,
-            isUploaded = false
-        )
     }
 }

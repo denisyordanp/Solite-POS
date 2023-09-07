@@ -8,8 +8,6 @@ import androidx.room.PrimaryKey
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.data.schema.response.OrderResponse
 import com.socialite.data.schema.room.EntityData
-import java.io.Serializable
-import java.util.UUID
 
 @Entity(
     tableName = Order.DB_NAME,
@@ -51,9 +49,7 @@ data class Order(
 
     @ColumnInfo(name = UPLOAD)
     var isUploaded: Boolean
-) : Serializable, EntityData {
-
-    fun isEditable() = status == ON_PROCESS || status == NEED_PAY
+) : EntityData {
 
     fun toResponse(): OrderResponse {
         return OrderResponse(
@@ -77,27 +73,5 @@ data class Order(
         const val ID = "order_id"
 
         const val DB_NAME = "new_order"
-
-        const val ON_PROCESS = 0
-        const val NEED_PAY = 1
-        const val CANCEL = 2
-        const val DONE = 3
-
-        fun createNew(
-            orderNo: String,
-            customer: String,
-            orderTime: String,
-            store: String,
-            isTakeAway: Boolean
-        ) = Order(
-            id = UUID.randomUUID().toString(),
-            orderNo = orderNo,
-            customer = customer,
-            orderTime = orderTime,
-            isTakeAway = isTakeAway,
-            status = ON_PROCESS,
-            store = store,
-            isUploaded = false
-        )
     }
 }
