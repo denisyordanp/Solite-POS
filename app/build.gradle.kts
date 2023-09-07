@@ -74,8 +74,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Depedencies.lifecycleVersion}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Depedencies.lifecycleVersion}")
     implementation("androidx.appcompat:appcompat:${Depedencies.appCompatVersion}")
-    implementation("androidx.recyclerview:recyclerview:${Depedencies.recycleViewVersion}")
-    implementation("androidx.cardview:cardview:${Depedencies.cardViewVersion}")
     implementation("androidx.lifecycle:lifecycle-extensions:${Depedencies.lifecycleExtensionVersion}")
 
     // Compose
