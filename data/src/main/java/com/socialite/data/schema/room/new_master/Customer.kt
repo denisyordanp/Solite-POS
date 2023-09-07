@@ -21,10 +21,10 @@ data class Customer(
     override val id: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): CustomerResponse {

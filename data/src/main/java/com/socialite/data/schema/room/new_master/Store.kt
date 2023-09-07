@@ -20,13 +20,13 @@ data class Store(
     override val id: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = ADDRESS)
-    var address: String,
+    val address: String,
 
     @ColumnInfo(name = AppDatabase.UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): StoreResponse {

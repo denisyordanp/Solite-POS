@@ -8,11 +8,11 @@ import com.socialite.data.schema.room.master.PurchaseProduct
 
 data class PurchaseProductWithProduct(
     @Embedded
-    var purchaseProduct: PurchaseProduct?,
+    val purchaseProduct: PurchaseProduct?,
 
     @Relation(parentColumn = Product.ID, entityColumn = Product.ID)
-    var product: Product?,
+    val product: Product?,
 
     @Ignore
-    var type: Int?
+    val type: Int?
 )

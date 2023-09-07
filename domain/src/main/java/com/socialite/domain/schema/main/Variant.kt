@@ -4,10 +4,10 @@ import java.util.UUID
 
 data class Variant(
     val id: String,
-    var name: String,
-    var type: Int,
-    var isMust: Boolean? = null,
-    var isUploaded: Boolean
+    val name: String,
+    val type: Int,
+    val isMust: Boolean? = null,
+    val isUploaded: Boolean
 ) {
 
     fun isSingleOption() = type == ONE_OPTION

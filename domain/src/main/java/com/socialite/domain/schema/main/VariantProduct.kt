@@ -3,12 +3,12 @@ package com.socialite.domain.schema.main
 import java.util.UUID
 
 data class VariantProduct(
-    var id: String,
-    var variant: String,
-    var variantOption: String,
-    var product: String,
-    var isUploaded: Boolean,
-    var isDeleted: Boolean
+    val id: String,
+    val variant: String,
+    val variantOption: String,
+    val product: String,
+    val isUploaded: Boolean,
+    val isDeleted: Boolean
 ) {
 
     companion object {

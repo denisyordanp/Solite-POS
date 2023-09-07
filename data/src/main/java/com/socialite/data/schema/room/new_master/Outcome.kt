@@ -21,25 +21,25 @@ data class Outcome(
     override val id: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = DESC)
-    var desc: String,
+    val desc: String,
 
     @ColumnInfo(name = PRICE)
-    var price: Long,
+    val price: Long,
 
     @ColumnInfo(name = AMOUNT)
-    var amount: Int,
+    val amount: Int,
 
     @ColumnInfo(name = DATE)
-    var date: String,
+    val date: String,
 
     @ColumnInfo(name = Store.ID)
-    var store: String,
+    val store: String,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): OutcomeResponse {

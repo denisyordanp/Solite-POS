@@ -36,19 +36,19 @@ import com.socialite.data.schema.room.new_master.Promo
 data class OrderPromo(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    override var id: String,
+    override val id: String,
 
     @ColumnInfo(name = Order.ID)
-    var order: String,
+    val order: String,
 
     @ColumnInfo(name = Promo.ID)
-    var promo: String,
+    val promo: String,
 
     @ColumnInfo(name = PROMO)
-    var totalPromo: Long,
+    val totalPromo: Long,
 
     @ColumnInfo(name = AppDatabase.UPLOAD)
-    var isUpload: Boolean
+    val isUpload: Boolean
 ) : EntityData {
 
     fun toResponse(): OrderPromoResponse {

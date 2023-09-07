@@ -3,11 +3,11 @@ package com.socialite.domain.schema.main
 import java.util.UUID
 
 data class OrderPayment(
-    var id: String,
-    var order: String,
-    var payment: String,
-    var pay: Long,
-    var isUpload: Boolean
+    val id: String,
+    val order: String,
+    val payment: String,
+    val pay: Long,
+    val isUpload: Boolean
 ) {
 
     fun inReturn(total: Long): Long {

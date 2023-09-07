@@ -4,8 +4,8 @@ import java.util.UUID
 
 data class Customer(
     val id: String,
-    var name: String,
-    var isUploaded: Boolean
+    val name: String,
+    val isUploaded: Boolean
 ) {
     fun isAdd() = id == ID_ADD
 

@@ -30,19 +30,19 @@ data class VariantOption(
     override val id: String,
 
     @ColumnInfo(name = Variant.ID)
-    var variant: String,
+    val variant: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = DESC)
-    var desc: String,
+    val desc: String,
 
     @ColumnInfo(name = STATUS)
-    var isActive: Boolean,
+    val isActive: Boolean,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): VariantOptionResponse {

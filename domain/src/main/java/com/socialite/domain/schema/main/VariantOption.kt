@@ -4,11 +4,11 @@ import java.util.UUID
 
 data class VariantOption(
     val id: String,
-    var variant: String,
-    var name: String,
-    var desc: String,
-    var isActive: Boolean,
-    var isUploaded: Boolean
+    val variant: String,
+    val name: String,
+    val desc: String,
+    val isActive: Boolean,
+    val isUploaded: Boolean
 ) {
 
     fun isAdd() = id == ID_ADD

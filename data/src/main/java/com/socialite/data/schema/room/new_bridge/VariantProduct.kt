@@ -44,22 +44,22 @@ import com.socialite.data.schema.room.new_master.VariantOption
 data class VariantProduct(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    override var id: String,
+    override val id: String,
 
     @ColumnInfo(name = Variant.ID)
-    var variant: String,
+    val variant: String,
 
     @ColumnInfo(name = VariantOption.ID)
-    var variantOption: String,
+    val variantOption: String,
 
     @ColumnInfo(name = Product.ID)
-    var product: String,
+    val product: String,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean,
+    val isUploaded: Boolean,
 
     @ColumnInfo(name = OrderDetail.DELETED, defaultValue = "0")
-    var isDeleted: Boolean
+    val isDeleted: Boolean
 ) : EntityData {
 
     fun toResponse(): VariantProductResponse {

@@ -4,12 +4,12 @@ import java.util.UUID
 
 data class Payment(
     val id: String,
-    var name: String,
-    var desc: String,
-    var tax: Float,
-    var isCash: Boolean,
-    var isActive: Boolean,
-    var isUploaded: Boolean
+    val name: String,
+    val desc: String,
+    val tax: Float,
+    val isCash: Boolean,
+    val isActive: Boolean,
+    val isUploaded: Boolean
 ) {
 
     fun isNewPayment() = id == ID_ADD

@@ -38,22 +38,22 @@ import java.util.UUID
 data class OrderDetail(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    override var id: String,
+    override val id: String,
 
     @ColumnInfo(name = Order.ID)
-    var order: String,
+    val order: String,
 
     @ColumnInfo(name = Product.ID)
-    var product: String,
+    val product: String,
 
     @ColumnInfo(name = AMOUNT)
-    var amount: Int,
+    val amount: Int,
 
     @ColumnInfo(name = UPLOAD)
-    var isUpload: Boolean,
+    val isUpload: Boolean,
 
     @ColumnInfo(name = DELETED, defaultValue = "0")
-    var isDeleted: Boolean
+    val isDeleted: Boolean
 ) : Serializable, EntityData {
 
     fun toResponse(): OrderDetailResponse {

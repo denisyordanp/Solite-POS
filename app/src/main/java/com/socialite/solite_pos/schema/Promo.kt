@@ -5,12 +5,12 @@ import java.io.Serializable
 
 data class Promo(
     val id: String,
-    override var name: String,
-    var desc: String,
-    var isCash: Boolean,
-    var value: Int?,
-    var isActive: Boolean,
-    var isUploaded: Boolean
+    override val name: String,
+    val desc: String,
+    val isCash: Boolean,
+    val value: Int?,
+    val isActive: Boolean,
+    val isUploaded: Boolean
 ) : Serializable, DropdownItem {
 
     fun isManualInput() = isCash && value == null

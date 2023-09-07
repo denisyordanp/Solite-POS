@@ -30,25 +30,25 @@ data class Order(
     override val id: String,
 
     @ColumnInfo(name = NO)
-    var orderNo: String,
+    val orderNo: String,
 
     @ColumnInfo(name = Customer.ID)
-    var customer: String,
+    val customer: String,
 
     @ColumnInfo(name = ORDER_DATE)
-    var orderTime: String,
+    val orderTime: String,
 
     @ColumnInfo(name = TAKE_AWAY)
-    var isTakeAway: Boolean,
+    val isTakeAway: Boolean,
 
     @ColumnInfo(name = STATUS)
-    var status: Int,
+    val status: Int,
 
     @ColumnInfo(name = Store.ID)
-    var store: String,
+    val store: String,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): OrderResponse {

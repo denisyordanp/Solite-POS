@@ -30,25 +30,25 @@ data class Product(
     override val id: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = Category.ID)
-    var category: String,
+    val category: String,
 
     @ColumnInfo(name = IMAGE)
-    var image: String,
+    val image: String,
 
     @ColumnInfo(name = DESC)
-    var desc: String,
+    val desc: String,
 
     @ColumnInfo(name = PRICE)
-    var price: Long,
+    val price: Long,
 
     @ColumnInfo(name = STATUS)
-    var isActive: Boolean,
+    val isActive: Boolean,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): ProductResponse {

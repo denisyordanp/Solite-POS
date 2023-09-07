@@ -36,19 +36,19 @@ import com.socialite.data.schema.room.new_master.Payment
 data class OrderPayment(
     @PrimaryKey
     @ColumnInfo(name = ID, defaultValue = "")
-    override var id: String,
+    override val id: String,
 
     @ColumnInfo(name = Order.ID)
-    var order: String,
+    val order: String,
 
     @ColumnInfo(name = Payment.ID)
-    var payment: String,
+    val payment: String,
 
     @ColumnInfo(name = PAY)
-    var pay: Long,
+    val pay: Long,
 
     @ColumnInfo(name = UPLOAD)
-    var isUpload: Boolean
+    val isUpload: Boolean
 ) : EntityData {
 
     fun toResponse(): OrderPaymentResponse {
