@@ -1,6 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_bridge.OrderDetail
 import com.socialite.data.database.AppDatabase
@@ -11,6 +12,8 @@ import com.socialite.data.database.dao.ProductsDao
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 
@@ -19,36 +22,9 @@ class OrderDetailsRepositoryImpl @Inject constructor(
     private val ordersDao: OrdersDao,
     private val orderProductVariantsDao: OrderProductVariantsDao,
     private val productsDao: ProductsDao,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : OrderDetailsRepository {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: OrderDetailsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: OrderDetailsDao,
-            ordersDao: OrdersDao,
-            orderProductVariantsDao: OrderProductVariantsDao,
-            productsDao: ProductsDao,
-            db: AppDatabase
-        ): OrderDetailsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(OrderDetailsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = OrderDetailsRepositoryImpl(
-                            dao = dao,
-                            ordersDao = ordersDao,
-                            orderProductVariantsDao = orderProductVariantsDao,
-                            productsDao = productsDao,
-                            db = db
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
 
     override suspend fun getNeedUploadOrderDetails() = dao.getNeedUploadOrderDetails()
 
@@ -57,8 +33,10 @@ class OrderDetailsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDeletedOrderDetailIds() = dao.getDeletedOrderDetailIds()
-    override fun getOrderDetailByIdOrder(orderId: String) = dao.getOrderDetailByIdOrder(orderId)
-    override fun getOrderDetail() = dao.getOrderDetailsFlow()
+    override fun getOrderDetailByIdOrder(orderId: String) =
+        dao.getOrderDetailByIdOrder(orderId)
+            .flowOn(dispatcher)
+    override fun getOrderDetail() = dao.getOrderDetailsFlow().flowOn(dispatcher)
     override suspend fun getOrderDetailWithVariants(idDetail: String) =
         dao.getOrderDetailWithVariants(idDetail)
 

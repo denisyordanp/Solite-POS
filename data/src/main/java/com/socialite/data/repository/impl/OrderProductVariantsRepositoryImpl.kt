@@ -20,32 +20,6 @@ class OrderProductVariantsRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : OrderProductVariantsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: OrderProductVariantsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: OrderProductVariantsDao,
-            orderDetailsDao: OrderDetailsDao,
-            variantOptionsDao: VariantOptionsDao,
-            db: AppDatabase
-        ): OrderProductVariantsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(OrderProductVariantsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = OrderProductVariantsRepositoryImpl(
-                            dao = dao,
-                            orderDetailsDao = orderDetailsDao,
-                            variantOptionsDao = variantOptionsDao,
-                            db = db
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override suspend fun getNeedUploadOrderProductVariants() = dao.getNeedOrderProductVariants()
 
     override suspend fun insertOrderProductVariants(list: List<OrderProductVariant>) {

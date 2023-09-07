@@ -1,18 +1,22 @@
 package com.socialite.domain.domain.impl
 
+import com.socialite.common.di.IoDispatcher
 import com.socialite.domain.domain.GetProductWithCategories
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class IsShouldSelectStoreImpl @Inject constructor(
     private val settingRepository: SettingRepository,
     private val storeRepository: StoreRepository,
     private val getProductWithCategories: GetProductWithCategories,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : IsShouldSelectStore {
     override fun invoke(): Flow<Boolean> {
         return flow {
@@ -30,6 +34,6 @@ class IsShouldSelectStoreImpl @Inject constructor(
             } else {
                 emit(false)
             }
-        }
+        }.flowOn(dispatcher)
     }
 }

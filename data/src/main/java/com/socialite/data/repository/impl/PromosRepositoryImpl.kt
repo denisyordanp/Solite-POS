@@ -2,6 +2,7 @@ package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.PromosDao
 import com.socialite.data.repository.PromosRepository
@@ -9,34 +10,18 @@ import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.master.Promo
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 import com.socialite.data.schema.room.new_master.Promo as NewPromo
 
 class PromosRepositoryImpl @Inject constructor(
     private val dao: PromosDao,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : PromosRepository, SyncRepository<NewPromo> {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: PromosRepositoryImpl? = null
-
-        fun getInstance(
-            dao: PromosDao,
-            db: AppDatabase
-        ): PromosRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(PromosRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = PromosRepositoryImpl(dao = dao, db = db)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
 
     override suspend fun insertPromo(data: NewPromo) = dao.insertNewPromo(data)
     override suspend fun updatePromo(data: NewPromo) = dao.updateNewPromo(data.copy(
@@ -44,7 +29,7 @@ class PromosRepositoryImpl @Inject constructor(
     ))
 
     override suspend fun getNeedUploadPromos() = dao.getNeedUploadPromos()
-    override fun getPromos(query: SupportSQLiteQuery) = dao.getNewPromos(query)
+    override fun getPromos(query: SupportSQLiteQuery) = dao.getNewPromos(query).flowOn(dispatcher)
     override suspend fun migrateToUUID() {
         val promos = dao.getPromos(Promo.filter(Promo.Status.ALL)).firstOrNull()
         if (!promos.isNullOrEmpty()) {

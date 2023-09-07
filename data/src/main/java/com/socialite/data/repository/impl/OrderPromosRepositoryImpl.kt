@@ -20,32 +20,6 @@ class OrderPromosRepositoryImpl @Inject constructor(
     private val db: AppDatabase
 ) : OrderPromosRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: OrderPromosRepositoryImpl? = null
-
-        fun getInstance(
-            dao: OrderPromosDao,
-            ordersDao: OrdersDao,
-            promosDao: PromosDao,
-            db: AppDatabase
-        ): OrderPromosRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(OrderPromosRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = OrderPromosRepositoryImpl(
-                            dao = dao,
-                            ordersDao = ordersDao,
-                            promosDao = promosDao,
-                            db = db
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
     override suspend fun getNeedUploadOrderPromos() = dao.getNeedUploadOrderPromos()
 
     override suspend fun getItems(): List<OrderPromo> {

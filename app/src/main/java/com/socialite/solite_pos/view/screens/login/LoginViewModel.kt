@@ -2,14 +2,14 @@ package com.socialite.solite_pos.view.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.socialite.common.state.DataState
 import com.socialite.domain.domain.LoginUser
 import com.socialite.domain.domain.RegisterUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,19 +25,17 @@ class LoginViewModel @Inject constructor(
     fun login(
         email: String,
         password: String
-    ) {
-        viewModelScope.launch {
-            val currentState = _viewState.value
-
-            flow {
-                val isSuccessLogin = loginUser(email, password)
-                if (isSuccessLogin) emit(currentState.copySucceed())
-            }.onStart {
-                emit(currentState.copyLoading())
-            }.catch {
-                emit(currentState.copyError(it.message ?: ""))
-            }.collect(_viewState)
-        }
+    ) = viewModelScope.launch {
+        _viewState.emitAll(
+            loginUser(email, password)
+                .map {
+                    when (it) {
+                        is DataState.Error -> _viewState.value.copyError(it.throwable.message)
+                        DataState.Loading -> _viewState.value.copyLoading()
+                        is DataState.Success -> _viewState.value.copySucceed()
+                    }
+                }
+        )
     }
 
     fun register(
@@ -45,19 +43,17 @@ class LoginViewModel @Inject constructor(
         email: String,
         password: String,
         storeName: String
-    ) {
-        viewModelScope.launch {
-            val currentState = _viewState.value
-
-            flow {
-                val isSuccessRegister = registerUser(name, email, password, storeName)
-                if (isSuccessRegister) emit(currentState.copySucceed())
-            }.onStart {
-                emit(currentState.copyLoading())
-            }.catch {
-                emit(currentState.copyError(it.message ?: ""))
-            }.collect(_viewState)
-        }
+    ) =  viewModelScope.launch {
+        _viewState.emitAll(
+            registerUser(name, email, password, storeName)
+                .map {
+                    when (it) {
+                        is DataState.Error -> _viewState.value.copyError(it.throwable.message)
+                        DataState.Loading -> _viewState.value.copyLoading()
+                        is DataState.Success -> _viewState.value.copySucceed()
+                    }
+                }
+        )
     }
 
     fun resetState() {

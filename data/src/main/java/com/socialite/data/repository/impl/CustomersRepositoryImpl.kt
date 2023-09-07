@@ -1,6 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Customer
 import com.socialite.data.database.AppDatabase
@@ -8,36 +9,20 @@ import com.socialite.data.database.dao.CustomersDao
 import com.socialite.data.repository.CustomersRepository
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 
 class CustomersRepositoryImpl @Inject constructor(
     private val dao: CustomersDao,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : CustomersRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: CustomersRepositoryImpl? = null
-
-        fun getInstance(
-            dao: CustomersDao,
-            db: AppDatabase
-        ): CustomersRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(CustomersRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = CustomersRepositoryImpl(dao = dao, db = db)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
-    override fun getCustomers() = dao.getNewCustomers()
+    override fun getCustomers() = dao.getNewCustomers().flowOn(dispatcher)
     override suspend fun getNeedUploadCustomers() = dao.getNeedUploadCustomers()
     override suspend fun getItems() = dao.getNewCustomers().first()
 

@@ -1,18 +1,24 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.domain.domain.GetProductWithCategories
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
+import com.socialite.domain.domain.GetProductWithCategories
 import com.socialite.domain.helper.toDomain
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
 class GetProductWithCategoriesImpl @Inject constructor(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : GetProductWithCategories {
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke() = productsRepository.getActiveProductsWithCategory()
-        .map {
+        .mapLatest {
             it.map { product ->
                 val hasVariant = productVariantsRepository
                     .isProductHasVariants(product.product.id)
@@ -24,5 +30,5 @@ class GetProductWithCategoriesImpl @Inject constructor(
             }.filterKeys { category ->
                 category.isActive
             }
-        }
+        }.flowOn(dispatcher)
 }

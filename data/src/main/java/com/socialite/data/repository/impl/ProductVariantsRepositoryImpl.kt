@@ -1,6 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.ProductVariantsDao
 import com.socialite.data.database.dao.ProductsDao
@@ -11,6 +12,8 @@ import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_bridge.VariantProduct
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 
@@ -19,46 +22,19 @@ class ProductVariantsRepositoryImpl @Inject constructor(
     private val variantsDao: VariantsDao,
     private val variantOptionsDao: VariantOptionsDao,
     private val productsDao: ProductsDao,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ProductVariantsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: ProductVariantsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: ProductVariantsDao,
-            variantsDao: VariantsDao,
-            variantOptionsDao: VariantOptionsDao,
-            productsDao: ProductsDao,
-            db: AppDatabase
-        ): ProductVariantsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(ProductVariantsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = ProductVariantsRepositoryImpl(
-                            dao = dao,
-                            db = db,
-                            variantsDao = variantsDao,
-                            variantOptionsDao = variantOptionsDao,
-                            productsDao = productsDao
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
-    override fun getVariantOptions(productId: String) = dao.getVariantProducts(productId)
-    override fun getAllVariantOptions() = dao.getAllVariantProducts()
+    override fun getVariantOptions(productId: String) = dao.getVariantProducts(productId).flowOn(dispatcher)
+    override fun getAllVariantOptions() = dao.getAllVariantProducts().flowOn(dispatcher)
 
     override suspend fun getNeedUploadVariantProducts() = dao.getNeedUploadVariantProducts()
 
     override suspend fun isProductHasVariants(idProduct: String) =
         !dao.getProductVariants(idProduct).isNullOrEmpty()
 
-    override fun getVariantsProductById(idProduct: String) = dao.getProductVariantsById(idProduct)
+    override fun getVariantsProductById(idProduct: String) = dao.getProductVariantsById(idProduct).flowOn(dispatcher)
 
     override suspend fun insertVariantProduct(data: VariantProduct) {
         dao.insertNewVariantProduct(data)

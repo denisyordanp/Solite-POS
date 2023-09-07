@@ -1,6 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.VariantOptionsDao
 import com.socialite.data.database.dao.VariantsDao
@@ -9,40 +10,19 @@ import com.socialite.data.repository.VariantOptionsRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.VariantOption
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 
 class VariantOptionsRepositoryImpl @Inject constructor(
     private val dao: VariantOptionsDao,
     private val variantsDao: VariantsDao,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : VariantOptionsRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: VariantOptionsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: VariantOptionsDao,
-            variantsDao: VariantsDao,
-            db: AppDatabase
-        ): VariantOptionsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(VariantOptionsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = VariantOptionsRepositoryImpl(
-                            dao = dao,
-                            db = db,
-                            variantsDao = variantsDao
-                        )
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
-
-    override fun getVariantOptions() = dao.getNewVariantOptionsFlow()
+    override fun getVariantOptions() = dao.getNewVariantOptionsFlow().flowOn(dispatcher)
 
     override suspend fun getNeedUploadVariantOptions() = dao.getNeedUploadVariantOptions()
 

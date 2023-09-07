@@ -17,7 +17,7 @@ data class LoginViewState(
         isSuccessLogin = true
     )
 
-    fun copyError(message: String) = this.copy(
+    fun copyError(message: String?) = this.copy(
         isLoading = false,
         errorMessage = message
     )

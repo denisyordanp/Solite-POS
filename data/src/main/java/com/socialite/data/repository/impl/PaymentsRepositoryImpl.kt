@@ -2,6 +2,7 @@ package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.PaymentsDao
 import com.socialite.data.repository.PaymentsRepository
@@ -9,35 +10,19 @@ import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.master.Payment
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 import com.socialite.data.schema.room.new_master.Payment as NewPayment
 
 class PaymentsRepositoryImpl @Inject  constructor(
     private val dao: PaymentsDao,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : PaymentsRepository {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: PaymentsRepositoryImpl? = null
-
-        fun getInstance(
-            dao: PaymentsDao,
-            db: AppDatabase
-        ): PaymentsRepositoryImpl {
-            if (INSTANCE == null) {
-                synchronized(PaymentsRepositoryImpl::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = PaymentsRepositoryImpl(dao = dao, db = db)
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
-    }
 
     override suspend fun insertPayment(data: NewPayment) {
         dao.insertNewPayment(data)
@@ -49,7 +34,7 @@ class PaymentsRepositoryImpl @Inject  constructor(
         ))
     }
 
-    override fun getPayments(query: SupportSQLiteQuery) = dao.getNewPayments(query)
+    override fun getPayments(query: SupportSQLiteQuery) = dao.getNewPayments(query).flowOn(dispatcher)
     override suspend fun getNeedUploadPayments() = dao.getNeedUploadPayments()
 
     override suspend fun getItems(): List<NewPayment> {

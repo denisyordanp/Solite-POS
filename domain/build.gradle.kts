@@ -33,6 +33,7 @@ android {
 
 dependencies {
     implementation(project(":data"))
+    implementation(project(":common"))
 
     implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")

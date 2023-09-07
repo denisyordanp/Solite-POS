@@ -1,10 +1,13 @@
 package com.socialite.domain.domain
 
+import com.socialite.common.state.DataState
+import kotlinx.coroutines.flow.Flow
+
 fun interface RegisterUser {
     suspend operator fun invoke(
         name: String,
         email: String,
         password: String,
         storeName: String
-    ): Boolean
+    ): Flow<DataState<String>>
 }
