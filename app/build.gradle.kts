@@ -11,16 +11,17 @@ plugins {
 }
 
 android {
-    val properties = gradleLocalProperties(rootDir)
-
-    signingConfigs {
-        create("release") {
-            storeFile = file(properties.getProperty("STORE_FILE"))
-            storePassword = properties.getProperty("STORE_PASSWORD")
-            keyAlias = properties.getProperty("KEY_ALIAS")
-            keyPassword = properties.getProperty("KEY_PASSWORD")
-        }
-    }
+    // Uncomment this when want to build release variant
+//    val properties = gradleLocalProperties(rootDir)
+//
+//    signingConfigs {
+//        create("release") {
+//            storeFile = file(properties.getProperty("STORE_FILE"))
+//            storePassword = properties.getProperty("STORE_PASSWORD")
+//            keyAlias = properties.getProperty("KEY_ALIAS")
+//            keyPassword = properties.getProperty("KEY_PASSWORD")
+//        }
+//    }
 
     compileSdk = AppConfig.compileSdk
     namespace = "com.socialite.solite_pos"
