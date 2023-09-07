@@ -1,5 +1,6 @@
 plugins {
     id("com.android.library")
+    id("com.google.devtools.ksp")
     id("kotlin-kapt")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
@@ -15,10 +16,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -57,8 +56,8 @@ dependencies {
     // Database
     api("androidx.room:room-runtime:${Depedencies.roomVersion}")
     api("androidx.room:room-ktx:${Depedencies.roomVersion}")
-    kapt("org.xerial:sqlite-jdbc:${Depedencies.sqliteJdbc}")
-    kapt("androidx.room:room-compiler:${Depedencies.roomVersion}")
+    ksp("org.xerial:sqlite-jdbc:${Depedencies.sqliteJdbc}")
+    ksp("androidx.room:room-compiler:${Depedencies.roomVersion}")
 
     // Preferences
     implementation("androidx.security:security-crypto-ktx:${Depedencies.securityCryptoVersion}")
