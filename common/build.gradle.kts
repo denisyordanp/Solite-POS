@@ -1,19 +1,15 @@
 plugins {
     id("com.android.library")
-    id("com.google.devtools.ksp")
     id("kotlin-kapt")
     id("org.jetbrains.kotlin.android")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.socialite.domain"
+    namespace = "com.socialite.common"
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
         minSdk = AppConfig.minSdk
-        targetSdk = AppConfig.targetSdk
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,18 +28,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(project(":common"))
-
-    implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
+    api("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")
     kapt("com.google.dagger:hilt-compiler:${Depedencies.hiltVersion}")
-
-    // Test
-    testImplementation("junit:junit:${Depedencies.junitVersion}")
-    androidTestImplementation("androidx.test.ext:junit:${Depedencies.junitExtVersion}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Depedencies.espressoVersion}")
 }

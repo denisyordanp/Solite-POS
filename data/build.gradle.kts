@@ -36,9 +36,7 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
+    implementation(project(":common"))
 
     // Hilt
     implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")
