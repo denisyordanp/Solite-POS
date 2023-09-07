@@ -35,7 +35,7 @@ class OrdersRepositoryImpl @Inject constructor(
     ) = dao.getOrdersByStatus(status, from, until, store).flowOn(dispatcher)
 
     override fun getOrderList(from: String, until: String, store: String) =
-        dao.getOrdersByStatus(from, until, store)
+        dao.getOrdersByStatus(from, until, store).flowOn(dispatcher)
 
     override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId).flowOn(dispatcher)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
