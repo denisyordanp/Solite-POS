@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -9,6 +11,17 @@ plugins {
 }
 
 android {
+    val properties = gradleLocalProperties(rootDir)
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(properties.getProperty("STORE_FILE"))
+            storePassword = properties.getProperty("STORE_PASSWORD")
+            keyAlias = properties.getProperty("KEY_ALIAS")
+            keyPassword = properties.getProperty("KEY_PASSWORD")
+        }
+    }
+
     compileSdk = AppConfig.compileSdk
     namespace = "com.socialite.solite_pos"
 
@@ -27,6 +40,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -43,7 +57,6 @@ android {
         kotlinCompilerExtensionVersion = AppConfig.kotlinCompilerExtensionVersion
     }
 	buildFeatures{
-		viewBinding = true
         compose = true
 	}
     buildToolsVersion = AppConfig.buildToolsVersion

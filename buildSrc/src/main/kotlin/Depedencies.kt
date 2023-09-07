@@ -35,8 +35,6 @@ object Depedencies {
     // UI
     const val materialVersion = "1.6.1"
     const val constraintLayoutVersion = "2.0.4"
-    const val recycleViewVersion = "1.1.0"
-    const val cardViewVersion = "1.0.0"
 
     // Utility
     const val easyPermissionVersion = "3.0.0"
