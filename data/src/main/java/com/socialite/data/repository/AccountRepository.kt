@@ -1,10 +1,13 @@
 package com.socialite.data.repository
 
+import com.socialite.common.state.DataState
+import kotlinx.coroutines.flow.Flow
+
 interface AccountRepository {
     suspend fun login(
         email: String,
         password: String
-    ): String
+    ): Flow<DataState<String>>
 
     suspend fun register(
         name: String,
