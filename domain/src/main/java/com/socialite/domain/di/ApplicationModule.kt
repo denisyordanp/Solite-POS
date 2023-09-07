@@ -1,5 +1,6 @@
 package com.socialite.domain.di
 
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.repository.SettingRepository
 import com.socialite.domain.domain.IsDarkModeActive
 import com.socialite.domain.domain.impl.IsDarkModeActiveImpl
@@ -7,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 
 
 @Module
@@ -14,6 +16,7 @@ import dagger.hilt.components.SingletonComponent
 object ApplicationModule {
     @Provides
     fun provideIsDarkModeActive(
-        settingRepository: SettingRepository
-    ): IsDarkModeActive = IsDarkModeActiveImpl(settingRepository)
+        settingRepository: SettingRepository,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): IsDarkModeActive = IsDarkModeActiveImpl(settingRepository, dispatcher)
 }

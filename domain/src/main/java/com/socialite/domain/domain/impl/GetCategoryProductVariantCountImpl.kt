@@ -1,23 +1,29 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.domain.domain.GetCategoryProductVariantCount
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
+import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.helper.toDomain
 import com.socialite.domain.schema.ProductVariantCount
 import com.socialite.domain.schema.main.Category
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
 class GetCategoryProductVariantCountImpl @Inject constructor(
     private val productsRepository: ProductsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : GetCategoryProductVariantCount {
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(): Flow<List<Pair<Category, List<ProductVariantCount>>>> {
         return productsRepository.getAllProductsWithCategory()
-            .map {
+            .mapLatest {
                 it.groupBy { product ->
                     product.category.toDomain()
                 }.filterKeys { category ->
@@ -39,6 +45,6 @@ class GetCategoryProductVariantCountImpl @Inject constructor(
                         }
                     )
                 }
-            }
+            }.flowOn(dispatcher)
     }
 }

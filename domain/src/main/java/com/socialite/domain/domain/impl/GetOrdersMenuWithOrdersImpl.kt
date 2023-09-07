@@ -1,29 +1,32 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.domain.domain.GetOrdersMenuWithOrders
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.repository.OrderDetailsRepository
-import com.socialite.data.repository.OrdersRepository
+import com.socialite.domain.domain.GetAllOrderListByReport
+import com.socialite.domain.domain.GetOrdersMenuWithOrders
 import com.socialite.domain.helper.ProductOrderDetailConverter
-import com.socialite.domain.helper.toData
 import com.socialite.domain.helper.toDomain
 import com.socialite.domain.menu.OrderMenus
-import com.socialite.domain.schema.ReportParameter
 import com.socialite.domain.schema.OrderMenuWithOrders
 import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.domain.schema.ReportParameter
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class GetOrdersMenuWithOrdersImpl @Inject constructor(
-    private val orderRepository: OrdersRepository,
+    private val getAllOrderListByReport: GetAllOrderListByReport,
     private val orderDetailRepository: OrderDetailsRepository,
-    private val converter: ProductOrderDetailConverter
+    private val converter: ProductOrderDetailConverter,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : GetOrdersMenuWithOrders {
     override fun invoke(parameter: ReportParameter): Flow<List<OrderMenuWithOrders>> {
         return combine(
             flowOf(OrderMenus.values()),
-            orderRepository.getAllOrderList(parameter.toData()),
+            getAllOrderListByReport(parameter),
             orderDetailRepository.getOrderDetail()
         ) { menus, orders, details ->
             menus.map { menu ->
@@ -41,6 +44,6 @@ class GetOrdersMenuWithOrdersImpl @Inject constructor(
                     orders = filteredOrders
                 )
             }
-        }
+        }.flowOn(dispatcher)
     }
 }

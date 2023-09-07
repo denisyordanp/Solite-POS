@@ -1,7 +1,6 @@
 package com.socialite.domain.helper
 
 import com.socialite.domain.schema.Outcome
-import com.socialite.domain.schema.ReportParameter
 import com.socialite.domain.schema.main.Category
 import com.socialite.domain.schema.main.Customer
 import com.socialite.domain.schema.main.Order
@@ -41,10 +40,6 @@ fun Customer.toData() = com.socialite.data.schema.room.new_master.Customer(
     this.id,
     this.name,
     this.isUploaded
-)
-
-fun ReportParameter.toData() = com.socialite.data.schema.helper.ReportParameter(
-    this.start, this.end, this.storeId
 )
 
 fun Category.toData() = com.socialite.data.schema.room.new_master.Category(

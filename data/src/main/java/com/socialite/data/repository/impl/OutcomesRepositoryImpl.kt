@@ -1,6 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.OutcomesDao
 import com.socialite.data.database.dao.StoreDao
@@ -9,17 +10,20 @@ import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Outcome
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 
 class OutcomesRepositoryImpl @Inject constructor(
     private val dao: OutcomesDao,
     private val storesDao: StoreDao,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : OutcomesRepository {
 
     override fun getOutcomes(from: String, until: String, store: String) =
-        dao.getOutcome(from, until, store)
+        dao.getOutcome(from, until, store).flowOn(dispatcher)
 
     override suspend fun insertOutcome(data: Outcome) {
         dao.insertNewOutcome(data)

@@ -1,6 +1,5 @@
 package com.socialite.domain.helper
 
-import com.socialite.data.schema.helper.ReportParameter
 import com.socialite.data.schema.room.helper.OrderData
 import com.socialite.data.schema.room.helper.ProductWithCategory
 import com.socialite.data.schema.room.new_bridge.OrderPayment
@@ -126,12 +125,6 @@ fun OrderData.toDomain() = DomainOrderData(
     this.payment?.toDomain(),
     this.orderPromo?.toDomain(),
     this.promo?.toDomain()
-)
-
-fun ReportParameter.toDomain() = com.socialite.domain.schema.ReportParameter(
-    this.start,
-    this.end,
-    this.storeId
 )
 
 fun ProductWithCategory.toDomain() = com.socialite.domain.schema.ProductWithCategory(

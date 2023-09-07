@@ -1,21 +1,18 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.helper.OrderData
-import com.socialite.data.schema.room.new_master.Order
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.CustomersDao
 import com.socialite.data.database.dao.OrdersDao
 import com.socialite.data.database.dao.StoreDao
 import com.socialite.data.repository.OrdersRepository
-import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.SyncRepository
-import com.socialite.data.schema.helper.ReportParameter
 import com.socialite.data.schema.helper.UpdateSynchronizations
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapConcat
+import com.socialite.data.schema.room.EntityData
+import com.socialite.data.schema.room.new_master.Order
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 
@@ -23,35 +20,26 @@ class OrdersRepositoryImpl @Inject constructor(
     private val dao: OrdersDao,
     private val customersDao: CustomersDao,
     private val storesDao: StoreDao,
-    private val settingRepository: SettingRepository,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : OrdersRepository {
 
-    override fun getOrderList(status: Int, date: String) = dao.getOrdersByStatus(status, date)
+    override fun getOrderList(status: Int, storeId: String, date: String) =
+        dao.getOrdersByStatus(status, storeId, date).flowOn(dispatcher)
 
-    @FlowPreview
-    override fun getOrderList(status: Int, parameters: ReportParameter): Flow<List<OrderData>> {
-        return if (parameters.isTodayOnly()) {
-            settingRepository.getNewSelectedStore().flatMapConcat {
-                dao.getOrdersByStatus(status, parameters.start, parameters.end, it)
-            }
-        } else {
-            dao.getOrdersByStatus(status, parameters.start, parameters.end, parameters.storeId)
-        }
-    }
+    override fun getOrderList(
+        status: Int,
+        from: String,
+        until: String,
+        store: String
+    ) = dao.getOrdersByStatus(status, from, until, store).flowOn(dispatcher)
 
-    override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId)
+    override fun getOrderList(from: String, until: String, store: String) =
+        dao.getOrdersByStatus(from, until, store)
+
+    override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId).flowOn(dispatcher)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
-    @OptIn(FlowPreview::class)
-    override fun getAllOrderList(parameters: ReportParameter): Flow<List<OrderData>> {
-        return if (parameters.isTodayOnly()) {
-            settingRepository.getNewSelectedStore().flatMapConcat {
-                dao.getAllOrders(parameters.start, parameters.end, it)
-            }
-        } else {
-            dao.getAllOrders(parameters.start, parameters.end, parameters.storeId)
-        }
-    }
+
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
         order.copy(
             isUploaded = false

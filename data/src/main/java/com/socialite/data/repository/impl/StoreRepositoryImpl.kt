@@ -1,6 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
+import com.socialite.common.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.StoreDao
 import com.socialite.data.repository.SettingRepository
@@ -9,21 +10,24 @@ import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Store
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
 
 class StoreRepositoryImpl @Inject constructor(
     private val dao: StoreDao,
     private val settingRepository: SettingRepository,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : StoreRepository {
     override suspend fun getStore(id: String): Store? {
         return dao.getNewStore(id)
     }
 
-    override fun getStores() = dao.getNewStores()
+    override fun getStores() = dao.getNewStores().flowOn(dispatcher)
     override suspend fun getNeedUploadStores() = dao.getNeedUploadStores()
     override suspend fun insertStore(store: Store) {
         dao.insertStore(store)

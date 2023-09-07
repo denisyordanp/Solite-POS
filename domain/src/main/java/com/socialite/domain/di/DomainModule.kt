@@ -9,9 +9,11 @@ import com.socialite.domain.domain.AddNewVariant
 import com.socialite.domain.domain.AddNewVariantOption
 import com.socialite.domain.domain.AddNewVariantProduct
 import com.socialite.domain.domain.FetchRemoteConfig
+import com.socialite.domain.domain.GetAllOrderListByReport
 import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.domain.GetCustomers
+import com.socialite.domain.domain.GetOrderListByReport
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
@@ -64,9 +66,11 @@ import com.socialite.domain.domain.impl.AddNewVariantImpl
 import com.socialite.domain.domain.impl.AddNewVariantOptionImpl
 import com.socialite.domain.domain.impl.AddNewVariantProductImpl
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
+import com.socialite.domain.domain.impl.GetAllOrderListByReportImpl
 import com.socialite.domain.domain.impl.GetCategoriesImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.domain.domain.impl.GetCustomersImpl
+import com.socialite.domain.domain.impl.GetOrderListByReportImpl
 import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.domain.domain.impl.GetOrderWithProductImpl
 import com.socialite.domain.domain.impl.GetOrdersGeneralMenuBadgeImpl
@@ -393,4 +397,14 @@ abstract class DomainModule {
     abstract fun bindRemoveVariantProduct(
         removeVariantProductImpl: RemoveVariantProductImpl
     ): RemoveVariantProduct
+
+    @Binds
+    abstract fun bindGetOrderListByReport(
+        getOrderListByReportImpl: GetOrderListByReportImpl
+    ): GetOrderListByReport
+
+    @Binds
+    abstract fun bindGetAllOrderListByReport(
+        getAllOrderListByReportImpl: GetAllOrderListByReportImpl
+    ): GetAllOrderListByReport
 }
