@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.socialite.data.database.AppDatabase.Companion.UPLOAD
 import com.socialite.data.schema.response.VariantOptionResponse
 import com.socialite.data.schema.room.EntityData
@@ -68,20 +67,5 @@ data class VariantOption(
 
         const val DB_NAME = "new_variant_option"
         const val ID_ADD = "add_id"
-
-        fun getFilter(idVariant: String, state: Int): SimpleSQLiteQuery {
-            val query = StringBuilder().append("SELECT * FROM ")
-            query.append(DB_NAME)
-            query.append(" WHERE ")
-                .append(Variant.ID)
-                .append(" = ")
-                .append("'${idVariant}'")
-            if (state == ACTIVE) {
-                query.append(" AND ")
-                    .append(STATUS)
-                    .append(" = ").append(ACTIVE)
-            }
-            return SimpleSQLiteQuery(query.toString())
-        }
     }
 }

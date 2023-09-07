@@ -116,7 +116,7 @@ class DateUtils {
                 return dbDateTimeSimpleFormat.format(currentTime)
             }
 
-        val currentTime: Date
+        private val currentTime: Date
             get() = Calendar.getInstance().time
 
 
