@@ -34,7 +34,6 @@ object Depedencies {
 
     // UI
     const val materialVersion = "1.6.1"
-    const val constraintLayoutVersion = "2.0.4"
 
     // Utility
     const val easyPermissionVersion = "3.0.0"
