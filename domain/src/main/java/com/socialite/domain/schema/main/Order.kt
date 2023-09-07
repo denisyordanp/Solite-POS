@@ -6,13 +6,13 @@ import java.util.UUID
 
 data class Order(
     val id: String,
-    var orderNo: String,
-    var customer: String,
-    var orderTime: String,
-    var isTakeAway: Boolean,
-    var status: Int,
-    var store: String,
-    var isUploaded: Boolean
+    val orderNo: String,
+    val customer: String,
+    val orderTime: String,
+    val isTakeAway: Boolean,
+    val status: Int,
+    val store: String,
+    val isUploaded: Boolean
 ) {
 
     fun isEditable() = status == ON_PROCESS || status == NEED_PAY

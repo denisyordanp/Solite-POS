@@ -3,11 +3,11 @@ package com.socialite.domain.schema.main
 import java.util.UUID
 
 data class OrderPromo(
-    var id: String,
-    var order: String,
-    var promo: String,
-    var totalPromo: Long,
-    var isUpload: Boolean
+    val id: String,
+    val order: String,
+    val promo: String,
+    val totalPromo: Long,
+    val isUpload: Boolean
 ) {
 
     companion object {

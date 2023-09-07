@@ -4,9 +4,9 @@ import java.util.UUID
 
 data class Store(
     val id: String,
-    var name: String,
-    var address: String,
-    var isUploaded: Boolean
+    val name: String,
+    val address: String,
+    val isUploaded: Boolean
 ) {
 
     fun isNewStore() = id == ID_ADD

@@ -4,13 +4,13 @@ import java.util.UUID
 
 data class Product(
     val id: String,
-    var name: String,
-    var category: String,
-    var image: String,
-    var desc: String,
-    var price: Long,
-    var isActive: Boolean,
-    var isUploaded: Boolean
+    val name: String,
+    val category: String,
+    val image: String,
+    val desc: String,
+    val price: Long,
+    val isActive: Boolean,
+    val isUploaded: Boolean
 ) {
     companion object {
         fun createNewProduct(

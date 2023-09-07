@@ -22,22 +22,22 @@ data class Payment(
     override val id: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = DESC)
-    var desc: String,
+    val desc: String,
 
     @ColumnInfo(name = TAX)
-    var tax: Float,
+    val tax: Float,
 
     @ColumnInfo(name = CASH)
-    var isCash: Boolean,
+    val isCash: Boolean,
 
     @ColumnInfo(name = STATUS)
-    var isActive: Boolean,
+    val isActive: Boolean,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): PaymentResponse {

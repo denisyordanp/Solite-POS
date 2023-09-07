@@ -20,16 +20,16 @@ data class Variant(
     override val id: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = TYPE)
-    var type: Int,
+    val type: Int,
 
     @ColumnInfo(name = MUST)
-    var isMust: Boolean? = null,
+    val isMust: Boolean? = null,
 
     @ColumnInfo(name = UPLOAD)
-    var isUploaded: Boolean
+    val isUploaded: Boolean
 ) : EntityData {
 
     fun toResponse(): VariantResponse {
