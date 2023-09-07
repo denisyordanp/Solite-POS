@@ -14,5 +14,5 @@ interface AccountRepository {
         email: String,
         password: String,
         storeName: String
-    ): String
+    ): Flow<DataState<String>>
 }

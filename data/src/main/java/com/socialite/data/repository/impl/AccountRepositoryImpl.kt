@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class AccountRepositoryImpl @Inject constructor(
@@ -20,7 +21,6 @@ class AccountRepositoryImpl @Inject constructor(
 ) : AccountRepository {
     override suspend fun login(email: String, password: String): Flow<DataState<String>> {
         return flow {
-            emit(DataState.Loading)
             val result = try {
                 val response = handleErrorMessage {
                     service.login(email, password)
@@ -32,6 +32,8 @@ class AccountRepositoryImpl @Inject constructor(
                 DataState.Error(e)
             }
             emit(result)
+        }.onStart {
+            emit(DataState.Loading)
         }.flowOn(dispatcher)
     }
 
@@ -40,11 +42,22 @@ class AccountRepositoryImpl @Inject constructor(
         email: String,
         password: String,
         storeName: String
-    ): String {
-        val response = handleErrorMessage {
-            service.register(name, email, password, storeName)
-        }
-        return response.getTokenOrError()
+    ): Flow<DataState<String>> {
+        return flow {
+            val result = try {
+                val response = handleErrorMessage {
+                    service.register(name, email, password, storeName)
+                }
+
+                DataState.Success(response.getTokenOrError())
+
+            } catch (e: Exception) {
+                DataState.Error(e)
+            }
+            emit(result)
+        }.onStart {
+            emit(DataState.Loading)
+        }.flowOn(dispatcher)
     }
 
     private fun ApiResponse<TokenResponse>.getTokenOrError(): String {
