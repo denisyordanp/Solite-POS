@@ -20,4 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.socialite.solite_pos.data.schema.response.** { *; }
+## Gson
+-keep class com.socialite.data.schema.response.** { *; }

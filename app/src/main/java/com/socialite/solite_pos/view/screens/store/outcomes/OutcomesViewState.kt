@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.store.outcomes
 
-import com.socialite.solite_pos.data.schema.room.new_master.Outcome
+import com.socialite.domain.schema.Outcome
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 
 data class OutcomesViewState(

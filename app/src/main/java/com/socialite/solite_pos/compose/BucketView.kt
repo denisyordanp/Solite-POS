@@ -26,11 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.schema.ProductOrderDetail
+import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.config.timeMilliSecondToDateFormat
-import com.socialite.solite_pos.data.schema.helper.BucketOrder
+import com.socialite.domain.schema.BucketOrder
 
 @Composable
 fun BucketView(

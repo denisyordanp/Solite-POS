@@ -3,8 +3,8 @@ package com.socialite.solite_pos.view.screens.bluetooth
 import android.bluetooth.BluetoothDevice
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetOrderWithProduct
-import com.socialite.solite_pos.data.preference.SettingPreferences
+import com.socialite.domain.domain.GetOrderWithProduct
+import com.socialite.domain.domain.SetNewPrinterAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BluetoothDevicesViewModel @Inject constructor(
     private val getOrderWithProduct: GetOrderWithProduct,
-    private val settingPreferences: SettingPreferences
+    private val setNewPrinterAddress: SetNewPrinterAddress
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(BluetoothViewState.idle())
     val viewState = _viewState.asStateFlow()
@@ -36,7 +36,7 @@ class BluetoothDevicesViewModel @Inject constructor(
     }
 
     fun setNewPrinterDevice(address: String) {
-        settingPreferences.printerDevice = address
+        setNewPrinterAddress(address)
     }
 
     fun showSnackBar() = viewModelScope.launch {

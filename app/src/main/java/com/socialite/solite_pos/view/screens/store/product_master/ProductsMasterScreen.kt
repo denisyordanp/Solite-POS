@@ -52,10 +52,11 @@ import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.schema.helper.ProductVariantCount
-import com.socialite.solite_pos.data.schema.room.new_master.Category
-import com.socialite.solite_pos.data.schema.room.new_master.Product
+import com.socialite.domain.schema.ProductVariantCount
+import com.socialite.domain.schema.main.Product
+import com.socialite.solite_pos.schema.Category
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import kotlinx.coroutines.launch
 
 @Composable
@@ -70,7 +71,7 @@ fun ProductsMasterScreen(
     val pagerState = rememberPagerState()
     val products = currentViewModel.getProductsWithCategory().collectAsState(initial = emptyList())
     val categories = products.value.map {
-        it.first
+        it.first.toUi()
     }
 
     Box {

@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.order_customer.select_customer
 
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
+import com.socialite.domain.schema.main.Customer
 
 data class SelectCustomersViewState(
     val customers: List<Customer>,

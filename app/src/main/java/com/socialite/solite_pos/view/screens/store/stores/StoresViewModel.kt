@@ -2,38 +2,44 @@ package com.socialite.solite_pos.view.screens.store.stores
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.schema.room.new_master.Store
-import com.socialite.solite_pos.data.repository.SettingRepository
-import com.socialite.solite_pos.data.repository.StoreRepository
+import com.socialite.domain.domain.AddNewStore
+import com.socialite.domain.domain.GetSelectedStore
+import com.socialite.domain.domain.GetStores
+import com.socialite.domain.domain.SelectStore
+import com.socialite.domain.domain.UpdateStore
+import com.socialite.domain.schema.main.Store
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class StoresViewModel @Inject constructor(
-    private val storeRepository: StoreRepository,
-    private val settingRepository: SettingRepository,
+    private val addNewStore: AddNewStore,
+    private val getStores: GetStores,
+    private val updateStore: UpdateStore,
+    private val getSelectedStore: GetSelectedStore,
+    private val selectStore: SelectStore,
 ) : ViewModel() {
 
-    fun getStores() = storeRepository.getStores()
+    fun getStores() = getStores.invoke()
 
     fun insertStore(store: Store) {
         viewModelScope.launch {
-            storeRepository.insertStore(store.asNewStore())
+            addNewStore(store.asNewStore())
         }
     }
 
     fun updateStore(store: Store) {
         viewModelScope.launch {
-            storeRepository.updateStore(store)
+            updateStore.invoke(store)
         }
     }
 
-    val selectedStore = settingRepository.getNewSelectedStore()
+    val selectedStore get() = getSelectedStore()
 
     fun selectStore(id: String) {
         viewModelScope.launch {
-            settingRepository.selectNewStore(id)
+            selectStore.invoke(id)
         }
     }
 }

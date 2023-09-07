@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.socialite.domain.schema.main.Store
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicAlertDialog
@@ -49,7 +50,6 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.schema.room.new_master.Store
 import kotlinx.coroutines.launch
 
 @Composable

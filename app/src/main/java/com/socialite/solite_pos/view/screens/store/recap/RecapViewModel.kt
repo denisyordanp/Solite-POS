@@ -2,10 +2,13 @@ package com.socialite.solite_pos.view.screens.store.recap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetOrderMenusWithAmount
-import com.socialite.solite_pos.data.domain.GetRecapData
-import com.socialite.solite_pos.data.schema.room.new_master.Store
-import com.socialite.solite_pos.data.repository.StoreRepository
+import com.socialite.domain.domain.GetOrderMenusWithAmount
+import com.socialite.domain.domain.GetRecapData
+import com.socialite.domain.domain.GetStores
+import com.socialite.solite_pos.schema.MenuOrderAmount
+import com.socialite.solite_pos.schema.Store
+import com.socialite.solite_pos.utils.tools.mapper.toDomain
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecapViewModel @Inject constructor(
-    private val storeRepository: StoreRepository,
+    private val getStores: GetStores,
     private val getRecapData: GetRecapData,
     private val getOrderMenusWithAmount: GetOrderMenusWithAmount
 ) : ViewModel() {
@@ -27,18 +30,21 @@ class RecapViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            storeRepository.getStores()
-                .map {
+            getStores()
+                .map { stores ->
                     _viewState.value.copy(
-                        stores = it
+                        stores = stores.map { it.toUi() }
                     )
                 }.collect(_viewState)
         }
 
         _viewState.onEach {
             val parameters = it.getParameters()
-            val recap = getRecapData(parameters).first()
-            val menusWithAmount = getOrderMenusWithAmount(parameters).first()
+            val recap = getRecapData(parameters.toDomain()).first()
+            val menusWithAmount =
+                getOrderMenusWithAmount(parameters.toDomain()).first().map { menu ->
+                    MenuOrderAmount.fromDomain(menu)
+                }
             _viewState.emit(
                 _viewState.value.copy(
                     recap = recap,

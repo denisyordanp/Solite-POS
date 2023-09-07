@@ -2,10 +2,11 @@ package com.socialite.solite_pos.view.screens.store.outcomes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.NewOutcome
-import com.socialite.solite_pos.data.schema.room.new_master.Outcome
-import com.socialite.solite_pos.data.repository.OutcomesRepository
+import com.socialite.domain.domain.GetOutcomes
+import com.socialite.domain.domain.NewOutcome
+import com.socialite.domain.schema.Outcome
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
+import com.socialite.solite_pos.utils.tools.mapper.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OutcomesViewModel @Inject constructor(
-    private val outcomesRepository: OutcomesRepository,
     private val newOutcome: NewOutcome,
+    private val getOutcomes: GetOutcomes,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(OutcomesViewState.idle())
@@ -25,7 +26,7 @@ class OutcomesViewModel @Inject constructor(
 
     init {
         _viewState.onEach {
-            outcomesRepository.getOutcomes(it.parameters)
+            getOutcomes(it.parameters.toDomain())
                 .onEach { outcomes ->
                     _viewState.emit(
                         _viewState.value.copy(

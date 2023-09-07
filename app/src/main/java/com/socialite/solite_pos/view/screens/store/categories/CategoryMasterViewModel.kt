@@ -2,29 +2,32 @@ package com.socialite.solite_pos.view.screens.store.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.sqlite.db.SimpleSQLiteQuery
-import com.socialite.solite_pos.data.schema.room.new_master.Category
-import com.socialite.solite_pos.data.repository.CategoriesRepository
+import com.socialite.domain.domain.AddNewCategory
+import com.socialite.domain.domain.GetCategories
+import com.socialite.domain.domain.UpdateCategory
+import com.socialite.domain.schema.main.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryMasterViewModel @Inject constructor(
-    private val categoriesRepository: CategoriesRepository,
+    private val getCategories: GetCategories,
+    private val addNewCategory: AddNewCategory,
+    private val updateCategory: UpdateCategory,
 ) : ViewModel() {
 
-    fun getCategories(query: SimpleSQLiteQuery) = categoriesRepository.getCategories(query)
+    fun getAllCategories() = getCategories.invoke(Category.Status.ALL)
 
     fun insertCategory(data: Category) {
         viewModelScope.launch {
-            categoriesRepository.insertCategory(data.asNewCategory())
+            addNewCategory(data.asNewCategory())
         }
     }
 
     fun updateCategory(data: Category) {
         viewModelScope.launch {
-            categoriesRepository.updateCategory(data)
+            updateCategory.invoke(data)
         }
     }
 }

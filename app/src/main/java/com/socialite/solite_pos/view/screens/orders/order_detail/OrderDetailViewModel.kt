@@ -2,16 +2,16 @@ package com.socialite.solite_pos.view.screens.orders.order_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetOrderWithProduct
-import com.socialite.solite_pos.data.schema.room.new_master.Order
-import com.socialite.solite_pos.data.repository.OrdersRepository
+import com.socialite.domain.domain.GetOrderWithProduct
+import com.socialite.domain.domain.UpdateOrder
+import com.socialite.domain.schema.main.Order
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OrderDetailViewModel @Inject constructor(
-    private val ordersRepository: OrdersRepository,
+    private val updateOrder: UpdateOrder,
     private val getOrderWithProduct: GetOrderWithProduct
 ) : ViewModel() {
 
@@ -19,7 +19,7 @@ class OrderDetailViewModel @Inject constructor(
 
     fun putBackOrder(order: Order) {
         viewModelScope.launch {
-            ordersRepository.updateOrder(
+            updateOrder.invoke(
                 order.copy(
                     status = Order.ON_PROCESS
                 )
@@ -29,13 +29,13 @@ class OrderDetailViewModel @Inject constructor(
 
     fun updateOrder(order: Order) {
         viewModelScope.launch {
-            ordersRepository.updateOrder(order)
+            updateOrder.invoke(order)
         }
     }
 
     fun doneOrder(order: Order) {
         viewModelScope.launch {
-            ordersRepository.updateOrder(
+            updateOrder.invoke(
                 order.copy(
                     status = Order.NEED_PAY
                 )
@@ -45,7 +45,7 @@ class OrderDetailViewModel @Inject constructor(
 
     fun cancelOrder(order: Order) {
         viewModelScope.launch {
-            ordersRepository.updateOrder(
+            updateOrder.invoke(
                 order.copy(
                     status = Order.CANCEL
                 )

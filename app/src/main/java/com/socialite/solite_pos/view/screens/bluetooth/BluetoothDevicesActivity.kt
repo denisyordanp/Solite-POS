@@ -41,9 +41,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import com.socialite.domain.schema.OrderWithProduct
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
 import com.socialite.solite_pos.utils.printer.PrintBill
 import com.socialite.solite_pos.utils.printer.PrinterConnection
 import com.socialite.solite_pos.utils.printer.PrinterUtils

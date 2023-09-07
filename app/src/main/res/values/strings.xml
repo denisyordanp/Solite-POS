@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Solite-POS</string>
+    <string name="app_name_debug" translatable="false">Solite-POS Debug</string>
     <string name="solite_logo_image" translatable="false">Solite Logo</string>
     <string name="new_order">Pesanan baru</string>
     <string name="order_now">Pesanan sekarang</string>

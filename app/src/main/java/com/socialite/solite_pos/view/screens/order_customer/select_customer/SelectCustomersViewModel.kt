@@ -2,8 +2,9 @@ package com.socialite.solite_pos.view.screens.order_customer.select_customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
-import com.socialite.solite_pos.data.repository.CustomersRepository
+import com.socialite.domain.domain.GetCustomers
+import com.socialite.domain.domain.NewCustomer
+import com.socialite.domain.schema.main.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectCustomersViewModel @Inject constructor(
-    private val customersRepository: CustomersRepository,
+    private val newCustomer: NewCustomer,
+    private val getCustomers: GetCustomers,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(SelectCustomersViewState.idle())
@@ -21,10 +23,10 @@ class SelectCustomersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            customersRepository.getCustomers()
-                .map {
+            getCustomers()
+                .map { customers ->
                     _viewState.value.copy(
-                        customers = it
+                        customers = customers
                     )
                 }
                 .collect(_viewState)
@@ -43,7 +45,7 @@ class SelectCustomersViewModel @Inject constructor(
 
     fun newCustomer(data: Customer) {
         viewModelScope.launch {
-            customersRepository.insertCustomer(data)
+            newCustomer.invoke(data)
         }
     }
 }

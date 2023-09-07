@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.socialite.solite_pos.data.schema.helper.GeneralMenuBadge
+import com.socialite.solite_pos.schema.GeneralMenuBadge
 import com.socialite.solite_pos.view.ui.GeneralMenus
 
 @Composable

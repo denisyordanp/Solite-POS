@@ -56,9 +56,9 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.schema.helper.GeneralMenuBadge
-import com.socialite.solite_pos.data.schema.helper.OrderMenuWithOrders
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
+import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.solite_pos.schema.GeneralMenuBadge
+import com.socialite.solite_pos.schema.OrderMenuWithOrders
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.GeneralMenus

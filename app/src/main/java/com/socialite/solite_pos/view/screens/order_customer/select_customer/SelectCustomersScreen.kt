@@ -35,10 +35,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.socialite.domain.schema.main.Customer
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
 
 @Composable
 @ExperimentalComposeUiApi

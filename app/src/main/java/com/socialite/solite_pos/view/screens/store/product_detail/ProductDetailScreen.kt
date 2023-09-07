@@ -39,10 +39,11 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
-import com.socialite.solite_pos.data.schema.helper.VariantWithOptions
-import com.socialite.solite_pos.data.schema.room.new_master.Category
-import com.socialite.solite_pos.data.schema.room.new_master.Product
+import com.socialite.domain.schema.VariantWithOptions
+import com.socialite.domain.schema.main.Product
+import com.socialite.solite_pos.schema.Category
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 
 @Composable
@@ -113,7 +114,7 @@ private fun DetailContent(
             mutableStateOf(false)
         }
         var selectedCategory by remember {
-            mutableStateOf(product?.category)
+            mutableStateOf(product?.category?.toUi())
         }
         var isError by remember { mutableStateOf(false) }
 
@@ -125,7 +126,7 @@ private fun DetailContent(
             name = product?.product?.name ?: ""
             desc = product?.product?.desc ?: ""
             price = product?.product?.price ?: 0L
-            selectedCategory = product?.category
+            selectedCategory = product?.category?.toUi()
         }
 
         Column(

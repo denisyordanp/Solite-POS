@@ -2,13 +2,13 @@ package com.socialite.solite_pos.view.screens.order_customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.IsShouldSelectStore
-import com.socialite.solite_pos.data.domain.NewOrder
-import com.socialite.solite_pos.data.schema.helper.BucketOrder
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.helper.findExisting
-import com.socialite.solite_pos.data.schema.room.new_master.Customer
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.domain.IsShouldSelectStore
+import com.socialite.domain.domain.NewOrder
+import com.socialite.domain.schema.BucketOrder
+import com.socialite.domain.schema.ProductOrderDetail
+import com.socialite.domain.schema.findExisting
+import com.socialite.domain.helper.DateUtils
+import com.socialite.domain.schema.main.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

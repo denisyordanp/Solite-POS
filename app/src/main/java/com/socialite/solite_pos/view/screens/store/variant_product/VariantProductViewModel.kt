@@ -2,10 +2,12 @@ package com.socialite.solite_pos.view.screens.store.variant_product
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
-import com.socialite.solite_pos.data.schema.room.new_bridge.VariantProduct
-import com.socialite.solite_pos.data.repository.ProductVariantsRepository
-import com.socialite.solite_pos.data.repository.ProductsRepository
+import com.socialite.domain.domain.AddNewVariantProduct
+import com.socialite.domain.domain.GetProductById
+import com.socialite.domain.domain.GetVariantsProductById
+import com.socialite.domain.domain.GetVariantsWithOptions
+import com.socialite.domain.domain.RemoveVariantProduct
+import com.socialite.domain.schema.main.VariantProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,9 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VariantProductViewModel @Inject constructor(
-    private val productsRepository: ProductsRepository,
-    private val productVariantsRepository: ProductVariantsRepository,
-    private val getVariantsWithOptions: GetVariantsWithOptions
+    private val getProductById: GetProductById,
+    private val getVariantsProductById: GetVariantsProductById,
+    private val getVariantsWithOptions: GetVariantsWithOptions,
+    private val addNewVariantProduct: AddNewVariantProduct,
+    private val removeVariantProduct: RemoveVariantProduct,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(VariantProductViewState.idle())
@@ -27,8 +31,8 @@ class VariantProductViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 getVariantsWithOptions(),
-                productVariantsRepository.getVariantsProductById(productId),
-                productsRepository.getProductById(productId)
+                getVariantsProductById(productId),
+                getProductById(productId)
             ) { variants, selectedOptions, product ->
                 _viewState.value.copy(
                     variants = variants,
@@ -41,13 +45,13 @@ class VariantProductViewModel @Inject constructor(
 
     fun insertVariantProduct(data: VariantProduct) {
         viewModelScope.launch {
-            productVariantsRepository.insertVariantProduct(data)
+            addNewVariantProduct(data)
         }
     }
 
     fun removeVariantProduct(data: VariantProduct) {
         viewModelScope.launch {
-            productVariantsRepository.removeVariantProduct(data)
+            removeVariantProduct.invoke(data)
         }
     }
 }

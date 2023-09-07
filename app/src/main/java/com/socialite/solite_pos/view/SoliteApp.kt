@@ -5,10 +5,13 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
+import com.socialite.domain.domain.IsDarkModeActive
+import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.BuildConfig
-import com.socialite.solite_pos.data.repository.SettingRepository
-import com.socialite.solite_pos.utils.config.DateUtils
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
@@ -16,32 +19,27 @@ import javax.inject.Inject
 class SoliteApp : Application() {
 
     @Inject
-    lateinit var settingRepository: SettingRepository
-
-    private lateinit var viewModel: ApplicationViewModel
+    lateinit var isDarkModeActive: IsDarkModeActive
 
     override fun onCreate() {
         super.onCreate()
 
-        setupViewModel()
         setupTheme()
         setupLocale()
         setupFirebase()
     }
 
-    private fun setupViewModel() {
-        viewModel = ApplicationViewModel(this, settingRepository)
-    }
-
     private fun setupTheme() {
-        viewModel.getDarkMode {
-            val delegate = if (it) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
+        MainScope().launch {
+            isDarkModeActive().first().apply {
+                val delegate = if (this) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
 
-            AppCompatDelegate.setDefaultNightMode(delegate)
+                AppCompatDelegate.setDefaultNightMode(delegate)
+            }
         }
     }
 

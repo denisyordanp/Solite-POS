@@ -13,7 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import com.socialite.solite_pos.compose.GeneralMenusView
-import com.socialite.solite_pos.data.schema.helper.GeneralMenuBadge
+import com.socialite.solite_pos.schema.GeneralMenuBadge
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
 import com.socialite.solite_pos.view.ui.ModalContent

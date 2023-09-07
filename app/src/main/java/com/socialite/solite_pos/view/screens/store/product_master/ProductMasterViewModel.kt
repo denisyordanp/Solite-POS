@@ -2,16 +2,16 @@ package com.socialite.solite_pos.view.screens.store.product_master
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetCategoryProductVariantCount
-import com.socialite.solite_pos.data.schema.room.new_master.Product
-import com.socialite.solite_pos.data.repository.ProductsRepository
+import com.socialite.domain.domain.GetCategoryProductVariantCount
+import com.socialite.domain.domain.UpdateProduct
+import com.socialite.domain.schema.main.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductMasterViewModel @Inject constructor(
-    private val productsRepository: ProductsRepository,
+    private val updateProduct: UpdateProduct,
     private val getCategoryProductVariantCount: GetCategoryProductVariantCount,
 ) : ViewModel() {
 
@@ -19,7 +19,7 @@ class ProductMasterViewModel @Inject constructor(
 
     fun updateProduct(data: Product) {
         viewModelScope.launch {
-            productsRepository.updateProduct(data)
+            updateProduct.invoke(data)
         }
     }
 }

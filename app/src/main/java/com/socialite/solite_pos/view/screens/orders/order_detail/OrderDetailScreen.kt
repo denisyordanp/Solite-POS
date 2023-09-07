@@ -41,12 +41,13 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.room.new_master.Order
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.domain.schema.ProductOrderDetail
+import com.socialite.domain.helper.DateUtils
+import com.socialite.domain.schema.main.Order
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.screens.orders.OrderButtonType
 import com.socialite.solite_pos.view.ui.OrderMenus
 
@@ -302,11 +303,12 @@ private fun Details(
                 OrderFooter(orderWithProduct = orderWithProduct)
             }
         }
-        orderWithProduct.orderData.order.statusToOrderMenu()?.let {
+        val statusToOrderMenu = orderWithProduct.orderData.order.statusToOrderMenu()
+        statusToOrderMenu?.let {
             ButtonBottomBar(
                 modifier = Modifier
                     .align(Alignment.BottomCenter),
-                orderStatus = it,
+                orderStatus = it.toUi(),
                 onMenuClicked = onMenuClicked
             )
         }

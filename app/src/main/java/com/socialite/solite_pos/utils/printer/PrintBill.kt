@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.utils.printer
 
-import com.socialite.solite_pos.data.schema.helper.OrderWithProduct
-import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
+import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.domain.schema.main.VariantOption
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import java.io.IOException
@@ -63,8 +63,9 @@ object PrintBill {
             PrinterUtils.TextAlign.LEFT
         )
         printNewLine()
+        val queueNumber = order.orderData.order.getQueueNumber()
         printCustom(
-            "No  : ${order.orderData.order.getQueueNumber()}",
+            "No  : $queueNumber",
             PrinterUtils.TextType.NORMAL,
             PrinterUtils.TextAlign.LEFT
         )
@@ -74,8 +75,9 @@ object PrintBill {
 
     private fun OutputStream.setHeaderQueue(order: OrderWithProduct) {
         printNewLine()
+        val queueNumber = order.orderData.order.getQueueNumber()
         printCustom(
-            order.orderData.order.getQueueNumber(),
+            queueNumber,
             PrinterUtils.TextType.BOLD_LARGE,
             PrinterUtils.TextAlign.CENTER
         )
@@ -107,7 +109,7 @@ object PrintBill {
             for (item in order.products) {
                 if (item.product != null) {
                     printCustom(
-                        item.product.name,
+                        item.product!!.name,
                         PrinterUtils.TextType.NORMAL_BOLD,
                         PrinterUtils.TextAlign.LEFT
                     )
@@ -117,8 +119,8 @@ object PrintBill {
 
                     printCustom(
                         PrinterUtils.withSpace(
-                            "  ${item.amount} x ${toRupiah(item.product.price)}",
-                            "= ${toRupiah(item.amount * item.product.price)}",
+                            "  ${item.amount} x ${toRupiah(item.product!!.price)}",
+                            "= ${toRupiah(item.amount * item.product!!.price)}",
                             32
                         ), PrinterUtils.TextType.NORMAL, PrinterUtils.TextAlign.LEFT
                     )
@@ -168,7 +170,7 @@ object PrintBill {
             )
             printNewLine()
 
-            if (order.orderData.payment.isCash) {
+            if (order.orderData.payment?.isCash == true) {
                 printCustom(
                     PrinterUtils.withSpace(
                         "Bayar   : Rp.",
@@ -187,7 +189,7 @@ object PrintBill {
                 printNewLine()
             } else {
                 printCustom(
-                    PrinterUtils.withSpace("Bayar   :", order.orderData.payment.name, 21),
+                    PrinterUtils.withSpace("Bayar   :", order.orderData.payment?.name, 21),
                     PrinterUtils.TextType.NORMAL_BOLD,
                     PrinterUtils.TextAlign.RIGHT
                 )
@@ -201,7 +203,7 @@ object PrintBill {
             for ((i, item) in order.products.withIndex()) {
                 if (item.product != null) {
                     printCustom(
-                        "${i + 1}. ${item.product.name} x${item.amount}",
+                        "${i + 1}. ${item.product!!.name} x${item.amount}",
                         PrinterUtils.TextType.NORMAL,
                         PrinterUtils.TextAlign.LEFT
                     )

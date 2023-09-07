@@ -42,13 +42,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.socialite.domain.schema.main.Category
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.schema.room.new_master.Category
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,9 +61,7 @@ fun CategoryMasterScreen(
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
     val categories =
-        currentViewModel.getCategories(Category.getFilter(Category.ALL)).collectAsState(
-            initial = emptyList()
-        ).value
+        currentViewModel.getAllCategories().collectAsState(initial = emptyList()).value
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
 
     if (modalState.currentValue == ModalBottomSheetValue.Hidden) {

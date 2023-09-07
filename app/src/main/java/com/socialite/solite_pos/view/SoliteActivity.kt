@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.utils.tools.helper.ShowDialogMessage
 
 open class SoliteActivity : AppCompatActivity() {
 
@@ -28,9 +27,7 @@ open class SoliteActivity : AppCompatActivity() {
 
     private var messageReceiver = object : BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-            ShowDialogMessage(supportFragmentManager)
-                .setName(intent?.getStringExtra(NAME))
-                .show()
+            // TODO: show message
         }
     }
 

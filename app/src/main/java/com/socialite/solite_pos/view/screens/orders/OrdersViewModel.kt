@@ -2,13 +2,13 @@ package com.socialite.solite_pos.view.screens.orders
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetOrderWithProduct
-import com.socialite.solite_pos.data.domain.UpdateOrderProducts
-import com.socialite.solite_pos.data.schema.helper.BucketOrder
-import com.socialite.solite_pos.data.schema.helper.ProductOrderDetail
-import com.socialite.solite_pos.data.schema.helper.findExisting
-import com.socialite.solite_pos.data.preference.SettingPreferences
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.domain.GetOrderWithProduct
+import com.socialite.domain.domain.UpdateOrderProducts
+import com.socialite.domain.schema.BucketOrder
+import com.socialite.domain.schema.ProductOrderDetail
+import com.socialite.domain.schema.findExisting
+import com.socialite.domain.domain.GetPrinterDevice
+import com.socialite.domain.helper.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,13 +21,13 @@ import javax.inject.Inject
 class OrdersViewModel @Inject constructor(
     private val updateOrderProducts: UpdateOrderProducts,
     private val getOrderWithProduct: GetOrderWithProduct,
-    private val settingPreferences: SettingPreferences
+    private val getPrinterDevice: GetPrinterDevice,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(OrdersViewState.idle())
     val viewState = _viewState.asStateFlow()
 
-    val defaultPrinterAddress get() = settingPreferences.printerDevice
+    val defaultPrinterAddress get() = getPrinterDevice()
 
     fun setDefaultPage(page: Int) {
         viewModelScope.launch {

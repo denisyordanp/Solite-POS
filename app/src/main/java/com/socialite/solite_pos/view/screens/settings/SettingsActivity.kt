@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.FullScreenLoadingView
-import com.socialite.solite_pos.utils.config.DateUtils
+import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.screens.opening.OpeningActivity
 import com.socialite.solite_pos.view.screens.order_customer.OrderCustomerActivity

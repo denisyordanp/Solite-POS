@@ -2,19 +2,23 @@ package com.socialite.solite_pos.view.screens.store.variant_master
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.solite_pos.data.domain.GetVariantsWithOptions
-import com.socialite.solite_pos.data.schema.room.new_master.Variant
-import com.socialite.solite_pos.data.schema.room.new_master.VariantOption
-import com.socialite.solite_pos.data.repository.VariantOptionsRepository
-import com.socialite.solite_pos.data.repository.VariantsRepository
+import com.socialite.domain.domain.AddNewVariant
+import com.socialite.domain.domain.AddNewVariantOption
+import com.socialite.domain.domain.GetVariantsWithOptions
+import com.socialite.domain.domain.UpdateVariant
+import com.socialite.domain.domain.UpdateVariantOption
+import com.socialite.domain.schema.main.Variant
+import com.socialite.domain.schema.main.VariantOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VariantMasterViewModel @Inject constructor(
-    private val variantsRepository: VariantsRepository,
-    private val variantOptionsRepository: VariantOptionsRepository,
+    private val addNewVariant: AddNewVariant,
+    private val updateVariant: UpdateVariant,
+    private val addNewVariantOption: AddNewVariantOption,
+    private val updateVariantOption: UpdateVariantOption,
     private val getVariantsWithOptions: GetVariantsWithOptions
 ) : ViewModel() {
 
@@ -22,25 +26,25 @@ class VariantMasterViewModel @Inject constructor(
 
     fun insertVariant(data: Variant) {
         viewModelScope.launch {
-            variantsRepository.insertVariant(data.asNewVariant())
+            addNewVariant(data.asNewVariant())
         }
     }
 
     fun updateVariant(data: Variant) {
         viewModelScope.launch {
-            variantsRepository.updateVariant(data)
+            updateVariant.invoke(data)
         }
     }
 
     fun insertVariantOption(data: VariantOption) {
         viewModelScope.launch {
-            variantOptionsRepository.insertVariantOption(data.asNewVariantOption())
+            addNewVariantOption(data.asNewVariantOption())
         }
     }
 
     fun updateVariantOption(data: VariantOption) {
         viewModelScope.launch {
-            variantOptionsRepository.updateVariantOption(data)
+            updateVariantOption.invoke(data)
         }
     }
 }
