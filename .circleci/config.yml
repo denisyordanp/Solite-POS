@@ -27,8 +27,8 @@ jobs:
         type: integer
     executor:
       name: android/android-machine
-      tag: 2021.10.1
       resource_class: medium
+      tag: 2021.10.1
 
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
