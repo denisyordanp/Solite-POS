@@ -21,10 +21,6 @@ jobs:
         default: 1
         description: Max number of tries. To disable retries, set this to 1.
         type: integer
-      java-version:
-        default: 17
-        description: The version of OpenJDK to change to
-        type: integer
     executor:
       name: android/android-machine
       resource-class: medium
@@ -33,6 +29,12 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
+      - run:
+          command:
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            fi
+            echo "export JAVA_HOME=/usr/lib/jvm/java-${PARAM_JAVA_VER}-openjdk-amd64" >> ~/.bashrc
+            echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
       # Checkout the code as the first step.
       - checkout
 
