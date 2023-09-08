@@ -13,7 +13,7 @@ orbs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  build-test:
+  build-app:
     # These next lines define the Android machine image executor.
     # See: https://circleci.com/docs/2.0/executor-types/
     parameters:
@@ -94,7 +94,8 @@ jobs:
 workflows:
   main-workflow:
     jobs:
-      - build-test-sonar
+      - build-app
+        - build-sonar
 
 
 
