@@ -7,7 +7,6 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("com.google.dagger.hilt.android")
-    id("org.sonarqube")
     id("com.starter.easylauncher")
 }
 
@@ -133,14 +132,6 @@ easylauncher {
         register("debug") {
             filters(chromeLike(overlayHeight = 0.35f, textSizeRatio = 0.13f))
         }
-    }
-}
-
-sonarqube {
-    properties {
-        property("sonar.projectKey", "solite_pos")
-        property("sonar.organization", "solite")
-        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 

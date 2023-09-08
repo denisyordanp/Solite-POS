@@ -1,9 +1,3 @@
-buildscript {
-    dependencies {
-        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${AppPlugins.sonarQube}")
-    }
-}
-
 plugins {
     id("com.android.application") version AppPlugins.androidApplication apply false
     id("com.android.library") version AppPlugins.androidLibrary apply false
@@ -13,6 +7,7 @@ plugins {
     id("com.google.gms.google-services") version AppPlugins.googleService apply false
     id("com.google.firebase.crashlytics") version AppPlugins.firebaseCrashlitics apply false
     id("com.starter.easylauncher") version AppPlugins.easyLauncher apply false
+    id("org.sonarqube") version AppPlugins.sonarQube apply true
 }
 
 allprojects {
@@ -21,6 +16,15 @@ allprojects {
         mavenCentral()
 
 		maven { url = uri("https://jitpack.io") }
+    }
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "solite_pos")
+        property("sonar.organization", "solite")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.androidLint.reportPaths", "${project.buildDir}/reports/lint-results-debug.xml")
     }
 }
 
