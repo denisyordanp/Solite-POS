@@ -1,17 +1,17 @@
 buildscript {
     dependencies {
-        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.0.0.2929")
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${AppPlugins.sonarQube}")
     }
 }
 
 plugins {
-    id("com.android.application") version "7.3.0" apply false
-    id("com.android.library") version "7.3.0" apply false
-    id("com.google.dagger.hilt.android") version "2.44" apply false
-    id("org.jetbrains.kotlin.android") version "1.7.10" apply false
-    id("com.google.devtools.ksp") version "1.7.10-1.0.6" apply false
-    id("com.google.gms.google-services") version "4.3.15" apply false
-    id("com.google.firebase.crashlytics") version "2.9.2" apply false
+    id("com.android.application") version AppPlugins.androidApplication apply false
+    id("com.android.library") version AppPlugins.androidLibrary apply false
+    id("com.google.dagger.hilt.android") version AppPlugins.hilt apply false
+    id("org.jetbrains.kotlin.android") version AppPlugins.kotlin apply false
+    id("com.google.devtools.ksp") version AppPlugins.ksp apply false
+    id("com.google.gms.google-services") version AppPlugins.googleService apply false
+    id("com.google.firebase.crashlytics") version AppPlugins.firebaseCrashlitics apply false
 }
 
 allprojects {
