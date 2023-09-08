@@ -12,6 +12,7 @@ plugins {
     id("com.google.devtools.ksp") version AppPlugins.ksp apply false
     id("com.google.gms.google-services") version AppPlugins.googleService apply false
     id("com.google.firebase.crashlytics") version AppPlugins.firebaseCrashlitics apply false
+    id("com.starter.easylauncher") version AppPlugins.easyLauncher apply false
 }
 
 allprojects {

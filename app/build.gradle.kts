@@ -8,6 +8,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.google.dagger.hilt.android")
     id("org.sonarqube")
+    id("com.starter.easylauncher")
 }
 
 android {
@@ -69,14 +70,6 @@ android {
     }
 }
 
-sonarqube {
-    properties {
-        property("sonar.projectKey", "solite_pos")
-        property("sonar.organization", "solite")
-        property("sonar.host.url", "https://sonarcloud.io")
-    }
-}
-
 dependencies {
     implementation(project(":domain"))
     implementation(project(":common"))
@@ -124,6 +117,22 @@ dependencies {
     testImplementation("junit:junit:${Depedencies.junitVersion}")
     androidTestImplementation("androidx.test.ext:junit:${Depedencies.junitExtVersion}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Depedencies.espressoVersion}")
+}
+
+easylauncher {
+    buildTypes {
+        register("debug") {
+            filters(chromeLike(overlayHeight = 0.35f, textSizeRatio = 0.13f))
+        }
+    }
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "solite_pos")
+        property("sonar.organization", "solite")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
 
 kapt {
