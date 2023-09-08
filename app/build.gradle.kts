@@ -12,17 +12,27 @@ plugins {
 }
 
 android {
-    // Uncomment this when want to build release variant
-//    val properties = gradleLocalProperties(rootDir)
-//
-//    signingConfigs {
-//        create("release") {
-//            storeFile = file(properties.getProperty("STORE_FILE"))
-//            storePassword = properties.getProperty("STORE_PASSWORD")
-//            keyAlias = properties.getProperty("KEY_ALIAS")
-//            keyPassword = properties.getProperty("KEY_PASSWORD")
-//        }
-//    }
+    val properties = gradleLocalProperties(rootDir)
+
+    signingConfigs {
+        val debugStoreFile = "../socialite-debug-key.jks"
+        val debugStorePassword = "DebugKey"
+        val debugStoreAlias = "Socialite-Debug-Key"
+
+        // Dor easy build release variant later and required placeholder for release signing config on CI build
+        create("release") {
+            storeFile = file(properties.getProperty("STORE_FILE") ?: debugStoreFile)
+            storePassword = properties.getProperty("STORE_PASSWORD") ?: debugStorePassword
+            keyAlias = properties.getProperty("KEY_ALIAS") ?: debugStoreAlias
+            keyPassword = properties.getProperty("KEY_PASSWORD") ?: debugStorePassword
+        }
+        getByName("debug") {
+            storeFile = file(debugStoreFile)
+            storePassword = debugStorePassword
+            keyAlias = debugStoreAlias
+            keyPassword = debugStorePassword
+        }
+    }
 
     compileSdk = AppConfig.compileSdk
     namespace = "com.socialite.solite_pos"
@@ -42,8 +52,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            // Uncomment this when want to build release variant
-//            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"

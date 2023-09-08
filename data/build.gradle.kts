@@ -25,12 +25,14 @@ android {
 
     val properties = gradleLocalProperties(rootDir)
     buildTypes {
+        // required for placeholder on CI build
+        val baseUrlPlaceHolder = "\"placeholder\""
         release {
             isMinifyEnabled = false
-            buildConfigField("String", "BASE_URL", properties.getProperty("RELEASE_BASE_URL"))
+            buildConfigField("String", "BASE_URL", properties.getProperty("RELEASE_BASE_URL") ?: baseUrlPlaceHolder)
         }
         debug {
-            buildConfigField("String", "BASE_URL", properties.getProperty("DEVELOP_BASE_URL"))
+            buildConfigField("String", "BASE_URL", properties.getProperty("DEVELOP_BASE_URL") ?: baseUrlPlaceHolder)
         }
     }
     compileOptions {
