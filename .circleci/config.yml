@@ -21,6 +21,10 @@ jobs:
         default: 1
         description: Max number of tries. To disable retries, set this to 1.
         type: integer
+      java-version:
+        default: 11
+        description: The version of OpenJDK to change to
+        type: integer
     executor:
       name: android/android-machine
       tag: 2021.10.1
