@@ -47,12 +47,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.socialite.domain.menu.UserAuthority
 import com.socialite.domain.schema.main.User
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
+import com.socialite.solite_pos.compose.GeneralDropdown
+import com.socialite.solite_pos.compose.GeneralDropdownItem
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.utils.config.PasswordStatus
@@ -75,7 +78,7 @@ fun StoreUsersScreen(
             id = "",
             name = "Testing1",
             email = "Testing@mail.com",
-            authority = "STAFF",
+            authority = UserAuthority.STAFF,
             isUserActive = true,
             password = ""
         ),
@@ -83,7 +86,7 @@ fun StoreUsersScreen(
             id = "",
             name = "Testing2",
             email = "Testing2@mail.com",
-            authority = "ADMIN",
+            authority = UserAuthority.ADMIN,
             isUserActive = false,
             password = ""
         )
@@ -251,7 +254,7 @@ private fun UserItem(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = user.authority,
+                text = user.authority.name,
                 style = MaterialTheme.typography.body1.copy(
                     fontWeight = FontWeight.Bold
                 )
@@ -283,12 +286,12 @@ private fun UserDetail(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var authority by remember { mutableStateOf("") }
+    var authority by remember { mutableStateOf<UserAuthority?>(null) }
 
     LaunchedEffect(key1 = user) {
         name = user?.name ?: ""
         email = user?.email ?: ""
-        authority = user?.authority ?: ""
+        authority = user?.authority
     }
 
     val nameErrorMessage by remember {
@@ -332,8 +335,8 @@ private fun UserDetail(
     }
     val authorityErrorMessage by remember {
         derivedStateOf {
-            when {
-                authority.isEmpty() -> R.string.field_can_not_emtpy
+            when (authority) {
+                null -> R.string.field_can_not_emtpy
                 else -> null
             }
         }
@@ -394,11 +397,14 @@ private fun UserDetail(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        BasicEditText(
-            value = authority,
-            placeHolder = stringResource(R.string.select_authority),
-            onValueChange = {
-                authority = it
+        GeneralDropdown(
+            label = stringResource(R.string.select_authority),
+            items = UserAuthority.values().map {
+                   GeneralDropdownItem(it.name, it)
+            },
+            selectedItem = authority?.run { GeneralDropdownItem(this.name, this) },
+            onSelectedItem = {
+                authority = it.value
             }
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -486,17 +492,17 @@ private fun UserDetail(
                     user?.copy(
                         name = name,
                         email = email,
-                        authority = authority
+                        authority = authority!!
                     ) ?: User.add(
                         name = name,
                         email = email,
-                        authority = authority,
+                        authority = authority!!,
                         password = password
                     )
                 )
                 name = ""
                 email = ""
-                authority = ""
+                authority = UserAuthority.OWNER
                 password = ""
                 confirmPassword = ""
             }
