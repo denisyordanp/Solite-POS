@@ -27,7 +27,7 @@ jobs:
         type: integer
     executor:
       name: android/android-machine
-      resource_class: medium
+      resource-class: medium
       tag: 2021.10.1
 
     # Add steps to the job
