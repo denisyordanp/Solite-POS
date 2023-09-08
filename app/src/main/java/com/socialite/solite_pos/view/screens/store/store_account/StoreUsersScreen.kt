@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.socialite.domain.schema.main.User
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicAlertDialog
@@ -54,7 +55,6 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.data.source.remote.response.entity.UsersResponse
 import com.socialite.solite_pos.utils.config.PasswordStatus
 import com.socialite.solite_pos.utils.config.isNotValidEmail
 import com.socialite.solite_pos.utils.config.isNotValidPassword
@@ -69,9 +69,9 @@ fun StoreUsersScreen(
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
-    var selectedUserForDetail by remember { mutableStateOf<UsersResponse?>(null) }
+    var selectedUserForDetail by remember { mutableStateOf<User?>(null) }
     val storeAccounts = listOf(
-        UsersResponse(
+        User(
             id = "",
             name = "Testing1",
             email = "Testing@mail.com",
@@ -79,7 +79,7 @@ fun StoreUsersScreen(
             isUserActive = true,
             password = ""
         ),
-        UsersResponse(
+        User(
             id = "",
             name = "Testing2",
             email = "Testing2@mail.com",
@@ -140,12 +140,12 @@ fun StoreUsersScreen(
 @Composable
 private fun StoresUsersContent(
     modifier: Modifier = Modifier,
-    storeAccounts: List<UsersResponse>,
+    storeAccounts: List<User>,
     onAddClicked: () -> Unit,
-    onAccountClicked: (UsersResponse) -> Unit,
-    onUserSwitched: (UsersResponse, Boolean) -> Unit
+    onAccountClicked: (User) -> Unit,
+    onUserSwitched: (User, Boolean) -> Unit
 ) {
-    var alertSwitchedUser by remember { mutableStateOf<Pair<UsersResponse, Boolean>?>(null) }
+    var alertSwitchedUser by remember { mutableStateOf<Pair<User, Boolean>?>(null) }
 
     Box(
         modifier = modifier
@@ -220,8 +220,8 @@ private fun StoresUsersContent(
 
 @Composable
 private fun UserItem(
-    user: UsersResponse,
-    onUserClicked: (UsersResponse) -> Unit,
+    user: User,
+    onUserClicked: (User) -> Unit,
     onUserSwitched: (Boolean) -> Unit
 ) {
     Row(
@@ -275,9 +275,9 @@ private fun UserItem(
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 private fun UserDetail(
-    user: UsersResponse?,
+    user: User?,
     errorMessage: String?,
-    onSubmitUser: (UsersResponse) -> Unit
+    onSubmitUser: (User) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -487,7 +487,7 @@ private fun UserDetail(
                         name = name,
                         email = email,
                         authority = authority
-                    ) ?: UsersResponse.add(
+                    ) ?: User.add(
                         name = name,
                         email = email,
                         authority = authority,
