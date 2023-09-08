@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.library")
     id("com.google.devtools.ksp")
@@ -21,9 +23,14 @@ android {
         }
     }
 
+    val properties = gradleLocalProperties(rootDir)
     buildTypes {
         release {
             isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", properties.getProperty("RELEASE_BASE_URL"))
+        }
+        debug {
+            buildConfigField("String", "BASE_URL", properties.getProperty("DEVELOP_BASE_URL"))
         }
     }
     compileOptions {
