@@ -32,9 +32,9 @@ jobs:
       - run:
           command:
             sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            fi
             echo "export JAVA_HOME=/usr/lib/jvm/java-${PARAM_JAVA_VER}-openjdk-amd64" >> ~/.bashrc
             echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+
       # Checkout the code as the first step.
       - checkout
 
