@@ -22,17 +22,9 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
-
-    val properties = gradleLocalProperties(rootDir)
     buildTypes {
-        // required for placeholder on CI build
-        val baseUrlPlaceHolder = "\"placeholder\""
         release {
             isMinifyEnabled = false
-            buildConfigField("String", "BASE_URL", properties.getProperty("RELEASE_BASE_URL") ?: baseUrlPlaceHolder)
-        }
-        debug {
-            buildConfigField("String", "BASE_URL", properties.getProperty("DEVELOP_BASE_URL") ?: baseUrlPlaceHolder)
         }
     }
     compileOptions {
@@ -52,8 +44,6 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:${Depedencies.hiltVersion}")
 
     // Network
-    implementation("com.squareup.retrofit2:retrofit:${Depedencies.retrofitVersion}")
-    implementation("com.squareup.retrofit2:converter-gson:${Depedencies.retrofitVersion}")
     implementation("com.squareup.okhttp3:logging-interceptor:${Depedencies.okhttpLoggingVersion}")
 
     // Firebase

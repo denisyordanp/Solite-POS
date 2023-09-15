@@ -1,9 +1,9 @@
-package com.socialite.data.network
+package com.socialite.common.network
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.socialite.data.BuildConfig
+import com.socialite.common.BuildConfig
 
 object NetworkConfig {
 

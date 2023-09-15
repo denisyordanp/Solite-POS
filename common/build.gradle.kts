@@ -13,9 +13,16 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    val properties = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir)
     buildTypes {
+        // required for placeholder on CI build
+        val baseUrlPlaceHolder = "\"placeholder\""
         release {
             isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", properties.getProperty("RELEASE_BASE_URL") ?: baseUrlPlaceHolder)
+        }
+        debug {
+            buildConfigField("String", "BASE_URL", properties.getProperty("DEVELOP_BASE_URL") ?: baseUrlPlaceHolder)
         }
     }
     compileOptions {
@@ -30,6 +37,10 @@ android {
 dependencies {
     api("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
+
+    // Network
+    api("com.squareup.retrofit2:retrofit:${Depedencies.retrofitVersion}")
+    api("com.squareup.retrofit2:converter-gson:${Depedencies.retrofitVersion}")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")

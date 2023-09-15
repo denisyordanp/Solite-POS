@@ -1,12 +1,13 @@
 package com.socialite.data.repository.impl
 
 import com.socialite.common.di.IoDispatcher
+import com.socialite.common.extension.toError
+import com.socialite.common.network.response.ApiResponse
 import com.socialite.common.state.DataState
 import com.socialite.data.di.NonAuthorizationService
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.schema.response.TokenResponse
 import com.socialite.data.schema.helper.ResponseHandler.handleErrorMessage
-import com.socialite.data.schema.response.helper.ApiResponse
 import com.socialite.data.repository.AccountRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +30,7 @@ class AccountRepositoryImpl @Inject constructor(
                 DataState.Success(response.getTokenOrError())
 
             } catch (e: Exception) {
-                DataState.Error(e)
+                DataState.Error(e.toError<String>())
             }
             emit(result)
         }.onStart {
@@ -52,7 +53,7 @@ class AccountRepositoryImpl @Inject constructor(
                 DataState.Success(response.getTokenOrError())
 
             } catch (e: Exception) {
-                DataState.Error(e)
+                DataState.Error(e.toError<String>())
             }
             emit(result)
         }.onStart {

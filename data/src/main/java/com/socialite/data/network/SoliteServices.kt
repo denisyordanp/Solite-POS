@@ -1,6 +1,6 @@
 package com.socialite.data.network
 
-import com.socialite.data.schema.response.helper.ApiResponse
+import com.socialite.common.network.response.ApiResponse
 import com.socialite.data.schema.response.SynchronizeParams
 import com.socialite.data.schema.response.SynchronizeResponse
 import com.socialite.data.schema.response.TokenResponse

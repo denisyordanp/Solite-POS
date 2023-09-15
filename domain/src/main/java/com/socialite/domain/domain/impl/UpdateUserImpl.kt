@@ -1,7 +1,7 @@
 package com.socialite.domain.domain.impl
 
 import com.socialite.common.di.IoDispatcher
-import com.socialite.common.extension.dataStateFlowNoData
+import com.socialite.common.extension.dataStateFlow
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.UpdateUser
 import com.socialite.domain.helper.toData
@@ -13,7 +13,7 @@ class UpdateUserImpl @Inject constructor(
     private val userRepository: UserRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : UpdateUser {
-    override fun invoke(user: User) = dataStateFlowNoData(dispatcher) {
+    override fun invoke(user: User) = dataStateFlow(dispatcher) {
         userRepository.updateUser(user.toData())
     }
 }

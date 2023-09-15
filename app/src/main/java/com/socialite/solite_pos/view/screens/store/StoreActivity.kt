@@ -33,7 +33,7 @@ import com.socialite.solite_pos.view.screens.store.product_detail.ProductDetailS
 import com.socialite.solite_pos.view.screens.store.product_master.ProductsMasterScreen
 import com.socialite.solite_pos.view.screens.store.promo.PromoMasterScreen
 import com.socialite.solite_pos.view.screens.store.recap.RecapScreen
-import com.socialite.solite_pos.view.screens.store.store_account.StoreUsersScreen
+import com.socialite.solite_pos.view.screens.store.store_user.StoreUsersScreen
 import com.socialite.solite_pos.view.screens.store.stores.StoresScreen
 import com.socialite.solite_pos.view.screens.store.variant_master.VariantMasterScreen
 import com.socialite.solite_pos.view.screens.store.variant_product.VariantProductScreen

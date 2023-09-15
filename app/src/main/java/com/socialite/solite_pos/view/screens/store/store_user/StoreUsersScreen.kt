@@ -1,4 +1,4 @@
-package com.socialite.solite_pos.view.screens.store.store_account
+package com.socialite.solite_pos.view.screens.store.store_user
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.socialite.common.state.DataState
+import com.socialite.common.state.ErrorState
 import com.socialite.domain.menu.UserAuthority
 import com.socialite.domain.schema.main.User
 import com.socialite.solite_pos.R
@@ -66,6 +67,7 @@ import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.solite_pos.utils.config.PasswordStatus
 import com.socialite.solite_pos.utils.config.isNotValidEmail
 import com.socialite.solite_pos.utils.config.isNotValidPassword
+import com.socialite.solite_pos.utils.config.result
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import kotlinx.coroutines.launch
 
@@ -76,12 +78,15 @@ fun StoreUsersScreen(
     viewModel: StoreUsersViewModel = hiltViewModel(),
     onBackClicked: () -> Unit
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.loadUsers()
+    }
+
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
     var selectedUserForDetail by remember { mutableStateOf<User?>(null) }
-
-    val usersState = viewModel.usersFLow.collectAsState(initial = DataState.Idle)
-    val actionUserState = viewModel.actionUserFLow.collectAsState(initial = DataState.Idle)
+    val usersState = viewModel.usersFLow.collectAsState()
+    val actionUserState = viewModel.actionUserFLow.collectAsState(DataState.Idle)
 
     ModalBottomSheetLayout(
         sheetState = modalState,
@@ -92,10 +97,13 @@ fun StoreUsersScreen(
         sheetContent = {
             UserDetail(
                 user = selectedUserForDetail,
-                errorMessage = if (actionUserState.value is DataState.Error)
-                    (actionUserState.value as DataState.Error).throwable.message else null,
+                errorState = if (actionUserState.value is DataState.Error)
+                    (actionUserState.value as DataState.Error).errorState else null,
                 onSubmitUser = {
                     viewModel.submitUser(it)
+                    scope.launch {
+                        modalState.hide()
+                    }
                 },
             )
         },
@@ -113,37 +121,40 @@ fun StoreUsersScreen(
                             .padding(padding)
                             .fillMaxSize()
                     ) {
-                        when (val state = usersState.value) {
-                            is DataState.Error -> BasicError(
-                                title = "Error",
-                                message = state.throwable.message ?: "",
-                                onRetry = {
-                                    viewModel.loadUsers()
-                                }
-                            )
-
-                            is DataState.Loading -> BasicLoading()
-                            is DataState.Success -> StoresUsersContent(
-                                storeAccounts = state.data,
-                                onAddClicked = {
-                                    scope.launch {
-                                        selectedUserForDetail = null
-                                        modalState.animateTo(ModalBottomSheetValue.Expanded)
+                        usersState.value.result(
+                            onSuccess = {
+                                StoresUsersContent(
+                                    storeAccounts = it,
+                                    onAddClicked = {
+                                        scope.launch {
+                                            selectedUserForDetail = null
+                                            modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    },
+                                    onAccountClicked = {
+                                        scope.launch {
+                                            selectedUserForDetail = it
+                                            modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    },
+                                    onUserSwitched = { user, switch ->
+                                        viewModel.submitUser(user.copy(isUserActive = switch))
                                     }
-                                },
-                                onAccountClicked = {
-                                    scope.launch {
-                                        selectedUserForDetail = it
-                                        modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                )
+                            },
+                            onError = {
+                                BasicError(
+                                    title = stringResource(id = it.title),
+                                    message = stringResource(id = it.message).plus(it.additionalMessage),
+                                    onRetry = {
+                                        viewModel.loadUsers()
                                     }
-                                },
-                                onUserSwitched = { user, switch ->
-                                    viewModel.submitUser(user.copy(isUserActive = switch))
-                                }
-                            )
-
-                            else -> Unit
-                        }
+                                )
+                            },
+                            onLoading = {
+                                BasicLoading()
+                            }
+                        )
                     }
                 }
             )
@@ -290,7 +301,7 @@ private fun UserItem(
 @ExperimentalMaterialApi
 private fun UserDetail(
     user: User?,
-    errorMessage: String?,
+    errorState: ErrorState?,
     onSubmitUser: (User) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
@@ -470,7 +481,7 @@ private fun UserDetail(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        if (!errorMessage.isNullOrEmpty()) {
+        if (errorState != null) {
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -484,7 +495,7 @@ private fun UserDetail(
                 Text(
                     modifier = Modifier
                         .padding(8.dp),
-                    text = errorMessage,
+                    text = stringResource(id = errorState.title),
                     color = Color.Red,
                     textAlign = TextAlign.Center
                 )
