@@ -1,6 +1,11 @@
 package com.socialite.data.repository.impl
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.socialite.common.di.IoDispatcher
+import com.socialite.common.network.NetworkConfig
 import com.socialite.data.database.dao.UserDao
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.repository.UserRepository
@@ -11,12 +16,21 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val dao: UserDao,
+    private val dataStore: DataStore<Preferences>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : UserRepository {
+
+    private object PreferencesKeys {
+        val LOGGED_IN_USER = stringPreferencesKey("logged_in_user")
+    }
+
+
+
     override suspend fun getItems(): List<User> {
         return dao.getUsers().first()
     }
@@ -45,5 +59,22 @@ class UserRepositoryImpl @Inject constructor(
     override fun updateUser(user: User) = flow {
         dao.updateUser(user)
         emit(true)
+    }.flowOn(dispatcher)
+
+    override fun saveLoggedInUser(user: User?) = flow {
+        user?.let {
+            val jsonUser = NetworkConfig.gson().toJson(user)
+            dataStore.edit {
+                it[PreferencesKeys.LOGGED_IN_USER] = jsonUser
+            }
+        }
+        emit(true)
+    }.flowOn(dispatcher)
+
+    override fun getLoggedInUser() = dataStore.data.map {
+        val jsonUser = it[PreferencesKeys.LOGGED_IN_USER]
+        jsonUser?.let {
+            NetworkConfig.gson().fromJson(jsonUser, User::class.java)
+        }
     }.flowOn(dispatcher)
 }

@@ -17,7 +17,6 @@ inline fun <T> dataStateFlow(
     }.onStart {
         emit(DataState.Loading)
     }.catch {
-        val error = (it as Exception).toError<T>()
-        emit(DataState.Error(error))
+        emit(DataState.Error(it.toError<T>()))
     }.flowOn(dispatcher)
 }

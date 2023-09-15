@@ -4,10 +4,10 @@ import com.socialite.common.state.DataState
 import kotlinx.coroutines.flow.Flow
 
 fun interface RegisterUser {
-    suspend operator fun invoke(
+    operator fun invoke(
         name: String,
         email: String,
         password: String,
         storeName: String
-    ): Flow<DataState<String>>
+    ): Flow<DataState<Boolean>>
 }

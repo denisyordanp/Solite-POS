@@ -30,7 +30,7 @@ class LoginViewModel @Inject constructor(
             loginUser(email, password)
                 .map {
                     when (it) {
-                        is DataState.Error -> _viewState.value.copyError(it.errorState.throwable.message)
+                        is DataState.Error -> _viewState.value.copyError(it.errorState.additionalMessage)
                         DataState.Loading -> _viewState.value.copyLoading()
                         is DataState.Success -> _viewState.value.copySucceed()
                         else -> viewState.value
@@ -49,7 +49,7 @@ class LoginViewModel @Inject constructor(
             registerUser(name, email, password, storeName)
                 .map {
                     when (it) {
-                        is DataState.Error -> _viewState.value.copyError(it.errorState.throwable.message)
+                        is DataState.Error -> _viewState.value.copyError(it.errorState.additionalMessage)
                         DataState.Loading -> _viewState.value.copyLoading()
                         is DataState.Success -> _viewState.value.copySucceed()
                         else -> viewState.value

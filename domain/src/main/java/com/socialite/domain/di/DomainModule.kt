@@ -38,6 +38,7 @@ import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.domain.domain.LoginUser
+import com.socialite.domain.domain.Logout
 import com.socialite.domain.domain.MigrateToUUID
 import com.socialite.domain.domain.NewCustomer
 import com.socialite.domain.domain.NewOrder
@@ -48,7 +49,6 @@ import com.socialite.domain.domain.RemoveVariantProduct
 import com.socialite.domain.domain.SelectStore
 import com.socialite.domain.domain.SetDarkMode
 import com.socialite.domain.domain.SetNewPrinterAddress
-import com.socialite.domain.domain.SetNewToken
 import com.socialite.domain.domain.Synchronize
 import com.socialite.domain.domain.UpdateCategory
 import com.socialite.domain.domain.UpdateOrder
@@ -98,6 +98,7 @@ import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
 import com.socialite.domain.domain.impl.IsServerActiveImpl
 import com.socialite.domain.domain.impl.IsShouldSelectStoreImpl
 import com.socialite.domain.domain.impl.LoginUserImpl
+import com.socialite.domain.domain.impl.LogoutImpl
 import com.socialite.domain.domain.impl.MigrateToUUIDImpl
 import com.socialite.domain.domain.impl.NewCustomerImpl
 import com.socialite.domain.domain.impl.NewOrderImpl
@@ -108,7 +109,6 @@ import com.socialite.domain.domain.impl.RemoveVariantProductImpl
 import com.socialite.domain.domain.impl.SelectStoreImpl
 import com.socialite.domain.domain.impl.SetDarkModeImpl
 import com.socialite.domain.domain.impl.SetNewPrinterAddressImpl
-import com.socialite.domain.domain.impl.SetNewTokenImpl
 import com.socialite.domain.domain.impl.SynchronizeImpl
 import com.socialite.domain.domain.impl.UpdateCategoryImpl
 import com.socialite.domain.domain.impl.UpdateOrderImpl
@@ -252,11 +252,6 @@ abstract class DomainBinderModule {
     abstract fun bindSetNewPrinterAddress(
         setNewPrinterAddressImpl: SetNewPrinterAddressImpl
     ): SetNewPrinterAddress
-
-    @Binds
-    abstract fun bindSetNewToken(
-        setNewTokenImpl: SetNewTokenImpl
-    ): SetNewToken
 
     @Binds
     abstract fun bindSetDarkMode(
@@ -437,4 +432,9 @@ abstract class DomainBinderModule {
     abstract fun bindUpdateUser(
         updateUserImpl: UpdateUserImpl
     ): UpdateUser
+
+    @Binds
+    abstract fun bindLogout(
+        logoutImpl: LogoutImpl
+    ): Logout
 }

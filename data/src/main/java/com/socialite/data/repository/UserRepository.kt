@@ -7,4 +7,6 @@ interface UserRepository : SyncRepository<User> {
     fun getUsers(): Flow<List<User>>
     fun addUser(user: User): Flow<Boolean>
     fun updateUser(user: User): Flow<Boolean>
+    fun saveLoggedInUser(user: User?): Flow<Boolean>
+    fun getLoggedInUser(): Flow<User?>
 }

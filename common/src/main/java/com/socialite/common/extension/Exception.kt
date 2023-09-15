@@ -9,7 +9,7 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-fun <T> Exception.toError(): ErrorState {
+fun <T> Throwable.toError(): ErrorState {
     return try {
         when {
             this is IOException && message == "No Internet" -> {

@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
 import com.socialite.domain.domain.IsDarkModeActive
 import com.socialite.domain.domain.IsServerActive
+import com.socialite.domain.domain.Logout
 import com.socialite.domain.domain.MigrateToUUID
 import com.socialite.domain.domain.SetDarkMode
-import com.socialite.domain.domain.SetNewToken
 import com.socialite.domain.domain.Synchronize
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     private val synchronize: Synchronize,
     private val migrateToUUID: MigrateToUUID,
-    private val setNewToken: SetNewToken,
+    private val logout: Logout,
     private val setDarkMode: SetDarkMode,
     private val isDarkModeActive: IsDarkModeActive,
     private val isServerActive: IsServerActive,
@@ -94,7 +94,7 @@ class SettingViewModel @Inject constructor(
     }
 
     fun logout() {
-        setNewToken("")
+        logout.invoke()
     }
 
     fun resetSynchronizeStatus() {
