@@ -28,6 +28,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,12 +48,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.socialite.common.state.DataState
 import com.socialite.domain.menu.UserAuthority
 import com.socialite.domain.schema.main.User
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicEditText
+import com.socialite.solite_pos.compose.BasicError
+import com.socialite.solite_pos.compose.BasicLoading
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.GeneralDropdown
 import com.socialite.solite_pos.compose.GeneralDropdownItem
@@ -68,29 +73,15 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 fun StoreUsersScreen(
+    viewModel: StoreUsersViewModel = hiltViewModel(),
     onBackClicked: () -> Unit
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
     var selectedUserForDetail by remember { mutableStateOf<User?>(null) }
-    val storeAccounts = listOf(
-        User(
-            id = "",
-            name = "Testing1",
-            email = "Testing@mail.com",
-            authority = UserAuthority.STAFF,
-            isUserActive = true,
-            password = ""
-        ),
-        User(
-            id = "",
-            name = "Testing2",
-            email = "Testing2@mail.com",
-            authority = UserAuthority.ADMIN,
-            isUserActive = false,
-            password = ""
-        )
-    )
+
+    val usersState = viewModel.usersFLow.collectAsState(initial = DataState.Idle)
+    val actionUserState = viewModel.actionUserFLow.collectAsState(initial = DataState.Idle)
 
     ModalBottomSheetLayout(
         sheetState = modalState,
@@ -101,8 +92,11 @@ fun StoreUsersScreen(
         sheetContent = {
             UserDetail(
                 user = selectedUserForDetail,
-                onSubmitUser = {},
-                errorMessage = ""
+                errorMessage = if (actionUserState.value is DataState.Error)
+                    (actionUserState.value as DataState.Error).throwable.message else null,
+                onSubmitUser = {
+                    viewModel.submitUser(it)
+                },
             )
         },
         content = {
@@ -114,26 +108,43 @@ fun StoreUsersScreen(
                     )
                 },
                 content = { padding ->
-                    StoresUsersContent(
+                    Box(
                         modifier = Modifier
-                            .padding(padding),
-                        storeAccounts = storeAccounts,
-                        onAddClicked = {
-                            scope.launch {
-                                selectedUserForDetail = null
-                                modalState.animateTo(ModalBottomSheetValue.Expanded)
-                            }
-                        },
-                        onAccountClicked = {
-                            scope.launch {
-                                selectedUserForDetail = it
-                                modalState.animateTo(ModalBottomSheetValue.Expanded)
-                            }
-                        },
-                        onUserSwitched = { user, switch ->
-                            //TODO: update user access
+                            .padding(padding)
+                            .fillMaxSize()
+                    ) {
+                        when (val state = usersState.value) {
+                            is DataState.Error -> BasicError(
+                                title = "Error",
+                                message = state.throwable.message ?: "",
+                                onRetry = {
+                                    viewModel.loadUsers()
+                                }
+                            )
+
+                            is DataState.Loading -> BasicLoading()
+                            is DataState.Success -> StoresUsersContent(
+                                storeAccounts = state.data,
+                                onAddClicked = {
+                                    scope.launch {
+                                        selectedUserForDetail = null
+                                        modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                    }
+                                },
+                                onAccountClicked = {
+                                    scope.launch {
+                                        selectedUserForDetail = it
+                                        modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                    }
+                                },
+                                onUserSwitched = { user, switch ->
+                                    viewModel.submitUser(user.copy(isUserActive = switch))
+                                }
+                            )
+
+                            else -> Unit
                         }
-                    )
+                    }
                 }
             )
         }
@@ -400,7 +411,7 @@ private fun UserDetail(
         GeneralDropdown(
             label = stringResource(R.string.select_authority),
             items = UserAuthority.values().map {
-                   GeneralDropdownItem(it.name, it)
+                GeneralDropdownItem(it.name, it)
             },
             selectedItem = authority?.run { GeneralDropdownItem(this.name, this) },
             onSelectedItem = {
@@ -459,7 +470,7 @@ private fun UserDetail(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        if (errorMessage.isNullOrEmpty().not()) {
+        if (!errorMessage.isNullOrEmpty()) {
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -473,7 +484,7 @@ private fun UserDetail(
                 Text(
                     modifier = Modifier
                         .padding(8.dp),
-                    text = errorMessage!!,
+                    text = errorMessage,
                     color = Color.Red,
                     textAlign = TextAlign.Center
                 )

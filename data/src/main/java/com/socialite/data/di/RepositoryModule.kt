@@ -18,6 +18,7 @@ import com.socialite.data.repository.PromosRepository
 import com.socialite.data.repository.RemoteConfigRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
+import com.socialite.data.repository.UserRepository
 import com.socialite.data.repository.VariantOptionsRepository
 import com.socialite.data.repository.VariantsRepository
 import com.socialite.data.repository.impl.AccountRepositoryImpl
@@ -36,6 +37,7 @@ import com.socialite.data.repository.impl.PromosRepositoryImpl
 import com.socialite.data.repository.impl.RemoteConfigRepositoryImpl
 import com.socialite.data.repository.impl.SettingRepositoryImpl
 import com.socialite.data.repository.impl.StoreRepositoryImpl
+import com.socialite.data.repository.impl.UserRepositoryImpl
 import com.socialite.data.repository.impl.VariantOptionsRepositoryImpl
 import com.socialite.data.repository.impl.VariantsRepositoryImpl
 import dagger.Binds
@@ -141,4 +143,9 @@ abstract class RepositoryModule {
     abstract fun bindAccountRepository(
         accountRepository: AccountRepositoryImpl
     ): AccountRepository
+
+    @Binds
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 }

@@ -10,14 +10,18 @@ data class User(
     val isUserActive: Boolean = false,
     val password: String = ""
 ) {
+
+    val isNewUser get() = id == ADD_ID
+
     companion object {
+        private const val ADD_ID = "add_id"
         fun add(
             name: String,
             email: String,
             authority: UserAuthority,
             password: String
         ) = User(
-            id = "",
+            id = ADD_ID,
             name = name,
             email = email,
             authority = authority,

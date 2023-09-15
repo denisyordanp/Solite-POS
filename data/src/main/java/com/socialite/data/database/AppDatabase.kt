@@ -24,6 +24,7 @@ import com.socialite.data.database.dao.PromosDao
 import com.socialite.data.database.dao.PurchasesDao
 import com.socialite.data.database.dao.StoreDao
 import com.socialite.data.database.dao.SuppliersDao
+import com.socialite.data.database.dao.UserDao
 import com.socialite.data.database.dao.VariantMixesDao
 import com.socialite.data.database.dao.VariantOptionsDao
 import com.socialite.data.database.dao.VariantsDao
@@ -110,6 +111,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun variantMixesDao(): VariantMixesDao
     abstract fun storeDao(): StoreDao
     abstract fun promoDao(): PromosDao
+    abstract fun userDao(): UserDao
 
     companion object {
 

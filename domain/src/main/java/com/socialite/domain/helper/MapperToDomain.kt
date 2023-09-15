@@ -2,6 +2,7 @@ package com.socialite.domain.helper
 
 import com.socialite.data.schema.room.helper.OrderData
 import com.socialite.data.schema.room.helper.ProductWithCategory
+import com.socialite.data.schema.room.master.User
 import com.socialite.data.schema.room.new_bridge.OrderPayment
 import com.socialite.data.schema.room.new_bridge.OrderPromo
 import com.socialite.data.schema.room.new_bridge.VariantProduct
@@ -17,138 +18,148 @@ import com.socialite.data.schema.room.new_master.Promo
 import com.socialite.data.schema.room.new_master.Store
 import com.socialite.data.schema.room.new_master.Variant
 import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.domain.menu.toAuthority
 import com.socialite.domain.schema.main.VariantOption as DomainVariantOption
 import com.socialite.domain.schema.main.Variant as DomainVariant
 import com.socialite.domain.schema.main.Product as DomainProduct
 
 fun Product.toDomain() = DomainProduct(
-    this.id,
-    this.name,
-    this.category,
-    this.image,
-    this.desc,
-    this.price,
-    this.isActive,
-    this.isUploaded
+    id = id,
+    name = name,
+    category = category,
+    image = image,
+    desc = desc,
+    price = price,
+    isActive = isActive,
+    isUploaded = isUploaded
 )
 
 fun Category.toDomain() = DomainCategory(
-    this.id,
-    this.name,
-    this.desc,
-    this.isActive,
-    this.isUploaded
+    id = id,
+    name = name,
+    desc = desc,
+    isActive = isActive,
+    isUploaded = isUploaded
 )
 
 fun Variant.toDomain() = DomainVariant(
-    this.id,
-    this.name,
-    this.type,
-    this.isMust,
-    this.isUploaded
+    id = id,
+    name = name,
+    type = type,
+    isMust = isMust,
+    isUploaded = isUploaded
 )
 
 fun VariantOption.toDomain() = DomainVariantOption(
-    this.id,
-    this.variant,
-    this.name,
-    this.desc,
-    this.isActive,
-    this.isUploaded
+    id = id,
+    variant = variant,
+    name = name,
+    desc = desc,
+    isActive = isActive,
+    isUploaded = isUploaded
 )
 
 fun Order.toDomain() = com.socialite.domain.schema.main.Order(
-    this.id,
-    this.orderNo,
-    this.customer,
-    this.orderTime,
-    this.isTakeAway,
-    this.status,
-    this.store,
-    this.isUploaded
+    id = id,
+    orderNo = orderNo,
+    customer = customer,
+    orderTime = orderTime,
+    isTakeAway = isTakeAway,
+    status = status,
+    store = store,
+    isUploaded = isUploaded
 )
 
 fun Store.toDomain() = com.socialite.domain.schema.main.Store(
-    this.id,
-    this.name,
-    this.address,
-    this.isUploaded
+    id = id,
+    name = name,
+    address = address,
+    isUploaded = isUploaded
 )
 
 fun Customer.toDomain() = com.socialite.domain.schema.main.Customer(
-    this.id,
-    this.name,
-    this.isUploaded
+    id = id,
+    name = name,
+    isUploaded = isUploaded
 )
 
 fun OrderPayment.toDomain() = com.socialite.domain.schema.main.OrderPayment(
-    this.id,
-    this.order,
-    this.payment,
-    this.pay,
-    this.isUpload
+    id = id,
+    order = order,
+    payment = payment,
+    pay = pay,
+    isUpload = isUpload
 )
 
 fun Payment.toDomain() = com.socialite.domain.schema.main.Payment(
-    this.id,
-    this.name,
-    this.desc,
-    this.tax,
-    this.isCash,
-    this.isActive,
-    this.isUploaded
+    id = id,
+    name = name,
+    desc = desc,
+    tax = tax,
+    isCash = isCash,
+    isActive = isActive,
+    isUploaded = isUploaded
 )
 
 fun OrderPromo.toDomain() = com.socialite.domain.schema.main.OrderPromo(
-    this.id,
-    this.order,
-    this.promo,
-    this.totalPromo,
-    this.isUpload
+    id = id,
+    order = order,
+    promo = promo,
+    totalPromo = totalPromo,
+    isUpload = isUpload
 )
 
 fun Promo.toDomain() = com.socialite.domain.schema.main.Promo(
-    this.id,
-    this.name,
-    this.desc,
-    this.isCash,
-    this.value,
-    this.isActive,
-    this.isUploaded
+    id = id,
+    name = name,
+    desc = desc,
+    isCash = isCash,
+    value = value,
+    isActive = isActive,
+    isUploaded = isUploaded
 )
 
 fun OrderData.toDomain() = DomainOrderData(
-    this.order.toDomain(),
-    this.store.toDomain(),
-    this.customer.toDomain(),
-    this.orderPayment?.toDomain(),
-    this.payment?.toDomain(),
-    this.orderPromo?.toDomain(),
-    this.promo?.toDomain()
+    order = order.toDomain(),
+    store = store.toDomain(),
+    customer = customer.toDomain(),
+    orderPayment = orderPayment?.toDomain(),
+    payment = payment?.toDomain(),
+    orderPromo = orderPromo?.toDomain(),
+    promo = promo?.toDomain()
 )
 
 fun ProductWithCategory.toDomain() = com.socialite.domain.schema.ProductWithCategory(
-    this.product.toDomain(),
-    this.category.toDomain(),
-    this.hasVariant
+    product = product.toDomain(),
+    category = category.toDomain(),
+    hasVariant = hasVariant
 )
 
 fun Outcome.toDomain() = com.socialite.domain.schema.Outcome(
-    this.id,
-    this.name,
-    this.desc,
-    this.price,
-    this.amount,
-    this.date,
-    this.store,
-    this.isUploaded
+    id = id,
+    name = name,
+    desc = desc,
+    price = price,
+    amount = amount,
+    date = date,
+    store = store,
+    isUploaded = isUploaded
 )
 
 fun VariantProduct.toDomain() = com.socialite.domain.schema.main.VariantProduct(
-    this.id,
-    this.variant,
-    this.variantOption,
-    this.product,
-    this.isUploaded,
-    this.isDeleted
+    id = id,
+    variant = variant,
+    variantOption = variantOption,
+    product = product,
+    isUploaded = isUploaded,
+    isDeleted = isDeleted
+)
+
+fun User.toDomain() = com.socialite.domain.schema.main.User(
+    id = id,
+    name = name,
+    email = email,
+    authority = authority.toAuthority(),
+    isUserActive = true,
+    password = ""
 )

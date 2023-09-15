@@ -5,6 +5,7 @@ import com.socialite.domain.domain.AddNewPayment
 import com.socialite.domain.domain.AddNewProduct
 import com.socialite.domain.domain.AddNewPromo
 import com.socialite.domain.domain.AddNewStore
+import com.socialite.domain.domain.AddNewUser
 import com.socialite.domain.domain.AddNewVariant
 import com.socialite.domain.domain.AddNewVariantOption
 import com.socialite.domain.domain.AddNewVariantProduct
@@ -31,6 +32,7 @@ import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetSelectedStore
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetToken
+import com.socialite.domain.domain.GetUsers
 import com.socialite.domain.domain.GetVariantsProductById
 import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.IsServerActive
@@ -55,6 +57,7 @@ import com.socialite.domain.domain.UpdatePayment
 import com.socialite.domain.domain.UpdateProduct
 import com.socialite.domain.domain.UpdatePromo
 import com.socialite.domain.domain.UpdateStore
+import com.socialite.domain.domain.UpdateUser
 import com.socialite.domain.domain.UpdateVariant
 import com.socialite.domain.domain.UpdateVariantOption
 import com.socialite.domain.domain.impl.AddNewCategoryImpl
@@ -62,6 +65,7 @@ import com.socialite.domain.domain.impl.AddNewPaymentImpl
 import com.socialite.domain.domain.impl.AddNewProductImpl
 import com.socialite.domain.domain.impl.AddNewPromoImpl
 import com.socialite.domain.domain.impl.AddNewStoreImpl
+import com.socialite.domain.domain.impl.AddNewUserImpl
 import com.socialite.domain.domain.impl.AddNewVariantImpl
 import com.socialite.domain.domain.impl.AddNewVariantOptionImpl
 import com.socialite.domain.domain.impl.AddNewVariantProductImpl
@@ -88,6 +92,7 @@ import com.socialite.domain.domain.impl.GetRecapDataImpl
 import com.socialite.domain.domain.impl.GetSelectedStoreImpl
 import com.socialite.domain.domain.impl.GetStoresImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
+import com.socialite.domain.domain.impl.GetUsersImpl
 import com.socialite.domain.domain.impl.GetVariantsProductByIdImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
 import com.socialite.domain.domain.impl.IsServerActiveImpl
@@ -112,16 +117,26 @@ import com.socialite.domain.domain.impl.UpdatePaymentImpl
 import com.socialite.domain.domain.impl.UpdateProductImpl
 import com.socialite.domain.domain.impl.UpdatePromoImpl
 import com.socialite.domain.domain.impl.UpdateStoreImpl
+import com.socialite.domain.domain.impl.UpdateUserImpl
 import com.socialite.domain.domain.impl.UpdateVariantImpl
 import com.socialite.domain.domain.impl.UpdateVariantOptionImpl
+import com.socialite.domain.helper.IdManager
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class DomainModule {
+object DomainProviderModule {
+    @Provides
+    fun provideIdManager(): IdManager = IdManager()
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class DomainBinderModule {
 
     @Binds
     abstract fun bindGetOrdersGeneralMenuBadge(
@@ -407,4 +422,19 @@ abstract class DomainModule {
     abstract fun bindGetAllOrderListByReport(
         getAllOrderListByReportImpl: GetAllOrderListByReportImpl
     ): GetAllOrderListByReport
+
+    @Binds
+    abstract fun bindGetUsers(
+        getUsersImpl: GetUsersImpl
+    ): GetUsers
+
+    @Binds
+    abstract fun bindAddNewUser(
+        addNewUserImpl: AddNewUserImpl
+    ): AddNewUser
+
+    @Binds
+    abstract fun bindUpdateUser(
+        updateUserImpl: UpdateUserImpl
+    ): UpdateUser
 }
