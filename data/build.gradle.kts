@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 plugins {
     id("com.android.library")
     id("com.google.devtools.ksp")
@@ -24,6 +22,9 @@ android {
     }
     buildTypes {
         release {
+            isMinifyEnabled = false
+        }
+        create("local") {
             isMinifyEnabled = false
         }
     }

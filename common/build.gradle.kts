@@ -24,6 +24,10 @@ android {
         debug {
             buildConfigField("String", "BASE_URL", properties.getProperty("DEVELOP_BASE_URL") ?: baseUrlPlaceHolder)
         }
+        create("local") {
+            isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", properties.getProperty("LOCAL_BASE_URL") ?: baseUrlPlaceHolder)
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

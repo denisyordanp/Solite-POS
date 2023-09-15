@@ -7,7 +7,7 @@ import com.socialite.common.BuildConfig
 
 object NetworkConfig {
 
-    fun isDebugMode(): Boolean = BuildConfig.DEBUG
+    fun isDebugMode(): Boolean = BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "local"
 
     fun getBaseUrl(): String = BuildConfig.BASE_URL
 
