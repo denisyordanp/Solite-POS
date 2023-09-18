@@ -1,8 +1,8 @@
 package com.socialite.domain.helper
 
+import com.socialite.data.schema.response.UserStoreResponse
 import com.socialite.data.schema.room.helper.OrderData
 import com.socialite.data.schema.room.helper.ProductWithCategory
-import com.socialite.data.schema.room.master.User
 import com.socialite.data.schema.room.new_bridge.OrderPayment
 import com.socialite.data.schema.room.new_bridge.OrderPromo
 import com.socialite.data.schema.room.new_bridge.VariantProduct
@@ -155,11 +155,10 @@ fun VariantProduct.toDomain() = com.socialite.domain.schema.main.VariantProduct(
     isDeleted = isDeleted
 )
 
-fun User.toDomain() = com.socialite.domain.schema.main.User(
-    id = id,
-    name = name,
-    email = email,
-    authority = authority.toAuthority(),
-    isUserActive = true,
-    password = ""
+fun UserStoreResponse.toDomain() = com.socialite.domain.schema.main.User(
+    id = id.toString(),
+    name = user.name,
+    email = user.email,
+    authority = user.authority.toAuthority(),
+    isUserActive = isActive,
 )

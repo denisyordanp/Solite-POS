@@ -146,5 +146,7 @@
     <string name="synchronization_success_title">Sinkronisasi Berhasil</string>
     <string name="synchronization_failed_title">Sinkronisasi Gagal</string>
     <string name="synchronization_failed_message">"Silahkan hubungi developer. Pesan gagal: %s"</string>
+    <string name="attention_title">Perhatian</string>
+    <string name="store_user_page_need_to_useing_internet_connection">Khusus untuk halaman pengguna harus menggunakan koneksi internet</string>
 
 </resources>

@@ -5,7 +5,7 @@ import com.socialite.common.extension.dataStateFlow
 import com.socialite.common.network.response.ApiResponse
 import com.socialite.common.state.DataState
 import com.socialite.data.repository.UserRepository
-import com.socialite.data.schema.response.LoginResponse
+import com.socialite.data.schema.response.UserResponse
 import com.socialite.domain.domain.AddNewUser
 import com.socialite.domain.schema.main.User
 import kotlinx.coroutines.CoroutineDispatcher
@@ -28,7 +28,7 @@ class AddNewUserImpl @Inject constructor(
             password = user.password,
             authority = user.authority.name
         )
-    }.flatMapConcat<DataState<ApiResponse<LoginResponse>>, DataState<Boolean>> {
+    }.flatMapConcat<DataState<ApiResponse<UserResponse>>, DataState<Boolean>> {
         when (it) {
             is DataState.Error -> flowOf(DataState.Error(it.errorState))
             DataState.Idle -> flowOf(DataState.Idle)

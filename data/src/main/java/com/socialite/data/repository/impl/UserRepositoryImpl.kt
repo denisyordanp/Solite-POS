@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.socialite.common.di.IoDispatcher
+import com.socialite.common.extension.toResponse
 import com.socialite.common.network.NetworkConfig
 import com.socialite.data.database.dao.UserDao
 import com.socialite.data.di.AuthorizationService
@@ -50,7 +51,10 @@ class UserRepositoryImpl @Inject constructor(
         update.updates(missingItems)
     }
 
-    override fun getUsers() = dao.getUsers().flowOn(dispatcher)
+    override fun getUsers() = flow {
+        val response = service.getUsers()
+        emit(response)
+    }.flowOn(dispatcher)
 
     override fun addUser(user: User) = flow {
         dao.insertUser(user)
@@ -63,7 +67,6 @@ class UserRepositoryImpl @Inject constructor(
         password: String,
         authority: String
     ) = flow {
-        kotlinx.coroutines.delay(3000L)
         val request = service.addUser(
             name = name,
             email = email,
@@ -74,9 +77,16 @@ class UserRepositoryImpl @Inject constructor(
         emit(request)
     }.flowOn(dispatcher)
 
-    override fun updateUser(user: User) = flow {
-        dao.updateUser(user)
-        emit(true)
+    override fun updateUser(
+        id: String,
+        name: String,
+        email: String,
+        password: String,
+        authority: String,
+        isActive: Boolean
+    ) = flow {
+        val request = service.updateUser(id, name, email, authority, isActive.toResponse())
+        emit(request)
     }.flowOn(dispatcher)
 
     override fun saveLoggedInUser(user: User?) = flow {

@@ -91,10 +91,8 @@ fun StoreUsersScreen(
     val usersState = viewModel.usersFLow.collectAsState()
     val actionUserState = viewModel.actionUserFLow.collectAsState(DataState.Idle)
 
-    LaunchedEffect(key1 = modalState) {
-        if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
-            viewModel.resetActionState()
-        }
+    if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
+        viewModel.resetActionState()
     }
 
     LaunchedEffect(key1 = actionUserState.value) {
@@ -131,45 +129,79 @@ fun StoreUsersScreen(
                         )
                     },
                     content = { padding ->
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .padding(padding)
                                 .fillMaxSize()
                         ) {
-                            usersState.value.result(
-                                onSuccess = {
-                                    StoresUsersContent(
-                                        storeAccounts = it,
-                                        onAddClicked = {
-                                            scope.launch {
-                                                selectedUserForDetail = null
-                                                modalState.animateTo(ModalBottomSheetValue.Expanded)
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .background(
+                                        color = MaterialTheme.colors.primary.copy(
+                                            0.3f
+                                        ),
+                                        shape = RoundedCornerShape(8.dp)
+                                    ),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(8.dp),
+                                    text = stringResource(R.string.attention_title),
+                                    color = Color.Red,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 8.dp),
+                                    text = stringResource(R.string.store_user_page_need_to_useing_internet_connection),
+                                    color = Color.Red,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .padding(padding)
+                                    .weight(1f)
+                            ) {
+                                usersState.value.result(
+                                    onSuccess = {
+                                        StoresUsersContent(
+                                            storeAccounts = it,
+                                            onAddClicked = {
+                                                scope.launch {
+                                                    selectedUserForDetail = null
+                                                    modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                                }
+                                            },
+                                            onAccountClicked = {
+                                                scope.launch {
+                                                    selectedUserForDetail = it
+                                                    modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                                }
+                                            },
+                                            onUserSwitched = { user, switch ->
+                                                viewModel.submitUser(user.copy(isUserActive = switch))
                                             }
-                                        },
-                                        onAccountClicked = {
-                                            scope.launch {
-                                                selectedUserForDetail = it
-                                                modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                        )
+                                    },
+                                    onError = {
+                                        BasicError(
+                                            title = stringResource(id = it.title),
+                                            message = stringResource(id = it.message).plus(it.additionalMessage),
+                                            onRetry = {
+                                                viewModel.loadUsers()
                                             }
-                                        },
-                                        onUserSwitched = { user, switch ->
-                                            viewModel.submitUser(user.copy(isUserActive = switch))
-                                        }
-                                    )
-                                },
-                                onError = {
-                                    BasicError(
-                                        title = stringResource(id = it.title),
-                                        message = stringResource(id = it.message).plus(it.additionalMessage),
-                                        onRetry = {
-                                            viewModel.loadUsers()
-                                        }
-                                    )
-                                },
-                                onLoading = {
-                                    BasicLoading()
-                                }
-                            )
+                                        )
+                                    },
+                                    onLoading = {
+                                        BasicLoading()
+                                    }
+                                )
+                            }
                         }
                     }
                 )
@@ -200,7 +232,10 @@ private fun StoresUsersContent(
                 .align(Alignment.TopCenter),
             state = listState
         ) {
-            items(storeAccounts) { user ->
+            items(
+                items = storeAccounts,
+                key = { it.id }
+            ) { user ->
                 UserItem(
                     user = user,
                     onUserClicked = onAccountClicked,
