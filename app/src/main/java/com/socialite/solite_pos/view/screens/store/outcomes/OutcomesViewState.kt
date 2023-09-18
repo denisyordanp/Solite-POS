@@ -5,12 +5,14 @@ import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 
 data class OutcomesViewState(
     val parameters: ReportParameter,
-    val outcomes: List<Outcome>
+    val outcomes: List<Outcome>,
+    val isUserStaff: Boolean
 ) {
     companion object {
         fun idle() = OutcomesViewState(
             parameters = ReportParameter.createTodayOnly(true),
-            outcomes = emptyList()
+            outcomes = emptyList(),
+            isUserStaff = false
         )
     }
 }

@@ -70,6 +70,7 @@ fun OutComesScreen(
 ) {
     LaunchedEffect(key1 = parameters) {
         currentViewModel.setNewParameters(parameters)
+        currentViewModel.loadUserAuthority()
     }
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
@@ -137,9 +138,11 @@ fun OutComesScreen(
                     },
                     onBackClicked = onBackClicked,
                     onItemClicked = {
-                        scope.launch {
-                            selectedOutcome = it
-                            modalState.show()
+                        if (!state.isUserStaff) {
+                            scope.launch {
+                                selectedOutcome = it
+                                modalState.show()
+                            }
                         }
                     }
                 )

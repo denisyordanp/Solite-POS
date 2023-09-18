@@ -38,6 +38,7 @@ import com.socialite.domain.domain.GetVariantsProductById
 import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.IsShouldSelectStore
+import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.LoginUser
 import com.socialite.domain.domain.Logout
 import com.socialite.domain.domain.MigrateToUUID
@@ -99,6 +100,7 @@ import com.socialite.domain.domain.impl.GetVariantsProductByIdImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
 import com.socialite.domain.domain.impl.IsServerActiveImpl
 import com.socialite.domain.domain.impl.IsShouldSelectStoreImpl
+import com.socialite.domain.domain.impl.IsUserStaffImpl
 import com.socialite.domain.domain.impl.LoginUserImpl
 import com.socialite.domain.domain.impl.LogoutImpl
 import com.socialite.domain.domain.impl.MigrateToUUIDImpl
@@ -444,4 +446,9 @@ abstract class DomainBinderModule {
     abstract fun bindGetStoreMenus(
         getStoreMenusImpl: GetStoreMenusImpl
     ): GetStoreMenus
+
+    @Binds
+    abstract fun bindIsUserStaff(
+        isUserStaffImpl: IsUserStaffImpl
+    ): IsUserStaff
 }
