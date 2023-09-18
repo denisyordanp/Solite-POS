@@ -25,11 +25,19 @@ fun <T> Throwable.toError(): ErrorState {
                     val gson = NetworkConfig.gson()
                     gson.fromJson(it.string(), type)
                 }
+                val additionalMessage = apiResponse?.error.orEmpty()
 
-                ErrorState.ServerErrorState(
-                    additionalMessage = apiResponse?.error.orEmpty(),
-                    throwable = this
-                )
+                if (response?.code() in 400..499) {
+                    ErrorState.UserError(
+                        additionalMessage = additionalMessage,
+                        throwable = this
+                    )
+                } else {
+                    ErrorState.ServerError(
+                        additionalMessage = additionalMessage,
+                        throwable = this
+                    )
+                }
             }
 
             this is SocketTimeoutException -> {

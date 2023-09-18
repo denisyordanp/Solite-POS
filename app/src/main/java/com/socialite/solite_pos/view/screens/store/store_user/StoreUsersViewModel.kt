@@ -40,4 +40,8 @@ class StoreUsersViewModel @Inject constructor(
             _actionUserFLow.emitAll(updateUser(user))
         }
     }
+
+    fun resetActionState() = viewModelScope.launch {
+        _actionUserFLow.emit(DataState.Idle)
+    }
 }

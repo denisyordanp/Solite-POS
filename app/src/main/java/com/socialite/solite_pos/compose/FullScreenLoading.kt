@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -23,7 +25,7 @@ fun FullScreenLoadingView(
         Box(
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colors.surface.copy(
+                    color = MaterialTheme.colors.onPrimary.copy(
                         0.7f
                     )
                 )
@@ -34,12 +36,15 @@ fun FullScreenLoadingView(
                     onClick = { }
                 ),
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = MaterialTheme.colors.primary,
-                strokeWidth = 4.dp
-            )
+            Card(
+                modifier = Modifier.align(Alignment.Center),
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(24.dp),
+                    color = MaterialTheme.colors.primary,
+                    strokeWidth = 4.dp
+                )
+            }
         }
     }
 }

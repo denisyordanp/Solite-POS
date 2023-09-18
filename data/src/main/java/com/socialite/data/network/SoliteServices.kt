@@ -1,9 +1,9 @@
 package com.socialite.data.network
 
 import com.socialite.common.network.response.ApiResponse
+import com.socialite.data.schema.response.LoginResponse
 import com.socialite.data.schema.response.SynchronizeParams
 import com.socialite.data.schema.response.SynchronizeResponse
-import com.socialite.data.schema.response.LoginResponse
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -25,6 +25,15 @@ interface SoliteServices {
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("store") storeName: String
+    ): ApiResponse<LoginResponse>
+
+    @FormUrlEncoded
+    @POST("v1/user_on_store")
+    suspend fun addUser(
+        @Field("name") name: String,
+        @Field("email") email: String,
+        @Field("password") password: String,
+        @Field("authority") authority: String
     ): ApiResponse<LoginResponse>
 
     @POST("v1/synchronize")

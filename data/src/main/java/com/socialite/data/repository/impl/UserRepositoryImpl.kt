@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.socialite.common.di.IoDispatcher
 import com.socialite.common.network.NetworkConfig
 import com.socialite.data.database.dao.UserDao
+import com.socialite.data.di.AuthorizationService
+import com.socialite.data.network.SoliteServices
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
+    @AuthorizationService private val service: SoliteServices,
     private val dao: UserDao,
     private val dataStore: DataStore<Preferences>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
@@ -28,8 +31,6 @@ class UserRepositoryImpl @Inject constructor(
     private object PreferencesKeys {
         val LOGGED_IN_USER = stringPreferencesKey("logged_in_user")
     }
-
-
 
     override suspend fun getItems(): List<User> {
         return dao.getUsers().first()
@@ -54,6 +55,23 @@ class UserRepositoryImpl @Inject constructor(
     override fun addUser(user: User) = flow {
         dao.insertUser(user)
         emit(true)
+    }.flowOn(dispatcher)
+
+    override fun postNewUserUser(
+        name: String,
+        email: String,
+        password: String,
+        authority: String
+    ) = flow {
+        kotlinx.coroutines.delay(3000L)
+        val request = service.addUser(
+            name = name,
+            email = email,
+            password = password,
+            authority = authority
+        )
+
+        emit(request)
     }.flowOn(dispatcher)
 
     override fun updateUser(user: User) = flow {

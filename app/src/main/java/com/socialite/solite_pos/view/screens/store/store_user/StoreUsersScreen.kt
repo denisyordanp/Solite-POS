@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -48,6 +49,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.socialite.common.state.DataState
 import com.socialite.common.state.ErrorState
@@ -60,6 +62,7 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicError
 import com.socialite.solite_pos.compose.BasicLoading
 import com.socialite.solite_pos.compose.BasicTopBar
+import com.socialite.solite_pos.compose.FullScreenLoadingView
 import com.socialite.solite_pos.compose.GeneralDropdown
 import com.socialite.solite_pos.compose.GeneralDropdownItem
 import com.socialite.solite_pos.compose.PrimaryButtonView
@@ -88,78 +91,91 @@ fun StoreUsersScreen(
     val usersState = viewModel.usersFLow.collectAsState()
     val actionUserState = viewModel.actionUserFLow.collectAsState(DataState.Idle)
 
-    ModalBottomSheetLayout(
-        sheetState = modalState,
-        sheetShape = RoundedCornerShape(
-            topStart = 16.dp,
-            topEnd = 16.dp
-        ),
-        sheetContent = {
-            UserDetail(
-                user = selectedUserForDetail,
-                errorState = if (actionUserState.value is DataState.Error)
-                    (actionUserState.value as DataState.Error).errorState else null,
-                onSubmitUser = {
-                    viewModel.submitUser(it)
-                    scope.launch {
-                        modalState.hide()
-                    }
-                },
-            )
-        },
-        content = {
-            Scaffold(
-                topBar = {
-                    BasicTopBar(
-                        titleText = stringResource(id = R.string.store_users),
-                        onBackClicked = onBackClicked
-                    )
-                },
-                content = { padding ->
-                    Box(
-                        modifier = Modifier
-                            .padding(padding)
-                            .fillMaxSize()
-                    ) {
-                        usersState.value.result(
-                            onSuccess = {
-                                StoresUsersContent(
-                                    storeAccounts = it,
-                                    onAddClicked = {
-                                        scope.launch {
-                                            selectedUserForDetail = null
-                                            modalState.animateTo(ModalBottomSheetValue.Expanded)
-                                        }
-                                    },
-                                    onAccountClicked = {
-                                        scope.launch {
-                                            selectedUserForDetail = it
-                                            modalState.animateTo(ModalBottomSheetValue.Expanded)
-                                        }
-                                    },
-                                    onUserSwitched = { user, switch ->
-                                        viewModel.submitUser(user.copy(isUserActive = switch))
-                                    }
-                                )
-                            },
-                            onError = {
-                                BasicError(
-                                    title = stringResource(id = it.title),
-                                    message = stringResource(id = it.message).plus(it.additionalMessage),
-                                    onRetry = {
-                                        viewModel.loadUsers()
-                                    }
-                                )
-                            },
-                            onLoading = {
-                                BasicLoading()
-                            }
-                        )
-                    }
-                }
-            )
+    LaunchedEffect(key1 = modalState) {
+        if (modalState.currentValue == ModalBottomSheetValue.Hidden) {
+            viewModel.resetActionState()
         }
-    )
+    }
+
+    LaunchedEffect(key1 = actionUserState.value) {
+        if (actionUserState.value is DataState.Success) {
+            modalState.hide()
+        }
+    }
+
+    FullScreenLoadingView(
+        isLoading = actionUserState.value is DataState.Loading
+    ) {
+        ModalBottomSheetLayout(
+            sheetState = modalState,
+            sheetShape = RoundedCornerShape(
+                topStart = 16.dp,
+                topEnd = 16.dp
+            ),
+            sheetContent = {
+                UserDetail(
+                    user = selectedUserForDetail,
+                    errorState = if (actionUserState.value is DataState.Error)
+                        (actionUserState.value as DataState.Error).errorState else null,
+                    onSubmitUser = {
+                        viewModel.submitUser(it)
+                    },
+                )
+            },
+            content = {
+                Scaffold(
+                    topBar = {
+                        BasicTopBar(
+                            titleText = stringResource(id = R.string.store_users),
+                            onBackClicked = onBackClicked
+                        )
+                    },
+                    content = { padding ->
+                        Box(
+                            modifier = Modifier
+                                .padding(padding)
+                                .fillMaxSize()
+                        ) {
+                            usersState.value.result(
+                                onSuccess = {
+                                    StoresUsersContent(
+                                        storeAccounts = it,
+                                        onAddClicked = {
+                                            scope.launch {
+                                                selectedUserForDetail = null
+                                                modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                            }
+                                        },
+                                        onAccountClicked = {
+                                            scope.launch {
+                                                selectedUserForDetail = it
+                                                modalState.animateTo(ModalBottomSheetValue.Expanded)
+                                            }
+                                        },
+                                        onUserSwitched = { user, switch ->
+                                            viewModel.submitUser(user.copy(isUserActive = switch))
+                                        }
+                                    )
+                                },
+                                onError = {
+                                    BasicError(
+                                        title = stringResource(id = it.title),
+                                        message = stringResource(id = it.message).plus(it.additionalMessage),
+                                        onRetry = {
+                                            viewModel.loadUsers()
+                                        }
+                                    )
+                                },
+                                onLoading = {
+                                    BasicLoading()
+                                }
+                            )
+                        }
+                    }
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -388,6 +404,37 @@ private fun UserDetail(
             )
         )
         Spacer(modifier = Modifier.height(16.dp))
+        if (errorState != null) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .background(
+                        color = MaterialTheme.colors.primary.copy(
+                            0.3f
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = stringResource(id = errorState.title),
+                    color = Color.Red,
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    text = errorState.createMessage(LocalContext.current),
+                    color = Color.Red,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
         BasicEditText(
             value = name,
             placeHolder = stringResource(R.string.enter_user_name),
@@ -421,7 +468,9 @@ private fun UserDetail(
         Spacer(modifier = Modifier.height(16.dp))
         GeneralDropdown(
             label = stringResource(R.string.select_authority),
-            items = UserAuthority.values().map {
+            items = UserAuthority.values().filterNot {
+                it == UserAuthority.OWNER
+            }.map {
                 GeneralDropdownItem(it.name, it)
             },
             selectedItem = authority?.run { GeneralDropdownItem(this.name, this) },
@@ -481,32 +530,10 @@ private fun UserDetail(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        if (errorState != null) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .background(
-                        color = MaterialTheme.colors.surface.copy(
-                            0.3f
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    text = stringResource(id = errorState.title),
-                    color = Color.Red,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
         val buttonText = if (user != null) R.string.save else R.string.adding
         PrimaryButtonView(
             modifier = Modifier
                 .fillMaxWidth(),
-            backgroundColor = MaterialTheme.colors.surface,
             isEnabled = isButtonEnabled,
             buttonText = stringResource(id = buttonText),
             onClick = {
@@ -524,7 +551,7 @@ private fun UserDetail(
                 )
                 name = ""
                 email = ""
-                authority = UserAuthority.OWNER
+                authority = null
                 password = ""
                 confirmPassword = ""
             }
