@@ -19,15 +19,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.socialite.common.menus.StoreMenus
 import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.screens.managers.DateAndTimeManager
 import com.socialite.solite_pos.view.screens.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.screens.orders.OrdersActivity
-import com.socialite.solite_pos.view.screens.store.outcomes.OutComesScreen
 import com.socialite.solite_pos.view.screens.settings.SettingsActivity
 import com.socialite.solite_pos.view.screens.store.categories.CategoryMasterScreen
+import com.socialite.solite_pos.view.screens.store.outcomes.OutComesScreen
 import com.socialite.solite_pos.view.screens.store.payments.PaymentMasterScreen
 import com.socialite.solite_pos.view.screens.store.product_detail.ProductDetailScreen
 import com.socialite.solite_pos.view.screens.store.product_master.ProductsMasterScreen
@@ -39,7 +40,6 @@ import com.socialite.solite_pos.view.screens.store.variant_master.VariantMasterS
 import com.socialite.solite_pos.view.screens.store.variant_product.VariantProductScreen
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
-import com.socialite.solite_pos.view.ui.StoreMenus
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -67,7 +67,7 @@ class StoreActivity : SoliteActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val date = DateUtils.currentDate
-        storeViewModel.loadBadges(date)
+        storeViewModel.loadData(date)
 
         setContent {
             SolitePOSTheme {
@@ -82,6 +82,7 @@ class StoreActivity : SoliteActivity() {
                     composable(StoreDestinations.MAIN_STORE) {
                         MainStoreMenu(
                             badges = state.badges,
+                            menus = state.menus,
                             onGeneralMenuClicked = {
                                 when (it) {
                                     GeneralMenus.NEW_ORDER -> goToOrderCustomerActivity()

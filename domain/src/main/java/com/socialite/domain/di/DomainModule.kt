@@ -30,6 +30,7 @@ import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetSelectedStore
+import com.socialite.domain.domain.GetStoreMenus
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetUsers
@@ -90,6 +91,7 @@ import com.socialite.domain.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetPromosImpl
 import com.socialite.domain.domain.impl.GetRecapDataImpl
 import com.socialite.domain.domain.impl.GetSelectedStoreImpl
+import com.socialite.domain.domain.impl.GetStoreMenusImpl
 import com.socialite.domain.domain.impl.GetStoresImpl
 import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetUsersImpl
@@ -437,4 +439,9 @@ abstract class DomainBinderModule {
     abstract fun bindLogout(
         logoutImpl: LogoutImpl
     ): Logout
+
+    @Binds
+    abstract fun bindGetStoreMenus(
+        getStoreMenusImpl: GetStoreMenusImpl
+    ): GetStoreMenus
 }

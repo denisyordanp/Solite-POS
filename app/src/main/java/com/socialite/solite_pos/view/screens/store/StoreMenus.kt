@@ -13,12 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.socialite.common.menus.StoreMenus
 import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.StoreMenuItem
-import com.socialite.solite_pos.view.ui.StoreMenus
 
 @Composable
 fun StoreMenus(
+    menus: List<StoreMenus>,
     onGeneralMenuClicked: () -> Unit,
     onStoreMenuClicked: (menu: StoreMenus) -> Unit
 ) {
@@ -32,7 +33,7 @@ fun StoreMenus(
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
         ) {
-            items(StoreMenus.values()) {
+            items(menus) {
                 StoreMenuItem(stringResource(id = it.title)) {
                     onStoreMenuClicked(it)
                 }
