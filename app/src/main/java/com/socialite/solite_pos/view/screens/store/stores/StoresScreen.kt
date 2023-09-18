@@ -62,6 +62,7 @@ fun StoresScreen(
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
+    val isUSerStaff = currentViewModel.isUserStaff().collectAsState(initial = false)
     val stores = currentViewModel.getStores().collectAsState(initial = emptyList())
     val selectedActiveStore = currentViewModel.selectedStore.collectAsState(initial = "")
     var selectedStoreForDetail by remember { mutableStateOf<Store?>(null) }
@@ -102,6 +103,7 @@ fun StoresScreen(
                     StoresContent(
                         modifier = Modifier
                             .padding(padding),
+                        isUserStaff = isUSerStaff.value,
                         stores = stores.value,
                         selectedStore = selectedActiveStore.value,
                         onAddClicked = {
@@ -111,9 +113,11 @@ fun StoresScreen(
                             }
                         },
                         onStoreClicked = {
-                            scope.launch {
-                                selectedStoreForDetail = it
-                                modalState.show()
+                            if (!isUSerStaff.value) {
+                                scope.launch {
+                                    selectedStoreForDetail = it
+                                    modalState.show()
+                                }
                             }
                         },
                         onSelectStore = {
@@ -129,6 +133,7 @@ fun StoresScreen(
 @Composable
 private fun StoresContent(
     modifier: Modifier = Modifier,
+    isUserStaff: Boolean,
     stores: List<Store>,
     selectedStore: String,
     onAddClicked: () -> Unit,
@@ -167,7 +172,7 @@ private fun StoresContent(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(24.dp),
-            visible = !listState.isScrollInProgress,
+            visible = !listState.isScrollInProgress && !isUserStaff,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
