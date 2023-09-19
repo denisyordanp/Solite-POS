@@ -23,7 +23,8 @@ fun Order.toData() = com.socialite.data.schema.room.new_master.Order(
     isTakeAway = isTakeAway,
     status = status,
     store = store,
-    isUploaded = isUploaded
+    isUploaded = isUploaded,
+    user = user
 )
 
 fun Outcome.toData() = com.socialite.data.schema.room.new_master.Outcome(
@@ -34,7 +35,8 @@ fun Outcome.toData() = com.socialite.data.schema.room.new_master.Outcome(
     amount = amount,
     date = date,
     store = store,
-    isUploaded = isUploaded
+    isUploaded = isUploaded,
+    user = user
 )
 
 fun Customer.toData() = com.socialite.data.schema.room.new_master.Customer(
@@ -131,16 +133,10 @@ fun VariantProduct.toData() = com.socialite.data.schema.room.new_bridge.VariantP
     isDeleted = isDeleted
 )
 
-fun User.toNewUserData(newId: String) = com.socialite.data.schema.room.master.User(
-    id = newId,
-    name = name,
-    email = email,
-    authority = authority.name
-)
-
 fun User.toData() = com.socialite.data.schema.room.master.User(
     id = id,
     name = name,
     email = email,
-    authority = authority.name
+    authority = authority.name,
+    active = isUserActive
 )

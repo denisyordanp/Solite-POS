@@ -11,10 +11,11 @@ data class Outcome(
     val amount: Int,
     val date: String,
     val store: String,
+    val user: Long,
     val isUploaded: Boolean
 ) {
 
-
+    val isNewOutcome get() = store == "" && user == 0L
     fun dateString() =
         DateUtils.convertDateFromDb(date, DateUtils.DATE_WITH_DAY_WITHOUT_YEAR_FORMAT)
 
@@ -32,7 +33,8 @@ data class Outcome(
                 amount = 1,
                 date = date,
                 store = "",
-                isUploaded = false
+                isUploaded = false,
+                user = 0L
             )
     }
 }

@@ -1,13 +1,11 @@
 package com.socialite.data.repository.impl
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.socialite.common.di.IoDispatcher
 import com.socialite.common.extension.toResponse
 import com.socialite.common.network.NetworkConfig
 import com.socialite.data.database.dao.UserDao
+import com.socialite.data.datastore.DataStoreManager
 import com.socialite.data.di.AuthorizationService
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.repository.SyncRepository
@@ -19,13 +17,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     @AuthorizationService private val service: SoliteServices,
     private val dao: UserDao,
-    private val dataStore: DataStore<Preferences>,
+    private val dataStoreManager: DataStoreManager,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : UserRepository {
 
@@ -51,14 +48,14 @@ class UserRepositoryImpl @Inject constructor(
         update.updates(missingItems)
     }
 
-    override fun getUsers() = flow {
+    override fun fetchUsers() = flow {
         val response = service.getUsers()
         emit(response)
     }.flowOn(dispatcher)
 
-    override fun addUser(user: User) = flow {
-        dao.insertUser(user)
-        emit(true)
+    override fun fetchUser() = flow {
+        val response = service.getUser()
+        emit(response)
     }.flowOn(dispatcher)
 
     override fun postNewUserUser(
@@ -89,20 +86,17 @@ class UserRepositoryImpl @Inject constructor(
         emit(request)
     }.flowOn(dispatcher)
 
-    override fun saveLoggedInUser(user: User?) = flow {
-        user?.let {
-            val jsonUser = NetworkConfig.gson().toJson(user)
-            dataStore.edit {
-                it[PreferencesKeys.LOGGED_IN_USER] = jsonUser
-            }
-        }
-        emit(true)
-    }.flowOn(dispatcher)
+    override fun saveLoggedInUser(user: User?) =
+        dataStoreManager.saveMapData(PreferencesKeys.LOGGED_IN_USER) {
+            user?.let {
+                NetworkConfig.gson().toJson(user)
+            } ?: ""
+        }.flowOn(dispatcher)
 
-    override fun getLoggedInUser() = dataStore.data.map {
-        val jsonUser = it[PreferencesKeys.LOGGED_IN_USER]
-        jsonUser?.let {
-            NetworkConfig.gson().fromJson(jsonUser, User::class.java)
-        }
-    }.flowOn(dispatcher)
+    override fun getLoggedInUser() =
+        dataStoreManager.getMapData(PreferencesKeys.LOGGED_IN_USER) { jsonUser ->
+            jsonUser.let {
+                NetworkConfig.gson().fromJson(it, User::class.java)
+            }
+        }.flowOn(dispatcher)
 }

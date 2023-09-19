@@ -73,10 +73,9 @@ class OpeningActivity : SoliteActivity() {
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 Text(text = version)
             }
-
         }
     }
 

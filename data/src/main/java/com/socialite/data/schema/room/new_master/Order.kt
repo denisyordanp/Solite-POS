@@ -47,6 +47,9 @@ data class Order(
     @ColumnInfo(name = Store.ID)
     val store: String,
 
+    @ColumnInfo(name = USER, defaultValue = "0")
+    val user: Long,
+
     @ColumnInfo(name = UPLOAD)
     val isUploaded: Boolean
 ) : EntityData {
@@ -60,7 +63,8 @@ data class Order(
             status = status,
             store = store,
             isTakeAway = isTakeAway,
-            isUploaded = true
+            isUploaded = true,
+            user = user
         )
     }
 
@@ -69,6 +73,7 @@ data class Order(
         const val ORDER_DATE = "order_date"
         const val TAKE_AWAY = "take_away"
         const val STATUS = "status"
+        const val USER = "user_id"
         const val NO = "order_no"
         const val ID = "order_id"
 

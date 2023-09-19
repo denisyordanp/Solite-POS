@@ -14,7 +14,9 @@ data class LoginResponse(
             id = id,
             name = name,
             email = email,
-            authority = authority
+            authority = authority,
+            // TODO: Add user active on login response
+            active = true
         )
     }
 }

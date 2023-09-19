@@ -52,6 +52,9 @@ interface SoliteServices {
     @GET("v1/user_store")
     suspend fun getUsers(): ApiResponse<List<UserStoreResponse>>
 
+    @GET("v1/user")
+    suspend fun getUser(): ApiResponse<UserStoreResponse>
+
     @POST("v1/synchronize")
     suspend fun synchronize(
         @Body synchronize: SynchronizeParams

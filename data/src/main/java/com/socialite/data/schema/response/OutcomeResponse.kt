@@ -10,7 +10,8 @@ data class OutcomeResponse(
     val isUploaded: Boolean,
     val name: String,
     val price: Int,
-    val store: String
+    val store: String,
+    val user: Long
 ) {
 
     fun toEntity(): Outcome {
@@ -22,7 +23,8 @@ data class OutcomeResponse(
             amount = amount,
             date = date,
             store = store,
-            isUploaded = isUploaded
+            isUploaded = isUploaded,
+            user = user
         )
     }
 }

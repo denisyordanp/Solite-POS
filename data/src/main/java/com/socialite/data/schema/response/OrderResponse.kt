@@ -10,7 +10,8 @@ data class OrderResponse(
     val orderNo: String,
     val orderTime: String,
     val status: Int,
-    val store: String
+    val store: String,
+    val user: Long
 ) {
     fun toEntity(): Order {
         return Order(
@@ -21,7 +22,8 @@ data class OrderResponse(
             isTakeAway = isTakeAway,
             status = status,
             store = store,
-            isUploaded = isUploaded
+            isUploaded = isUploaded,
+            user = user
         )
     }
 }

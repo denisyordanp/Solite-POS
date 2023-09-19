@@ -25,7 +25,8 @@ data class User(
             name = name,
             email = email,
             authority = authority,
-            password = password
+            password = password,
+            isUserActive = true
         )
     }
 }

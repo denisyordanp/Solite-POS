@@ -1,23 +1,21 @@
 package com.socialite.data.repository.impl
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.socialite.common.di.IoDispatcher
+import com.socialite.data.datastore.DataStoreManager
 import com.socialite.data.preference.SettingPreferences
 import com.socialite.data.preference.UserPreferences
 import com.socialite.data.repository.SettingRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SettingRepositoryImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
+    private val dataStoreManager: DataStoreManager,
     private val userPreference: UserPreferences,
     private val settingPreferences: SettingPreferences,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
@@ -31,48 +29,42 @@ class SettingRepositoryImpl @Inject constructor(
         val IS_MIGRATE_PHASE_2 = booleanPreferencesKey("is_migrate_phase_2")
     }
 
-    override fun getSelectedStore() = dataStore.data.map {
-        it[PreferencesKeys.SELECTED_STORE] ?: 0L
-    }.flowOn(dispatcher)
+    override fun getSelectedStore() = dataStoreManager.getData(PreferencesKeys.SELECTED_STORE, 0L)
+        .flowOn(dispatcher)
 
-    override fun getNewSelectedStore() = dataStore.data.map {
-        it[PreferencesKeys.NEW_SELECTED_STORE] ?: ""
-    }.flowOn(dispatcher)
+    override fun getNewSelectedStore() =
+        dataStoreManager.getData(PreferencesKeys.NEW_SELECTED_STORE, "")
+            .flowOn(dispatcher)
 
-    override fun getIsDarkModeActive() = dataStore.data.map {
-        it[PreferencesKeys.IS_DARK_MODE] ?: false
-    }.flowOn(dispatcher)
+    override fun getIsDarkModeActive() =
+        dataStoreManager.getData(PreferencesKeys.IS_DARK_MODE, false)
+            .flowOn(dispatcher)
 
     override suspend fun selectNewStore(storeId: String) {
-        dataStore.edit {
-            it[PreferencesKeys.NEW_SELECTED_STORE] = storeId
-        }
+        dataStoreManager.saveData(PreferencesKeys.NEW_SELECTED_STORE, storeId)
+            .collect()
     }
 
     override suspend fun setDarkMode(isActive: Boolean) {
-        dataStore.edit {
-            it[PreferencesKeys.IS_DARK_MODE] = isActive
-        }
+        dataStoreManager.saveData(PreferencesKeys.IS_DARK_MODE, isActive)
+            .collect()
     }
 
-    override suspend fun isMigrated() = dataStore.data.map {
-        it[PreferencesKeys.IS_MIGRATE] ?: false
-    }.first()
+    override suspend fun isMigrated() = dataStoreManager.getData(PreferencesKeys.IS_MIGRATE, false)
+        .first()
 
-    override suspend fun isMigratedPhase2() = dataStore.data.map {
-        it[PreferencesKeys.IS_MIGRATE_PHASE_2] ?: false
-    }.first()
+    override suspend fun isMigratedPhase2() =
+        dataStoreManager.getData(PreferencesKeys.IS_MIGRATE_PHASE_2, false)
+            .first()
 
     override suspend fun setMigration(isMigrate: Boolean) {
-        dataStore.edit {
-            it[PreferencesKeys.IS_MIGRATE] = isMigrate
-        }
+        dataStoreManager.saveData(PreferencesKeys.IS_MIGRATE, isMigrate)
+            .collect()
     }
 
     override suspend fun setMigrationPhase2(isMigrate: Boolean) {
-        dataStore.edit {
-            it[PreferencesKeys.IS_MIGRATE_PHASE_2] = isMigrate
-        }
+        dataStoreManager.saveData(PreferencesKeys.IS_MIGRATE_PHASE_2, isMigrate)
+            .collect()
     }
 
     override fun insertToken(token: String) {

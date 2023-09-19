@@ -38,6 +38,9 @@ data class Outcome(
     @ColumnInfo(name = Store.ID)
     val store: String,
 
+    @ColumnInfo(name = USER, defaultValue = "0")
+    val user: Long,
+
     @ColumnInfo(name = UPLOAD)
     val isUploaded: Boolean
 ) : EntityData {
@@ -51,12 +54,14 @@ data class Outcome(
             amount = amount,
             price = price.toInt(),
             store = store,
-            isUploaded = true
+            isUploaded = true,
+            user = user
         )
     }
 
     companion object {
         const val ID = "id_outcome"
+        const val USER = "user_id"
         const val AMOUNT = "amount"
         const val PRICE = "price"
         const val NAME = "name"

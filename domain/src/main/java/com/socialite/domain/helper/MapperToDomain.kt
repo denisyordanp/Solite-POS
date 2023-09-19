@@ -1,27 +1,27 @@
 package com.socialite.domain.helper
 
-import com.socialite.data.schema.response.UserStoreResponse
 import com.socialite.data.schema.room.helper.OrderData
 import com.socialite.data.schema.room.helper.ProductWithCategory
+import com.socialite.data.schema.room.master.User
 import com.socialite.data.schema.room.new_bridge.OrderPayment
 import com.socialite.data.schema.room.new_bridge.OrderPromo
 import com.socialite.data.schema.room.new_bridge.VariantProduct
-import com.socialite.domain.schema.OrderData as DomainOrderData
 import com.socialite.data.schema.room.new_master.Category
 import com.socialite.data.schema.room.new_master.Customer
 import com.socialite.data.schema.room.new_master.Order
 import com.socialite.data.schema.room.new_master.Outcome
 import com.socialite.data.schema.room.new_master.Payment
-import com.socialite.domain.schema.main.Category as DomainCategory
 import com.socialite.data.schema.room.new_master.Product
 import com.socialite.data.schema.room.new_master.Promo
 import com.socialite.data.schema.room.new_master.Store
 import com.socialite.data.schema.room.new_master.Variant
 import com.socialite.data.schema.room.new_master.VariantOption
 import com.socialite.domain.menu.toAuthority
-import com.socialite.domain.schema.main.VariantOption as DomainVariantOption
-import com.socialite.domain.schema.main.Variant as DomainVariant
+import com.socialite.domain.schema.OrderData as DomainOrderData
+import com.socialite.domain.schema.main.Category as DomainCategory
 import com.socialite.domain.schema.main.Product as DomainProduct
+import com.socialite.domain.schema.main.Variant as DomainVariant
+import com.socialite.domain.schema.main.VariantOption as DomainVariantOption
 
 fun Product.toDomain() = DomainProduct(
     id = id,
@@ -67,7 +67,8 @@ fun Order.toDomain() = com.socialite.domain.schema.main.Order(
     isTakeAway = isTakeAway,
     status = status,
     store = store,
-    isUploaded = isUploaded
+    isUploaded = isUploaded,
+    user = user
 )
 
 fun Store.toDomain() = com.socialite.domain.schema.main.Store(
@@ -143,7 +144,8 @@ fun Outcome.toDomain() = com.socialite.domain.schema.Outcome(
     amount = amount,
     date = date,
     store = store,
-    isUploaded = isUploaded
+    isUploaded = isUploaded,
+    user = user
 )
 
 fun VariantProduct.toDomain() = com.socialite.domain.schema.main.VariantProduct(
@@ -155,10 +157,10 @@ fun VariantProduct.toDomain() = com.socialite.domain.schema.main.VariantProduct(
     isDeleted = isDeleted
 )
 
-fun UserStoreResponse.toDomain() = com.socialite.domain.schema.main.User(
-    id = id.toString(),
-    name = user.name,
-    email = user.email,
-    authority = user.authority.toAuthority(),
-    isUserActive = isActive,
+fun User.toDomain() = com.socialite.domain.schema.main.User(
+    id = id,
+    name = name,
+    email = email,
+    authority = authority.toAuthority(),
+    isUserActive = active,
 )

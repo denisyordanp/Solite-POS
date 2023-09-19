@@ -51,7 +51,8 @@ class OutcomesRepositoryImpl @Inject constructor(
                         amount = outcome.amount,
                         date = outcome.date,
                         store = store.new_id,
-                        isUploaded = outcome.isUploaded
+                        isUploaded = outcome.isUploaded,
+                        user = 0L
                     )
                     dao.insertNewOutcome(newOutcome)
                 }

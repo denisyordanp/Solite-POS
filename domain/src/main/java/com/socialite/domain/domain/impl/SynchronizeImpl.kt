@@ -2,10 +2,6 @@ package com.socialite.domain.domain.impl
 
 import com.socialite.data.di.AuthorizationService
 import com.socialite.data.network.SoliteServices
-import com.socialite.domain.domain.Synchronize
-import com.socialite.data.schema.response.SynchronizeParamItem
-import com.socialite.data.schema.response.SynchronizeParams
-import com.socialite.data.schema.response.SynchronizeResponse
 import com.socialite.data.repository.CategoriesRepository
 import com.socialite.data.repository.CustomersRepository
 import com.socialite.data.repository.OrderDetailsRepository
@@ -19,8 +15,13 @@ import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
 import com.socialite.data.repository.PromosRepository
 import com.socialite.data.repository.StoreRepository
+import com.socialite.data.repository.UserRepository
 import com.socialite.data.repository.VariantOptionsRepository
 import com.socialite.data.repository.VariantsRepository
+import com.socialite.data.schema.response.SynchronizeParamItem
+import com.socialite.data.schema.response.SynchronizeParams
+import com.socialite.data.schema.response.SynchronizeResponse
+import com.socialite.domain.domain.Synchronize
 import javax.inject.Inject
 
 class SynchronizeImpl @Inject constructor(
@@ -39,6 +40,7 @@ class SynchronizeImpl @Inject constructor(
     private val variantOptionsRepository: VariantOptionsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
+    private val userRepository: UserRepository,
     @AuthorizationService private val service: SoliteServices
 ) : Synchronize {
     override suspend fun invoke(): Boolean {
@@ -98,6 +100,7 @@ class SynchronizeImpl @Inject constructor(
             variantOptionsRepository = variantOptionsRepository,
             orderProductVariantsRepository = orderProductVariantsRepository,
             productVariantsRepository = productVariantsRepository,
+            userRepository = userRepository,
             data = response.data
         )
 
@@ -261,8 +264,10 @@ class SynchronizeImpl @Inject constructor(
         variantOptionsRepository: VariantOptionsRepository,
         orderProductVariantsRepository: OrderProductVariantsRepository,
         productVariantsRepository: ProductVariantsRepository,
+        userRepository: UserRepository,
         data: SynchronizeResponse?
     ) {
+        userRepository.updateSynchronization(data?.user?.map { it.toEntity() })
         customersRepository.updateSynchronization(data?.customer?.map { it.toEntity() })
         storeRepository.updateSynchronization(data?.store?.map { it.toEntity() })
         categoriesRepository.updateSynchronization(data?.category?.map { it.toEntity() })

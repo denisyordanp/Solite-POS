@@ -91,7 +91,8 @@ class OrdersRepositoryImpl @Inject constructor(
                         isTakeAway = order.isTakeAway,
                         status = order.status,
                         store = store.new_id,
-                        isUploaded = order.isUploaded
+                        isUploaded = order.isUploaded,
+                        user = 0L
                     )
                     dao.insertNewOrder(newOrder)
                 }

@@ -22,14 +22,20 @@ class GetUsersImpl @Inject constructor(
 ) : GetUsers {
     @OptIn(FlowPreview::class)
     override fun invoke() = dataStateFlow(dispatcher) {
-        userRepository.getUsers()
+        userRepository.fetchUsers()
     }.flatMapConcat<DataState<ApiResponse<List<UserStoreResponse>>>, DataState<List<User>>> { response ->
         when (response) {
             is DataState.Error -> flowOf(DataState.Error(response.errorState))
             DataState.Idle -> flowOf(DataState.Idle)
             DataState.Loading -> flowOf(DataState.Loading)
             is DataState.Success -> flow {
-                emit(DataState.Success(response.data.data?.map { it.toDomain() } ?: emptyList()))
+                // save users from response
+                val users = response.data.data?.map { it.toEntity() }
+                userRepository.insertItems(users!!)
+
+                // get saved users
+                val dataUsers = userRepository.getItems()
+                emit(DataState.Success(dataUsers.map { it.toDomain() }))
             }
         }
     }

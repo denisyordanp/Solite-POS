@@ -15,5 +15,6 @@ data class SynchronizeResponse(
     val orderPromo: List<OrderPromoResponse>,
     val variantOption: List<VariantOptionResponse>,
     val orderProductVariant: List<OrderProductVariantResponse>,
-    val variantProduct: List<VariantProductResponse>
+    val variantProduct: List<VariantProductResponse>,
+    val user: List<UserStoreResponse>
 )

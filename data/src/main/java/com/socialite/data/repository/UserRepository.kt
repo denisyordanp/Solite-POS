@@ -7,8 +7,8 @@ import com.socialite.data.schema.room.master.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository : SyncRepository<User> {
-    fun getUsers(): Flow<ApiResponse<List<UserStoreResponse>>>
-    fun addUser(user: User): Flow<Boolean>
+    fun fetchUsers(): Flow<ApiResponse<List<UserStoreResponse>>>
+    fun fetchUser(): Flow<ApiResponse<UserStoreResponse>>
     fun postNewUserUser(
         name: String,
         email: String,

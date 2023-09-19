@@ -14,6 +14,7 @@ import com.socialite.domain.domain.GetAllOrderListByReport
 import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.domain.GetCustomers
+import com.socialite.domain.domain.FetchLoggedInUser
 import com.socialite.domain.domain.GetOrderListByReport
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetOrderWithProduct
@@ -76,6 +77,7 @@ import com.socialite.domain.domain.impl.GetAllOrderListByReportImpl
 import com.socialite.domain.domain.impl.GetCategoriesImpl
 import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.domain.domain.impl.GetCustomersImpl
+import com.socialite.domain.domain.impl.FetchLoggedInUserImpl
 import com.socialite.domain.domain.impl.GetOrderListByReportImpl
 import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.domain.domain.impl.GetOrderWithProductImpl
@@ -451,4 +453,9 @@ abstract class DomainBinderModule {
     abstract fun bindIsUserStaff(
         isUserStaffImpl: IsUserStaffImpl
     ): IsUserStaff
+
+    @Binds
+    abstract fun bindGetLoggedInUser(
+        getLoggedInUserImpl: FetchLoggedInUserImpl
+    ): FetchLoggedInUser
 }

@@ -12,6 +12,7 @@ data class Order(
     val isTakeAway: Boolean,
     val status: Int,
     val store: String,
+    val user: Long,
     val isUploaded: Boolean
 ) {
 
@@ -40,7 +41,8 @@ data class Order(
             customer: String,
             orderTime: String,
             store: String,
-            isTakeAway: Boolean
+            isTakeAway: Boolean,
+            userId: Long
         ) = Order(
             id = UUID.randomUUID().toString(),
             orderNo = orderNo,
@@ -49,7 +51,8 @@ data class Order(
             isTakeAway = isTakeAway,
             status = ON_PROCESS,
             store = store,
-            isUploaded = false
+            isUploaded = false,
+            user = userId
         )
     }
 }
