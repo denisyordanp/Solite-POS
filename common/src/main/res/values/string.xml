@@ -3,6 +3,8 @@
     <string name="no_internet_connection_title">Koneksi Internet Terputus</string>
     <string name="timeout_connection_title">Koneksi Lambat</string>
     <string name="something_wrong_title">Terjadi Kesalahan</string>
+    <string name="deactivated_account_title">Akun Dinonaktifkan</string>
+    <string name="deactivated_account_message">Maaf akun anda telah dinonaktifkan oleh owner, silahkan hubungi owner anda jika ini kesalahan.</string>
     <string name="request_failed">Permintaan ditolak</string>
     <string name="no_internet_connection_message">Mohon periksa koneksi internet anda dan coba lagi</string>
     <string name="something_wrong_message">Kesalahan tidak terduga, mohon hubungi developer. pesan error: %s</string>

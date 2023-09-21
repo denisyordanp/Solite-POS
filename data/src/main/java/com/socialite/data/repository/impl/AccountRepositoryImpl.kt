@@ -5,7 +5,7 @@ import com.socialite.common.network.response.ApiResponse
 import com.socialite.data.di.NonAuthorizationService
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.repository.AccountRepository
-import com.socialite.data.schema.response.LoginResponse
+import com.socialite.data.schema.response.AccountResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,7 +16,7 @@ class AccountRepositoryImpl @Inject constructor(
     @NonAuthorizationService private val service: SoliteServices,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : AccountRepository {
-    override fun login(email: String, password: String): Flow<ApiResponse<LoginResponse>> {
+    override fun login(email: String, password: String): Flow<ApiResponse<AccountResponse>> {
         return flow {
             val request = service.login(email, password)
 
@@ -34,7 +34,7 @@ class AccountRepositoryImpl @Inject constructor(
         email: String,
         password: String,
         storeName: String
-    ): Flow<ApiResponse<LoginResponse>> {
+    ): Flow<ApiResponse<AccountResponse>> {
         return flow {
             val request = service.register(name, email, password, storeName)
 

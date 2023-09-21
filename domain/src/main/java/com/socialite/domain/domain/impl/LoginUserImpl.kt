@@ -4,10 +4,11 @@ import com.socialite.common.di.DefaultDispatcher
 import com.socialite.common.extension.dataStateFlow
 import com.socialite.common.network.response.ApiResponse
 import com.socialite.common.state.DataState
+import com.socialite.common.state.ErrorState
 import com.socialite.data.repository.AccountRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
-import com.socialite.data.schema.response.LoginResponse
+import com.socialite.data.schema.response.AccountResponse
 import com.socialite.domain.domain.LoginUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -29,20 +30,32 @@ class LoginUserImpl @Inject constructor(
     override fun invoke(email: String, password: String): Flow<DataState<Boolean>> {
         return dataStateFlow(dispatcher) {
             repository.login(email, password)
-        }.flatMapConcat<DataState<ApiResponse<LoginResponse>>, DataState<Boolean>> {
+        }.flatMapConcat<DataState<ApiResponse<AccountResponse>>, DataState<Boolean>> {
             when (it) {
                 is DataState.Error -> flowOf(DataState.Error(it.errorState))
                 DataState.Idle -> flowOf(DataState.Idle)
                 DataState.Loading -> flowOf(DataState.Loading)
                 is DataState.Success -> flow {
                     val response = it.data.data
-                    val savedLogin = userRepository.saveLoggedInUser(response?.toUser()).first()
-                    settingRepository.insertToken(response?.token.orEmpty())
+                    if (response == null) {
+                        emit(
+                            DataState.Error(
+                                ErrorState.ServerError(
+                                    additionalMessage = "Data empty",
+                                    throwable = IllegalArgumentException()
+                                )
+                            )
+                        )
+                    } else if (response.isActive) {
+                        val savedLogin = userRepository.saveLoggedInUser(response.toUser()).first()
+                        settingRepository.insertToken(response.token)
 
-                    emit(DataState.Success(savedLogin))
+                        emit(DataState.Success(savedLogin))
+                    } else {
+                        emit(DataState.Error(ErrorState.DeactivatedAccount))
+                    }
                 }
             }
         }.flowOn(dispatcher)
     }
-
 }

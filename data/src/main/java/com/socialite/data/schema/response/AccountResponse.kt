@@ -2,12 +2,13 @@ package com.socialite.data.schema.response
 
 import com.socialite.data.schema.room.master.User
 
-data class LoginResponse(
+data class AccountResponse(
     val id: String,
     val name: String,
     val email: String,
     val authority: String,
-    val token: String
+    val token: String,
+    val isActive: Boolean
 ) {
     fun toUser(): User {
         return User(
@@ -15,8 +16,7 @@ data class LoginResponse(
             name = name,
             email = email,
             authority = authority,
-            // TODO: Add user active on login response
-            active = true
+            active = isActive
         )
     }
 }

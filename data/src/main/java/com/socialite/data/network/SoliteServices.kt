@@ -1,7 +1,7 @@
 package com.socialite.data.network
 
 import com.socialite.common.network.response.ApiResponse
-import com.socialite.data.schema.response.LoginResponse
+import com.socialite.data.schema.response.AccountResponse
 import com.socialite.data.schema.response.SynchronizeParams
 import com.socialite.data.schema.response.SynchronizeResponse
 import com.socialite.data.schema.response.UserResponse
@@ -19,7 +19,7 @@ interface SoliteServices {
     suspend fun login(
         @Query("email") email: String,
         @Query("password") password: String
-    ): ApiResponse<LoginResponse>
+    ): ApiResponse<AccountResponse>
 
     @FormUrlEncoded
     @POST("v2/register")
@@ -28,7 +28,7 @@ interface SoliteServices {
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("store") storeName: String
-    ): ApiResponse<LoginResponse>
+    ): ApiResponse<AccountResponse>
 
     @FormUrlEncoded
     @POST("v1/user_on_store")

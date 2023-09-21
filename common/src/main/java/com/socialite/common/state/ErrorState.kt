@@ -15,37 +15,53 @@ sealed class ErrorState(
     }
 
     data class NoInternet(
-        override val title: Int = R.string.no_internet_connection_title,
-        override val message: Int = R.string.no_internet_connection_message,
-        override val additionalMessage: String = "",
         override val throwable: Throwable
-    ) : ErrorState(title, message, additionalMessage, throwable)
+    ) : ErrorState(
+        R.string.no_internet_connection_title,
+        R.string.no_internet_connection_message,
+        "",
+        throwable
+    )
 
     data class ServerError(
-        override val title: Int = R.string.something_wrong_title,
-        override val message: Int = R.string.something_wrong_message,
         override val additionalMessage: String,
         override val throwable: Throwable
-    ) : ErrorState(title, message, additionalMessage, throwable)
+    ) : ErrorState(
+        R.string.something_wrong_title,
+        R.string.something_wrong_message,
+        additionalMessage,
+        throwable
+    )
 
     data class Timeout(
-        override val title: Int = R.string.timeout_connection_title,
-        override val message: Int = R.string.no_internet_connection_message,
         override val additionalMessage: String = "",
         override val throwable: Throwable
-    ) : ErrorState(title, message, additionalMessage, throwable)
+    ) : ErrorState(
+        R.string.timeout_connection_title,
+        R.string.no_internet_connection_message,
+        additionalMessage,
+        throwable
+    )
 
     data class UserError(
-        override val title: Int = R.string.request_failed,
-        override val message: Int = R.string.user_mistake_message,
         override val additionalMessage: String,
         override val throwable: Throwable
-    ) : ErrorState(title, message, additionalMessage, throwable)
+    ) : ErrorState(
+        R.string.request_failed,
+        R.string.user_mistake_message,
+        additionalMessage,
+        throwable
+    )
+
+    object DeactivatedAccount : ErrorState(
+        R.string.deactivated_account_title,
+        R.string.deactivated_account_message,
+        "",
+        IllegalArgumentException()
+    )
 
     data class Unknown(
-        override val title: Int = R.string.something_wrong_title,
-        override val message: Int = R.string.something_wrong_message,
         override val additionalMessage: String,
         override val throwable: Throwable
-    ) : ErrorState(title, message, additionalMessage, throwable)
+    ) : ErrorState(R.string.something_wrong_title, R.string.something_wrong_message, additionalMessage, throwable)
 }

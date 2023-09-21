@@ -7,7 +7,7 @@ import com.socialite.common.state.DataState
 import com.socialite.data.repository.AccountRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
-import com.socialite.data.schema.response.LoginResponse
+import com.socialite.data.schema.response.AccountResponse
 import com.socialite.domain.domain.RegisterUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -34,7 +34,7 @@ class RegisterUserImpl @Inject constructor(
     ): Flow<DataState<Boolean>> {
         return dataStateFlow(dispatcher) {
             repository.register(name, email, password, storeName)
-        }.flatMapConcat<DataState<ApiResponse<LoginResponse>>, DataState<Boolean>> {
+        }.flatMapConcat<DataState<ApiResponse<AccountResponse>>, DataState<Boolean>> {
             when (it) {
                 is DataState.Error -> flowOf(DataState.Error(it.errorState))
                 DataState.Idle -> flowOf(DataState.Idle)
