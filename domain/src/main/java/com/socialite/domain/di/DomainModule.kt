@@ -16,6 +16,7 @@ import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.domain.GetCustomers
 import com.socialite.domain.domain.FetchLoggedInUser
 import com.socialite.domain.domain.FetchUsers
+import com.socialite.domain.domain.GetLoggedInUser
 import com.socialite.domain.domain.GetOrderListByReport
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetOrderWithProduct
@@ -32,6 +33,7 @@ import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetSelectedStore
+import com.socialite.domain.domain.GetSelectedStoreId
 import com.socialite.domain.domain.GetStoreMenus
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetToken
@@ -80,6 +82,7 @@ import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.domain.domain.impl.GetCustomersImpl
 import com.socialite.domain.domain.impl.FetchLoggedInUserImpl
 import com.socialite.domain.domain.impl.FetchUsersImpl
+import com.socialite.domain.domain.impl.GetLoggedInUserImpl
 import com.socialite.domain.domain.impl.GetOrderListByReportImpl
 import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
 import com.socialite.domain.domain.impl.GetOrderWithProductImpl
@@ -95,6 +98,7 @@ import com.socialite.domain.domain.impl.GetProductWithCategoryByIdImpl
 import com.socialite.domain.domain.impl.GetProductWithVariantOptionsImpl
 import com.socialite.domain.domain.impl.GetPromosImpl
 import com.socialite.domain.domain.impl.GetRecapDataImpl
+import com.socialite.domain.domain.impl.GetSelectedStoreIdImpl
 import com.socialite.domain.domain.impl.GetSelectedStoreImpl
 import com.socialite.domain.domain.impl.GetStoreMenusImpl
 import com.socialite.domain.domain.impl.GetStoresImpl
@@ -357,9 +361,9 @@ abstract class DomainBinderModule {
     ): GetStores
 
     @Binds
-    abstract fun bindGetSelectedStore(
-        getSelectedStoreImpl: GetSelectedStoreImpl
-    ): GetSelectedStore
+    abstract fun bindGetSelectedStoreId(
+        getSelectedStoreIdImpl: GetSelectedStoreIdImpl
+    ): GetSelectedStoreId
 
     @Binds
     abstract fun bindSelectStore(
@@ -457,7 +461,7 @@ abstract class DomainBinderModule {
     ): IsUserStaff
 
     @Binds
-    abstract fun bindGetLoggedInUser(
+    abstract fun bindFetchLoggedInUser(
         getLoggedInUserImpl: FetchLoggedInUserImpl
     ): FetchLoggedInUser
 
@@ -465,4 +469,14 @@ abstract class DomainBinderModule {
     abstract fun bindFetchUsers(
         fetchUsersImpl: FetchUsersImpl
     ): FetchUsers
+
+    @Binds
+    abstract fun bindGetLoggedInUser(
+        getLoggedInUserImpl: GetLoggedInUserImpl
+    ): GetLoggedInUser
+
+    @Binds
+    abstract fun bindGetSelectedStore(
+        getSelectedStoreImpl: GetSelectedStoreImpl
+    ): GetSelectedStore
 }

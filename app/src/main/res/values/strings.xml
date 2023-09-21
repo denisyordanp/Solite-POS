@@ -150,5 +150,6 @@
     <string name="attention_title">Perhatian</string>
     <string name="store_user_page_need_to_useing_internet_connection">Khusus untuk halaman pengguna harus menggunakan koneksi internet</string>
     <string name="deactivated_user_message">Akun anda telah di nonaktifkan oleh Owner, silahkan menghubungi Owner jika ini kesalahan.</string>
+    <string name="currently_you_are_at">Saat ini anda sedang berada di Kedai %s</string>
 
 </resources>
