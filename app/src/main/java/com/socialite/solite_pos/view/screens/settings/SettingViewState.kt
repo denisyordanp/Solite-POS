@@ -1,5 +1,6 @@
 package com.socialite.solite_pos.view.screens.settings
 
+import com.socialite.common.state.ErrorState
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 
 
@@ -9,7 +10,7 @@ data class SettingViewState(
     val isServerActive: Boolean,
     val isSynchronizeSuccess: Boolean,
     val badges: List<GeneralMenuBadge>,
-    val error: Throwable?
+    val error: ErrorState?
 ) {
     companion object {
         fun idle() = SettingViewState(

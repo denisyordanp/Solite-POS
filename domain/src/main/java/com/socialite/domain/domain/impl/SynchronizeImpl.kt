@@ -1,7 +1,10 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.data.di.AuthorizationService
-import com.socialite.data.network.SoliteServices
+import com.socialite.common.di.DefaultDispatcher
+import com.socialite.common.extension.dataStateFlow
+import com.socialite.common.network.response.ApiResponse
+import com.socialite.common.state.DataState
+import com.socialite.common.state.ErrorState
 import com.socialite.data.repository.CategoriesRepository
 import com.socialite.data.repository.CustomersRepository
 import com.socialite.data.repository.OrderDetailsRepository
@@ -15,13 +18,24 @@ import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
 import com.socialite.data.repository.PromosRepository
 import com.socialite.data.repository.StoreRepository
+import com.socialite.data.repository.SynchronizeRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.data.repository.VariantOptionsRepository
 import com.socialite.data.repository.VariantsRepository
 import com.socialite.data.schema.response.SynchronizeParamItem
 import com.socialite.data.schema.response.SynchronizeParams
 import com.socialite.data.schema.response.SynchronizeResponse
+import com.socialite.domain.domain.FetchLoggedInUser
 import com.socialite.domain.domain.Synchronize
+import com.socialite.domain.schema.main.User
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class SynchronizeImpl @Inject constructor(
@@ -41,96 +55,54 @@ class SynchronizeImpl @Inject constructor(
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
     private val productVariantsRepository: ProductVariantsRepository,
     private val userRepository: UserRepository,
-    @AuthorizationService private val service: SoliteServices
+    private val synchronizeRepository: SynchronizeRepository,
+    private val fetchLoggedInUser: FetchLoggedInUser,
+    @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : Synchronize {
-    override suspend fun invoke(): Boolean {
-        val synchronizeParam = createSynchronizeParams(
-            customersRepository = customersRepository,
-            storeRepository = storeRepository,
-            categoriesRepository = categoriesRepository,
-            promosRepository = promosRepository,
-            paymentsRepository = paymentsRepository,
-            ordersRepository = ordersRepository,
-            outcomesRepository = outcomesRepository,
-            productsRepository = productsRepository,
-            variantsRepository = variantsRepository,
-            orderDetailsRepository = orderDetailsRepository,
-            orderPaymentsRepository = orderPaymentsRepository,
-            orderPromosRepository = orderPromosRepository,
-            variantOptionsRepository = variantOptionsRepository,
-            orderProductVariantsRepository = orderProductVariantsRepository,
-            productVariantsRepository = productVariantsRepository
-        )
-        val response = service.synchronize(synchronizeParam)
+    @OptIn(FlowPreview::class)
+    override fun invoke() = fetchLoggedInUser().flatMapConcat<DataState<User>, DataState<Boolean>> {
+        when (it) {
+            is DataState.Error -> flowOf(DataState.Error(it.errorState))
+            DataState.Idle -> flowOf(DataState.Idle)
+            DataState.Loading -> flowOf(DataState.Loading)
+            is DataState.Success -> flow {
+                if (it.data.isUserActive) {
+                    val synchronizeParam = createSynchronizeParams()
+                    emitAll(beginSynchronize(synchronizeParam))
+                } else {
+                    emit(DataState.Error(ErrorState.DeactivatedAccount))
+                }
+            }
+        }
+    }.flowOn(dispatcher)
 
-        // Update all un uploaded data that already uploaded
-        updateAllUnUploadedDataAfterUploaded(
-            customersRepository = customersRepository,
-            storeRepository = storeRepository,
-            categoriesRepository = categoriesRepository,
-            promosRepository = promosRepository,
-            paymentsRepository = paymentsRepository,
-            ordersRepository = ordersRepository,
-            outcomesRepository = outcomesRepository,
-            productsRepository = productsRepository,
-            variantsRepository = variantsRepository,
-            orderDetailsRepository = orderDetailsRepository,
-            orderPaymentsRepository = orderPaymentsRepository,
-            orderPromosRepository = orderPromosRepository,
-            variantOptionsRepository = variantOptionsRepository,
-            orderProductVariantsRepository = orderProductVariantsRepository,
-            productVariantsRepository = productVariantsRepository,
-            synchronizeParams = synchronizeParam
-        )
+    @OptIn(FlowPreview::class)
+    private fun beginSynchronize(params: SynchronizeParams): Flow<DataState<Boolean>> {
+        return dataStateFlow(dispatcher) {
+            synchronizeRepository.synchronize(params)
+        }.flatMapConcat<DataState<ApiResponse<SynchronizeResponse>>, DataState<Boolean>> {
+            when (it) {
+                is DataState.Error -> flowOf(DataState.Error(it.errorState))
+                DataState.Idle -> flowOf(DataState.Idle)
+                DataState.Loading -> flowOf(DataState.Loading)
+                is DataState.Success -> flow {
+                    val response = it.data
+                    // Update all un uploaded data that already uploaded
+                    updateAllUnUploadedDataAfterUploaded(params)
 
-        // Insert all missing data that given by server
-        insertAllMissingDataFromServer(
-            customersRepository = customersRepository,
-            storeRepository = storeRepository,
-            categoriesRepository = categoriesRepository,
-            promosRepository = promosRepository,
-            paymentsRepository = paymentsRepository,
-            ordersRepository = ordersRepository,
-            outcomesRepository = outcomesRepository,
-            productsRepository = productsRepository,
-            variantsRepository = variantsRepository,
-            orderDetailsRepository = orderDetailsRepository,
-            orderPaymentsRepository = orderPaymentsRepository,
-            orderPromosRepository = orderPromosRepository,
-            variantOptionsRepository = variantOptionsRepository,
-            orderProductVariantsRepository = orderProductVariantsRepository,
-            productVariantsRepository = productVariantsRepository,
-            userRepository = userRepository,
-            data = response.data
-        )
+                    // Insert all missing data that given by server
+                    insertAllMissingDataFromServer(response.data)
 
-        // Delete the deleted items
-        deleteAllDeletedItems(
-            orderDetailsRepository = orderDetailsRepository,
-            orderProductVariantsRepository = orderProductVariantsRepository,
-            synchronizeParams = synchronizeParam
-        )
+                    // Delete the deleted items
+                    deleteAllDeletedItems(params)
 
-        return true
+                    emit(DataState.Success(true))
+                }
+            }
+        }
     }
 
-    private suspend fun createSynchronizeParams(
-        customersRepository: CustomersRepository,
-        storeRepository: StoreRepository,
-        categoriesRepository: CategoriesRepository,
-        promosRepository: PromosRepository,
-        paymentsRepository: PaymentsRepository,
-        ordersRepository: OrdersRepository,
-        outcomesRepository: OutcomesRepository,
-        productsRepository: ProductsRepository,
-        variantsRepository: VariantsRepository,
-        orderDetailsRepository: OrderDetailsRepository,
-        orderPaymentsRepository: OrderPaymentsRepository,
-        orderPromosRepository: OrderPromosRepository,
-        variantOptionsRepository: VariantOptionsRepository,
-        orderProductVariantsRepository: OrderProductVariantsRepository,
-        productVariantsRepository: ProductVariantsRepository,
-    ): SynchronizeParams {
+    private suspend fun createSynchronizeParams(): SynchronizeParams {
         val needUploadCustomers =
             customersRepository.getNeedUploadCustomers().map { it.toResponse() }
         val needUploadStores = storeRepository.getNeedUploadStores().map { it.toResponse() }
@@ -182,21 +154,6 @@ class SynchronizeImpl @Inject constructor(
     }
 
     private suspend fun updateAllUnUploadedDataAfterUploaded(
-        customersRepository: CustomersRepository,
-        storeRepository: StoreRepository,
-        categoriesRepository: CategoriesRepository,
-        promosRepository: PromosRepository,
-        paymentsRepository: PaymentsRepository,
-        ordersRepository: OrdersRepository,
-        outcomesRepository: OutcomesRepository,
-        productsRepository: ProductsRepository,
-        variantsRepository: VariantsRepository,
-        orderDetailsRepository: OrderDetailsRepository,
-        orderPaymentsRepository: OrderPaymentsRepository,
-        orderPromosRepository: OrderPromosRepository,
-        variantOptionsRepository: VariantOptionsRepository,
-        orderProductVariantsRepository: OrderProductVariantsRepository,
-        productVariantsRepository: ProductVariantsRepository,
         synchronizeParams: SynchronizeParams
     ) {
         if (synchronizeParams.customer.isNotEmpty()) {
@@ -249,22 +206,6 @@ class SynchronizeImpl @Inject constructor(
     }
 
     private suspend fun insertAllMissingDataFromServer(
-        customersRepository: CustomersRepository,
-        storeRepository: StoreRepository,
-        categoriesRepository: CategoriesRepository,
-        promosRepository: PromosRepository,
-        paymentsRepository: PaymentsRepository,
-        ordersRepository: OrdersRepository,
-        outcomesRepository: OutcomesRepository,
-        productsRepository: ProductsRepository,
-        variantsRepository: VariantsRepository,
-        orderDetailsRepository: OrderDetailsRepository,
-        orderPaymentsRepository: OrderPaymentsRepository,
-        orderPromosRepository: OrderPromosRepository,
-        variantOptionsRepository: VariantOptionsRepository,
-        orderProductVariantsRepository: OrderProductVariantsRepository,
-        productVariantsRepository: ProductVariantsRepository,
-        userRepository: UserRepository,
         data: SynchronizeResponse?
     ) {
         userRepository.updateSynchronization(data?.user?.map { it.toEntity() })
@@ -286,8 +227,6 @@ class SynchronizeImpl @Inject constructor(
     }
 
     private suspend fun deleteAllDeletedItems(
-        orderDetailsRepository: OrderDetailsRepository,
-        orderProductVariantsRepository: OrderProductVariantsRepository,
         synchronizeParams: SynchronizeParams
     ) {
         if (synchronizeParams.orderDetail.deletedItems.isNotEmpty()) {

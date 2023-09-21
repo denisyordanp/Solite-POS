@@ -8,11 +8,13 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.socialite.common.state.ErrorState
+import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.FullScreenLoadingView
-import com.socialite.domain.helper.DateUtils
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.screens.opening.OpeningActivity
 import com.socialite.solite_pos.view.screens.order_customer.OrderCustomerActivity
@@ -29,7 +31,7 @@ class SettingsActivity : SoliteActivity() {
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val currentDate = DateUtils.currentDate
         settingViewModel.getBadges(currentDate)
 
@@ -91,23 +93,32 @@ class SettingsActivity : SoliteActivity() {
         if (state.isSynchronizeSuccess || state.error != null) {
             val title =
                 if (state.isSynchronizeSuccess) stringResource(R.string.synchronization_success_title) else stringResource(
-                    R.string.synchronization_failed_title
+                    state.error!!.title
                 )
             val message =
-                if (state.isSynchronizeSuccess) stringResource(R.string.synchronization_success_message) else stringResource(
-                    R.string.synchronization_failed_message, state.error?.message ?: ""
+                if (state.isSynchronizeSuccess) stringResource(R.string.synchronization_success_message) else state.error!!.createMessage(
+                    LocalContext.current
                 )
             BasicAlertDialog(
                 titleText = title,
                 descText = message,
                 positiveAction = {
-                    settingViewModel.resetSynchronizeStatus()
+                    handleDismissAlert(state.error)
                 },
                 positiveText = stringResource(R.string.yes),
                 onDismiss = {
-                    settingViewModel.resetSynchronizeStatus()
+                    handleDismissAlert(state.error)
                 }
             )
+        }
+    }
+
+    private fun handleDismissAlert(error: ErrorState?) {
+        if (error is ErrorState.DeactivatedAccount) {
+            settingViewModel.logout()
+            goToOpening()
+        } else {
+            settingViewModel.resetSynchronizeStatus()
         }
     }
 
