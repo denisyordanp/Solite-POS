@@ -16,7 +16,8 @@ interface OrdersRepository : SyncRepository<Order> {
         status: Int,
         from: String,
         until: String,
-        store: String
+        store: String,
+        userId: Long
     ): Flow<List<OrderData>>
 
     fun getOrderList(

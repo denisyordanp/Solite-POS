@@ -4,7 +4,9 @@ import com.socialite.domain.schema.main.Category
 import com.socialite.domain.schema.main.Payment
 import com.socialite.domain.schema.main.Promo
 import com.socialite.domain.schema.main.Store
+import com.socialite.domain.schema.main.User
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
+import okhttp3.internal.toLongOrDefault
 import com.socialite.solite_pos.schema.Category as UiCategory
 
 fun Category.toUi() = UiCategory(
@@ -16,7 +18,7 @@ fun Category.toUi() = UiCategory(
 )
 
 fun ReportParameter.toDomain() = com.socialite.domain.schema.ReportParameter(
-    start, end, storeId
+    start, end, storeId, userId.toLongOrDefault(0L)
 )
 
 fun Store.toUi() = com.socialite.solite_pos.schema.Store(
@@ -44,4 +46,8 @@ fun Payment.toUi() = com.socialite.solite_pos.schema.Payment(
     this.isCash,
     this.isActive,
     this.isUploaded
+)
+
+fun User.toUi() = com.socialite.solite_pos.schema.User(
+    id, name, email, authority, isUserActive, password
 )

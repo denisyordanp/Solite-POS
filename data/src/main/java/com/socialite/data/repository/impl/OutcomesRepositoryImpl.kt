@@ -22,8 +22,8 @@ class OutcomesRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : OutcomesRepository {
 
-    override fun getOutcomes(from: String, until: String, store: String) =
-        dao.getOutcome(from, until, store).flowOn(dispatcher)
+    override fun getOutcomes(from: String, until: String, store: String, userId: Long) =
+        dao.getOutcome(from, until, store, userId).flowOn(dispatcher)
 
     override suspend fun insertOutcome(data: Outcome) {
         dao.insertNewOutcome(data)

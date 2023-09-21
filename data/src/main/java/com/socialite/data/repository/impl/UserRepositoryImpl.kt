@@ -53,6 +53,8 @@ class UserRepositoryImpl @Inject constructor(
         emit(response)
     }.flowOn(dispatcher)
 
+    override fun getUsers() = dao.getUsers().flowOn(dispatcher)
+
     override fun fetchUser() = flow {
         val response = service.getUser()
         emit(response)

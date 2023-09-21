@@ -9,10 +9,11 @@ import java.io.Serializable
 data class ReportParameter(
     val start: String,
     val end: String,
-    val storeId: String
+    val storeId: String,
+    val userId: String
 ) : Serializable {
 
-    fun isTodayOnly() = storeId.isEmpty()
+    fun isTodayOnly() = storeId.isEmpty() && userId.isEmpty()
 
     fun toTitle() = if (start == end) {
         DateUtils.convertDateFromDate(
@@ -40,6 +41,7 @@ data class ReportParameter(
         private const val START = "report_start"
         private const val END = "report_end"
         private const val STORE = "report_store"
+        private const val USER = "report_user"
         private const val EMPTY_ROUTE_VALUE = "empty"
 
         fun createReportFromArguments(
@@ -49,10 +51,12 @@ data class ReportParameter(
                 val start = it.getString(START) ?: ""
                 val end = it.getString(END) ?: ""
                 val store = it.getString(STORE) ?: ""
+                val user = it.getString(USER) ?: ""
                 ReportParameter(
                     start = start,
                     end = end,
-                    storeId = if (store == EMPTY_ROUTE_VALUE) "" else store
+                    storeId = if (store == EMPTY_ROUTE_VALUE) "" else store,
+                    userId = user
                 )
             } ?: createTodayOnly(true)
         }
@@ -73,7 +77,8 @@ data class ReportParameter(
             return ReportParameter(
                 start = date,
                 end = date,
-                storeId = ""
+                storeId = "",
+                userId = ""
             )
         }
     }

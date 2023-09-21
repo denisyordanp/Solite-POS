@@ -31,12 +31,13 @@ interface OrdersDao {
     suspend fun getNeedUploadOrders(): List<NewOrder>
 
     @Transaction
-    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND ${NewOrder.USER} = :userId AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
     fun getOrdersByStatus(
         status: Int,
         from: String,
         until: String,
-        store: String
+        store: String,
+        userId: Long
     ): Flow<List<OrderData>>
 
     @Transaction

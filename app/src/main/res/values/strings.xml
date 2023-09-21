@@ -64,6 +64,7 @@
     <string name="user_name">Nama pengguna</string>
     <string name="address">Alamat</string>
     <string name="select_store">Pilih kedai</string>
+    <string name="select_user">Pilih pengguna</string>
     <string name="user_access_off">Menonaktifkan user</string>
     <string name="user_access_on">Mengaktifkan user</string>
     <string name="user_access_off_desc">Anda yakin akan menonaktifkan user <b>%s</b>, sehingga user tidak dapat login kembali?</string>

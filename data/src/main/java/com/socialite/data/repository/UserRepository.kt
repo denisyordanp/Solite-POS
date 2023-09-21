@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository : SyncRepository<User> {
     fun fetchUsers(): Flow<ApiResponse<List<UserStoreResponse>>>
+    fun getUsers(): Flow<List<User>>
     fun fetchUser(): Flow<ApiResponse<UserStoreResponse>>
     fun postNewUserUser(
         name: String,

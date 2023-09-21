@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.common.state.DataState
 import com.socialite.domain.domain.AddNewUser
-import com.socialite.domain.domain.GetUsers
+import com.socialite.domain.domain.FetchUsers
 import com.socialite.domain.domain.UpdateUser
 import com.socialite.domain.schema.main.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StoreUsersViewModel @Inject constructor(
-    private val getUsers: GetUsers,
+    private val fetchUsers: FetchUsers,
     private val addNewUser: AddNewUser,
     private val updateUser: UpdateUser
 ) : ViewModel() {
@@ -30,7 +30,7 @@ class StoreUsersViewModel @Inject constructor(
     val usersFLow = _usersFLow.asStateFlow()
 
     fun loadUsers() = viewModelScope.launch {
-        _usersFLow.emitAll(getUsers())
+        _usersFLow.emitAll(fetchUsers())
     }
 
     fun submitUser(user: User) = viewModelScope.launch {
