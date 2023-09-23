@@ -60,6 +60,7 @@ fun CategoryMasterScreen(
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    val isUserStaff = currentViewModel.isUserStaff().collectAsState(initial = false).value
     val categories =
         currentViewModel.getAllCategories().collectAsState(initial = emptyList()).value
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
@@ -102,11 +103,14 @@ fun CategoryMasterScreen(
                     CategoryContent(
                         modifier = Modifier
                             .padding(padding),
+                        isUSerStaff = isUserStaff,
                         categories = categories,
                         onCategoryClicked = {
-                            scope.launch {
-                                selectedCategory = it
-                                modalState.show()
+                            if (!isUserStaff) {
+                                scope.launch {
+                                    selectedCategory = it
+                                    modalState.show()
+                                }
                             }
                         },
                         onAddClicked = {
@@ -187,6 +191,7 @@ private fun CategoryDetail(
 @Composable
 private fun CategoryContent(
     modifier: Modifier = Modifier,
+    isUSerStaff: Boolean,
     categories: List<Category>,
     onCategoryClicked: (Category) -> Unit,
     onAddClicked: () -> Unit,
@@ -225,7 +230,7 @@ private fun CategoryContent(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(24.dp),
-            visible = !listState.isScrollInProgress,
+            visible = !listState.isScrollInProgress && !isUSerStaff,
             enter = fadeIn(),
             exit = fadeOut()
         ) {

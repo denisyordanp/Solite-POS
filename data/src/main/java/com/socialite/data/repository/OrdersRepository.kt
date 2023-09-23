@@ -8,21 +8,24 @@ interface OrdersRepository : SyncRepository<Order> {
 
     fun getOrderList(
         status: Int,
+        date: String,
         storeId: String,
-        date: String
+        userId: Long
     ): Flow<List<OrderData>>
     suspend fun getNeedUploadOrders(): List<Order>
     fun getOrderList(
         status: Int,
         from: String,
         until: String,
-        store: String
+        store: String,
+        userId: Long
     ): Flow<List<OrderData>>
 
     fun getOrderList(
         from: String,
         until: String,
-        store: String
+        store: String,
+        userId: Long
     ): Flow<List<OrderData>>
     fun getOrderDataAsFlow(orderId: String): Flow<OrderData?>
     suspend fun updateOrder(order: Order)

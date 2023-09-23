@@ -2,11 +2,14 @@ package com.socialite.solite_pos.view.screens.store.recap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.socialite.common.state.DataState
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetStores
+import com.socialite.domain.domain.GetUsers
 import com.socialite.solite_pos.schema.MenuOrderAmount
 import com.socialite.solite_pos.schema.Store
+import com.socialite.solite_pos.schema.User
 import com.socialite.solite_pos.utils.tools.mapper.toDomain
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RecapViewModel @Inject constructor(
     private val getStores: GetStores,
+    private val getUsers: GetUsers,
     private val getRecapData: GetRecapData,
     private val getOrderMenusWithAmount: GetOrderMenusWithAmount
 ) : ViewModel() {
@@ -36,6 +40,19 @@ class RecapViewModel @Inject constructor(
                         stores = stores.map { it.toUi() }
                     )
                 }.collect(_viewState)
+        }
+
+        viewModelScope.launch {
+            getUsers()
+                .collect { state ->
+                    if (state is DataState.Success) {
+                        _viewState.emit(
+                            _viewState.value.copy(
+                                users = state.data.map { it.toUi() }
+                            )
+                        )
+                    }
+                }
         }
 
         _viewState.onEach {
@@ -69,6 +86,16 @@ class RecapViewModel @Inject constructor(
             _viewState.emit(
                 _viewState.value.copy(
                     selectedStore = store
+                )
+            )
+        }
+    }
+
+    fun selectUser(user: User) {
+        viewModelScope.launch {
+            _viewState.emit(
+                _viewState.value.copy(
+                    selectedUser = user
                 )
             )
         }

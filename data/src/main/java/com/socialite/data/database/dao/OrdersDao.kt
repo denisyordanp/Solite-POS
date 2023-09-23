@@ -24,27 +24,29 @@ import com.socialite.data.schema.room.new_master.Order as NewOrder
 @Dao
 interface OrdersDao {
     @Transaction
-    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :storeId")
-    fun getOrdersByStatus(status: Int, storeId: String, date: String): Flow<List<OrderData>>
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${NewOrder.USER} = :userId AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :storeId")
+    fun getOrdersByStatus(status: Int, storeId: String, date: String, userId: Long): Flow<List<OrderData>>
 
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadOrders(): List<NewOrder>
 
     @Transaction
-    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${Store.ID} = :store AND ${NewOrder.USER} = :userId AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
     fun getOrdersByStatus(
         status: Int,
         from: String,
         until: String,
-        store: String
+        store: String,
+        userId: Long
     ): Flow<List<OrderData>>
 
     @Transaction
-    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${Store.ID} = :store AND ${NewOrder.USER} = :userId AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
     fun getOrdersByStatus(
         from: String,
         until: String,
-        store: String
+        store: String,
+        userId: Long
     ): Flow<List<OrderData>>
 
     @Transaction

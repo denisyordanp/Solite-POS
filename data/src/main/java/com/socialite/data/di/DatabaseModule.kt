@@ -15,6 +15,7 @@ import com.socialite.data.database.dao.ProductVariantsDao
 import com.socialite.data.database.dao.ProductsDao
 import com.socialite.data.database.dao.PromosDao
 import com.socialite.data.database.dao.StoreDao
+import com.socialite.data.database.dao.UserDao
 import com.socialite.data.database.dao.VariantOptionsDao
 import com.socialite.data.database.dao.VariantsDao
 import dagger.Module
@@ -82,4 +83,7 @@ object DatabaseModule {
 
     @Provides
     fun promoDao(appDatabase: AppDatabase): PromosDao = appDatabase.promoDao()
+
+    @Provides
+    fun userDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
 }

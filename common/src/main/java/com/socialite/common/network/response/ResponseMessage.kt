@@ -1,4 +1,4 @@
-package com.socialite.data.schema.response.helper
+package com.socialite.common.network.response
 
 enum class ResponseMessage {
 	Success, Empty, Failed

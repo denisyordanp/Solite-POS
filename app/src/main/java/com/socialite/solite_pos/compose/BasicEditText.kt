@@ -46,12 +46,14 @@ fun BasicEditText(
     imeAction: ImeAction = ImeAction.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     passwordVisible: Boolean = false,
+    readOnly: Boolean = false,
     value: String,
     placeHolder: String,
     isEnabled: Boolean = true,
     onValueChange: (String) -> Unit,
     onAction: (() -> Unit)? = null,
     onPasswordVisibility: (() -> Unit)? = null,
+    suffixIcon: (@Composable () -> Unit)? = null
 ) {
     val shape = RoundedCornerShape(8.dp)
     val surfaceColor = if (isEnabled) MaterialTheme.colors.surface.copy(
@@ -84,13 +86,14 @@ fun BasicEditText(
                     visualTransformation = visualTransformation,
                     passwordVisible = passwordVisible,
                     value = value,
+                    readOnly = readOnly,
                     placeHolder = placeHolder,
                     isEnabled = isEnabled,
                     onValueChange = onValueChange,
                     onAction = onAction
                 )
             }
-            SuffixIcon(
+            suffixIcon?.invoke() ?: SuffixIcon(
                 keyboardType = keyboardType,
                 passwordVisible = passwordVisible,
                 value = value,
@@ -108,6 +111,7 @@ private fun BoxScope.BasicEditTextContent(
     imeAction: ImeAction,
     visualTransformation: VisualTransformation,
     passwordVisible: Boolean,
+    readOnly: Boolean = false,
     value: String,
     placeHolder: String,
     isEnabled: Boolean,
@@ -120,6 +124,7 @@ private fun BoxScope.BasicEditTextContent(
                 VisualTransformation.None else visualTransformation,
             keyboardType = keyboardType,
             imeAction = imeAction,
+            readOnly = readOnly,
             value = value,
             placeHolder = placeHolder,
             onAction = onAction,
@@ -177,6 +182,7 @@ private fun BoxScope.EnabledContent(
     visualTransformation: VisualTransformation,
     keyboardType: KeyboardType,
     imeAction: ImeAction,
+    readOnly: Boolean = false,
     value: String,
     placeHolder: String,
     onAction: (() -> Unit)? = null,
@@ -194,6 +200,7 @@ private fun BoxScope.EnabledContent(
         keyboardActions = KeyboardActions {
             onAction?.invoke()
         },
+        readOnly = readOnly,
         onValueChange = {
             onValueChange(it)
         },

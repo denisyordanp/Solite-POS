@@ -3,7 +3,7 @@ package com.socialite.data.schema.room.master
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
-import java.io.Serializable
+import com.socialite.data.schema.room.EntityData
 
 @Entity(
     tableName = User.DB_NAME,
@@ -14,30 +14,27 @@ import java.io.Serializable
 )
 data class User(
     @ColumnInfo(name = ID)
-    var id: String,
+    override val id: String,
 
     @ColumnInfo(name = NAME)
-    var name: String,
+    val name: String,
 
     @ColumnInfo(name = EMAIL)
-    var email: String,
+    val email: String,
 
     @ColumnInfo(name = AUTHORITY)
-    var authority: String,
-) : Serializable {
+    val authority: String,
+
+    @ColumnInfo(name = ACTIVE, defaultValue = "1")
+    val active: Boolean,
+) : EntityData {
     companion object {
-        const val ID = "id_user"
-        const val AUTHORITY = "authority"
-        const val NAME = "name"
-        const val EMAIL = "email"
-
-        private const val CASHIER = "cashier"
-        const val ADMIN = "admin"
-
         const val DB_NAME = "user"
 
-        fun isNotAdmin(authority: String?): Boolean {
-            return authority == CASHIER
-        }
+        const val ID = "id_user"
+        const val AUTHORITY = "authority"
+        const val ACTIVE = "active"
+        const val NAME = "name"
+        const val EMAIL = "email"
     }
 }

@@ -1,30 +1,32 @@
 package com.socialite.solite_pos.view.screens.login
 
+import com.socialite.common.state.ErrorState
+
 data class LoginViewState(
-    val errorMessage: String?,
+    val errorState: ErrorState?,
     val isLoading: Boolean,
     val isSuccessLogin: Boolean
 ) {
 
     fun copyLoading() = this.copy(
         isLoading = true,
-        errorMessage = null
+        errorState = null
     )
 
     fun copySucceed() = this.copy(
-        errorMessage = null,
+        errorState = null,
         isLoading = false,
         isSuccessLogin = true
     )
 
-    fun copyError(message: String?) = this.copy(
+    fun copyError(errorState: ErrorState) = this.copy(
         isLoading = false,
-        errorMessage = message
+        errorState = errorState
     )
 
     companion object {
         fun idle() = LoginViewState(
-            errorMessage = null,
+            errorState = null,
             isLoading = false,
             isSuccessLogin = false
         )

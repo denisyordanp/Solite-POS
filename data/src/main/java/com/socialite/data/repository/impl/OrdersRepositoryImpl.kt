@@ -24,18 +24,19 @@ class OrdersRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : OrdersRepository {
 
-    override fun getOrderList(status: Int, storeId: String, date: String) =
-        dao.getOrdersByStatus(status, storeId, date).flowOn(dispatcher)
+    override fun getOrderList(status: Int, date: String, storeId: String, userId: Long) =
+        dao.getOrdersByStatus(status, storeId, date, userId).flowOn(dispatcher)
 
     override fun getOrderList(
         status: Int,
         from: String,
         until: String,
-        store: String
-    ) = dao.getOrdersByStatus(status, from, until, store).flowOn(dispatcher)
+        store: String,
+        userId: Long
+    ) = dao.getOrdersByStatus(status, from, until, store, userId).flowOn(dispatcher)
 
-    override fun getOrderList(from: String, until: String, store: String) =
-        dao.getOrdersByStatus(from, until, store).flowOn(dispatcher)
+    override fun getOrderList(from: String, until: String, store: String, userId: Long) =
+        dao.getOrdersByStatus(from, until, store, userId).flowOn(dispatcher)
 
     override fun getOrderDataAsFlow(orderId: String) = dao.getOrderData(orderId).flowOn(dispatcher)
     override suspend fun getNeedUploadOrders(): List<Order> = dao.getNeedUploadOrders()
@@ -91,7 +92,8 @@ class OrdersRepositoryImpl @Inject constructor(
                         isTakeAway = order.isTakeAway,
                         status = order.status,
                         store = store.new_id,
-                        isUploaded = order.isUploaded
+                        isUploaded = order.isUploaded,
+                        user = 0L
                     )
                     dao.insertNewOrder(newOrder)
                 }

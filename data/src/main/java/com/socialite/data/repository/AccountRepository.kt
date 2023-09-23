@@ -1,18 +1,19 @@
 package com.socialite.data.repository
 
-import com.socialite.common.state.DataState
+import com.socialite.common.network.response.ApiResponse
+import com.socialite.data.schema.response.AccountResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
-    suspend fun login(
+    fun login(
         email: String,
         password: String
-    ): Flow<DataState<String>>
+    ): Flow<ApiResponse<AccountResponse>>
 
-    suspend fun register(
+    fun register(
         name: String,
         email: String,
         password: String,
         storeName: String
-    ): Flow<DataState<String>>
+    ): Flow<ApiResponse<AccountResponse>>
 }

@@ -50,7 +50,7 @@ class LoginActivity : ComponentActivity() {
                     route = LoginDestinations.LOGIN
                 ) {
                     LoginScreen(
-                        errorMessage = state.errorMessage,
+                        error = state.errorState,
                         onLogin = { email, password ->
                             viewModel.login(email, password)
                         },
@@ -67,7 +67,7 @@ class LoginActivity : ComponentActivity() {
                     }
 
                     RegisterScreen(
-                        errorMessage = state.errorMessage,
+                        error = state.errorState,
                         onBackClick = {
                             navController.navigateUp()
                         },

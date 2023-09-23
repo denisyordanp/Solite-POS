@@ -22,12 +22,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.socialite.common.state.ErrorState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.PrimaryButtonView
@@ -35,7 +39,7 @@ import com.socialite.solite_pos.compose.PrimaryButtonView
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
-    errorMessage: String?,
+    error: ErrorState?,
     onLogin: (email: String, password: String) -> Unit,
     onRegister: () -> Unit
 ) {
@@ -57,7 +61,7 @@ fun LoginScreen(
                 painter = painterResource(id = R.drawable.solite),
                 contentDescription = null
             )
-            if (errorMessage.isNullOrEmpty().not()) {
+            if (error != null) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -68,13 +72,28 @@ fun LoginScreen(
                             shape = RoundedCornerShape(8.dp)
                         )
                 ) {
-                    Text(
+                    Column(
                         modifier = Modifier
-                            .padding(8.dp),
-                        text = errorMessage!!,
-                        color = Color.Red,
-                        textAlign = TextAlign.Center
-                    )
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(8.dp),
+                            text = stringResource(error.title),
+                            color = Color.Red,
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            text = error.createMessage(LocalContext.current),
+                            color = Color.Red,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))

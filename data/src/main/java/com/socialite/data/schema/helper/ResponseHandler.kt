@@ -1,9 +1,9 @@
 package com.socialite.data.schema.helper
 
 import com.google.gson.reflect.TypeToken
-import com.socialite.data.network.NetworkConfig
-import com.socialite.data.schema.response.helper.ApiResponse
-import com.socialite.data.schema.response.helper.ResponseMessage
+import com.socialite.common.network.NetworkConfig
+import com.socialite.common.network.response.ApiResponse
+import com.socialite.common.network.response.ResponseMessage
 import retrofit2.HttpException
 import java.net.UnknownHostException
 

@@ -21,6 +21,9 @@ android {
         release {
             isMinifyEnabled = false
         }
+        create("local") {
+            isMinifyEnabled = false
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

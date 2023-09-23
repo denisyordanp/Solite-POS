@@ -12,18 +12,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import com.socialite.common.menus.StoreMenus
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.schema.GeneralMenuBadge
+import com.socialite.solite_pos.schema.Store
+import com.socialite.solite_pos.schema.User
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.MasterMenus
 import com.socialite.solite_pos.view.ui.ModalContent
-import com.socialite.solite_pos.view.ui.StoreMenus
 import kotlinx.coroutines.launch
 
 @Composable
 @ExperimentalMaterialApi
 fun MainStoreMenu(
     badges: List<GeneralMenuBadge>,
+    menus: List<StoreMenus>,
+    user: User?,
+    store: Store?,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onMasterMenuClicked: (menu: MasterMenus) -> Unit,
     onStoreMenuClicked: (menu: StoreMenus) -> Unit
@@ -66,6 +71,9 @@ fun MainStoreMenu(
         },
         content = {
             StoreMenus(
+                menus = menus,
+                user = user,
+                store = store,
                 onGeneralMenuClicked = {
                     scope.launch {
                         modalContent = ModalContent.GENERAL_MENUS

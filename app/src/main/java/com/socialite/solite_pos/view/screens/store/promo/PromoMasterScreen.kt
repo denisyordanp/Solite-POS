@@ -65,6 +65,7 @@ fun PromoMasterScreen(
 ) {
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    val isUserStaff = currentViewModel.isUserStaff().collectAsState(initial = false)
     val promos = currentViewModel.getAllPromos().collectAsState(initial = emptyList())
     var selectedPromo by remember { mutableStateOf<Promo?>(null) }
 
@@ -107,10 +108,13 @@ fun PromoMasterScreen(
                         modifier = Modifier
                             .padding(padding),
                         promos = promos.value,
+                        isUserStaff = isUserStaff.value,
                         onPromoClicked = {
-                            scope.launch {
-                                selectedPromo = it
-                                modalState.show()
+                            if (!isUserStaff.value) {
+                                scope.launch {
+                                    selectedPromo = it
+                                    modalState.show()
+                                }
                             }
                         },
                         onAddClicked = {
@@ -262,6 +266,7 @@ private fun PromoDetail(
 @Composable
 private fun PromoContent(
     modifier: Modifier = Modifier,
+    isUserStaff: Boolean,
     promos: List<Promo>,
     onPromoClicked: (Promo) -> Unit,
     onAddClicked: () -> Unit,
@@ -282,6 +287,7 @@ private fun PromoContent(
             items(promos) {
                 PromoItem(
                     promo = it,
+                    isUserStaff = isUserStaff,
                     onPromoClicked = onPromoClicked,
                     onPromoSwitched = { isActive ->
                         onSwitched(
@@ -300,7 +306,7 @@ private fun PromoContent(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(24.dp),
-            visible = !listState.isScrollInProgress,
+            visible = !listState.isScrollInProgress && !isUserStaff,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
@@ -316,6 +322,7 @@ private fun PromoContent(
 @Composable
 private fun PromoItem(
     promo: Promo,
+    isUserStaff: Boolean,
     onPromoClicked: (Promo) -> Unit,
     onPromoSwitched: (isActive: Boolean) -> Unit
 ) {
@@ -359,14 +366,16 @@ private fun PromoItem(
                 style = MaterialTheme.typography.body2
             )
         }
-        Switch(
-            checked = promo.isActive,
-            onCheckedChange = onPromoSwitched,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colors.primary,
-                uncheckedThumbColor = MaterialTheme.colors.primaryVariant
+        if (!isUserStaff) {
+            Switch(
+                checked = promo.isActive,
+                onCheckedChange = onPromoSwitched,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colors.primary,
+                    uncheckedThumbColor = MaterialTheme.colors.primaryVariant
+                )
             )
-        )
+        }
     }
     Spacer(modifier = Modifier.height(4.dp))
 }

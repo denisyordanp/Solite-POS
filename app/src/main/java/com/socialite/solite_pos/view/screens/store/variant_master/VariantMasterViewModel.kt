@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.AddNewVariant
 import com.socialite.domain.domain.AddNewVariantOption
 import com.socialite.domain.domain.GetVariantsWithOptions
+import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.UpdateVariant
 import com.socialite.domain.domain.UpdateVariantOption
 import com.socialite.domain.schema.main.Variant
@@ -19,10 +20,13 @@ class VariantMasterViewModel @Inject constructor(
     private val updateVariant: UpdateVariant,
     private val addNewVariantOption: AddNewVariantOption,
     private val updateVariantOption: UpdateVariantOption,
-    private val getVariantsWithOptions: GetVariantsWithOptions
+    private val getVariantsWithOptions: GetVariantsWithOptions,
+    private val isUserStaff: IsUserStaff
 ) : ViewModel() {
 
     fun getVariants() = getVariantsWithOptions()
+
+    fun isUserStaff() = isUserStaff.invoke()
 
     fun insertVariant(data: Variant) {
         viewModelScope.launch {

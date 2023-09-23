@@ -35,6 +35,7 @@ import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.schema.MenuOrderAmount
 import com.socialite.solite_pos.schema.Store
+import com.socialite.solite_pos.schema.User
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -63,9 +64,11 @@ fun RecapScreen(
                     .padding(padding),
                 recap = state.recap,
                 stores = state.stores,
+                users = state.users,
                 menusWithParameter = state.getMenuWithParameters(),
                 selectedDate = state.selectedDate,
                 selectedStore = state.selectedStore,
+                selectedUser = state.selectedUser,
                 onOrdersClicked = onOrdersClicked,
                 onOutcomesClicked = onOutcomesClicked,
                 onDateClicked = {
@@ -83,6 +86,9 @@ fun RecapScreen(
                 },
                 onSelectedStore = {
                     currentViewModel.selectStore(it)
+                },
+                onSelectedUser = {
+                    currentViewModel.selectUser(it)
                 }
             )
         }
@@ -94,15 +100,22 @@ private fun RecapContent(
     modifier: Modifier = Modifier,
     recap: RecapData,
     stores: List<Store>,
+    users: List<User>,
     menusWithParameter: MenusWithParameter,
     selectedDate: Pair<String, String>,
     selectedStore: Store?,
+    selectedUser: User?,
     onOrdersClicked: (parameters: ReportParameter) -> Unit,
     onOutcomesClicked: (parameters: ReportParameter) -> Unit,
     onDateClicked: () -> Unit,
-    onSelectedStore: (store: Store) -> Unit
+    onSelectedStore: (store: Store) -> Unit,
+    onSelectedUser: (user: User) -> Unit
 ) {
     var storeExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    var usersExpanded by remember {
         mutableStateOf(false)
     }
 
@@ -133,8 +146,24 @@ private fun RecapContent(
                 storeExpanded = false
             }
         )
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+        basicDropdown(
+            isExpanded = usersExpanded,
+            title = R.string.select_user,
+            selectedItem = selectedUser?.name,
+            items = users,
+            onHeaderClicked = {
+                usersExpanded = !usersExpanded
+            },
+            onSelectedItem = {
+                onSelectedUser(it as User)
+                usersExpanded = false
+            }
+        )
 
-        selectedStore?.let {
+        if (selectedStore != null && selectedUser != null) {
             item {
                 OrdersMenuItem(
                     menusWithParameter = menusWithParameter,
@@ -143,7 +172,7 @@ private fun RecapContent(
             }
         }
 
-        if (recap.incomes.isNotEmpty() && selectedStore != null) {
+        if (recap.incomes.isNotEmpty() && selectedStore != null && selectedUser != null) {
             item {
                 Column(
                     modifier = Modifier
@@ -163,7 +192,7 @@ private fun RecapContent(
             }
         }
 
-        if (recap.outcomes.isNotEmpty() && selectedStore != null) {
+        if (recap.outcomes.isNotEmpty() && selectedStore != null && selectedUser != null) {
             item {
                 Column(
                     modifier = Modifier
@@ -173,7 +202,8 @@ private fun RecapContent(
                                 ReportParameter(
                                     start = selectedDate.first,
                                     end = selectedDate.second,
-                                    storeId = selectedStore.id
+                                    storeId = selectedStore.id,
+                                    userId = selectedUser.id
                                 )
                             )
                         }
@@ -192,7 +222,7 @@ private fun RecapContent(
             }
         }
 
-        selectedStore?.let {
+        if (selectedStore != null && selectedUser != null) {
             item {
                 TotalRecap(recap)
             }

@@ -69,6 +69,7 @@ fun ProductsMasterScreen(
     onAddProductClicked: () -> Unit
 ) {
     val pagerState = rememberPagerState()
+    val isUserStaff = currentViewModel.isUserStaff().collectAsState(initial = false).value
     val products = currentViewModel.getProductsWithCategory().collectAsState(initial = emptyList())
     val categories = products.value.map {
         it.first.toUi()
@@ -97,8 +98,16 @@ fun ProductsMasterScreen(
                 ) { page ->
                     ProductItems(
                         products = products.value[page].second,
-                        onItemClicked = onItemClicked,
-                        onVariantClicked = onVariantClicked,
+                        onItemClicked = {
+                            if (!isUserStaff) {
+                                onItemClicked(it)
+                            }
+                        },
+                        onVariantClicked = {
+                            if (!isUserStaff) {
+                                onVariantClicked(it)
+                            }
+                        },
                         onScrollInProgress = {
                             shouldShowButton = !it
                         },
@@ -114,7 +123,7 @@ fun ProductsMasterScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(24.dp),
-            visible = shouldShowButton,
+            visible = shouldShowButton && !isUserStaff,
             enter = fadeIn(),
             exit = fadeOut()
         ) {

@@ -14,22 +14,12 @@ android {
     val properties = gradleLocalProperties(rootDir)
 
     signingConfigs {
-        val debugStoreFile = "../socialite-debug-key.jks"
-        val debugStorePassword = "DebugKey"
-        val debugStoreAlias = "Socialite-Debug-Key"
-
-        // Dor easy build release variant later and required placeholder for release signing config on CI build
+        // For easy build release variant later and required placeholder for release signing config on CI build
         create("release") {
-            storeFile = file(properties.getProperty("STORE_FILE") ?: debugStoreFile)
-            storePassword = properties.getProperty("STORE_PASSWORD") ?: debugStorePassword
-            keyAlias = properties.getProperty("KEY_ALIAS") ?: debugStoreAlias
-            keyPassword = properties.getProperty("KEY_PASSWORD") ?: debugStorePassword
-        }
-        getByName("debug") {
-            storeFile = file(debugStoreFile)
-            storePassword = debugStorePassword
-            keyAlias = debugStoreAlias
-            keyPassword = debugStorePassword
+            storeFile = file(properties.getProperty("STORE_FILE") ?: KeyStores.Debug.debugStoreFile)
+            storePassword = properties.getProperty("STORE_PASSWORD") ?: KeyStores.Debug.debugStorePassword
+            keyAlias = properties.getProperty("KEY_ALIAS") ?: KeyStores.Debug.debugStoreAlias
+            keyPassword = properties.getProperty("KEY_PASSWORD") ?: KeyStores.Debug.debugStorePassword
         }
     }
 
@@ -55,6 +45,11 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
+        }
+        create("local") {
+            isMinifyEnabled = false
+            applicationIdSuffix = ".local"
+            isDebuggable = true
         }
     }
     compileOptions {
@@ -129,8 +124,13 @@ dependencies {
 
 easylauncher {
     buildTypes {
+        val overLayHeight = 0.35f
+        val textSizeRatio = 0.13f
         register("debug") {
-            filters(chromeLike(overlayHeight = 0.35f, textSizeRatio = 0.13f))
+            filters(chromeLike(overlayHeight = overLayHeight, textSizeRatio = textSizeRatio))
+        }
+        register("local") {
+            filters(chromeLike(overlayHeight = overLayHeight, textSizeRatio = textSizeRatio))
         }
     }
 }

@@ -5,6 +5,8 @@ import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
+import com.socialite.data.repository.UserRepository
+import com.socialite.data.schema.room.master.User
 import com.socialite.data.schema.room.new_bridge.OrderDetail
 import com.socialite.data.schema.room.new_bridge.OrderProductVariant
 import com.socialite.data.schema.room.new_master.Store
@@ -22,6 +24,7 @@ import javax.inject.Inject
 
 class NewOrderImpl @Inject constructor(
     private val settingRepository: SettingRepository,
+    private val userRepository: UserRepository,
     private val ordersRepository: OrdersRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
@@ -35,7 +38,9 @@ class NewOrderImpl @Inject constructor(
     ) {
         val selectedStoreId = settingRepository.getNewSelectedStore().first()
         val selectedStore = storeRepository.getStore(selectedStoreId)!!
-        val orderData = generateOrder(customer, selectedStore, isTakeAway, currentTime)
+        val loggedInUser = userRepository.getLoggedInUser().first()
+        val orderData =
+            generateOrder(customer, selectedStore, isTakeAway, currentTime, loggedInUser!!)
         val orderWithProducts = OrderWithProduct(
             orderData = orderData,
             products = products
@@ -49,7 +54,8 @@ class NewOrderImpl @Inject constructor(
         customer: Customer,
         store: Store,
         isTakeAway: Boolean,
-        currentTime: String
+        currentTime: String,
+        user: User
     ): OrderData {
         val order = Order.createNew(
             orderNo = generateOrderNo(currentTime),
@@ -57,6 +63,7 @@ class NewOrderImpl @Inject constructor(
             orderTime = currentTime,
             store = store.id,
             isTakeAway = isTakeAway,
+            userId = user.id.toLong()
         )
         return OrderData.newOrder(
             order = order,

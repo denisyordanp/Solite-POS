@@ -1,14 +1,16 @@
 package com.socialite.data.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.socialite.common.di.IoDispatcher
+import com.socialite.data.datastore.DataStoreManager
+import com.socialite.data.datastore.impl.DataStoreManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 
 private const val SETTING_DATASTORE = "setting_datastore"
 private val Context.settingDataStore by preferencesDataStore(
@@ -20,9 +22,10 @@ private val Context.settingDataStore by preferencesDataStore(
 object DataStoreModule {
 
     @Provides
-    fun provideSettingDataStore(
-        @ApplicationContext context: Context
-    ): DataStore<Preferences> {
-        return context.settingDataStore
+    fun provideDataStoreManager(
+        @ApplicationContext context: Context,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): DataStoreManager {
+        return DataStoreManagerImpl(context.settingDataStore, dispatcher)
     }
 }
