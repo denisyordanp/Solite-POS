@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
+import okhttp3.internal.toLongOrDefault
 import javax.inject.Inject
 
 class GetOutcomesImpl @Inject constructor(
@@ -38,6 +39,12 @@ class GetOutcomesImpl @Inject constructor(
                         Pair(store, user)
                     }.flatMapConcat {
                         outcomesRepository.getOutcomes(parameters.start, parameters.end, it.first, it.second?.id?.toLong() ?: 0L)
+                    }
+                )
+            } else if(parameters.isLoggedInUserOnly()) {
+                emitAll(
+                    userRepository.getLoggedInUser().flatMapConcat {
+                        outcomesRepository.getOutcomes(parameters.start, parameters.end, parameters.storeId, it?.id?.toLongOrDefault(0L) ?: 0L)
                     }
                 )
             } else {

@@ -19,9 +19,9 @@ class GetStoreMenusImpl @Inject constructor(
                 UserAuthority.ADMIN -> storeMenus.filterNot {
                     it == StoreMenus.STORE_USER
                 }.toList()
+
                 UserAuthority.STAFF -> storeMenus.filterNot {
-                    it == StoreMenus.SALES_RECAP ||
-                            it == StoreMenus.PAYMENT ||
+                    it == StoreMenus.PAYMENT ||
                             it == StoreMenus.STORE_USER
                 }.toList()
             }

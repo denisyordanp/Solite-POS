@@ -7,6 +7,7 @@ import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetUsers
+import com.socialite.domain.domain.IsUserStaff
 import com.socialite.solite_pos.schema.MenuOrderAmount
 import com.socialite.solite_pos.schema.Store
 import com.socialite.solite_pos.schema.User
@@ -27,7 +28,8 @@ class RecapViewModel @Inject constructor(
     private val getStores: GetStores,
     private val getUsers: GetUsers,
     private val getRecapData: GetRecapData,
-    private val getOrderMenusWithAmount: GetOrderMenusWithAmount
+    private val getOrderMenusWithAmount: GetOrderMenusWithAmount,
+    private val isUserStaff: IsUserStaff
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(RecapViewState.idle())
     val viewState = _viewState.asStateFlow()
@@ -70,6 +72,8 @@ class RecapViewModel @Inject constructor(
             )
         }.launchIn(viewModelScope)
     }
+
+    fun isUserStaff() = isUserStaff.invoke()
 
     fun selectDate(selectedDate: Pair<String, String>) {
         viewModelScope.launch {

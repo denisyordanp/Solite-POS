@@ -6,5 +6,7 @@ data class ReportParameter(
     val storeId: String,
     val userId: Long
 ) {
-    fun isTodayOnly() = storeId.isEmpty() && userId == 0L
+    fun isTodayOnly() = storeId.isEmpty()
+
+    fun isLoggedInUserOnly() = userId == 0L && storeId.isNotEmpty()
 }

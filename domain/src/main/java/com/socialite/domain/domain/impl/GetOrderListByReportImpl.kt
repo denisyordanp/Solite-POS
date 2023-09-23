@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.internal.toLongOrDefault
 import javax.inject.Inject
 
 class GetOrderListByReportImpl @Inject constructor(
@@ -35,6 +36,16 @@ class GetOrderListByReportImpl @Inject constructor(
                     parameters.end,
                     it.first,
                     it.second?.id?.toLong() ?: 0L
+                )
+            }
+        } else if(parameters.isLoggedInUserOnly()) {
+            userRepository.getLoggedInUser().flatMapConcat {
+                ordersRepository.getOrderList(
+                    status,
+                    parameters.start,
+                    parameters.end,
+                    parameters.storeId,
+                    it?.id?.toLongOrDefault(0L) ?: 0L
                 )
             }
         } else {

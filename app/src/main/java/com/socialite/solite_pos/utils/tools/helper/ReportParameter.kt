@@ -81,5 +81,16 @@ data class ReportParameter(
                 userId = ""
             )
         }
+
+        fun createParameter(
+            start: String,
+            end: String,
+            storeId: String,
+            userId: String?
+        ): ReportParameter {
+            return ReportParameter(
+                start = start, end = end, storeId = storeId, userId = userId.orEmpty()
+            )
+        }
     }
 }
