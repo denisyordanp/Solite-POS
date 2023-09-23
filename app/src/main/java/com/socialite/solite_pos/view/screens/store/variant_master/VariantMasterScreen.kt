@@ -66,12 +66,14 @@ fun VariantMasterScreen(
     currentViewModel: VariantMasterViewModel = hiltViewModel(),
     onBackClicked: () -> Unit
 ) {
+    val isUserStaff = currentViewModel.isUserStaff().collectAsState(initial = false).value
     val variants =
         currentViewModel.getVariants().collectAsState(initial = emptyList()).value
 
     VariantMasterView(
-        onBackClicked = onBackClicked,
+        isUserStaff = isUserStaff,
         variants = variants,
+        onBackClicked = onBackClicked,
         onVariant = {
             if (it.isAdd()) {
                 currentViewModel.insertVariant(it)
@@ -93,6 +95,7 @@ fun VariantMasterScreen(
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 private fun VariantMasterView(
+    isUserStaff: Boolean,
     variants: List<VariantWithOptions>,
     onBackClicked: () -> Unit,
     onVariant: (variant: Variant) -> Unit,
@@ -161,6 +164,7 @@ private fun VariantMasterView(
                     VariantsMasterContent(
                         modifier = Modifier
                             .padding(padding),
+                        isUserStaff = isUserStaff,
                         variants = variants,
                         onAddVariantClicked = {
                             selectedVariant = null
@@ -170,10 +174,12 @@ private fun VariantMasterView(
                             }
                         },
                         onVariantClicked = {
-                            selectedVariant = it
-                            scope.launch {
-                                sheetContent = ModalContent.VARIANT_DETAIL
-                                modalState.show()
+                            if (!isUserStaff) {
+                                selectedVariant = it
+                                scope.launch {
+                                    sheetContent = ModalContent.VARIANT_DETAIL
+                                    modalState.show()
+                                }
                             }
                         },
                         onAddOptionClicked = {
@@ -187,13 +193,15 @@ private fun VariantMasterView(
                             }
                         },
                         onOptionClicked = { variant, option ->
-                            selectedOption = Pair(
-                                variant,
-                                option
-                            )
-                            scope.launch {
-                                sheetContent = ModalContent.VARIANT_OPTION_DETAIL
-                                modalState.show()
+                            if (!isUserStaff) {
+                                selectedOption = Pair(
+                                    variant,
+                                    option
+                                )
+                                scope.launch {
+                                    sheetContent = ModalContent.VARIANT_OPTION_DETAIL
+                                    modalState.show()
+                                }
                             }
                         },
                         onUpdateVariantOption = {
@@ -351,6 +359,7 @@ private fun VariantOptionDetail(
 @Composable
 private fun VariantsMasterContent(
     modifier: Modifier = Modifier,
+    isUserStaff: Boolean,
     variants: List<VariantWithOptions>,
     onAddVariantClicked: (() -> Unit)? = null,
     onAddOptionClicked: ((Variant) -> Unit)? = null,
@@ -373,6 +382,7 @@ private fun VariantsMasterContent(
         ) {
             items(variants) {
                 VariantItem(
+                    isUserStaff = isUserStaff,
                     variant = it.variant,
                     options = it.options,
                     isExpanded = expandedItem == it.variant,
@@ -401,7 +411,7 @@ private fun VariantsMasterContent(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(24.dp),
-            visible = !listState.isScrollInProgress,
+            visible = !listState.isScrollInProgress && !isUserStaff,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
@@ -418,6 +428,7 @@ private fun VariantsMasterContent(
 
 @Composable
 private fun VariantItem(
+    isUserStaff: Boolean,
     variant: Variant,
     options: List<VariantOption>,
     isExpanded: Boolean,
@@ -476,25 +487,27 @@ private fun VariantItem(
     }
     Spacer(modifier = Modifier.height(4.dp))
     if (isExpanded) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colors.surface)
-                .clickable {
-                    onAddOptionClicked(variant)
-                }
-                .padding(16.dp)
-        ) {
-            Text(
+        if (!isUserStaff) {
+            Box(
                 modifier = Modifier
-                    .align(Alignment.Center),
-                text = stringResource(R.string.add_new_option),
-                style = MaterialTheme.typography.body2.copy(
-                    fontStyle = FontStyle.Italic
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colors.surface)
+                    .clickable {
+                        onAddOptionClicked(variant)
+                    }
+                    .padding(16.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    text = stringResource(R.string.add_new_option),
+                    style = MaterialTheme.typography.body2.copy(
+                        fontStyle = FontStyle.Italic
+                    )
                 )
-            )
+            }
+            Spacer(modifier = Modifier.height(2.dp))
         }
-        Spacer(modifier = Modifier.height(2.dp))
         options.forEach {
             OptionItem(
                 isProductVariant = false,
