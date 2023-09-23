@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.socialite.solite_pos.R
@@ -106,7 +107,7 @@ class OpeningActivity : SoliteActivity() {
             .addOnSuccessListener { appUpdateInfo ->
                 if (
                     appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
-                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
                 ) {
                     requestInAppUpdate(appUpdateManager, appUpdateInfo)
                 } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
@@ -127,8 +128,8 @@ class OpeningActivity : SoliteActivity() {
     ) {
         appUpdateManager.startUpdateFlowForResult(
             appUpdateInfo,
-            AppUpdateType.IMMEDIATE,
             this,
+            AppUpdateOptions.defaultOptions(AppUpdateType.FLEXIBLE),
             IN_APP_UPDATE_REQUEST_CODE
         )
     }
