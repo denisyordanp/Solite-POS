@@ -17,6 +17,7 @@ data class Store(
 
     companion object {
         const val ID_ADD = "add_id"
+        const val ADD_OPTION_ID = (-1L).toString()
 
         fun add(name: String, address: String): Store {
             return Store(
@@ -26,6 +27,13 @@ data class Store(
                 isUploaded = false
             )
         }
+
+        fun addOption() = Store(
+            id = ADD_OPTION_ID,
+            name = "Semua kedai",
+            address = "",
+            isUploaded = true
+        )
     }
 }
 

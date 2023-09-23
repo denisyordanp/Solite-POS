@@ -25,6 +25,21 @@ class OutcomesRepositoryImpl @Inject constructor(
     override fun getOutcomes(from: String, until: String, store: String, userId: Long) =
         dao.getOutcome(from, until, store, userId).flowOn(dispatcher)
 
+    override fun getOutcomesAllStore(
+        from: String,
+        until: String,
+        userId: Long
+    ) = dao.getOutcome(from, until, userId).flowOn(dispatcher)
+
+    override fun getOutcomesAllUser(
+        from: String,
+        until: String,
+        store: String
+    ) = dao.getOutcome(from, until, store).flowOn(dispatcher)
+
+    override fun getOutcomesAllStoreAndUser(from: String, until: String) =
+        dao.getOutcome(from, until).flowOn(dispatcher)
+
     override suspend fun insertOutcome(data: Outcome) {
         dao.insertNewOutcome(data)
     }

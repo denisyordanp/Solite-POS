@@ -9,6 +9,8 @@ import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetUsers
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.solite_pos.schema.MenuOrderAmount
+import com.socialite.domain.schema.main.Store as DomainStore
+import com.socialite.domain.schema.main.User as DomainUser
 import com.socialite.solite_pos.schema.Store
 import com.socialite.solite_pos.schema.User
 import com.socialite.solite_pos.utils.tools.mapper.toDomain
@@ -38,8 +40,12 @@ class RecapViewModel @Inject constructor(
         viewModelScope.launch {
             getStores()
                 .map { stores ->
+                    val storesMutable = stores
+                        .toMutableList()
+                    storesMutable.add(0, DomainStore.addOption())
+
                     _viewState.value.copy(
-                        stores = stores.map { it.toUi() }
+                        stores = storesMutable.map { it.toUi() }.toList()
                     )
                 }.collect(_viewState)
         }
@@ -48,9 +54,13 @@ class RecapViewModel @Inject constructor(
             getUsers()
                 .collect { state ->
                     if (state is DataState.Success) {
+                        val users = state.data
+                            .toMutableList()
+                        users.add(0, DomainUser.addOption())
+
                         _viewState.emit(
                             _viewState.value.copy(
-                                users = state.data.map { it.toUi() }
+                                users = users.map { it.toUi() }.toList()
                             )
                         )
                     }

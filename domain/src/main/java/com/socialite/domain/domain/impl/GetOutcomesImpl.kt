@@ -38,19 +38,59 @@ class GetOutcomesImpl @Inject constructor(
                     ) { store, user ->
                         Pair(store, user)
                     }.flatMapConcat {
-                        outcomesRepository.getOutcomes(parameters.start, parameters.end, it.first, it.second?.id?.toLong() ?: 0L)
+                        outcomesRepository.getOutcomes(
+                            parameters.start,
+                            parameters.end,
+                            it.first,
+                            it.second?.id?.toLong() ?: 0L
+                        )
                     }
                 )
-            } else if(parameters.isLoggedInUserOnly()) {
+            } else if (parameters.isLoggedInUserOnly()) {
                 emitAll(
                     userRepository.getLoggedInUser().flatMapConcat {
-                        outcomesRepository.getOutcomes(parameters.start, parameters.end, parameters.storeId, it?.id?.toLongOrDefault(0L) ?: 0L)
+                        outcomesRepository.getOutcomes(
+                            parameters.start,
+                            parameters.end,
+                            parameters.storeId,
+                            it?.id?.toLongOrDefault(0L) ?: 0L
+                        )
                     }
                 )
             } else {
-                emitAll(
-                    outcomesRepository.getOutcomes(parameters.start, parameters.end, parameters.storeId, parameters.userId)
-                )
+                if (parameters.isAllStoreAndUser()) {
+                    emitAll(
+                        outcomesRepository.getOutcomesAllStoreAndUser(
+                            from = parameters.start,
+                            until = parameters.end
+                        )
+                    )
+                } else if (parameters.isAllStore()) {
+                    emitAll(
+                        outcomesRepository.getOutcomesAllStore(
+                            parameters.start,
+                            parameters.end,
+                            parameters.userId
+                        )
+                    )
+                } else if (parameters.isAllUser()) {
+                    emitAll(
+                        outcomesRepository.getOutcomesAllUser(
+                            parameters.start,
+                            parameters.end,
+                            parameters.storeId
+                        )
+                    )
+                } else {
+                    emitAll(
+                        outcomesRepository.getOutcomes(
+                            parameters.start,
+                            parameters.end,
+                            parameters.storeId,
+                            parameters.userId
+                        )
+                    )
+                }
             }
         }.mapLatest { outcomes ->
             outcomes.map { it.toDomain() }

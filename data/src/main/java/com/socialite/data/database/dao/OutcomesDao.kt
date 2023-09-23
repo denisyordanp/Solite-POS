@@ -20,6 +20,15 @@ interface OutcomesDao {
     @Query("SELECT * FROM ${NewOutcome.DB_NAME} WHERE ${Store.ID} = :store AND ${NewOutcome.USER} = :userId AND date(${NewOutcome.DATE}) BETWEEN date(:from) AND date(:until)")
     fun getOutcome(from: String, until: String, store: String, userId: Long): Flow<List<NewOutcome>>
 
+    @Query("SELECT * FROM ${NewOutcome.DB_NAME} WHERE ${NewOutcome.USER} = :userId AND date(${NewOutcome.DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getOutcome(from: String, until: String, userId: Long): Flow<List<NewOutcome>>
+
+    @Query("SELECT * FROM ${NewOutcome.DB_NAME} WHERE ${Store.ID} = :store AND date(${NewOutcome.DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getOutcome(from: String, until: String, store: String): Flow<List<NewOutcome>>
+
+    @Query("SELECT * FROM ${NewOutcome.DB_NAME} WHERE date(${NewOutcome.DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getOutcome(from: String, until: String): Flow<List<NewOutcome>>
+
     @Query("SELECT * FROM '${Outcome.DB_NAME}'")
     suspend fun getOutcomes(): List<Outcome>
 

@@ -31,31 +31,52 @@ class GetOrderListByReportImpl @Inject constructor(
                 Pair(store, user)
             }.flatMapConcat {
                 ordersRepository.getOrderList(
-                    status,
-                    parameters.start,
-                    parameters.end,
-                    it.first,
-                    it.second?.id?.toLong() ?: 0L
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    store = it.first,
+                    userId = it.second?.id?.toLong() ?: 0L
                 )
             }
-        } else if(parameters.isLoggedInUserOnly()) {
+        } else if (parameters.isLoggedInUserOnly()) {
             userRepository.getLoggedInUser().flatMapConcat {
                 ordersRepository.getOrderList(
-                    status,
-                    parameters.start,
-                    parameters.end,
-                    parameters.storeId,
-                    it?.id?.toLongOrDefault(0L) ?: 0L
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    store = parameters.storeId,
+                    userId = it?.id?.toLongOrDefault(0L) ?: 0L
                 )
             }
         } else {
-            ordersRepository.getOrderList(
-                status,
-                parameters.start,
-                parameters.end,
-                parameters.storeId,
-                parameters.userId
-            )
+            if (parameters.isAllStoreAndUser()) {
+                ordersRepository.getOrderAllUserAndStoreList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end
+                )
+            } else if (parameters.isAllStore()) {
+                ordersRepository.getOrderAllStoreList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    userId = parameters.userId
+                )
+            } else if (parameters.isAllUser()) {
+                ordersRepository.getOrderAllUserList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    store = parameters.storeId
+                )
+            } else {
+                ordersRepository.getOrderAllStoreList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    userId = parameters.userId
+                )
+            }
         }.flowOn(dispatcher)
     }
 }

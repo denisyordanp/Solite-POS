@@ -21,6 +21,26 @@ interface OrdersRepository : SyncRepository<Order> {
         userId: Long
     ): Flow<List<OrderData>>
 
+    fun getOrderAllStoreList(
+        status: Int,
+        from: String,
+        until: String,
+        userId: Long
+    ): Flow<List<OrderData>>
+
+    fun getOrderAllUserList(
+        status: Int,
+        from: String,
+        until: String,
+        store: String,
+    ): Flow<List<OrderData>>
+
+    fun getOrderAllUserAndStoreList(
+        status: Int,
+        from: String,
+        until: String,
+    ): Flow<List<OrderData>>
+
     fun getOrderList(
         from: String,
         until: String,
