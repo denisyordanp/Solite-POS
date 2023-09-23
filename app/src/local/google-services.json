@@ -9,6 +9,35 @@
       "client_info": {
         "mobilesdk_app_id": "1:69502937231:android:2f916324f6d8277f5468fa",
         "android_client_info": {
+          "package_name": "com.socialite.solite_pos.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69502937231-9san7e5i3ll2q4u6ornvdf5pb5ec9uu3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSzEJP9QC1dQxnlF23mYZKhVqaWGAgyt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69502937231-9san7e5i3ll2q4u6ornvdf5pb5ec9uu3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69502937231:android:5471464747a6ccd35468fa",
+        "android_client_info": {
           "package_name": "com.socialite.solite_pos.local"
         }
       },
