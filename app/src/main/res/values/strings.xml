@@ -30,6 +30,7 @@
     <string name="amount">Banyaknya</string>
     <string name="adding">Tambahkan</string>
     <string name="add_store_user">Tambah pengguna kedai</string>
+    <string name="edit_store_user">Rubah pengguna kedai</string>
     <string name="done_the_order">Selesaikan pesanan</string>
     <string name="put_back_order">Kembalikan pesanan</string>
     <string name="are_you_sure_will_done_this_order">Anda yakin akan menyelesaikan pesanan ini?</string>

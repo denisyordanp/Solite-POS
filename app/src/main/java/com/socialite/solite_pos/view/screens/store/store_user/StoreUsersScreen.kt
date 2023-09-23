@@ -355,6 +355,7 @@ private fun UserDetail(
     errorState: ErrorState?,
     onSubmitUser: (User) -> Unit
 ) {
+    var isEdit by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -362,6 +363,7 @@ private fun UserDetail(
     var authority by remember { mutableStateOf<UserAuthority?>(null) }
 
     LaunchedEffect(key1 = user) {
+        isEdit = user != null
         name = user?.name ?: ""
         email = user?.email ?: ""
         authority = user?.authority
@@ -417,8 +419,9 @@ private fun UserDetail(
     val isButtonEnabled by remember {
         derivedStateOf {
             emailErrorMessage == null &&
-                    passwordErrorMessage == null &&
-                    authorityErrorMessage == null &&
+                    (isEdit || passwordErrorMessage == null) &&
+                    (isEdit || confirmPasswordErrorMessage == null) &&
+                    (isEdit || authorityErrorMessage == null) &&
                     nameErrorMessage == null
         }
     }
@@ -433,7 +436,7 @@ private fun UserDetail(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(id = R.string.add_store_user),
+            text = stringResource(id = if (user != null) R.string.edit_store_user else R.string.add_store_user),
             style = MaterialTheme.typography.body1.copy(
                 fontWeight = FontWeight.Bold
             )
@@ -500,25 +503,27 @@ private fun UserDetail(
                 color = Color.Red
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        GeneralDropdown(
-            label = stringResource(R.string.select_authority),
-            items = UserAuthority.values().filterNot {
-                it == UserAuthority.OWNER
-            }.map {
-                GeneralDropdownItem(it.name, it)
-            },
-            selectedItem = authority?.run { GeneralDropdownItem(this.name, this) },
-            onSelectedItem = {
-                authority = it.value
-            }
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        authorityErrorMessage?.let {
-            Text(
-                text = stringResource(id = it),
-                color = Color.Red
+        if (user?.authority != UserAuthority.OWNER) {
+            Spacer(modifier = Modifier.height(16.dp))
+            GeneralDropdown(
+                label = stringResource(R.string.select_authority),
+                items = UserAuthority.values().filterNot {
+                    it == UserAuthority.OWNER
+                }.map {
+                    GeneralDropdownItem(it.name, it)
+                },
+                selectedItem = authority?.run { GeneralDropdownItem(this.name, this) },
+                onSelectedItem = {
+                    authority = it.value
+                }
             )
+            Spacer(modifier = Modifier.height(4.dp))
+            authorityErrorMessage?.let {
+                Text(
+                    text = stringResource(id = it),
+                    color = Color.Red
+                )
+            }
         }
         if (user == null) {
             Spacer(modifier = Modifier.height(16.dp))
