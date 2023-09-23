@@ -38,8 +38,8 @@ class StoreUsersViewModel @Inject constructor(
             _actionUserFLow.emitAll(addNewUser(user))
         } else {
             _actionUserFLow.emitAll(updateUser(user))
-            loadUsers()
         }
+        loadUsers()
     }
 
     fun resetActionState() = viewModelScope.launch {
