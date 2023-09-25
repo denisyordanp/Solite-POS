@@ -1,11 +1,13 @@
 package com.socialite.solite_pos.view.screens.opening
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,10 +40,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class OpeningActivity : SoliteActivity() {
-
-    companion object {
-        private const val IN_APP_UPDATE_REQUEST_CODE = 1234
-    }
 
     private val openingViewModel: OpeningViewModel by viewModels()
 
@@ -122,15 +120,21 @@ class OpeningActivity : SoliteActivity() {
             }
     }
 
+    private val requestUpdateResult =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if (it.resultCode == Activity.RESULT_CANCELED) {
+                preparingApp()
+            }
+        }
+
     private fun requestInAppUpdate(
         appUpdateManager: AppUpdateManager,
         appUpdateInfo: AppUpdateInfo
     ) {
         appUpdateManager.startUpdateFlowForResult(
             appUpdateInfo,
-            this,
+            requestUpdateResult,
             AppUpdateOptions.defaultOptions(AppUpdateType.FLEXIBLE),
-            IN_APP_UPDATE_REQUEST_CODE
         )
     }
 

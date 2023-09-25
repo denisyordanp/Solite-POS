@@ -56,12 +56,12 @@ data class ReportParameter(
                     start = start,
                     end = end,
                     storeId = if (store == EMPTY_ROUTE_VALUE) "" else store,
-                    userId = user
+                    userId = if (user == EMPTY_ROUTE_VALUE) "" else user
                 )
             } ?: createTodayOnly(true)
         }
 
-        fun getRoute() = "{$START}/{$END}/{$STORE}"
+        fun getRoute() = "{$START}/{$END}/{$STORE}/{$USER}"
 
         fun getArguments() = listOf(
             navArgument(name = START) { type = NavType.StringType },
