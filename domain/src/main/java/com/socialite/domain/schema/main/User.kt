@@ -15,6 +15,8 @@ data class User(
 
     companion object {
         private const val ADD_ID = "add_id"
+        const val ADD_OPTION_ID = -1L
+
         fun add(
             name: String,
             email: String,
@@ -27,6 +29,11 @@ data class User(
             authority = authority,
             password = password,
             isUserActive = true
+        )
+
+        fun addOption() = User(
+            id = ADD_OPTION_ID.toString(),
+            name = "Semua pengguna"
         )
     }
 }

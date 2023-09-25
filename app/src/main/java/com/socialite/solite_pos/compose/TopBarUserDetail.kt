@@ -82,7 +82,7 @@ fun TopBarUserDetail(
                 Divider()
                 Spacer(modifier = Modifier.height(16.dp))
 
-                storeName?.let {
+                if (storeName != null) {
                     val text = stringResource(R.string.currently_you_are_at, storeName)
                     val start = text.indexOf(storeName)
                     val spanStyles = listOf(
@@ -94,6 +94,11 @@ fun TopBarUserDetail(
                     )
                     Text(
                         text = AnnotatedString(text, spanStyles),
+                        style = MaterialTheme.typography.body1,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.you_are_not_pick_a_store_yet),
                         style = MaterialTheme.typography.body1,
                     )
                 }

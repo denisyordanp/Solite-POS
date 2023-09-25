@@ -34,7 +34,7 @@ data class ReportParameter(
         }"
     }
 
-    fun createRoute() = "$start/$end/${storeId.ifEmpty { EMPTY_ROUTE_VALUE }}"
+    fun createRoute() = "$start/$end/${storeId.ifEmpty { EMPTY_ROUTE_VALUE }}/${userId.ifEmpty { EMPTY_ROUTE_VALUE }}"
 
     companion object {
 
@@ -79,6 +79,17 @@ data class ReportParameter(
                 end = date,
                 storeId = "",
                 userId = ""
+            )
+        }
+
+        fun createParameter(
+            start: String,
+            end: String,
+            storeId: String,
+            userId: String?
+        ): ReportParameter {
+            return ReportParameter(
+                start = start, end = end, storeId = storeId, userId = userId.orEmpty()
             )
         }
     }

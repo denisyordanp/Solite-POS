@@ -1,5 +1,8 @@
 package com.socialite.domain.domain.impl
 
+import com.socialite.common.di.DefaultDispatcher
+import com.socialite.common.extension.toError
+import com.socialite.common.state.DataState
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.data.repository.OrdersRepository
@@ -19,7 +22,11 @@ import com.socialite.domain.schema.OrderWithProduct
 import com.socialite.domain.schema.ProductOrderDetail
 import com.socialite.domain.schema.main.Customer
 import com.socialite.domain.schema.main.Order
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class NewOrderImpl @Inject constructor(
@@ -28,26 +35,37 @@ class NewOrderImpl @Inject constructor(
     private val ordersRepository: OrdersRepository,
     private val orderDetailsRepository: OrderDetailsRepository,
     private val orderProductVariantsRepository: OrderProductVariantsRepository,
-    private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository,
+    @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : NewOrder {
-    override suspend fun invoke(
+    override fun invoke(
         customer: Customer,
         isTakeAway: Boolean,
         products: List<ProductOrderDetail>,
         currentTime: String
-    ) {
-        val selectedStoreId = settingRepository.getNewSelectedStore().first()
-        val selectedStore = storeRepository.getStore(selectedStoreId)!!
-        val loggedInUser = userRepository.getLoggedInUser().first()
-        val orderData =
-            generateOrder(customer, selectedStore, isTakeAway, currentTime, loggedInUser!!)
-        val orderWithProducts = OrderWithProduct(
-            orderData = orderData,
-            products = products
-        )
-        ordersRepository.insertOrder(orderWithProducts.orderData.order.toData())
-        insertOrderProduct(orderWithProducts)
-        increaseOrderQueue()
+    ): Flow<DataState<Boolean>> {
+        return flow {
+            try {
+                val selectedStoreId = settingRepository.getNewSelectedStore().first()
+                val selectedStore = storeRepository.getStore(selectedStoreId)!!
+                val loggedInUser = userRepository.getLoggedInUser().first()
+                val orderData =
+                    generateOrder(customer, selectedStore, isTakeAway, currentTime, loggedInUser!!)
+                val orderWithProducts = OrderWithProduct(
+                    orderData = orderData,
+                    products = products
+                )
+                ordersRepository.insertOrder(orderWithProducts.orderData.order.toData())
+                insertOrderProduct(orderWithProducts)
+                increaseOrderQueue()
+
+                emit(DataState.Success(true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(DataState.Error(e.toError<Boolean>()))
+            }
+
+        }.flowOn(dispatcher)
     }
 
     private fun generateOrder(
@@ -80,8 +98,9 @@ class NewOrderImpl @Inject constructor(
         if (time != lastOrderDate) {
             saveDate(time)
         }
+        val currentOrderDate = settingRepository.getLastOrderDate()
         val count = settingRepository.getOrderCount()
-        return "${lastOrderDate}${generateQueueNumber(count)}"
+        return "${currentOrderDate}${generateQueueNumber(count)}"
     }
 
     private fun saveDate(time: String) {

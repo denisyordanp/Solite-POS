@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.internal.toLongOrDefault
 import javax.inject.Inject
 
 class GetOrderListByReportImpl @Inject constructor(
@@ -30,21 +31,74 @@ class GetOrderListByReportImpl @Inject constructor(
                 Pair(store, user)
             }.flatMapConcat {
                 ordersRepository.getOrderList(
-                    status,
-                    parameters.start,
-                    parameters.end,
-                    it.first,
-                    it.second?.id?.toLong() ?: 0L
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    store = it.first,
+                    userId = it.second?.id?.toLong() ?: 0L
                 )
             }
+        } else if (parameters.isLoggedInUserOnly()) {
+            userRepository.getLoggedInUser().flatMapConcat {
+                if (parameters.isAllStoreAndUser()) {
+                    ordersRepository.getOrderAllUserAndStoreList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end
+                    )
+                } else if (parameters.isAllStore()) {
+                    ordersRepository.getOrderAllStoreList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end,
+                        userId = it?.id?.toLongOrDefault(0L) ?: 0L
+                    )
+                } else if (parameters.isAllUser()) {
+                    ordersRepository.getOrderAllUserList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end,
+                        store = parameters.storeId
+                    )
+                } else {
+                    ordersRepository.getOrderList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end,
+                        store = parameters.storeId,
+                        userId = it?.id?.toLongOrDefault(0L) ?: 0L
+                    )
+                }
+            }
         } else {
-            ordersRepository.getOrderList(
-                status,
-                parameters.start,
-                parameters.end,
-                parameters.storeId,
-                parameters.userId
-            )
+            if (parameters.isAllStoreAndUser()) {
+                ordersRepository.getOrderAllUserAndStoreList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end
+                )
+            } else if (parameters.isAllStore()) {
+                ordersRepository.getOrderAllStoreList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    userId = parameters.userId
+                )
+            } else if (parameters.isAllUser()) {
+                ordersRepository.getOrderAllUserList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    store = parameters.storeId
+                )
+            } else {
+                ordersRepository.getOrderAllStoreList(
+                    status = status,
+                    from = parameters.start,
+                    until = parameters.end,
+                    userId = parameters.userId
+                )
+            }
         }.flowOn(dispatcher)
     }
 }

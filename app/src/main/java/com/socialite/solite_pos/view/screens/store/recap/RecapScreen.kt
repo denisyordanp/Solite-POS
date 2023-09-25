@@ -49,6 +49,7 @@ fun RecapScreen(
     onOutcomesClicked: (parameters: ReportParameter) -> Unit,
     onBackClicked: () -> Unit,
 ) {
+    val isUserStaff = currentViewModel.isUserStaff().collectAsState(initial = false).value
     val state = currentViewModel.viewState.collectAsState().value
 
     Scaffold(
@@ -62,6 +63,7 @@ fun RecapScreen(
             RecapContent(
                 modifier = Modifier
                     .padding(padding),
+                isUserStaff = isUserStaff,
                 recap = state.recap,
                 stores = state.stores,
                 users = state.users,
@@ -98,6 +100,7 @@ fun RecapScreen(
 @Composable
 private fun RecapContent(
     modifier: Modifier = Modifier,
+    isUserStaff: Boolean,
     recap: RecapData,
     stores: List<Store>,
     users: List<User>,
@@ -146,24 +149,26 @@ private fun RecapContent(
                 storeExpanded = false
             }
         )
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-        basicDropdown(
-            isExpanded = usersExpanded,
-            title = R.string.select_user,
-            selectedItem = selectedUser?.name,
-            items = users,
-            onHeaderClicked = {
-                usersExpanded = !usersExpanded
-            },
-            onSelectedItem = {
-                onSelectedUser(it as User)
-                usersExpanded = false
+        if (!isUserStaff) {
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
-        )
+            basicDropdown(
+                isExpanded = usersExpanded,
+                title = R.string.select_user,
+                selectedItem = selectedUser?.name,
+                items = users,
+                onHeaderClicked = {
+                    usersExpanded = !usersExpanded
+                },
+                onSelectedItem = {
+                    onSelectedUser(it as User)
+                    usersExpanded = false
+                }
+            )
+        }
 
-        if (selectedStore != null && selectedUser != null) {
+        if (selectedStore != null && (selectedUser != null || isUserStaff)) {
             item {
                 OrdersMenuItem(
                     menusWithParameter = menusWithParameter,
@@ -172,7 +177,7 @@ private fun RecapContent(
             }
         }
 
-        if (recap.incomes.isNotEmpty() && selectedStore != null && selectedUser != null) {
+        if (recap.incomes.isNotEmpty() && selectedStore != null && (selectedUser != null || isUserStaff)) {
             item {
                 Column(
                     modifier = Modifier
@@ -192,18 +197,18 @@ private fun RecapContent(
             }
         }
 
-        if (recap.outcomes.isNotEmpty() && selectedStore != null && selectedUser != null) {
+        if (recap.outcomes.isNotEmpty() && selectedStore != null && (selectedUser != null || isUserStaff)) {
             item {
                 Column(
                     modifier = Modifier
                         .background(color = MaterialTheme.colors.surface)
                         .clickable {
                             onOutcomesClicked(
-                                ReportParameter(
+                                ReportParameter.createParameter(
                                     start = selectedDate.first,
                                     end = selectedDate.second,
                                     storeId = selectedStore.id,
-                                    userId = selectedUser.id
+                                    userId = selectedUser?.id
                                 )
                             )
                         }
@@ -222,7 +227,7 @@ private fun RecapContent(
             }
         }
 
-        if (selectedStore != null && selectedUser != null) {
+        if (selectedStore != null && (selectedUser != null || isUserStaff)) {
             item {
                 TotalRecap(recap)
             }
