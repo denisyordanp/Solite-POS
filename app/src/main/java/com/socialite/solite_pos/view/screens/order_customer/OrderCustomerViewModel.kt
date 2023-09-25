@@ -12,6 +12,7 @@ import com.socialite.domain.schema.main.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -141,15 +142,13 @@ class OrderCustomerViewModel @Inject constructor(
         customer: Customer,
         isTakeAway: Boolean,
     ) {
-        viewModelScope.launch {
-            _viewState.value.bucketOrder.products?.let {
-                newOrder.invoke(
-                    customer = customer,
-                    isTakeAway = isTakeAway,
-                    products = it,
-                    currentTime = DateUtils.currentDateTime
-                )
-            }
+        _viewState.value.bucketOrder.products?.let {
+            newOrder.invoke(
+                customer = customer,
+                isTakeAway = isTakeAway,
+                products = it,
+                currentTime = DateUtils.currentDateTime
+            ).launchIn(viewModelScope)
         }
     }
 }
