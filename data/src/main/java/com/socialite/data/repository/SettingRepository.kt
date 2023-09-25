@@ -6,7 +6,7 @@ interface SettingRepository {
     fun getSelectedStore(): Flow<Long>
     fun getNewSelectedStore(): Flow<String>
     fun getIsDarkModeActive(): Flow<Boolean>
-    suspend fun selectNewStore(storeId: String)
+    fun selectNewStore(storeId: String): Flow<Boolean>
     suspend fun setDarkMode(isActive: Boolean)
     suspend fun isMigrated(): Boolean
     suspend fun isMigratedPhase2(): Boolean

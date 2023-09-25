@@ -6,6 +6,7 @@ import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.Logout
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class LogoutImpl @Inject constructor(
@@ -15,6 +16,8 @@ class LogoutImpl @Inject constructor(
 ) : Logout {
     override fun invoke() = dataStateFlow(dispatcher) {
         settingRepository.insertToken("")
-        userRepository.saveLoggedInUser(null)
+        userRepository.saveLoggedInUser(null).combine(
+            settingRepository.selectNewStore("")
+        ) { _, _ -> true }
     }
 }

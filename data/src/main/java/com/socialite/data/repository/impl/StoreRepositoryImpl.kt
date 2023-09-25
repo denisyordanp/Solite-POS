@@ -11,6 +11,7 @@ import com.socialite.data.schema.helper.UpdateSynchronizations
 import com.socialite.data.schema.room.EntityData
 import com.socialite.data.schema.room.new_master.Store
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
@@ -46,7 +47,7 @@ class StoreRepositoryImpl @Inject constructor(
                         dao.updateStore(updatedStore)
 
                         if (activeStore != 0L && activeStore == updatedStore.id) {
-                            settingRepository.selectNewStore(updatedStore.new_id)
+                            settingRepository.selectNewStore(updatedStore.new_id).collect()
                         }
 
                         updatedStore.new_id

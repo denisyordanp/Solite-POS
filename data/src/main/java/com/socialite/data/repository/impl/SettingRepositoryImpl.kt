@@ -40,10 +40,8 @@ class SettingRepositoryImpl @Inject constructor(
         dataStoreManager.getData(PreferencesKeys.IS_DARK_MODE, false)
             .flowOn(dispatcher)
 
-    override suspend fun selectNewStore(storeId: String) {
-        dataStoreManager.saveData(PreferencesKeys.NEW_SELECTED_STORE, storeId)
-            .collect()
-    }
+    override fun selectNewStore(storeId: String) =
+        dataStoreManager.saveData(PreferencesKeys.NEW_SELECTED_STORE, storeId).flowOn(dispatcher)
 
     override suspend fun setDarkMode(isActive: Boolean) {
         dataStoreManager.saveData(PreferencesKeys.IS_DARK_MODE, isActive)
