@@ -92,11 +92,12 @@ class GetOrderListByReportImpl @Inject constructor(
                     store = parameters.storeId
                 )
             } else {
-                ordersRepository.getOrderAllStoreList(
+                ordersRepository.getOrderList(
                     status = status,
                     from = parameters.start,
                     until = parameters.end,
-                    userId = parameters.userId
+                    userId = parameters.userId,
+                    store = parameters.storeId
                 )
             }
         }.flowOn(dispatcher)
