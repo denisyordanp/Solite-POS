@@ -25,7 +25,12 @@ import com.socialite.data.schema.room.new_master.Order as NewOrder
 interface OrdersDao {
     @Transaction
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.STATUS} = :status AND ${NewOrder.USER} = :userId AND date(${NewOrder.ORDER_DATE}) = date(:date) AND ${Store.ID} = :storeId")
-    fun getOrdersByStatus(status: Int, storeId: String, date: String, userId: Long): Flow<List<OrderData>>
+    fun getOrdersByStatus(
+        status: Int,
+        storeId: String,
+        date: String,
+        userId: Long
+    ): Flow<List<OrderData>>
 
     @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${AppDatabase.UPLOAD} = 0")
     suspend fun getNeedUploadOrders(): List<NewOrder>
@@ -73,6 +78,29 @@ interface OrdersDao {
         until: String,
         store: String,
         userId: Long
+    ): Flow<List<OrderData>>
+
+    @Transaction
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getOrdersNotByStatus(
+        from: String,
+        until: String,
+    ): Flow<List<OrderData>>
+
+    @Transaction
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${NewOrder.USER} = :userId AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getOrdersNotByStatusAllStore(
+        from: String,
+        until: String,
+        userId: Long
+    ): Flow<List<OrderData>>
+
+    @Transaction
+    @Query("SELECT * FROM '${NewOrder.DB_NAME}' WHERE ${Store.ID} = :store AND date(${NewOrder.ORDER_DATE}) BETWEEN date(:from) AND date(:until)")
+    fun getOrdersNotByStatusAllUser(
+        from: String,
+        until: String,
+        store: String,
     ): Flow<List<OrderData>>
 
     @Transaction

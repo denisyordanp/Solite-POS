@@ -40,13 +40,35 @@ class GetOrderListByReportImpl @Inject constructor(
             }
         } else if (parameters.isLoggedInUserOnly()) {
             userRepository.getLoggedInUser().flatMapConcat {
-                ordersRepository.getOrderList(
-                    status = status,
-                    from = parameters.start,
-                    until = parameters.end,
-                    store = parameters.storeId,
-                    userId = it?.id?.toLongOrDefault(0L) ?: 0L
-                )
+                if (parameters.isAllStoreAndUser()) {
+                    ordersRepository.getOrderAllUserAndStoreList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end
+                    )
+                } else if (parameters.isAllStore()) {
+                    ordersRepository.getOrderAllStoreList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end,
+                        userId = it?.id?.toLongOrDefault(0L) ?: 0L
+                    )
+                } else if (parameters.isAllUser()) {
+                    ordersRepository.getOrderAllUserList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end,
+                        store = parameters.storeId
+                    )
+                } else {
+                    ordersRepository.getOrderList(
+                        status = status,
+                        from = parameters.start,
+                        until = parameters.end,
+                        store = parameters.storeId,
+                        userId = it?.id?.toLongOrDefault(0L) ?: 0L
+                    )
+                }
             }
         } else {
             if (parameters.isAllStoreAndUser()) {

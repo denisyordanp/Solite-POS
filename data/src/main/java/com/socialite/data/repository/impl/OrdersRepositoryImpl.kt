@@ -60,6 +60,23 @@ class OrdersRepositoryImpl @Inject constructor(
         until: String
     ) = dao.getOrdersByStatus(status, from, until).flowOn(dispatcher)
 
+    override fun getOrderListAllStore(
+        from: String,
+        until: String,
+        userId: Long
+    ) = dao.getOrdersNotByStatusAllStore(from, until, userId).flowOn(dispatcher)
+
+    override fun getOrderListAllUser(
+        from: String,
+        until: String,
+        store: String
+    ) = dao.getOrdersNotByStatusAllUser(from, until, store).flowOn(dispatcher)
+
+    override fun getOrderListAllUserAndStore(
+        from: String,
+        until: String
+    ) = dao.getOrdersNotByStatus(from, until).flowOn(dispatcher)
+
     override suspend fun updateOrder(order: Order) = dao.updateNewOrder(
         order.copy(
             isUploaded = false
