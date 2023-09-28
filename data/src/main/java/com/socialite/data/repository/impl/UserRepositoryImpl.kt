@@ -101,4 +101,12 @@ class UserRepositoryImpl @Inject constructor(
                 NetworkConfig.gson().fromJson(it, User::class.java)
             }
         }.flowOn(dispatcher)
+
+    override fun changePassword(
+        oldPassword: String,
+        newPassword: String
+    ) = flow {
+        val request = service.changePassword(oldPassword, newPassword)
+        emit(request)
+    }.flowOn(dispatcher)
 }

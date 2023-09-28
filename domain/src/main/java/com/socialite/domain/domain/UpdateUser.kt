@@ -5,5 +5,5 @@ import com.socialite.domain.schema.main.User
 import kotlinx.coroutines.flow.Flow
 
 fun interface UpdateUser {
-    operator fun invoke(user: User): Flow<DataState<Boolean>>
+    operator fun invoke(user: User, isLoggedInUser: Boolean): Flow<DataState<Boolean>>
 }

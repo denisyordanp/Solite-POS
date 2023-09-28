@@ -394,6 +394,7 @@ private fun UserDetail(
                     PasswordStatus.LENGTH -> R.string.password_must_between_8_15_character
                     PasswordStatus.UPPER_LOWER_CASE -> R.string.password_must_contains_upper_lower_case
                     PasswordStatus.SYMBOL -> R.string.password_must_contains_symbol
+                    PasswordStatus.NUMBER -> R.string.password_must_contains_number
                     PasswordStatus.SUCCESS -> null
                 }
             }

@@ -59,4 +59,11 @@ interface SoliteServices {
     suspend fun synchronize(
         @Body synchronize: SynchronizeParams
     ): ApiResponse<SynchronizeResponse>
+
+    @FormUrlEncoded
+    @POST("v1/user/change_password")
+    suspend fun changePassword(
+        @Field("old_password") oldPassword: String,
+        @Field("new_password") newPassword: String,
+    ): ApiResponse<String?>
 }

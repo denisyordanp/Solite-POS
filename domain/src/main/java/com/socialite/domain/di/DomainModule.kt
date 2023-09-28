@@ -9,6 +9,7 @@ import com.socialite.domain.domain.AddNewUser
 import com.socialite.domain.domain.AddNewVariant
 import com.socialite.domain.domain.AddNewVariantOption
 import com.socialite.domain.domain.AddNewVariantProduct
+import com.socialite.domain.domain.ChangePassword
 import com.socialite.domain.domain.FetchRemoteConfig
 import com.socialite.domain.domain.GetAllOrderListByReport
 import com.socialite.domain.domain.GetCategories
@@ -75,6 +76,7 @@ import com.socialite.domain.domain.impl.AddNewUserImpl
 import com.socialite.domain.domain.impl.AddNewVariantImpl
 import com.socialite.domain.domain.impl.AddNewVariantOptionImpl
 import com.socialite.domain.domain.impl.AddNewVariantProductImpl
+import com.socialite.domain.domain.impl.ChangePasswordImpl
 import com.socialite.domain.domain.impl.FetchRemoteConfigImpl
 import com.socialite.domain.domain.impl.GetAllOrderListByReportImpl
 import com.socialite.domain.domain.impl.GetCategoriesImpl
@@ -479,4 +481,9 @@ abstract class DomainBinderModule {
     abstract fun bindGetSelectedStore(
         getSelectedStoreImpl: GetSelectedStoreImpl
     ): GetSelectedStore
+
+    @Binds
+    abstract fun bindChangePassword(
+        changePasswordImpl: ChangePasswordImpl
+    ): ChangePassword
 }

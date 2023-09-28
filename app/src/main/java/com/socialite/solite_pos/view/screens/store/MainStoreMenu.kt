@@ -31,7 +31,8 @@ fun MainStoreMenu(
     store: Store?,
     onGeneralMenuClicked: (menu: GeneralMenus) -> Unit,
     onMasterMenuClicked: (menu: MasterMenus) -> Unit,
-    onStoreMenuClicked: (menu: StoreMenus) -> Unit
+    onStoreMenuClicked: (menu: StoreMenus) -> Unit,
+    onEditUserClicked: () -> Unit
 ) {
     var modalContent by remember {
         mutableStateOf(ModalContent.MASTERS)
@@ -89,7 +90,8 @@ fun MainStoreMenu(
                     } else {
                         onStoreMenuClicked(it)
                     }
-                }
+                },
+                onEditUserClicked = onEditUserClicked
             )
         }
     )
