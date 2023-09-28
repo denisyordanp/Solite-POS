@@ -46,4 +46,10 @@ class AccountRepositoryImpl @Inject constructor(
             emit(request)
         }.flowOn(dispatcher)
     }
+
+    override fun forgotPassword(email: String) = flow {
+        val request = service.forgotPassword(email)
+
+        emit(request)
+    }.flowOn(dispatcher)
 }

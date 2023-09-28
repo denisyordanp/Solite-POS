@@ -16,6 +16,7 @@ object StoreDestinations {
     const val MASTER_PAYMENT = "master_payment"
     const val MASTER_PROMO = "master_promo"
     const val STORE_USERS = "store_users"
+    const val DETAIL_USER = "detail_user"
 
     const val DETAIL_PRODUCT = "detail_product/{$PRODUCT_ID}"
     const val PRODUCT_VARIANTS = "product_variants/{$PRODUCT_ID}"

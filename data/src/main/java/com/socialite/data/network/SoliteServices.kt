@@ -31,6 +31,12 @@ interface SoliteServices {
     ): ApiResponse<AccountResponse>
 
     @FormUrlEncoded
+    @POST("v1/forgot_password")
+    suspend fun forgotPassword(
+        @Field("email") email: String,
+    ): ApiResponse<String?>
+
+    @FormUrlEncoded
     @POST("v1/user_on_store")
     suspend fun addUser(
         @Field("name") name: String,
@@ -59,4 +65,11 @@ interface SoliteServices {
     suspend fun synchronize(
         @Body synchronize: SynchronizeParams
     ): ApiResponse<SynchronizeResponse>
+
+    @FormUrlEncoded
+    @POST("v1/user/change_password")
+    suspend fun changePassword(
+        @Field("old_password") oldPassword: String,
+        @Field("new_password") newPassword: String,
+    ): ApiResponse<String?>
 }

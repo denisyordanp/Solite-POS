@@ -18,4 +18,8 @@
     <string name="products_menu_title">Data Produk</string>
     <string name="stores_menu_title">Data Kedai</string>
     <string name="store_users_menu_title">Data Pengguna Kedai</string>
+
+    <!--     reset password-->
+    <string name="request_send_forgot_password_limited_title">Permintaan Dibatasi</string>
+    <string name="request_send_forgot_password_limited_message">Anda tidak dapat melakukan permintaan reset password untuk saat ini, karena anda sudah memintanya %s yang lalu. Mohon menunggu 30 menit sebelum melakukan permintaan reset password lagi, karena permintaan terbatas. Terima kasih.</string>
 </resources>

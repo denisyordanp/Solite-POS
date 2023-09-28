@@ -28,7 +28,8 @@ fun StoreMenus(
     user: User?,
     store: Store?,
     onGeneralMenuClicked: () -> Unit,
-    onStoreMenuClicked: (menu: StoreMenus) -> Unit
+    onStoreMenuClicked: (menu: StoreMenus) -> Unit,
+    onEditUserClicked: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -41,7 +42,11 @@ fun StoreMenus(
                 .fillMaxWidth()
         ) {
             item {
-                TopBarUserDetail(user = user, storeName = store?.name)
+                TopBarUserDetail(
+                    user = user,
+                    storeName = store?.name,
+                    onEditClicked = onEditUserClicked
+                )
                 Spacer(modifier = Modifier.height(4.dp))
             }
             items(menus) {

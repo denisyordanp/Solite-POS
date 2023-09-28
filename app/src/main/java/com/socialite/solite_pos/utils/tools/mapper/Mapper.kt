@@ -51,3 +51,7 @@ fun Payment.toUi() = com.socialite.solite_pos.schema.Payment(
 fun User.toUi() = com.socialite.solite_pos.schema.User(
     id, name, email, authority, isUserActive, password
 )
+
+fun com.socialite.solite_pos.schema.User.toDomain() = User(
+    id, name, email, authority, isUserActive, password
+)

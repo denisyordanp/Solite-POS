@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -33,7 +36,8 @@ import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 fun TopBarUserDetail(
     modifier: Modifier = Modifier,
     user: User?,
-    storeName: String?
+    storeName: String?,
+    onEditClicked: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -69,13 +73,25 @@ fun TopBarUserDetail(
                             text = user?.email.orEmpty(),
                             style = MaterialTheme.typography.body1
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = user?.authority?.name.orEmpty(),
+                            style = MaterialTheme.typography.body1,
+                            fontWeight = FontWeight.Black
+                        )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        text = user?.authority?.name.orEmpty(),
-                        style = MaterialTheme.typography.body1,
-                        fontWeight = FontWeight.Black
+                    IconButton(
+                        onClick = onEditClicked,
+                        content = {
+                            Row {
+                                Text(
+                                    text = stringResource(R.string.edit_title),
+                                    style = MaterialTheme.typography.body1,
+                                )
+                                Icon(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = null)
+                            }
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -121,7 +137,8 @@ private fun Preview() {
                     email = "denis.yordan.p@gmail.com",
                     authority = UserAuthority.OWNER
                 ),
-                storeName = "Jajanan Sosialita"
+                storeName = "Jajanan Sosialita",
+                onEditClicked = {}
             )
         }
     }

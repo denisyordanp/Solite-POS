@@ -16,4 +16,8 @@ interface AccountRepository {
         password: String,
         storeName: String
     ): Flow<ApiResponse<AccountResponse>>
+
+    fun forgotPassword(
+        email: String
+    ): Flow<ApiResponse<String?>>
 }

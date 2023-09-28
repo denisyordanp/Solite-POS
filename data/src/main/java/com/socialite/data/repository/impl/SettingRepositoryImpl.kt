@@ -27,6 +27,7 @@ class SettingRepositoryImpl @Inject constructor(
         val IS_DARK_MODE = booleanPreferencesKey("is_dark_mode")
         val IS_MIGRATE = booleanPreferencesKey("is_migrate")
         val IS_MIGRATE_PHASE_2 = booleanPreferencesKey("is_migrate_phase_2")
+        val LAST_FORGOT_PASSWORD_SENT_TIME = longPreferencesKey("LAST_FORGOT_PASSWORD_SENT_TIME")
     }
 
     override fun getSelectedStore() = dataStoreManager.getData(PreferencesKeys.SELECTED_STORE, 0L)
@@ -93,4 +94,12 @@ class SettingRepositoryImpl @Inject constructor(
     override fun getLastOrderDate(): String {
         return settingPreferences.orderDate
     }
+
+    override fun getLastForgotPasswordTime() =
+        dataStoreManager.getData(PreferencesKeys.LAST_FORGOT_PASSWORD_SENT_TIME, 0L)
+            .flowOn(dispatcher)
+
+    override fun setLastForgotPasswordTime(time: Long) =
+        dataStoreManager.saveData(PreferencesKeys.LAST_FORGOT_PASSWORD_SENT_TIME, time)
+            .flowOn(dispatcher)
 }

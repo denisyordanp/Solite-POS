@@ -11,6 +11,7 @@ import com.socialite.domain.helper.toDomain
 import com.socialite.domain.schema.main.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -31,7 +32,7 @@ class FetchLoggedInUserImpl @Inject constructor(
             is DataState.Success -> flow {
                 val response = it.data.data
                 val userData = response?.toEntity()
-                userRepository.saveLoggedInUser(userData)
+                userRepository.saveLoggedInUser(userData).collect()
                 emit(DataState.Success(userData!!.toDomain()))
             }
         }

@@ -20,6 +20,10 @@ class DateUtils {
         private val dbDateTimeSimpleFormat = SimpleDateFormat(dbDateTimeFormat, locale)
         private val dbDateSimpleFormat = SimpleDateFormat(dbDateFormat, locale)
 
+        const val SECOND_IN_TIME_MILLIS = 1000
+        const val MINUTES_IN_TIME_MILLIS = 60 * SECOND_IN_TIME_MILLIS
+        const val THIRTY_MINUTES_IN_TIME_MILLIS = 30 * MINUTES_IN_TIME_MILLIS
+
         val locale: Locale
             get() = Locale("in", "ID")
 
@@ -108,16 +112,16 @@ class DateUtils {
 
         val currentDate: String
             get() {
-                return dbDateSimpleFormat.format(currentTime)
+                return dbDateSimpleFormat.format(calendar.time)
             }
 
         val currentDateTime: String
             get() {
-                return dbDateTimeSimpleFormat.format(currentTime)
+                return dbDateTimeSimpleFormat.format(calendar.time)
             }
 
-        private val currentTime: Date
-            get() = Calendar.getInstance().time
+        val calendar: Calendar
+            get() = Calendar.getInstance()
 
 
     }

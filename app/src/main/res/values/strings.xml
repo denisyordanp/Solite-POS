@@ -134,13 +134,17 @@
     <string name="password_must_between_8_15_character">Password harus antara 8–15 karakter</string>
     <string name="password_must_contains_upper_lower_case">Password harus mengandung huruf kecil dan huruf kapital</string>
     <string name="password_must_contains_symbol">Password harus mengandung karakter simbol</string>
+    <string name="password_must_contains_number">Password harus mengandung angka</string>
     <string name="confirm_password_must_match_with_password">Konfirmasi password harus sama dengan password</string>
     <string name="login">Masuk</string>
     <string name="logout">Keluar</string>
     <string name="register">Daftar</string>
     <string name="registration_form">Form pendaftaran</string>
     <string name="enter_password">Masukan password</string>
+    <string name="enter_new_password">Masukan password baru</string>
+    <string name="enter_old_password">Masukan password lama</string>
     <string name="enter_confirm_password">Masukan konfirmasi password</string>
+    <string name="enter_confirm_new_password">Masukan konfirmasi password baru</string>
     <string name="enter_store_name">Masukan nama toko anda</string>
     <string name="select_authority">Pilih hak akses pengguna</string>
     <string name="email_or_password_not_found_please_try_again">Email atau password tidak ditemukan, silahkan coba lagi</string>
@@ -153,5 +157,13 @@
     <string name="deactivated_user_message">Akun anda telah di nonaktifkan oleh Owner, silahkan menghubungi Owner jika ini kesalahan.</string>
     <string name="currently_you_are_at">Saat ini anda sedang berada di Kedai %s</string>
     <string name="you_are_not_pick_a_store_yet">Anda belum memilih Kedai, mohon pilih terlebih dahulu</string>
+    <string name="edit_title">Rubah</string>
+    <string name="change_password_title">Rubah password</string>
+    <string name="edit_data_title">Rubah data</string>
+    <string name="forgot_password_title">Lupa password</string>
+    <string name="forgot_password_button">Lupa password?</string>
+    <string name="send_email">Kirim email</string>
+    <string name="email_sent">Email terkirim</string>
+    <string name="cancel">Batal</string>
 
 </resources>

@@ -28,4 +28,5 @@ interface UserRepository : SyncRepository<User> {
 
     fun saveLoggedInUser(user: User?): Flow<Boolean>
     fun getLoggedInUser(): Flow<User?>
+    fun changePassword(oldPassword: String, newPassword: String): Flow<ApiResponse<String?>>
 }

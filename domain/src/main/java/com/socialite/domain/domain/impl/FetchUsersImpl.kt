@@ -8,6 +8,7 @@ import com.socialite.data.repository.UserRepository
 import com.socialite.data.schema.response.UserStoreResponse
 import com.socialite.domain.domain.FetchUsers
 import com.socialite.domain.helper.toDomain
+import com.socialite.domain.menu.UserAuthority
 import com.socialite.domain.schema.main.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -35,7 +36,9 @@ class FetchUsersImpl @Inject constructor(
 
                 // get saved users
                 val dataUsers = userRepository.getItems()
-                emit(DataState.Success(dataUsers.map { it.toDomain() }))
+                    .map { it.toDomain() }
+                    .filter { it.authority != UserAuthority.OWNER }
+                emit(DataState.Success(dataUsers))
             }
         }
     }

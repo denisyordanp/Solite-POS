@@ -37,7 +37,7 @@ class StoreUsersViewModel @Inject constructor(
         if (user.isNewUser) {
             _actionUserFLow.emitAll(addNewUser(user))
         } else {
-            _actionUserFLow.emitAll(updateUser(user))
+            _actionUserFLow.emitAll(updateUser(user, false))
         }
         loadUsers()
     }

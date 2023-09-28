@@ -63,5 +63,19 @@ sealed class ErrorState(
     data class Unknown(
         override val additionalMessage: String,
         override val throwable: Throwable
-    ) : ErrorState(R.string.something_wrong_title, R.string.something_wrong_message, additionalMessage, throwable)
+    ) : ErrorState(
+        R.string.something_wrong_title,
+        R.string.something_wrong_message,
+        additionalMessage,
+        throwable
+    )
+
+    data class LimitedSendForgotPassword(
+        override val additionalMessage: String,
+    ) : ErrorState(
+        R.string.request_send_forgot_password_limited_title,
+        R.string.request_send_forgot_password_limited_message,
+        additionalMessage,
+        IllegalArgumentException()
+    )
 }

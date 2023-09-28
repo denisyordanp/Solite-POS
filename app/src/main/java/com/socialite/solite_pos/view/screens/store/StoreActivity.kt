@@ -38,6 +38,7 @@ import com.socialite.solite_pos.view.screens.store.promo.PromoMasterScreen
 import com.socialite.solite_pos.view.screens.store.recap.RecapScreen
 import com.socialite.solite_pos.view.screens.store.store_user.StoreUsersScreen
 import com.socialite.solite_pos.view.screens.store.stores.StoresScreen
+import com.socialite.solite_pos.view.screens.store.user_detail.UserDetailScreen
 import com.socialite.solite_pos.view.screens.store.variant_master.VariantMasterScreen
 import com.socialite.solite_pos.view.screens.store.variant_product.VariantProductScreen
 import com.socialite.solite_pos.view.ui.GeneralMenus
@@ -161,6 +162,9 @@ class StoreActivity : SoliteActivity() {
 
                             else -> {}
                         }
+                    },
+                    onEditUserClicked = {
+                        navController.navigate(StoreDestinations.DETAIL_USER)
                     }
                 )
             }
@@ -300,6 +304,11 @@ class StoreActivity : SoliteActivity() {
                         navController.navigateUp()
                     }
                 )
+            }
+            composable(StoreDestinations.DETAIL_USER) {
+                UserDetailScreen {
+                    navController.navigateUp()
+                }
             }
         }
     }
