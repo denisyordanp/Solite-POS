@@ -17,6 +17,7 @@ import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.domain.GetCustomers
 import com.socialite.domain.domain.FetchLoggedInUser
 import com.socialite.domain.domain.FetchUsers
+import com.socialite.domain.domain.ForgotPassword
 import com.socialite.domain.domain.GetLoggedInUser
 import com.socialite.domain.domain.GetOrderListByReport
 import com.socialite.domain.domain.GetOrderMenusWithAmount
@@ -41,6 +42,7 @@ import com.socialite.domain.domain.GetToken
 import com.socialite.domain.domain.GetUsers
 import com.socialite.domain.domain.GetVariantsProductById
 import com.socialite.domain.domain.GetVariantsWithOptions
+import com.socialite.domain.domain.IsAbleSendForgotPassword
 import com.socialite.domain.domain.IsServerActive
 import com.socialite.domain.domain.IsShouldSelectStore
 import com.socialite.domain.domain.IsUserStaff
@@ -84,6 +86,7 @@ import com.socialite.domain.domain.impl.GetCategoryProductVariantCountImpl
 import com.socialite.domain.domain.impl.GetCustomersImpl
 import com.socialite.domain.domain.impl.FetchLoggedInUserImpl
 import com.socialite.domain.domain.impl.FetchUsersImpl
+import com.socialite.domain.domain.impl.ForgotPasswordImpl
 import com.socialite.domain.domain.impl.GetLoggedInUserImpl
 import com.socialite.domain.domain.impl.GetOrderListByReportImpl
 import com.socialite.domain.domain.impl.GetOrderMenusWithAmountImpl
@@ -108,6 +111,7 @@ import com.socialite.domain.domain.impl.GetTokenImpl
 import com.socialite.domain.domain.impl.GetUsersImpl
 import com.socialite.domain.domain.impl.GetVariantsProductByIdImpl
 import com.socialite.domain.domain.impl.GetVariantsWithOptionsImpl
+import com.socialite.domain.domain.impl.IsAbleSendForgotPasswordImpl
 import com.socialite.domain.domain.impl.IsServerActiveImpl
 import com.socialite.domain.domain.impl.IsShouldSelectStoreImpl
 import com.socialite.domain.domain.impl.IsUserStaffImpl
@@ -486,4 +490,14 @@ abstract class DomainBinderModule {
     abstract fun bindChangePassword(
         changePasswordImpl: ChangePasswordImpl
     ): ChangePassword
+
+    @Binds
+    abstract fun bindForgotPassword(
+        forgotPasswordImpl: ForgotPasswordImpl
+    ): ForgotPassword
+
+    @Binds
+    abstract fun bindIsAbleSendForgotPassword(
+        isAbleSendForgotPasswordImpl: IsAbleSendForgotPasswordImpl
+    ): IsAbleSendForgotPassword
 }

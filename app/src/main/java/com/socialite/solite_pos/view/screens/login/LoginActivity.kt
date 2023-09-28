@@ -4,22 +4,19 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.socialite.solite_pos.compose.FullScreenLoadingView
+import com.socialite.solite_pos.view.screens.login.forgot_password.ForgotPasswordScreen
+import com.socialite.solite_pos.view.screens.login.login.LoginScreen
+import com.socialite.solite_pos.view.screens.login.register.RegisterScreen
 import com.socialite.solite_pos.view.screens.order_customer.OrderCustomerActivity
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
-    private val viewModel: LoginViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -31,55 +28,44 @@ class LoginActivity : ComponentActivity() {
 
     @Composable
     fun MainContent() {
+        val navController = rememberNavController()
 
-        val state = viewModel.viewState.collectAsState().value
-
-        if (state.isSuccessLogin) toMain()
-
-        FullScreenLoadingView(
-            isLoading = state.isLoading
+        NavHost(
+            navController = navController,
+            startDestination = LoginDestinations.LOGIN,
         ) {
-
-            val navController = rememberNavController()
-
-            NavHost(
-                navController = navController,
-                startDestination = LoginDestinations.LOGIN,
+            composable(
+                route = LoginDestinations.LOGIN
             ) {
-                composable(
-                    route = LoginDestinations.LOGIN
-                ) {
-                    LoginScreen(
-                        error = state.errorState,
-                        onLogin = { email, password ->
-                            viewModel.login(email, password)
-                        },
-                        onRegister = {
-                            navController.navigate(LoginDestinations.REGISTER)
-                        }
-                    )
-                }
-                composable(
-                    route = LoginDestinations.REGISTER
-                ) {
-                    LaunchedEffect(key1 = Unit) {
-                        viewModel.resetState()
+                LoginScreen(
+                    onRegister = {
+                        navController.navigate(LoginDestinations.REGISTER)
+                    },
+                    onSuccessLogin = {
+                        toMain()
+                    },
+                    onForgotPassword = {
+                        navController.navigate(LoginDestinations.FORGOT_PASSWORD)
                     }
+                )
+            }
 
-                    RegisterScreen(
-                        error = state.errorState,
-                        onBackClick = {
-                            navController.navigateUp()
-                        },
-                        onRegister = { name, email, password, store ->
-                            viewModel.register(
-                                name = name,
-                                email = email,
-                                password = password,
-                                storeName = store
-                            )
-                        }
-                    )
+            composable(
+                route = LoginDestinations.REGISTER
+            ) {
+                RegisterScreen(
+                    onBackClick = {
+                        navController.navigateUp()
+                    },
+                    onSuccessLogin = {
+                        toMain()
+                    }
+                )
+            }
+
+            composable(LoginDestinations.FORGOT_PASSWORD) {
+                ForgotPasswordScreen {
+                    navController.navigateUp()
                 }
             }
         }

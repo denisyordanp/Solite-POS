@@ -1,8 +1,8 @@
-package com.socialite.solite_pos.view.screens.login
+package com.socialite.solite_pos.view.screens.login.register
 
 import com.socialite.common.state.ErrorState
 
-data class LoginViewState(
+data class RegisterViewState(
     val errorState: ErrorState?,
     val isLoading: Boolean,
     val isSuccessLogin: Boolean
@@ -25,7 +25,7 @@ data class LoginViewState(
     )
 
     companion object {
-        fun idle() = LoginViewState(
+        fun idle() = RegisterViewState(
             errorState = null,
             isLoading = false,
             isSuccessLogin = false

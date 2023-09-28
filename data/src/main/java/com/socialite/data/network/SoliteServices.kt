@@ -31,6 +31,12 @@ interface SoliteServices {
     ): ApiResponse<AccountResponse>
 
     @FormUrlEncoded
+    @POST("v1/forgot_password")
+    suspend fun forgotPassword(
+        @Field("email") email: String,
+    ): ApiResponse<String?>
+
+    @FormUrlEncoded
     @POST("v1/user_on_store")
     suspend fun addUser(
         @Field("name") name: String,

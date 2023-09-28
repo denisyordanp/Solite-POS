@@ -23,4 +23,7 @@ interface SettingRepository {
 
     fun setLastOrderDate(date: String)
     fun getLastOrderDate(): String
+
+    fun getLastForgotPasswordTime(): Flow<Long>
+    fun setLastForgotPasswordTime(time: Long): Flow<Boolean>
 }

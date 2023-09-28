@@ -93,7 +93,6 @@ fun TopBarUserDetail(
                             }
                         }
                     )
-
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Divider()

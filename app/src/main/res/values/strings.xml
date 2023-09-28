@@ -160,5 +160,10 @@
     <string name="edit_title">Rubah</string>
     <string name="change_password_title">Rubah password</string>
     <string name="edit_data_title">Rubah data</string>
+    <string name="forgot_password_title">Lupa password</string>
+    <string name="forgot_password_button">Lupa password?</string>
+    <string name="send_email">Kirim email</string>
+    <string name="email_sent">Email terkirim</string>
+    <string name="cancel">Batal</string>
 
 </resources>
