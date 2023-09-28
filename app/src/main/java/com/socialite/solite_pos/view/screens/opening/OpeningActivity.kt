@@ -67,7 +67,8 @@ class OpeningActivity : SoliteActivity() {
             ) {
                 Image(
                     modifier = Modifier
-                        .width(300.dp),
+                        .width(300.dp)
+                        .align(Alignment.CenterHorizontally),
                     painter = painterResource(id = R.drawable.solite),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth

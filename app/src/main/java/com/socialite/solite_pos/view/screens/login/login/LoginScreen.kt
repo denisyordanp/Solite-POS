@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -54,12 +57,15 @@ fun LoginScreen(
         isLoading = state.value.isLoading
     ) {
         Surface(
+            modifier = Modifier
+                .fillMaxSize(),
             color = MaterialTheme.colors.primary
         ) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
             ) {
                 var email by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
@@ -67,7 +73,8 @@ fun LoginScreen(
 
                 Image(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .size(300.dp)
+                        .align(Alignment.CenterHorizontally),
                     painter = painterResource(id = R.drawable.solite),
                     contentDescription = null
                 )
@@ -96,7 +103,6 @@ fun LoginScreen(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 modifier = Modifier.padding(horizontal = 8.dp),
                                 text = error.createMessage(LocalContext.current),
