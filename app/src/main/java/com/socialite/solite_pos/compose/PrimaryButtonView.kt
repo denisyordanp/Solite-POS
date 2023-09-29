@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,10 +21,21 @@ fun PrimaryButtonView(
     modifier: Modifier = Modifier,
     buttonText: String,
     isEnabled: Boolean = true,
+    isNegative: Boolean = false,
     backgroundColor: Color = MaterialTheme.colors.primary,
     textColor: Color = MaterialTheme.colors.onPrimary,
     onClick: () -> Unit
 ) {
+    val currentBackgroundColor = if (isEnabled) {
+        if (isNegative) {
+            MaterialTheme.colors.primaryVariant
+        } else {
+            backgroundColor
+        }
+    } else {
+        backgroundColor.copy(alpha = ContentAlpha.disabled)
+    }
+
     Box(
         modifier = modifier
             .run {
@@ -31,7 +44,7 @@ fun PrimaryButtonView(
                 } else { this }
             }
             .background(
-                color = if (isEnabled) backgroundColor else backgroundColor.copy(alpha = ContentAlpha.disabled),
+                color = currentBackgroundColor,
                 shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center
@@ -41,6 +54,8 @@ fun PrimaryButtonView(
                 .padding(16.dp),
             text = buttonText,
             style = MaterialTheme.typography.button,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
             color = textColor
         )
     }

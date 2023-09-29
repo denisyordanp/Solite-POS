@@ -1,8 +1,10 @@
 package com.socialite.solite_pos.compose
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -76,22 +78,26 @@ fun BasicAlertDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
                 ) {
+                    if (negativeAction != null && negativeText != null) {
+                        PrimaryButtonView(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f),
+                            buttonText = negativeText,
+                            onClick = negativeAction,
+                            isNegative = true
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
                     PrimaryButtonView(
                         modifier = Modifier
+                            .fillMaxHeight()
                             .weight(1f),
                         buttonText = positiveText,
                         onClick = positiveAction
                     )
-                    if (negativeAction != null && negativeText != null) {
-                        Spacer(modifier = Modifier.width(16.dp))
-                        PrimaryButtonView(
-                            modifier = Modifier
-                                .weight(1f),
-                            buttonText = negativeText,
-                            onClick = negativeAction
-                        )
-                    }
                 }
             }
         }
