@@ -1,9 +1,9 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
-import com.socialite.domain.domain.GetOrderWithProduct
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrdersRepository
+import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.helper.ProductOrderDetailConverter
 import com.socialite.domain.helper.toDomain
 import com.socialite.domain.schema.OrderWithProduct

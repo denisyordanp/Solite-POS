@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.common.menus.StoreMenus
+import com.socialite.schema.menu.StoreMenus
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetStoreMenus {

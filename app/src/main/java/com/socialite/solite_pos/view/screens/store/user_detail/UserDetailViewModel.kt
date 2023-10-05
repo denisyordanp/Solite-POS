@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.store.user_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.state.DataState
 import com.socialite.domain.domain.ChangePassword
 import com.socialite.domain.domain.GetLoggedInUser
 import com.socialite.domain.domain.UpdateUser

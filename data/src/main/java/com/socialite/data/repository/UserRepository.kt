@@ -1,6 +1,6 @@
 package com.socialite.data.repository
 
-import com.socialite.common.network.response.ApiResponse
+import com.socialite.core.network.response.ApiResponse
 import com.socialite.data.schema.response.UserResponse
 import com.socialite.data.schema.response.UserStoreResponse
 import com.socialite.data.schema.room.master.User

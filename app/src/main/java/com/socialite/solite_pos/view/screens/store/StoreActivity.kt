@@ -21,8 +21,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.socialite.common.menus.StoreMenus
 import com.socialite.domain.helper.DateUtils
+import com.socialite.schema.menu.StoreMenus
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.screens.managers.DateAndTimeManager

@@ -1,10 +1,10 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.DefaultDispatcher
-import com.socialite.common.extension.dataStateFlow
-import com.socialite.common.network.response.ApiResponse
-import com.socialite.common.state.DataState
-import com.socialite.common.state.ErrorState
+import com.socialite.common.utility.di.DefaultDispatcher
+import com.socialite.common.utility.extension.dataStateFlow
+import com.socialite.common.utility.state.DataState
+import com.socialite.common.utility.state.ErrorState
+import com.socialite.core.network.response.ApiResponse
 import com.socialite.data.repository.CategoriesRepository
 import com.socialite.data.repository.CustomersRepository
 import com.socialite.data.repository.OrderDetailsRepository

@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.settings
 
-import com.socialite.common.state.ErrorState
+import com.socialite.common.utility.state.ErrorState
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 
 

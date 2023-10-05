@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_internet_connection_title">Koneksi Internet Terputus</string>
+    <string name="timeout_connection_title">Koneksi Lambat</string>
+    <string name="something_wrong_title">Terjadi Kesalahan</string>
+    <string name="deactivated_account_title">Akun Dinonaktifkan</string>
+    <string name="deactivated_account_message">Maaf akun anda telah dinonaktifkan oleh owner, silahkan hubungi owner anda jika ini kesalahan.</string>
+    <string name="request_failed">Permintaan ditolak</string>
+    <string name="no_internet_connection_message">Mohon periksa koneksi internet anda dan coba lagi</string>
+    <string name="something_wrong_message">Kesalahan tidak terduga, mohon hubungi developer. pesan error: %s</string>
+    <string name="user_mistake_message">%s. Mohon coba lagi</string>
+
+    <!--     reset password-->
+    <string name="request_send_forgot_password_limited_title">Permintaan Dibatasi</string>
+    <string name="request_send_forgot_password_limited_message">Anda tidak dapat melakukan permintaan reset password untuk saat ini, karena anda sudah memintanya %s yang lalu. Mohon menunggu 30 menit sebelum melakukan permintaan reset password lagi, karena permintaan terbatas. Terima kasih.</string>
+</resources>

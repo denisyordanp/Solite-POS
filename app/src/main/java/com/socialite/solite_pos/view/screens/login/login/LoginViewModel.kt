@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.login.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.state.DataState
 import com.socialite.domain.domain.LoginUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

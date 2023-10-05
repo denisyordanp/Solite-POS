@@ -37,7 +37,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.state.DataState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicEditText
@@ -55,7 +55,8 @@ fun ForgotPasswordScreen(
     var shouldShowSuccessAlert by remember { mutableStateOf(false) }
     var shouldShowSendConfirmationAlert by remember { mutableStateOf(false) }
     val state = currentViewModel.viewState.collectAsState()
-    val isAbleToSendState = currentViewModel.isAbleSendEmail.collectAsState(initial = DataState.Idle)
+    val isAbleToSendState =
+        currentViewModel.isAbleSendEmail.collectAsState(initial = DataState.Idle)
     val isAbleToSendEmail = remember {
         derivedStateOf {
             isAbleToSendState.value is DataState.Success

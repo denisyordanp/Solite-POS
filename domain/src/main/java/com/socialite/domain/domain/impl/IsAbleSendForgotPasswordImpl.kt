@@ -1,8 +1,8 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.DefaultDispatcher
-import com.socialite.common.state.DataState
-import com.socialite.common.state.ErrorState
+import com.socialite.common.utility.di.DefaultDispatcher
+import com.socialite.common.utility.state.DataState
+import com.socialite.common.utility.state.ErrorState
 import com.socialite.data.repository.SettingRepository
 import com.socialite.domain.domain.IsAbleSendForgotPassword
 import com.socialite.domain.helper.DateUtils
@@ -29,7 +29,9 @@ class IsAbleSendForgotPasswordImpl @Inject constructor(
                     val seconds = (differenceTime/DateUtils.SECOND_IN_TIME_MILLIS).toInt()
                     "$seconds detik"
                 }
-                flowOf(DataState.Error(ErrorState.LimitedSendForgotPassword(
+                flowOf(
+                    DataState.Error(
+                        ErrorState.LimitedSendForgotPassword(
                     additionalMessage = time,
                 )))
             } else {

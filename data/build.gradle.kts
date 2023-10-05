@@ -38,22 +38,28 @@ android {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":common:utility"))
+    implementation(project(":core:network"))
+
+    implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
+
+    // Network
+    implementation("com.squareup.retrofit2:retrofit:${Depedencies.retrofitVersion}")
+    implementation("com.squareup.retrofit2:converter-gson:${Depedencies.retrofitVersion}")
+    implementation("com.squareup.okhttp3:logging-interceptor:${Depedencies.okhttpLoggingVersion}")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")
     kapt("com.google.dagger:hilt-compiler:${Depedencies.hiltVersion}")
-
-    // Network
-    implementation("com.squareup.okhttp3:logging-interceptor:${Depedencies.okhttpLoggingVersion}")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:${Depedencies.firebaseBomVersion}"))
     implementation("com.google.firebase:firebase-config-ktx")
 
     // Database
-    api("androidx.room:room-runtime:${Depedencies.roomVersion}")
-    api("androidx.room:room-ktx:${Depedencies.roomVersion}")
+    implementation("androidx.room:room-runtime:${Depedencies.roomVersion}")
+    implementation("androidx.room:room-ktx:${Depedencies.roomVersion}")
     ksp("org.xerial:sqlite-jdbc:${Depedencies.sqliteJdbc}")
     ksp("androidx.room:room-compiler:${Depedencies.roomVersion}")
 

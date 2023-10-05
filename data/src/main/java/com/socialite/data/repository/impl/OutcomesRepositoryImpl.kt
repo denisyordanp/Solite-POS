@@ -1,7 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.OutcomesDao
 import com.socialite.data.database.dao.StoreDao

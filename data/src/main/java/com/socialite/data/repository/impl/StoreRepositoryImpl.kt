@@ -1,7 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.StoreDao
 import com.socialite.data.repository.SettingRepository
@@ -33,6 +33,7 @@ class StoreRepositoryImpl @Inject constructor(
     override suspend fun insertStore(store: Store) {
         dao.insertStore(store)
     }
+
     override suspend fun updateStore(store: Store) = dao.updateNewStore(store)
     override suspend fun migrateToUUID() {
         val stores = dao.getStores().firstOrNull()
@@ -83,6 +84,7 @@ class StoreRepositoryImpl @Inject constructor(
     override suspend fun insertItems(items: List<Store>) {
         dao.insertStores(items)
     }
+
     override suspend fun updateItems(items: List<Store>) {
         dao.updateStores(items)
     }

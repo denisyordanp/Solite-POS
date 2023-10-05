@@ -1,9 +1,9 @@
 package com.socialite.data.repository.impl
 
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.socialite.common.di.IoDispatcher
-import com.socialite.common.extension.toResponse
-import com.socialite.common.network.NetworkConfig
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.common.utility.extension.toResponse
+import com.socialite.core.network.NetworkConfig
 import com.socialite.data.database.dao.UserDao
 import com.socialite.data.datastore.DataStoreManager
 import com.socialite.data.di.AuthorizationService

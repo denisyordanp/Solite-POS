@@ -1,6 +1,6 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.StoreRepository
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.helper.toDomain
@@ -16,5 +16,6 @@ class GetStoresImpl @Inject constructor(
 ) : GetStores {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke() =
-        storeRepository.getStores().mapLatest { it.map { stores -> stores.toDomain() } }.flowOn(dispatcher)
+        storeRepository.getStores().mapLatest { it.map { stores -> stores.toDomain() } }
+            .flowOn(dispatcher)
 }

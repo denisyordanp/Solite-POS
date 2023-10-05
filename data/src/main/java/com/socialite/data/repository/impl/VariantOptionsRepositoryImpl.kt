@@ -1,7 +1,7 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.VariantOptionsDao
 import com.socialite.data.database.dao.VariantsDao
@@ -29,10 +29,13 @@ class VariantOptionsRepositoryImpl @Inject constructor(
     override suspend fun insertVariantOption(data: VariantOption) {
         dao.insertNewVariantOption(data)
     }
+
     override suspend fun updateVariantOption(data: VariantOption) {
-        dao.updateNewVariantOption(data.copy(
-            isUploaded = false
-        ))
+        dao.updateNewVariantOption(
+            data.copy(
+                isUploaded = false
+            )
+        )
     }
 
     override suspend fun migrateToUUID() {

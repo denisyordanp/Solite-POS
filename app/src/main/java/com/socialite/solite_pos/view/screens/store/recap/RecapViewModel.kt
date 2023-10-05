@@ -2,15 +2,13 @@ package com.socialite.solite_pos.view.screens.store.recap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.state.DataState
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.domain.GetRecapData
 import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.GetUsers
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.solite_pos.schema.MenuOrderAmount
-import com.socialite.domain.schema.main.Store as DomainStore
-import com.socialite.domain.schema.main.User as DomainUser
 import com.socialite.solite_pos.schema.Store
 import com.socialite.solite_pos.schema.User
 import com.socialite.solite_pos.utils.tools.mapper.toDomain
@@ -24,6 +22,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.socialite.domain.schema.main.Store as DomainStore
+import com.socialite.domain.schema.main.User as DomainUser
 
 @HiltViewModel
 class RecapViewModel @Inject constructor(

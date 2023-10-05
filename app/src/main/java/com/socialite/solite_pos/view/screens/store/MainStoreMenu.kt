@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
-import com.socialite.common.menus.StoreMenus
+import com.socialite.schema.menu.StoreMenus
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 import com.socialite.solite_pos.schema.Store
@@ -71,7 +71,7 @@ fun MainStoreMenu(
             }
         },
         content = {
-            StoreMenus(
+            StoreMenusView(
                 menus = menus,
                 user = user,
                 store = store,

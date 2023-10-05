@@ -1,7 +1,7 @@
 package com.socialite.data.repository.impl
 
-import com.socialite.common.di.IoDispatcher
-import com.socialite.common.network.response.ApiResponse
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.core.network.response.ApiResponse
 import com.socialite.data.di.NonAuthorizationService
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.repository.AccountRepository

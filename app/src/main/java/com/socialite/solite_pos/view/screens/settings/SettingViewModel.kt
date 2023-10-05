@@ -2,7 +2,7 @@ package com.socialite.solite_pos.view.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.state.DataState
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
 import com.socialite.domain.domain.IsDarkModeActive
 import com.socialite.domain.domain.IsServerActive
@@ -78,7 +78,11 @@ class SettingViewModel @Inject constructor(
         _viewState.emitAll(
             synchronize().map {
                 when (it) {
-                    is DataState.Error -> _viewState.value.copy(error = it.errorState, isLoading = false)
+                    is DataState.Error -> _viewState.value.copy(
+                        error = it.errorState,
+                        isLoading = false
+                    )
+
                     DataState.Loading -> _viewState.value.copy(isLoading = true)
                     is DataState.Success -> _viewState.value.copy(
                         isLoading = false,

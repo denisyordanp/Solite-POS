@@ -1,8 +1,8 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.DefaultDispatcher
-import com.socialite.common.extension.toError
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.di.DefaultDispatcher
+import com.socialite.common.utility.extension.toError
+import com.socialite.common.utility.state.DataState
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.data.repository.OrdersRepository

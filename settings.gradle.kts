@@ -11,4 +11,17 @@ rootProject.name = "Solite-POS"
 include("app")
 include("data")
 include("domain")
-include("common")
+
+// Feature
+include(":feature:customerorder")
+
+// Core
+include(":core:ui")
+include(":core:network")
+
+// Common
+include(":common:ui")
+include(":common:utility")
+
+// Schema
+include(":schema:menu")

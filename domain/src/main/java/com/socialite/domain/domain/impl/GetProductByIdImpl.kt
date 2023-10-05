@@ -1,6 +1,6 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.ProductsRepository
 import com.socialite.domain.domain.GetProductById
 import com.socialite.domain.helper.toDomain

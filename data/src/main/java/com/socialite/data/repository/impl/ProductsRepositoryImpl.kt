@@ -1,15 +1,15 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.CategoriesDao
 import com.socialite.data.database.dao.ProductsDao
 import com.socialite.data.repository.ProductsRepository
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.new_master.Product
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
+import com.socialite.data.schema.room.EntityData
+import com.socialite.data.schema.room.new_master.Product
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
@@ -22,16 +22,24 @@ class ProductsRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ProductsRepository {
 
-    override fun getActiveProductsWithCategory() = dao.getActiveProductsWithCategory().flowOn(dispatcher)
+    override fun getActiveProductsWithCategory() =
+        dao.getActiveProductsWithCategory().flowOn(dispatcher)
+
     override fun getAllProductsWithCategory() = dao.getAllProductsWithCategory().flowOn(dispatcher)
-    override fun getProductWithCategory(productId: String) = dao.getProductWithCategory(productId).flowOn(dispatcher)
-    override fun getProductById(productId: String) = dao.getProductAsFlow(productId).flowOn(dispatcher)
+    override fun getProductWithCategory(productId: String) =
+        dao.getProductWithCategory(productId).flowOn(dispatcher)
+
+    override fun getProductById(productId: String) =
+        dao.getProductAsFlow(productId).flowOn(dispatcher)
+
     override suspend fun getNeedUploadProducts() = dao.getNeedUploadProducts()
     override suspend fun insertProduct(data: Product) = dao.insertNewProduct(data)
     override suspend fun updateProduct(data: Product) {
-        dao.updateNewProduct(data.copy(
-            isUploaded = false
-        ))
+        dao.updateNewProduct(
+            data.copy(
+                isUploaded = false
+            )
+        )
     }
 
     override suspend fun migrateToUUID() {

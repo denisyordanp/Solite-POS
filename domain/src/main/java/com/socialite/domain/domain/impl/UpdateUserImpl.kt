@@ -1,8 +1,8 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
-import com.socialite.common.extension.dataStateFlow
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.common.utility.extension.dataStateFlow
+import com.socialite.common.utility.state.DataState
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.FetchLoggedInUser
 import com.socialite.domain.domain.UpdateUser

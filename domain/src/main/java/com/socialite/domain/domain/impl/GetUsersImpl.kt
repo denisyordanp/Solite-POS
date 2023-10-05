@@ -1,7 +1,7 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.DefaultDispatcher
-import com.socialite.common.extension.dataStateFlow
+import com.socialite.common.utility.di.DefaultDispatcher
+import com.socialite.common.utility.extension.dataStateFlow
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.GetUsers
 import com.socialite.domain.helper.toDomain

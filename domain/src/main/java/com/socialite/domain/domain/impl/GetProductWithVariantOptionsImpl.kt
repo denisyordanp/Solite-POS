@@ -1,10 +1,10 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
-import com.socialite.domain.domain.GetProductWithVariantOptions
-import com.socialite.data.schema.room.helper.VariantProductWithOption
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
+import com.socialite.data.schema.room.helper.VariantProductWithOption
+import com.socialite.domain.domain.GetProductWithVariantOptions
 import com.socialite.domain.helper.toDomain
 import com.socialite.domain.schema.VariantWithOptions
 import kotlinx.coroutines.CoroutineDispatcher

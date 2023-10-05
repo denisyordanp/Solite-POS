@@ -2,7 +2,7 @@ package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.database.AppDatabase
 import com.socialite.data.database.dao.PromosDao
 import com.socialite.data.repository.PromosRepository
@@ -24,9 +24,11 @@ class PromosRepositoryImpl @Inject constructor(
 ) : PromosRepository, SyncRepository<NewPromo> {
 
     override suspend fun insertPromo(data: NewPromo) = dao.insertNewPromo(data)
-    override suspend fun updatePromo(data: NewPromo) = dao.updateNewPromo(data.copy(
-        isUploaded = false
-    ))
+    override suspend fun updatePromo(data: NewPromo) = dao.updateNewPromo(
+        data.copy(
+            isUploaded = false
+        )
+    )
 
     override suspend fun getNeedUploadPromos() = dao.getNeedUploadPromos()
     override fun getPromos(query: SupportSQLiteQuery) = dao.getNewPromos(query).flowOn(dispatcher)

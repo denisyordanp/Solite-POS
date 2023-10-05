@@ -1,6 +1,6 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.domain.domain.GetOrderListByReport
 import com.socialite.domain.domain.GetOrderMenusWithAmount
 import com.socialite.domain.menu.OrderMenus

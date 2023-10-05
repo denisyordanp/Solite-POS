@@ -51,8 +51,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.socialite.common.state.DataState
-import com.socialite.common.state.ErrorState
+import com.socialite.common.utility.state.DataState
+import com.socialite.common.utility.state.ErrorState
 import com.socialite.domain.menu.UserAuthority
 import com.socialite.domain.schema.main.User
 import com.socialite.solite_pos.R

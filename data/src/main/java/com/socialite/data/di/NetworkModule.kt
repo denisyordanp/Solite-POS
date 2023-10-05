@@ -1,6 +1,6 @@
 package com.socialite.data.di
 
-import com.socialite.common.network.NetworkConfig
+import com.socialite.core.network.NetworkConfig
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.preference.UserPreferences
 import dagger.Module

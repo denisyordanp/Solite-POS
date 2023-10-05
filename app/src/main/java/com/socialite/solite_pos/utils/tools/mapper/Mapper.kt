@@ -1,12 +1,12 @@
 package com.socialite.solite_pos.utils.tools.mapper
 
+import com.socialite.common.utility.extension.toLongDefault
 import com.socialite.domain.schema.main.Category
 import com.socialite.domain.schema.main.Payment
 import com.socialite.domain.schema.main.Promo
 import com.socialite.domain.schema.main.Store
 import com.socialite.domain.schema.main.User
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
-import okhttp3.internal.toLongOrDefault
 import com.socialite.solite_pos.schema.Category as UiCategory
 
 fun Category.toUi() = UiCategory(
@@ -18,7 +18,7 @@ fun Category.toUi() = UiCategory(
 )
 
 fun ReportParameter.toDomain() = com.socialite.domain.schema.ReportParameter(
-    start, end, storeId, userId.toLongOrDefault(0L)
+    start, end, storeId, userId.toLongDefault(0L)
 )
 
 fun Store.toUi() = com.socialite.solite_pos.schema.Store(
