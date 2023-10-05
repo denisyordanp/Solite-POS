@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.socialite.common.ui.component.Background
+import com.socialite.common.ui.component.MainBackground
 import com.socialite.core.ui.theme.SolitePOSTheme
 
 @Composable
 fun MainOrderScreen() {
-    Background {
+    MainBackground {
         Scaffold { padding ->
             Spacer(
                 modifier = Modifier

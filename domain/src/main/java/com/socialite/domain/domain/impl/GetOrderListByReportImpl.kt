@@ -1,7 +1,7 @@
 package com.socialite.domain.domain.impl
 
 import com.socialite.common.utility.di.IoDispatcher
-import com.socialite.common.utility.extension.toLongDefault
+import com.socialite.core.extensions.toLongDefault
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository

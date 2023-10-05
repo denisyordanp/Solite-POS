@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.socialite.common.ui"
+    namespace = "com.socialite.core.extension"
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
@@ -18,12 +18,6 @@ android {
             isMinifyEnabled = false
         }
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = AppConfig.kotlinCompilerExtensionVersion
-    }
-    buildFeatures{
-        compose = true
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -34,14 +28,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:extension"))
-    implementation(project(":core:ui"))
+    implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
 
     implementation(platform("androidx.compose:compose-bom:${Depedencies.composeBomVersion}"))
-    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.material:material")
-    implementation("androidx.navigation:navigation-compose:${Depedencies.navigationComposeVersion}")
 }

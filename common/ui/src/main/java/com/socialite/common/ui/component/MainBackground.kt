@@ -11,7 +11,7 @@ import androidx.compose.ui.res.painterResource
 import com.socialite.common.ui.R
 
 @Composable
-fun Background(content: @Composable () -> Unit) {
+fun MainBackground(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {

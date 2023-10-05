@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":schema:menu"))
     implementation(project(":common:utility"))
     implementation(project(":core:network"))
+    implementation(project(":core:extension"))
 
     // Kotlin
     implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")

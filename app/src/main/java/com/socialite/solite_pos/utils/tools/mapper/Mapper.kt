@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.utils.tools.mapper
 
-import com.socialite.common.utility.extension.toLongDefault
+import com.socialite.core.extensions.toLongDefault
 import com.socialite.domain.schema.main.Category
 import com.socialite.domain.schema.main.Payment
 import com.socialite.domain.schema.main.Promo
