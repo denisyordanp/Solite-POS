@@ -9,10 +9,10 @@ import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
 import com.socialite.data.repository.UserRepository
-import com.socialite.data.schema.room.master.User
-import com.socialite.data.schema.room.new_bridge.OrderDetail
-import com.socialite.data.schema.room.new_bridge.OrderProductVariant
-import com.socialite.data.schema.room.new_master.Store
+import com.socialite.schema.database.master.User
+import com.socialite.schema.database.new_bridge.OrderDetail
+import com.socialite.schema.database.new_bridge.OrderProductVariant
+import com.socialite.schema.database.new_master.Store
 import com.socialite.domain.domain.NewOrder
 import com.socialite.domain.helper.DateUtils
 import com.socialite.domain.helper.toData

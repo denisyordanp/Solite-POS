@@ -10,7 +10,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
-import com.socialite.data.schema.room.new_master.Promo as DataPromo
 
 class GetPromosImpl @Inject constructor(
     private val promosRepository: PromosRepository,
@@ -18,6 +17,6 @@ class GetPromosImpl @Inject constructor(
 ) : GetPromos {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(status: Promo.Status) =
-        promosRepository.getPromos(DataPromo.filter(status.code))
+        promosRepository.getPromos(com.socialite.schema.database.new_master.Promo.filter(status.code))
             .mapLatest { promos -> promos.map { it.toDomain() } }.flowOn(dispatcher)
 }

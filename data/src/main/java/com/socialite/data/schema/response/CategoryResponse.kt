@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_master.Category
+import com.socialite.schema.database.new_master.Category
 
 data class CategoryResponse(
     val desc: String,

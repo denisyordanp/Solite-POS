@@ -5,7 +5,7 @@ import com.socialite.core.extensions.toLongDefault
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
-import com.socialite.data.schema.room.helper.OrderData
+import com.socialite.schema.database.helper.OrderData
 import com.socialite.domain.domain.GetOrderListByReport
 import com.socialite.domain.schema.ReportParameter
 import kotlinx.coroutines.CoroutineDispatcher

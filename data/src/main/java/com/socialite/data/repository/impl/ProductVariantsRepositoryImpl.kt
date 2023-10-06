@@ -2,16 +2,16 @@ package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
 import com.socialite.common.utility.di.IoDispatcher
-import com.socialite.data.database.AppDatabase
-import com.socialite.data.database.dao.ProductVariantsDao
-import com.socialite.data.database.dao.ProductsDao
-import com.socialite.data.database.dao.VariantOptionsDao
-import com.socialite.data.database.dao.VariantsDao
+import com.socialite.core.database.AppDatabase
+import com.socialite.core.database.dao.ProductVariantsDao
+import com.socialite.core.database.dao.ProductsDao
+import com.socialite.core.database.dao.VariantOptionsDao
+import com.socialite.core.database.dao.VariantsDao
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.new_bridge.VariantProduct
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.new_bridge.VariantProduct
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import java.util.UUID

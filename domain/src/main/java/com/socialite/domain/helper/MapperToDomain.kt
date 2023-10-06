@@ -1,21 +1,21 @@
 package com.socialite.domain.helper
 
-import com.socialite.data.schema.room.helper.OrderData
-import com.socialite.data.schema.room.helper.ProductWithCategory
-import com.socialite.data.schema.room.master.User
-import com.socialite.data.schema.room.new_bridge.OrderPayment
-import com.socialite.data.schema.room.new_bridge.OrderPromo
-import com.socialite.data.schema.room.new_bridge.VariantProduct
-import com.socialite.data.schema.room.new_master.Category
-import com.socialite.data.schema.room.new_master.Customer
-import com.socialite.data.schema.room.new_master.Order
-import com.socialite.data.schema.room.new_master.Outcome
-import com.socialite.data.schema.room.new_master.Payment
-import com.socialite.data.schema.room.new_master.Product
-import com.socialite.data.schema.room.new_master.Promo
-import com.socialite.data.schema.room.new_master.Store
-import com.socialite.data.schema.room.new_master.Variant
-import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.schema.database.helper.OrderData
+import com.socialite.schema.database.helper.ProductWithCategory
+import com.socialite.schema.database.master.User
+import com.socialite.schema.database.new_bridge.OrderPayment
+import com.socialite.schema.database.new_bridge.OrderPromo
+import com.socialite.schema.database.new_bridge.VariantProduct
+import com.socialite.schema.database.new_master.Category
+import com.socialite.schema.database.new_master.Customer
+import com.socialite.schema.database.new_master.Order
+import com.socialite.schema.database.new_master.Outcome
+import com.socialite.schema.database.new_master.Payment
+import com.socialite.schema.database.new_master.Product
+import com.socialite.schema.database.new_master.Promo
+import com.socialite.schema.database.new_master.Store
+import com.socialite.schema.database.new_master.Variant
+import com.socialite.schema.database.new_master.VariantOption
 import com.socialite.domain.menu.toAuthority
 import com.socialite.domain.schema.OrderData as DomainOrderData
 import com.socialite.domain.schema.main.Category as DomainCategory

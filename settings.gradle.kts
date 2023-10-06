@@ -26,3 +26,5 @@ include(":common:utility")
 // Schema
 include(":schema:menu")
 include(":core:extension")
+include(":schema:database")
+include(":core:database")

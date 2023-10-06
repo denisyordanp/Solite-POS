@@ -1,12 +1,12 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.new_bridge.OrderProductVariant
-import com.socialite.data.database.AppDatabase
-import com.socialite.data.database.dao.OrderDetailsDao
-import com.socialite.data.database.dao.OrderProductVariantsDao
-import com.socialite.data.database.dao.VariantOptionsDao
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.new_bridge.OrderProductVariant
+import com.socialite.core.database.AppDatabase
+import com.socialite.core.database.dao.OrderDetailsDao
+import com.socialite.core.database.dao.OrderProductVariantsDao
+import com.socialite.core.database.dao.VariantOptionsDao
 import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
@@ -71,13 +71,14 @@ class OrderProductVariantsRepositoryImpl @Inject constructor(
                 val variantOption =
                     variantOptionsDao.getVariantOptionById(orderProductVariant.idVariantOption)
                 if (orderDetail != null && variantOption != null) {
-                    val newOrderProductVariant = OrderProductVariant(
-                        id = uuid,
-                        variantOption = variantOption.new_id,
-                        orderDetail = orderDetail.new_id,
-                        isUpload = orderProductVariant.isUpload,
-                        isDeleted = false
-                    )
+                    val newOrderProductVariant =
+                        OrderProductVariant(
+                            id = uuid,
+                            variantOption = variantOption.new_id,
+                            orderDetail = orderDetail.new_id,
+                            isUpload = orderProductVariant.isUpload,
+                            isDeleted = false
+                        )
                     dao.insertNewOrderProductVariant(newOrderProductVariant)
                 }
             }

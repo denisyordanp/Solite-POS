@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.schema.database.new_master.VariantOption
 
 data class VariantOptionResponse(
     val desc: String,

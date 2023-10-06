@@ -15,7 +15,7 @@ import com.socialite.domain.schema.main.Variant
 import com.socialite.domain.schema.main.VariantOption
 import com.socialite.domain.schema.main.VariantProduct
 
-fun Order.toData() = com.socialite.data.schema.room.new_master.Order(
+fun Order.toData() = com.socialite.schema.database.new_master.Order(
     id = id,
     orderNo = orderNo,
     customer = customer,
@@ -27,7 +27,7 @@ fun Order.toData() = com.socialite.data.schema.room.new_master.Order(
     user = user
 )
 
-fun Outcome.toData() = com.socialite.data.schema.room.new_master.Outcome(
+fun Outcome.toData() = com.socialite.schema.database.new_master.Outcome(
     id = id,
     name = name,
     desc = desc,
@@ -39,13 +39,13 @@ fun Outcome.toData() = com.socialite.data.schema.room.new_master.Outcome(
     user = user
 )
 
-fun Customer.toData() = com.socialite.data.schema.room.new_master.Customer(
+fun Customer.toData() = com.socialite.schema.database.new_master.Customer(
     id = id,
     name = name,
     isUploaded = isUploaded
 )
 
-fun Category.toData() = com.socialite.data.schema.room.new_master.Category(
+fun Category.toData() = com.socialite.schema.database.new_master.Category(
     id = id,
     name = name,
     desc = desc,
@@ -53,7 +53,7 @@ fun Category.toData() = com.socialite.data.schema.room.new_master.Category(
     isUploaded = isUploaded
 )
 
-fun OrderPromo.toData() = com.socialite.data.schema.room.new_bridge.OrderPromo(
+fun OrderPromo.toData() = com.socialite.schema.database.new_bridge.OrderPromo(
     id = id,
     order = order,
     promo = promo,
@@ -61,7 +61,7 @@ fun OrderPromo.toData() = com.socialite.data.schema.room.new_bridge.OrderPromo(
     isUpload = isUpload
 )
 
-fun OrderPayment.toData() = com.socialite.data.schema.room.new_bridge.OrderPayment(
+fun OrderPayment.toData() = com.socialite.schema.database.new_bridge.OrderPayment(
     id = id,
     order = order,
     payment = payment,
@@ -69,7 +69,7 @@ fun OrderPayment.toData() = com.socialite.data.schema.room.new_bridge.OrderPayme
     isUpload = isUpload
 )
 
-fun Payment.toData() = com.socialite.data.schema.room.new_master.Payment(
+fun Payment.toData() = com.socialite.schema.database.new_master.Payment(
     id = id,
     name = name,
     desc = desc,
@@ -79,7 +79,7 @@ fun Payment.toData() = com.socialite.data.schema.room.new_master.Payment(
     isUploaded = isUploaded
 )
 
-fun Product.toData() = com.socialite.data.schema.room.new_master.Product(
+fun Product.toData() = com.socialite.schema.database.new_master.Product(
     id = id,
     name = name,
     category = category,
@@ -90,7 +90,7 @@ fun Product.toData() = com.socialite.data.schema.room.new_master.Product(
     isUploaded = isUploaded
 )
 
-fun Promo.toData() = com.socialite.data.schema.room.new_master.Promo(
+fun Promo.toData() = com.socialite.schema.database.new_master.Promo(
     id = id,
     name = name,
     desc = desc,
@@ -100,14 +100,14 @@ fun Promo.toData() = com.socialite.data.schema.room.new_master.Promo(
     isUploaded = isUploaded
 )
 
-fun Store.toData() = com.socialite.data.schema.room.new_master.Store(
+fun Store.toData() = com.socialite.schema.database.new_master.Store(
     id = id,
     name = name,
     address = address,
     isUploaded = isUploaded
 )
 
-fun Variant.toData() = com.socialite.data.schema.room.new_master.Variant(
+fun Variant.toData() = com.socialite.schema.database.new_master.Variant(
     id = id,
     name = name,
     type = type,
@@ -115,7 +115,7 @@ fun Variant.toData() = com.socialite.data.schema.room.new_master.Variant(
     isUploaded = isUploaded
 )
 
-fun VariantOption.toData() = com.socialite.data.schema.room.new_master.VariantOption(
+fun VariantOption.toData() = com.socialite.schema.database.new_master.VariantOption(
     id = id,
     variant = variant,
     name = name,
@@ -124,7 +124,7 @@ fun VariantOption.toData() = com.socialite.data.schema.room.new_master.VariantOp
     isUploaded = isUploaded
 )
 
-fun VariantProduct.toData() = com.socialite.data.schema.room.new_bridge.VariantProduct(
+fun VariantProduct.toData() = com.socialite.schema.database.new_bridge.VariantProduct(
     id = id,
     variant = variant,
     variantOption = variantOption,
@@ -133,7 +133,7 @@ fun VariantProduct.toData() = com.socialite.data.schema.room.new_bridge.VariantP
     isDeleted = isDeleted
 )
 
-fun User.toData() = com.socialite.data.schema.room.master.User(
+fun User.toData() = com.socialite.schema.database.master.User(
     id = id,
     name = name,
     email = email,

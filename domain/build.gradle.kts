@@ -36,10 +36,11 @@ android {
 
 dependencies {
     implementation(project(":data"))
-    implementation(project(":schema:menu"))
     implementation(project(":common:utility"))
     implementation(project(":core:network"))
     implementation(project(":core:extension"))
+    implementation(project(":schema:menu"))
+    implementation(project(":schema:database"))
 
     // Kotlin
     implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")

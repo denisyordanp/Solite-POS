@@ -1,13 +1,13 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.data.database.AppDatabase
-import com.socialite.data.database.dao.OrderPaymentsDao
-import com.socialite.data.database.dao.OrdersDao
-import com.socialite.data.database.dao.PaymentsDao
+import com.socialite.core.database.AppDatabase
+import com.socialite.core.database.dao.OrderPaymentsDao
+import com.socialite.core.database.dao.OrdersDao
+import com.socialite.core.database.dao.PaymentsDao
 import com.socialite.data.repository.OrderPaymentsRepository
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.new_bridge.OrderPayment
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.new_bridge.OrderPayment
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
 import java.util.UUID

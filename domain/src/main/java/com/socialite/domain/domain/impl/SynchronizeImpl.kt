@@ -27,6 +27,21 @@ import com.socialite.data.schema.response.SynchronizeParams
 import com.socialite.data.schema.response.SynchronizeResponse
 import com.socialite.domain.domain.FetchLoggedInUser
 import com.socialite.domain.domain.Synchronize
+import com.socialite.domain.mapper.toCategoryResponse
+import com.socialite.domain.mapper.toCustomerResponse
+import com.socialite.domain.mapper.toOrderDetailResponse
+import com.socialite.domain.mapper.toOrderPaymentResponse
+import com.socialite.domain.mapper.toOrderProductVariantResponse
+import com.socialite.domain.mapper.toOrderPromoResponse
+import com.socialite.domain.mapper.toOrderResponse
+import com.socialite.domain.mapper.toOutcomeResponse
+import com.socialite.domain.mapper.toPaymentResponse
+import com.socialite.domain.mapper.toProductResponse
+import com.socialite.domain.mapper.toPromoResponse
+import com.socialite.domain.mapper.toStoreResponse
+import com.socialite.domain.mapper.toVariantOptionResponse
+import com.socialite.domain.mapper.toVariantProductResponse
+import com.socialite.domain.mapper.toVariantResponse
 import com.socialite.domain.schema.main.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -104,34 +119,34 @@ class SynchronizeImpl @Inject constructor(
 
     private suspend fun createSynchronizeParams(): SynchronizeParams {
         val needUploadCustomers =
-            customersRepository.getNeedUploadCustomers().map { it.toResponse() }
-        val needUploadStores = storeRepository.getNeedUploadStores().map { it.toResponse() }
+            customersRepository.getNeedUploadCustomers().map { it.toCustomerResponse() }
+        val needUploadStores = storeRepository.getNeedUploadStores().map { it.toStoreResponse() }
         val needUploadCategories =
-            categoriesRepository.getNeedUploadCategories().map { it.toResponse() }
-        val needUploadPromo = promosRepository.getNeedUploadPromos().map { it.toResponse() }
-        val needUploadPayments = paymentsRepository.getNeedUploadPayments().map { it.toResponse() }
-        val needUploadOrders = ordersRepository.getNeedUploadOrders().map { it.toResponse() }
-        val needUploadOutcomes = outcomesRepository.getNeedUploadOutcomes().map { it.toResponse() }
-        val needUploadProducts = productsRepository.getNeedUploadProducts().map { it.toResponse() }
-        val needUploadVariants = variantsRepository.getNeedUploadVariants().map { it.toResponse() }
+            categoriesRepository.getNeedUploadCategories().map { it.toCategoryResponse() }
+        val needUploadPromo = promosRepository.getNeedUploadPromos().map { it.toPromoResponse() }
+        val needUploadPayments = paymentsRepository.getNeedUploadPayments().map { it.toPaymentResponse() }
+        val needUploadOrders = ordersRepository.getNeedUploadOrders().map { it.toOrderResponse() }
+        val needUploadOutcomes = outcomesRepository.getNeedUploadOutcomes().map { it.toOutcomeResponse() }
+        val needUploadProducts = productsRepository.getNeedUploadProducts().map { it.toProductResponse() }
+        val needUploadVariants = variantsRepository.getNeedUploadVariants().map { it.toVariantResponse() }
         val needUploadOrderDetails = SynchronizeParamItem(
             deletedItems = orderDetailsRepository.getDeletedOrderDetailIds(),
-            items = orderDetailsRepository.getNeedUploadOrderDetails().map { it.toResponse() }
+            items = orderDetailsRepository.getNeedUploadOrderDetails().map { it.toOrderDetailResponse() }
         )
         val needUploadOrderPayments =
-            orderPaymentsRepository.getNeedUploadOrderPayments().map { it.toResponse() }
+            orderPaymentsRepository.getNeedUploadOrderPayments().map { it.toOrderPaymentResponse() }
         val needUploadOrderPromos =
-            orderPromosRepository.getNeedUploadOrderPromos().map { it.toResponse() }
+            orderPromosRepository.getNeedUploadOrderPromos().map { it.toOrderPromoResponse() }
         val needUploadVariantOptions =
-            variantOptionsRepository.getNeedUploadVariantOptions().map { it.toResponse() }
+            variantOptionsRepository.getNeedUploadVariantOptions().map { it.toVariantOptionResponse() }
         val needUploadOrderProductVariants = SynchronizeParamItem(
             deletedItems = orderProductVariantsRepository.getDeletedOrderProductVariantIds(),
             items = orderProductVariantsRepository.getNeedUploadOrderProductVariants()
-                .map { it.toResponse() }
+                .map { it.toOrderProductVariantResponse() }
         )
         val needUploadVariantProducts = SynchronizeParamItem(
             deletedItems = productVariantsRepository.getProductVariantIds(),
-            items = productVariantsRepository.getNeedUploadVariantProducts().map { it.toResponse() }
+            items = productVariantsRepository.getNeedUploadVariantProducts().map { it.toVariantProductResponse() }
         )
 
         return SynchronizeParams(

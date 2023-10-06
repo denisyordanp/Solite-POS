@@ -10,7 +10,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
-import com.socialite.data.schema.room.new_master.Category as DataCategory
 
 class GetCategoriesImpl @Inject constructor(
     private val categoriesRepository: CategoriesRepository,
@@ -18,7 +17,7 @@ class GetCategoriesImpl @Inject constructor(
 ) : GetCategories {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(status: Category.Status) =
-        categoriesRepository.getCategories(DataCategory.getFilter(status.code))
+        categoriesRepository.getCategories(com.socialite.schema.database.new_master.Category.getFilter(status.code))
             .mapLatest { categories ->
                 categories.map { it.toDomain() }
             }.flowOn(dispatcher)

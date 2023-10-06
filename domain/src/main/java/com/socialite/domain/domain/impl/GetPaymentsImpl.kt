@@ -10,7 +10,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
-import com.socialite.data.schema.room.new_master.Payment as DataPayment
 
 class GetPaymentsImpl @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
@@ -18,6 +17,6 @@ class GetPaymentsImpl @Inject constructor(
 ) : GetPayments {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(status: Payment.Status) =
-        paymentsRepository.getPayments(DataPayment.filter(status.code))
+        paymentsRepository.getPayments(com.socialite.schema.database.new_master.Payment.filter(status.code))
             .mapLatest { payments -> payments.map { it.toDomain() } }.flowOn(dispatcher)
 }

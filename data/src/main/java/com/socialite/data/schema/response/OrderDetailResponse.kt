@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_bridge.OrderDetail
+import com.socialite.schema.database.new_bridge.OrderDetail
 
 data class OrderDetailResponse(
     val amount: Int,

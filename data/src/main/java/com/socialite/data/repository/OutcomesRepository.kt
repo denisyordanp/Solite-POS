@@ -1,6 +1,6 @@
 package com.socialite.data.repository
 
-import com.socialite.data.schema.room.new_master.Outcome
+import com.socialite.schema.database.new_master.Outcome
 import kotlinx.coroutines.flow.Flow
 
 interface OutcomesRepository : SyncRepository<Outcome> {

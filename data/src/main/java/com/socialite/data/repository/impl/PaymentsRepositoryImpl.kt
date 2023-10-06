@@ -3,20 +3,20 @@ package com.socialite.data.repository.impl
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.socialite.common.utility.di.IoDispatcher
-import com.socialite.data.database.AppDatabase
-import com.socialite.data.database.dao.PaymentsDao
+import com.socialite.core.database.AppDatabase
+import com.socialite.core.database.dao.PaymentsDao
 import com.socialite.data.repository.PaymentsRepository
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.master.Payment
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.master.Payment
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 import javax.inject.Inject
-import com.socialite.data.schema.room.new_master.Payment as NewPayment
+import com.socialite.schema.database.new_master.Payment as NewPayment
 
 class PaymentsRepositoryImpl @Inject constructor(
     private val dao: PaymentsDao,
@@ -42,7 +42,7 @@ class PaymentsRepositoryImpl @Inject constructor(
     override suspend fun getNeedUploadPayments() = dao.getNeedUploadPayments()
 
     override suspend fun getItems(): List<NewPayment> {
-        return dao.getNewPayments(NewPayment.filter(NewPayment.ALL)).first()
+        return dao.getNewPayments(com.socialite.schema.database.new_master.Payment.filter(com.socialite.schema.database.new_master.Payment.ALL)).first()
     }
 
     override suspend fun updateItems(items: List<NewPayment>) {

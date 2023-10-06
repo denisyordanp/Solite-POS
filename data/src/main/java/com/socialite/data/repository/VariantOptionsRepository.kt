@@ -1,6 +1,6 @@
 package com.socialite.data.repository
 
-import com.socialite.data.schema.room.new_master.VariantOption
+import com.socialite.schema.database.new_master.VariantOption
 import kotlinx.coroutines.flow.Flow
 
 interface VariantOptionsRepository : SyncRepository<VariantOption> {

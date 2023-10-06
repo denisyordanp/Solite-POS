@@ -1,7 +1,7 @@
 package com.socialite.data.repository
 
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.socialite.data.schema.room.new_master.Payment
+import com.socialite.schema.database.new_master.Payment
 import kotlinx.coroutines.flow.Flow
 
 interface PaymentsRepository : SyncRepository<Payment> {

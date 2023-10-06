@@ -2,14 +2,14 @@ package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
 import com.socialite.common.utility.di.IoDispatcher
-import com.socialite.data.database.AppDatabase
-import com.socialite.data.database.dao.StoreDao
+import com.socialite.core.database.AppDatabase
+import com.socialite.core.database.dao.StoreDao
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.new_master.Store
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.new_master.Store
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first

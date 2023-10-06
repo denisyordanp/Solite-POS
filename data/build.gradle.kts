@@ -15,10 +15,6 @@ android {
         targetSdk = AppConfig.targetSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
     }
     buildTypes {
         release {
@@ -41,6 +37,8 @@ dependencies {
     implementation(project(":common:utility"))
     implementation(project(":core:network"))
     implementation(project(":core:extension"))
+    implementation(project(":core:database"))
+    implementation(project(":schema:database"))
 
     implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")

@@ -1,7 +1,7 @@
 package com.socialite.data.repository
 
-import com.socialite.data.schema.room.helper.ProductWithCategory
-import com.socialite.data.schema.room.new_master.Product
+import com.socialite.schema.database.helper.ProductWithCategory
+import com.socialite.schema.database.new_master.Product
 import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository : SyncRepository<Product> {

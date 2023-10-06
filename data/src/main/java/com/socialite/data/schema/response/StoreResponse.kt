@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_master.Store
+import com.socialite.schema.database.new_master.Store
 
 data class StoreResponse(
     val address: String,

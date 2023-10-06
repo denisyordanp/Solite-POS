@@ -1,8 +1,8 @@
 package com.socialite.domain.domain.impl
 
 import com.socialite.domain.domain.UpdateOrderProducts
-import com.socialite.data.schema.room.new_bridge.OrderDetail
-import com.socialite.data.schema.room.new_bridge.OrderProductVariant
+import com.socialite.schema.database.new_bridge.OrderDetail
+import com.socialite.schema.database.new_bridge.OrderProductVariant
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.OrderProductVariantsRepository
 import com.socialite.domain.schema.ProductOrderDetail
