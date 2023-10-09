@@ -1,6 +1,9 @@
 package com.socialite.core.ui.extension
 
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.socialite.core.ui.theme.Padding
+import com.socialite.core.ui.theme.CustomShapes
+import com.socialite.core.ui.theme.Paddings
 
-internal val LocalPadding = staticCompositionLocalOf { Padding() }
+internal val LocalPaddings = staticCompositionLocalOf { Paddings() }
+
+internal val LocalCustomShape = staticCompositionLocalOf { CustomShapes() }

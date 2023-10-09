@@ -6,8 +6,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import com.socialite.core.ui.extension.LocalPadding
 
 @SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
@@ -17,7 +15,7 @@ private val DarkColorPalette = darkColors(
     background = Gray,
     surface = GrayDark,
 
-)
+    )
 
 private val LightColorPalette = lightColors(
     primary = Syndicalist,
@@ -39,14 +37,10 @@ fun SolitePOSTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
         LightColorPalette
     }
 
-    CompositionLocalProvider(
-        LocalPadding provides Padding()
-    ) {
-        MaterialTheme(
-            colors = colors,
-            typography = Typography,
-            shapes = Shapes,
-            content = content
-        )
-    }
+    MaterialTheme(
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
 }
