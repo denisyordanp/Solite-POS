@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.orders
 
-import com.socialite.domain.schema.BucketOrder
+import com.socialite.schema.ui.helper.BucketOrder
 
 data class OrdersViewState(
     val bucketOrder: BucketOrder,

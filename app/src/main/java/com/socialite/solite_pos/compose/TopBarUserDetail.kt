@@ -27,7 +27,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.socialite.domain.menu.UserAuthority
+import com.socialite.schema.ui.utility.UserAuthority
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.schema.User
 import com.socialite.solite_pos.view.ui.theme.SolitePOSTheme

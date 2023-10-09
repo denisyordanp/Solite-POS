@@ -5,7 +5,7 @@ import com.socialite.common.utility.state.DataState
 import com.socialite.common.utility.state.ErrorState
 import com.socialite.data.repository.SettingRepository
 import com.socialite.domain.domain.IsAbleSendForgotPassword
-import com.socialite.domain.helper.DateUtils
+import com.socialite.common.utility.helper.DateUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapConcat
@@ -23,10 +23,10 @@ class IsAbleSendForgotPasswordImpl @Inject constructor(
             val differenceTime = currentTime - lastTime
             if (lastTime != 0L && differenceTime <= DateUtils.THIRTY_MINUTES_IN_TIME_MILLIS) {
                 val time = if (differenceTime > DateUtils.MINUTES_IN_TIME_MILLIS) {
-                    val minutes = (differenceTime/DateUtils.MINUTES_IN_TIME_MILLIS).toInt()
+                    val minutes = (differenceTime/ DateUtils.MINUTES_IN_TIME_MILLIS).toInt()
                     "$minutes menit"
                 } else {
-                    val seconds = (differenceTime/DateUtils.SECOND_IN_TIME_MILLIS).toInt()
+                    val seconds = (differenceTime/ DateUtils.SECOND_IN_TIME_MILLIS).toInt()
                     "$seconds detik"
                 }
                 flowOf(

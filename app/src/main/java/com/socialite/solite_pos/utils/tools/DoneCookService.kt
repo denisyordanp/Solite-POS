@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.socialite.domain.schema.OrderData
+import com.socialite.schema.ui.helper.OrderData
 import com.socialite.solite_pos.view.SoliteActivity
 import com.socialite.solite_pos.view.SoliteActivity.Companion.BROADCAST_KEY
 

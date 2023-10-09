@@ -45,8 +45,8 @@ import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.basicDropdown
-import com.socialite.domain.schema.OrderWithProduct
-import com.socialite.domain.schema.main.Order
+import com.socialite.schema.ui.helper.OrderWithProduct
+import com.socialite.schema.ui.main.Order
 import com.socialite.solite_pos.schema.Promo
 import com.socialite.solite_pos.schema.Payment
 import com.socialite.solite_pos.utils.config.thousand

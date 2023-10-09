@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    api(project(":schema:ui"))
+
     implementation(project(":data"))
     implementation(project(":common:utility"))
     implementation(project(":core:network"))

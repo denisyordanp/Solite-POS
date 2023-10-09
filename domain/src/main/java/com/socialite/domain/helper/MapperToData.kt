@@ -1,19 +1,19 @@
 package com.socialite.domain.helper
 
-import com.socialite.domain.schema.Outcome
-import com.socialite.domain.schema.main.Category
-import com.socialite.domain.schema.main.Customer
-import com.socialite.domain.schema.main.Order
-import com.socialite.domain.schema.main.OrderPayment
-import com.socialite.domain.schema.main.OrderPromo
-import com.socialite.domain.schema.main.Payment
-import com.socialite.domain.schema.main.Product
-import com.socialite.domain.schema.main.Promo
-import com.socialite.domain.schema.main.Store
-import com.socialite.domain.schema.main.User
-import com.socialite.domain.schema.main.Variant
-import com.socialite.domain.schema.main.VariantOption
-import com.socialite.domain.schema.main.VariantProduct
+import com.socialite.schema.ui.helper.Outcome
+import com.socialite.schema.ui.main.Category
+import com.socialite.schema.ui.main.Customer
+import com.socialite.schema.ui.main.Order
+import com.socialite.schema.ui.main.OrderPayment
+import com.socialite.schema.ui.main.OrderPromo
+import com.socialite.schema.ui.main.Payment
+import com.socialite.schema.ui.main.Product
+import com.socialite.schema.ui.main.Promo
+import com.socialite.schema.ui.main.Store
+import com.socialite.schema.ui.main.User
+import com.socialite.schema.ui.main.Variant
+import com.socialite.schema.ui.main.VariantOption
+import com.socialite.schema.ui.main.VariantProduct
 
 fun Order.toData() = com.socialite.schema.database.new_master.Order(
     id = id,

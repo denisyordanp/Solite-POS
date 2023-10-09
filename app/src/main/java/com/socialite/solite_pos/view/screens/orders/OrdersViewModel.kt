@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.UpdateOrderProducts
-import com.socialite.domain.schema.BucketOrder
-import com.socialite.domain.schema.ProductOrderDetail
-import com.socialite.domain.schema.findExisting
+import com.socialite.schema.ui.helper.findExisting
 import com.socialite.domain.domain.GetPrinterDevice
-import com.socialite.domain.helper.DateUtils
+import com.socialite.common.utility.helper.DateUtils
+import com.socialite.schema.ui.helper.BucketOrder
+import com.socialite.schema.ui.helper.ProductOrderDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

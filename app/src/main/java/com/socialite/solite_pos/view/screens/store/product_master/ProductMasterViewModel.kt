@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.UpdateProduct
-import com.socialite.domain.schema.main.Product
+import com.socialite.schema.ui.main.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

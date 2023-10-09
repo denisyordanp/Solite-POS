@@ -6,7 +6,7 @@ import com.socialite.data.repository.OrdersRepository
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.helper.ProductOrderDetailConverter
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.schema.ui.helper.OrderWithProduct
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn

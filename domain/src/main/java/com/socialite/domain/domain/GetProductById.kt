@@ -1,5 +1,5 @@
 package com.socialite.domain.domain
-import com.socialite.domain.schema.main.Product
+import com.socialite.schema.ui.main.Product
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetProductById {

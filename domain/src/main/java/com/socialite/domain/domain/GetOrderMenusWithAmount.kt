@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.ReportParameter
+import com.socialite.schema.ui.helper.ReportParameter
 import com.socialite.domain.schema.MenuOrderAmount
 import kotlinx.coroutines.flow.Flow
 

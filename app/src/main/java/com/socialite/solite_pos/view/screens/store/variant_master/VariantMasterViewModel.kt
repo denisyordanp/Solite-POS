@@ -8,8 +8,8 @@ import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.UpdateVariant
 import com.socialite.domain.domain.UpdateVariantOption
-import com.socialite.domain.schema.main.Variant
-import com.socialite.domain.schema.main.VariantOption
+import com.socialite.schema.ui.main.Variant
+import com.socialite.schema.ui.main.VariantOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

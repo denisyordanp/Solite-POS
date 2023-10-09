@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetOutcomes
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.NewOutcome
-import com.socialite.domain.schema.Outcome
+import com.socialite.schema.ui.helper.Outcome
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.utils.tools.mapper.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel

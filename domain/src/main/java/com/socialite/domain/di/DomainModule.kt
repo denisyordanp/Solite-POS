@@ -138,7 +138,7 @@ import com.socialite.domain.domain.impl.UpdateStoreImpl
 import com.socialite.domain.domain.impl.UpdateUserImpl
 import com.socialite.domain.domain.impl.UpdateVariantImpl
 import com.socialite.domain.domain.impl.UpdateVariantOptionImpl
-import com.socialite.domain.helper.IdManager
+import com.socialite.common.utility.helper.IdManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

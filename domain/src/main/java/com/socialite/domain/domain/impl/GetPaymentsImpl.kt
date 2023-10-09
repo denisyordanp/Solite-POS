@@ -4,7 +4,7 @@ import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.PaymentsRepository
 import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.main.Payment
+import com.socialite.schema.ui.main.Payment
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOn

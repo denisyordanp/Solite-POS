@@ -14,14 +14,14 @@ import com.socialite.schema.database.new_bridge.OrderDetail
 import com.socialite.schema.database.new_bridge.OrderProductVariant
 import com.socialite.schema.database.new_master.Store
 import com.socialite.domain.domain.NewOrder
-import com.socialite.domain.helper.DateUtils
+import com.socialite.common.utility.helper.DateUtils
 import com.socialite.domain.helper.toData
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.OrderData
-import com.socialite.domain.schema.OrderWithProduct
-import com.socialite.domain.schema.ProductOrderDetail
-import com.socialite.domain.schema.main.Customer
-import com.socialite.domain.schema.main.Order
+import com.socialite.schema.ui.helper.OrderData
+import com.socialite.schema.ui.helper.OrderWithProduct
+import com.socialite.schema.ui.helper.ProductOrderDetail
+import com.socialite.schema.ui.main.Customer
+import com.socialite.schema.ui.main.Order
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -131,7 +131,7 @@ class NewOrderImpl @Inject constructor(
 
                 val detail = OrderDetail.createNewOrderDetail(
                     order.orderData.order.id,
-                    item.product.id,
+                    item.product!!.id,
                     item.amount
                 )
                 orderDetailsRepository.insertOrderDetail(detail)

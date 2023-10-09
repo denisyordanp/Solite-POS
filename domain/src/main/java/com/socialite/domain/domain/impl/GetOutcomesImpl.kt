@@ -7,8 +7,8 @@ import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.GetOutcomes
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.Outcome
-import com.socialite.domain.schema.ReportParameter
+import com.socialite.schema.ui.helper.Outcome
+import com.socialite.schema.ui.helper.ReportParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

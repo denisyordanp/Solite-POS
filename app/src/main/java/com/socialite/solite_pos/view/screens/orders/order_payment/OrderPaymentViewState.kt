@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.orders.order_payment
 
-import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.schema.ui.helper.OrderWithProduct
 import com.socialite.solite_pos.schema.Promo
 import com.socialite.solite_pos.schema.Payment
 

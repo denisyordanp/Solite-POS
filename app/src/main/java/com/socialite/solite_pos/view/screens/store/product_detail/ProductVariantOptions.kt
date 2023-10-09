@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.view.screens.store.product_detail
 
-import com.socialite.domain.schema.ProductWithCategory
-import com.socialite.domain.schema.VariantWithOptions
+import com.socialite.schema.ui.helper.ProductWithCategory
+import com.socialite.schema.ui.helper.VariantWithOptions
 
 data class ProductVariantOptions(
     val product: ProductWithCategory,

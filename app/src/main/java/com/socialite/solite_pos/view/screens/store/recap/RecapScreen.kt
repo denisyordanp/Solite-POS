@@ -28,8 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.socialite.domain.helper.DateUtils
-import com.socialite.domain.schema.RecapData
+import com.socialite.common.utility.extension.toDateWithDayWithoutYear
+import com.socialite.common.utility.helper.DateUtils
+import com.socialite.schema.ui.helper.RecapData
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.basicDropdown
@@ -186,7 +187,7 @@ private fun RecapContent(
                 ) {
                     recap.incomes.forEach {
                         RecapItem(
-                            firstText = it.dateString(),
+                            firstText = it.date.toDateWithDayWithoutYear(),
                             middleText = it.payment,
                             amount = it.total,
                             isAdd = true
@@ -216,7 +217,7 @@ private fun RecapContent(
                 ) {
                     recap.outcomes.forEach {
                         RecapItem(
-                            firstText = it.dateString(),
+                            firstText = it.date.toDateWithDayWithoutYear(),
                             middleText = it.name,
                             amount = it.total,
                             isAdd = false

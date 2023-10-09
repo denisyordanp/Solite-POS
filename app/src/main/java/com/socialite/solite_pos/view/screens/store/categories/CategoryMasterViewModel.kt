@@ -6,7 +6,7 @@ import com.socialite.domain.domain.AddNewCategory
 import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.UpdateCategory
-import com.socialite.domain.schema.main.Category
+import com.socialite.schema.ui.main.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

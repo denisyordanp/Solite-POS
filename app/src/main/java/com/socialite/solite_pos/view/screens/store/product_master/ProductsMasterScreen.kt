@@ -52,8 +52,8 @@ import com.google.accompanist.pager.rememberPagerState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.domain.schema.ProductVariantCount
-import com.socialite.domain.schema.main.Product
+import com.socialite.schema.ui.helper.ProductVariantCount
+import com.socialite.schema.ui.main.Product
 import com.socialite.solite_pos.schema.Category
 import com.socialite.solite_pos.utils.config.thousand
 import com.socialite.solite_pos.utils.tools.mapper.toUi

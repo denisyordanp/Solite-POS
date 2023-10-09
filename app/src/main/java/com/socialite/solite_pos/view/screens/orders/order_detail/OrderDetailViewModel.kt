@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.UpdateOrder
-import com.socialite.domain.schema.main.Order
+import com.socialite.schema.ui.main.Order
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

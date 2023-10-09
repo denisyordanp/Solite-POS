@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.main.Store
+import com.socialite.schema.ui.main.Store
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetSelectedStore {

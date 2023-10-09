@@ -7,7 +7,7 @@ import com.socialite.domain.domain.GetProductById
 import com.socialite.domain.domain.GetVariantsProductById
 import com.socialite.domain.domain.GetVariantsWithOptions
 import com.socialite.domain.domain.RemoveVariantProduct
-import com.socialite.domain.schema.main.VariantProduct
+import com.socialite.schema.ui.main.VariantProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -5,7 +5,7 @@ import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.schema.database.helper.VariantProductWithOption
 import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.VariantWithOptions
+import com.socialite.schema.ui.helper.VariantWithOptions
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

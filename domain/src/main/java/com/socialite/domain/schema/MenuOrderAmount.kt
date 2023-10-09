@@ -1,6 +1,6 @@
 package com.socialite.domain.schema
 
-import com.socialite.domain.menu.OrderMenus
+import com.socialite.schema.menu.OrderMenus
 
 data class MenuOrderAmount(
     val menu: OrderMenus,

@@ -1,7 +1,7 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.Outcome
-import com.socialite.domain.schema.ReportParameter
+import com.socialite.schema.ui.helper.Outcome
+import com.socialite.schema.ui.helper.ReportParameter
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetOutcomes {

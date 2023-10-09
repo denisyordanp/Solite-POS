@@ -4,7 +4,7 @@ import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.PromosRepository
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.main.Promo
+import com.socialite.schema.ui.main.Promo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOn

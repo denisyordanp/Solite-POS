@@ -42,7 +42,7 @@ import com.socialite.domain.mapper.toStoreResponse
 import com.socialite.domain.mapper.toVariantOptionResponse
 import com.socialite.domain.mapper.toVariantProductResponse
 import com.socialite.domain.mapper.toVariantResponse
-import com.socialite.domain.schema.main.User
+import com.socialite.schema.ui.main.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow

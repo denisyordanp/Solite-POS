@@ -77,6 +77,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":common:utility"))
     implementation(project(":schema:menu"))
+    implementation(project(":schema:ui"))
     implementation(project(":core:extension"))
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

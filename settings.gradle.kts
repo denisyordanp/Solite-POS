@@ -18,6 +18,8 @@ include(":feature:customerorder")
 // Core
 include(":core:ui")
 include(":core:network")
+include(":core:database")
+include(":core:extension")
 
 // Common
 include(":common:ui")
@@ -25,6 +27,5 @@ include(":common:utility")
 
 // Schema
 include(":schema:menu")
-include(":core:extension")
 include(":schema:database")
-include(":core:database")
+include(":schema:ui")

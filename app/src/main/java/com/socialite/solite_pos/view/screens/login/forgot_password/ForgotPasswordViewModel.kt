@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.common.utility.state.DataState
 import com.socialite.domain.domain.ForgotPassword
 import com.socialite.domain.domain.IsAbleSendForgotPassword
-import com.socialite.domain.helper.DateUtils
+import com.socialite.common.utility.helper.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

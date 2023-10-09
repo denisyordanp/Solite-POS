@@ -3,7 +3,7 @@ package com.socialite.domain.domain.impl
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.domain.domain.RemoveVariantProduct
 import com.socialite.domain.helper.toData
-import com.socialite.domain.schema.main.VariantProduct
+import com.socialite.schema.ui.main.VariantProduct
 import javax.inject.Inject
 
 class RemoveVariantProductImpl @Inject constructor(

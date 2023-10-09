@@ -1,8 +1,8 @@
 package com.socialite.solite_pos.view.screens.store.variant_product
 
-import com.socialite.domain.schema.VariantWithOptions
-import com.socialite.domain.schema.main.Product
-import com.socialite.domain.schema.main.VariantProduct
+import com.socialite.schema.ui.helper.VariantWithOptions
+import com.socialite.schema.ui.main.Product
+import com.socialite.schema.ui.main.VariantProduct
 
 data class VariantProductViewState(
     val variants: List<VariantWithOptions>,

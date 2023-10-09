@@ -6,7 +6,7 @@ import com.socialite.domain.domain.AddNewPromo
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.UpdatePromo
-import com.socialite.domain.schema.main.Promo
+import com.socialite.schema.ui.main.Promo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

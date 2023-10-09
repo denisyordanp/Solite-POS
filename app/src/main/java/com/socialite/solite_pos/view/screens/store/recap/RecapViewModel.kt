@@ -22,8 +22,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.socialite.domain.schema.main.Store as DomainStore
-import com.socialite.domain.schema.main.User as DomainUser
+import com.socialite.schema.ui.main.Store as DomainStore
+import com.socialite.schema.ui.main.User as DomainUser
 
 @HiltViewModel
 class RecapViewModel @Inject constructor(

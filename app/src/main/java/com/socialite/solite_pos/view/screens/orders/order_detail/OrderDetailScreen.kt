@@ -38,15 +38,17 @@ import androidx.fragment.app.FragmentManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
+import com.socialite.common.utility.extension.toDateWithTime
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
-import com.socialite.domain.schema.OrderWithProduct
-import com.socialite.domain.schema.ProductOrderDetail
-import com.socialite.domain.helper.DateUtils
-import com.socialite.domain.schema.main.Order
+import com.socialite.common.utility.helper.DateUtils
+import com.socialite.schema.ui.helper.OrderWithProduct
+import com.socialite.schema.ui.helper.ProductOrderDetail
+import com.socialite.schema.ui.main.Order
 import com.socialite.solite_pos.utils.config.rupiahToK
 import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.solite_pos.utils.extension.orderMenuByStatus
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.screens.orders.OrderButtonType
 import com.socialite.solite_pos.view.ui.OrderMenus
@@ -303,7 +305,7 @@ private fun Details(
                 OrderFooter(orderWithProduct = orderWithProduct)
             }
         }
-        val statusToOrderMenu = orderWithProduct.orderData.order.statusToOrderMenu()
+        val statusToOrderMenu = orderWithProduct.orderData.order.orderMenuByStatus()
         statusToOrderMenu?.let {
             ButtonBottomBar(
                 modifier = Modifier
@@ -336,7 +338,7 @@ private fun OrderHeader(
                 .weight(1f)
         ) {
             Text(
-                text = order.timeString,
+                text = order.orderTime.toDateWithTime(),
                 style = MaterialTheme.typography.body2
             )
             Text(
