@@ -8,4 +8,5 @@ data class Paddings(
     val small: Dp = 8.dp,
     val smallMedium: Dp = 12.dp,
     val medium: Dp = 16.dp,
+    val large: Dp = 24.dp
 )

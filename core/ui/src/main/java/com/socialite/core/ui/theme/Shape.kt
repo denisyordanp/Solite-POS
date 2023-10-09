@@ -9,7 +9,3 @@ val Shapes = Shapes(
     medium = RoundedCornerShape(4.dp),
     large = RoundedCornerShape(0.dp)
 )
-
-data class CustomShapes(
-    val searchBar: RoundedCornerShape = RoundedCornerShape(20.dp)
-)

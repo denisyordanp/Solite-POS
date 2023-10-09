@@ -15,7 +15,6 @@ fun MainBackground(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        content()
         Image(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -23,5 +22,6 @@ fun MainBackground(content: @Composable () -> Unit) {
             contentDescription = null,
             contentScale = ContentScale.FillWidth
         )
+        content()
     }
 }
