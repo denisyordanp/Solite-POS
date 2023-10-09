@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
+    implementation(project(":domain:customerorder"))
     implementation(project(":common:ui"))
     implementation(project(":common:utility"))
     implementation(project(":core:ui"))
@@ -48,7 +48,9 @@ dependencies {
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material:material")
 
+    // UI
     implementation("androidx.constraintlayout:constraintlayout-compose:${Depedencies.constraintComposeVersion}")
+    implementation("io.coil-kt:coil-compose:${Depedencies.coilCompose}")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")

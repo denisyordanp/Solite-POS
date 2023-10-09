@@ -8,10 +8,25 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val Typography.bodyNormal
+val Typography.body1Normal
     @Composable
     @ReadOnlyComposable
     get() = MaterialTheme.typography.body1.copy(
+        color = MaterialTheme.colors.onPrimary,
+    )
+
+val Typography.body2Bold
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.typography.body2.copy(
+        color = MaterialTheme.colors.onPrimary,
+        fontWeight = FontWeight.Bold
+    )
+
+val Typography.overLineNormal
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.typography.overline.copy(
         color = MaterialTheme.colors.onPrimary,
     )
 

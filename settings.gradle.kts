@@ -11,6 +11,7 @@ rootProject.name = "Solite-POS"
 include("app")
 include("data")
 include("domain")
+include(":domain:customerorder")
 
 // Feature
 include(":feature:customerorder")
