@@ -1,6 +1,7 @@
 package com.socialite.common.ui.component
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -35,7 +36,8 @@ fun SoliteContent(
             Scaffold(
                 snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
                 topBar = topBar,
-                bottomBar = bottomBar
+                bottomBar = bottomBar,
+                backgroundColor = MaterialTheme.colors.background
             ) { padding ->
                 content(Modifier.padding(padding))
             }
