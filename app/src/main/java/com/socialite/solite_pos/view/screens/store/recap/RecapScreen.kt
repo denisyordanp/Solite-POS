@@ -37,7 +37,7 @@ import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.solite_pos.schema.MenuOrderAmount
 import com.socialite.solite_pos.schema.Store
 import com.socialite.solite_pos.schema.User
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.OrderMenus
 

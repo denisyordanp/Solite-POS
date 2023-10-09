@@ -59,7 +59,7 @@ import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.schema.ui.helper.OrderWithProduct
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 import com.socialite.solite_pos.schema.OrderMenuWithOrders
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent

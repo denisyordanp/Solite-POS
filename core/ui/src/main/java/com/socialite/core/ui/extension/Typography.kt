@@ -30,6 +30,14 @@ val Typography.overLineNormal
         color = MaterialTheme.colors.onPrimary,
     )
 
+val Typography.captionBold
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.typography.caption.copy(
+        color = MaterialTheme.colors.onPrimary,
+        fontWeight = FontWeight.Bold
+    )
+
 val Typography.defaultH5
     @Composable
     @ReadOnlyComposable

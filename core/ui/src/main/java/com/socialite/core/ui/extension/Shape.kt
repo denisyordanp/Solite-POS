@@ -7,6 +7,9 @@ import androidx.compose.ui.unit.dp
 val Shapes.searchBar: RoundedCornerShape
     get() = RoundedCornerShape(20.dp)
 
+val Shapes.tab: RoundedCornerShape
+    get() = RoundedCornerShape(15.dp)
+
 val Shapes.item: RoundedCornerShape
     get() = RoundedCornerShape(12.dp)
 

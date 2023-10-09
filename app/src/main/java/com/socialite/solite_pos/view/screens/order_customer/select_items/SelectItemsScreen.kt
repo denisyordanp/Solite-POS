@@ -49,13 +49,13 @@ import com.socialite.solite_pos.compose.GeneralMenuButtonView
 import com.socialite.solite_pos.compose.GeneralMenusView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.common.utility.helper.DateUtils
+import com.socialite.core.extensions.toIDR
 import com.socialite.schema.ui.helper.BucketOrder
 import com.socialite.schema.ui.helper.ProductOrderDetail
 import com.socialite.schema.ui.helper.ProductWithCategory
 import com.socialite.schema.ui.main.Category
 import com.socialite.schema.ui.main.Product
 import com.socialite.solite_pos.schema.GeneralMenuBadge
-import com.socialite.solite_pos.utils.config.toIDR
 import com.socialite.solite_pos.view.screens.order_customer.components.ProductCustomerItemView
 import com.socialite.solite_pos.view.ui.GeneralMenus
 import com.socialite.solite_pos.view.ui.ModalContent

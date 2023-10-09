@@ -28,7 +28,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.socialite.solite_pos.R
 import com.socialite.common.utility.helper.DateUtils
 import com.socialite.schema.ui.helper.ProductOrderDetail
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.utils.config.timeMilliSecondToDateFormat
 
 @Composable

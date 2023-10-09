@@ -44,4 +44,6 @@ dependencies {
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material:material")
     implementation("androidx.navigation:navigation-compose:${Depedencies.navigationComposeVersion}")
+
+    implementation("io.coil-kt:coil-compose:${Depedencies.coilCompose}")
 }

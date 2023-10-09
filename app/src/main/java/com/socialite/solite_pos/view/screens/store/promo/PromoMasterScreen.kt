@@ -52,7 +52,7 @@ import com.socialite.solite_pos.compose.BasicRadioButton
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 import kotlinx.coroutines.launch
 

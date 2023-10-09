@@ -55,7 +55,7 @@ import com.socialite.solite_pos.compose.SpaceForFloatingButton
 import com.socialite.schema.ui.helper.ProductVariantCount
 import com.socialite.schema.ui.main.Product
 import com.socialite.solite_pos.schema.Category
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import kotlinx.coroutines.launch
 

@@ -43,11 +43,11 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAlertDialog
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.common.utility.helper.DateUtils
+import com.socialite.core.extensions.rupiahToK
 import com.socialite.schema.ui.helper.OrderWithProduct
 import com.socialite.schema.ui.helper.ProductOrderDetail
 import com.socialite.schema.ui.main.Order
-import com.socialite.solite_pos.utils.config.rupiahToK
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.utils.extension.orderMenuByStatus
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.screens.orders.OrderButtonType

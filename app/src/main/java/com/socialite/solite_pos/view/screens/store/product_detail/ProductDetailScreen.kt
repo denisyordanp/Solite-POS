@@ -42,7 +42,7 @@ import com.socialite.solite_pos.compose.basicDropdown
 import com.socialite.schema.ui.helper.VariantWithOptions
 import com.socialite.schema.ui.main.Product
 import com.socialite.solite_pos.schema.Category
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 

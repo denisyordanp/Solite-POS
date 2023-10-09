@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":common:ui"))
     implementation(project(":common:utility"))
     implementation(project(":core:ui"))
+    implementation(project(":core:extension"))
 
     // Compose
     implementation(platform("androidx.compose:compose-bom:${Depedencies.composeBomVersion}"))
@@ -50,7 +51,7 @@ dependencies {
 
     // UI
     implementation("androidx.constraintlayout:constraintlayout-compose:${Depedencies.constraintComposeVersion}")
-    implementation("io.coil-kt:coil-compose:${Depedencies.coilCompose}")
+    implementation("com.google.accompanist:accompanist-pager-indicators:${Depedencies.accompanistPagerVersion}")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")
