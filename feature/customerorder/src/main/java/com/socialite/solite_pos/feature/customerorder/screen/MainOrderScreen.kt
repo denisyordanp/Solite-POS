@@ -278,7 +278,7 @@ private fun MenuByCategory(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Suppress(SuppressConstant.SpellCheckingInspection)
 @Composable
 private fun Preview() {
