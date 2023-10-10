@@ -2,6 +2,7 @@ package com.socialite.schema.ui.dummy
 
 import com.socialite.schema.ui.helper.ProductWithCategory
 import com.socialite.schema.ui.main.Category
+import com.socialite.schema.ui.main.Customer
 import com.socialite.schema.ui.main.Product
 
 object DummySchema {
@@ -176,5 +177,58 @@ object DummySchema {
             isActive = true,
             isUploaded = true
         ) to products,
+    )
+
+    val customers = listOf(
+        Customer(
+            id = "1",
+            name = "Lorem",
+            isUploaded = true
+        ),
+        Customer(
+            id = "2",
+            name = "Ipsum",
+            isUploaded = true
+        ),
+        Customer(
+            id = "3",
+            name = "Consectetur",
+            isUploaded = true
+        ),
+        Customer(
+            id = "4",
+            name = "Eiusmod",
+            isUploaded = true
+        ),
+        Customer(
+            id = "5",
+            name = "Irure",
+            isUploaded = true
+        ),
+        Customer(
+            id = "6",
+            name = "Voluptatem",
+            isUploaded = true
+        ),
+        Customer(
+            id = "7",
+            name = "Nostrum",
+            isUploaded = true
+        ),
+        Customer(
+            id = "8",
+            name = "Corporis",
+            isUploaded = true
+        ),
+        Customer(
+            id = "9",
+            name = "Happiness",
+            isUploaded = true
+        ),
+        Customer(
+            id = "10",
+            name = "Loves",
+            isUploaded = true
+        )
     )
 }

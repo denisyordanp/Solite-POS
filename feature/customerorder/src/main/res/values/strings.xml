@@ -2,6 +2,9 @@
 <resources>
     <string name="search_menu_title">Cari menu</string>
     <string name="search_menu_placeholder">Cari nama menu</string>
+    <string name="search_customer_placeholder">Cari nama pelanggan</string>
     <string name="favorite_menu_title">Menu favorit</string>
     <string name="menu_title">menu</string>
+    <string name="dine_in_title">Makan ditempat</string>
+    <string name="take_away_title">Dibungkus</string>
 </resources>
