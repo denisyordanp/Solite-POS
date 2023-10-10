@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainOrderScreen(
+    modifier: Modifier = Modifier,
     mainStoreName: String,
     currentStoreName: String,
     bucketBottomPadding: Dp,
@@ -70,7 +71,9 @@ fun MainOrderScreen(
     MainBackground {
         val paddings = MaterialTheme.paddings
 
-        Box {
+        Box(
+            modifier = modifier
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -281,6 +284,7 @@ private fun MenuByCategory(
 private fun Preview() {
     SoliteContent {
         MainOrderScreen(
+            modifier = it,
             mainStoreName = "Jajanan Sosialita",
             currentStoreName = "Baros",
             bucketBottomPadding = 50.dp,
