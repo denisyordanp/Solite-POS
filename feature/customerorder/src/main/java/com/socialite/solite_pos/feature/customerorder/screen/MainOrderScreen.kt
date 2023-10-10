@@ -1,32 +1,35 @@
 package com.socialite.solite_pos.feature.customerorder.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -36,6 +39,7 @@ import com.socialite.common.ui.extension.contentSpace
 import com.socialite.common.utility.constant.SuppressConstant
 import com.socialite.core.ui.extension.body1Normal
 import com.socialite.core.ui.extension.defaultH5
+import com.socialite.core.ui.extension.image
 import com.socialite.core.ui.extension.mainMenu
 import com.socialite.core.ui.extension.paddings
 import com.socialite.feature.customerorder.R
@@ -52,14 +56,12 @@ fun MainOrderScreen(
     mainStoreName: String,
     currentStoreName: String,
     favoriteItems: List<Product>,
-    productsCategory: Map<Category, List<Product>>
+    productsCategory: Map<Category, List<Product>>,
+    onSearchClick: () -> Unit,
+    onAllCategoryClick: () -> Unit
 ) {
     MainBackground {
         val paddings = MaterialTheme.paddings
-
-        var searchText by remember {
-            mutableStateOf("")
-        }
 
         LazyColumn(
             modifier = Modifier
@@ -77,10 +79,7 @@ fun MainOrderScreen(
 
             item {
                 SearchMenu(
-                    value = searchText,
-                    onValueChange = { text ->
-                        searchText = text
-                    }
+                    onClick = onSearchClick
                 )
             }
 
@@ -95,7 +94,10 @@ fun MainOrderScreen(
             contentSpace(paddings.large)
 
             item {
-                MenuByCategory(productsCategory = productsCategory)
+                MenuByCategory(
+                    productsCategory = productsCategory,
+                    onAllCategoryClick = onAllCategoryClick
+                )
             }
         }
     }
@@ -133,8 +135,7 @@ private fun StoreInfo(
 
 @Composable
 private fun SearchMenu(
-    value: String,
-    onValueChange: (value: String) -> Unit
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium)
@@ -145,9 +146,10 @@ private fun SearchMenu(
         )
         Spacer(modifier = Modifier.height(MaterialTheme.paddings.smallMedium))
         SearchBar(
-            value = value,
+            value = "",
             placeholder = stringResource(R.string.search_menu_placeholder),
-            onValueChange = onValueChange
+            onValueChange = {},
+            onClick = onClick
         )
     }
 }
@@ -178,7 +180,8 @@ private fun FavoriteMenu(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun MenuByCategory(
-    productsCategory: Map<Category, List<Product>>
+    productsCategory: Map<Category, List<Product>>,
+    onAllCategoryClick: () -> Unit
 ) {
     val categories = productsCategory.keys.toTypedArray()
 
@@ -186,41 +189,65 @@ private fun MenuByCategory(
         val pagerState = rememberPagerState()
         val scope = rememberCoroutineScope()
 
-        ScrollableTabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = {},
-            edgePadding = MaterialTheme.paddings.medium,
-            backgroundColor = Color.Transparent
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = MaterialTheme.paddings.medium)
         ) {
-            // TODO: Add all categories button
-            categories.forEachIndexed { i, category ->
-                Tab(
+            item {
+                IconButton(
+                    modifier = Modifier
+                        .padding(end = MaterialTheme.paddings.small)
+                        .background(
+                            color = MaterialTheme.colors.secondary,
+                            shape = MaterialTheme.shapes.image
+                        )
+                        .size(30.dp),
+                    onClick = onAllCategoryClick,
+                    content = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_all_menu),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.surface
+                            )
+                        }
+                    }
+                )
+            }
+
+            itemsIndexed(
+                items = categories,
+                key = { _, category -> category.id },
+            ) { i, category ->
+                TabItem(
                     modifier = Modifier.padding(end = MaterialTheme.paddings.small),
-                    selected = false,
+                    name = category.name,
+                    isSelected = pagerState.currentPage == i,
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(i)
                         }
                     }
-                ) {
-                    TabItem(name = category.name, isSelected = pagerState.currentPage == i)
-                }
+                )
             }
         }
 
         Spacer(modifier = Modifier.height(MaterialTheme.paddings.smallMedium))
 
         HorizontalPager(
-            modifier = Modifier
-                .padding(horizontal = MaterialTheme.paddings.medium),
             count = productsCategory.count(),
             state = pagerState,
-            key = { it }
+            key = { it },
+            contentPadding = PaddingValues(start = MaterialTheme.paddings.medium),
         ) { page ->
             val category = categories[page]
             val products = productsCategory[category]
 
-            Column {
+            Column(
+                modifier = Modifier.padding(end = MaterialTheme.paddings.medium)
+            ) {
                 products?.forEach { product ->
                     ProductItem(product = product)
                     Spacer(modifier = Modifier.height(MaterialTheme.paddings.smallMedium))
@@ -473,7 +500,9 @@ private fun Preview() {
                         isUploaded = false
                     ),
                 ),
-            )
+            ),
+            {},
+            {}
         )
     }
 }
