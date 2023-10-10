@@ -29,6 +29,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -37,14 +38,16 @@ import com.socialite.common.ui.component.MainBackground
 import com.socialite.common.ui.component.SoliteContent
 import com.socialite.common.ui.extension.contentSpace
 import com.socialite.common.utility.constant.SuppressConstant
-import com.socialite.core.ui.extension.body1Normal
-import com.socialite.core.ui.extension.defaultH5
-import com.socialite.core.ui.extension.image
-import com.socialite.core.ui.extension.mainMenu
 import com.socialite.core.ui.extension.paddings
+import com.socialite.core.ui.extension.round8
+import com.socialite.core.ui.extension.size14SemiBold
+import com.socialite.core.ui.extension.size16Normal
+import com.socialite.core.ui.extension.size24Bold
 import com.socialite.feature.customerorder.R
+import com.socialite.schema.ui.dummy.DummySchema
 import com.socialite.schema.ui.main.Category
 import com.socialite.schema.ui.main.Product
+import com.socialite.solite_pos.feature.customerorder.component.BucketWidget
 import com.socialite.solite_pos.feature.customerorder.component.FavoriteMenuItem
 import com.socialite.solite_pos.feature.customerorder.component.ProductItem
 import com.socialite.solite_pos.feature.customerorder.component.SearchBar
@@ -55,50 +58,65 @@ import kotlinx.coroutines.launch
 fun MainOrderScreen(
     mainStoreName: String,
     currentStoreName: String,
+    bucketBottomPadding: Dp,
+    currentOrderCount: Int,
+    currentTotalOrder: Long,
     favoriteItems: List<Product>,
     productsCategory: Map<Category, List<Product>>,
     onSearchClick: () -> Unit,
-    onAllCategoryClick: () -> Unit
+    onAllCategoryClick: () -> Unit,
+    onBucketClick: () -> Unit
 ) {
     MainBackground {
         val paddings = MaterialTheme.paddings
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
-            contentPadding = PaddingValues(vertical = MaterialTheme.paddings.medium),
-        ) {
-            item {
-                StoreInfo(
-                    mainStoreName = mainStoreName,
-                    currentStoreName = currentStoreName
-                )
+        Box {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(vertical = MaterialTheme.paddings.medium),
+            ) {
+                item {
+                    StoreInfo(
+                        mainStoreName = mainStoreName,
+                        currentStoreName = currentStoreName
+                    )
+                }
+
+                contentSpace(paddings.large)
+
+                item {
+                    SearchMenu(
+                        onClick = onSearchClick
+                    )
+                }
+
+                contentSpace(paddings.large)
+
+                item {
+                    FavoriteMenu(
+                        products = favoriteItems
+                    )
+                }
+
+                contentSpace(paddings.large)
+
+                item {
+                    MenuByCategory(
+                        productsCategory = productsCategory,
+                        onAllCategoryClick = onAllCategoryClick
+                    )
+                }
             }
 
-            contentSpace(paddings.large)
-
-            item {
-                SearchMenu(
-                    onClick = onSearchClick
-                )
-            }
-
-            contentSpace(paddings.large)
-
-            item {
-                FavoriteMenu(
-                    products = favoriteItems
-                )
-            }
-
-            contentSpace(paddings.large)
-
-            item {
-                MenuByCategory(
-                    productsCategory = productsCategory,
-                    onAllCategoryClick = onAllCategoryClick
-                )
-            }
+            BucketWidget(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = bucketBottomPadding),
+                orderCount = currentOrderCount,
+                totalOrder = currentTotalOrder,
+                onCLick = onBucketClick
+            )
         }
     }
 }
@@ -113,7 +131,7 @@ private fun StoreInfo(
     ) {
         Text(
             text = mainStoreName,
-            style = MaterialTheme.typography.defaultH5
+            style = MaterialTheme.typography.size24Bold
         )
         Spacer(modifier = Modifier.height(MaterialTheme.paddings.extraSmall))
         val text = buildAnnotatedString {
@@ -128,7 +146,7 @@ private fun StoreInfo(
         }
         Text(
             text = text,
-            style = MaterialTheme.typography.body1Normal
+            style = MaterialTheme.typography.size16Normal
         )
     }
 }
@@ -142,7 +160,7 @@ private fun SearchMenu(
     ) {
         Text(
             text = stringResource(R.string.search_menu_title),
-            style = MaterialTheme.typography.mainMenu
+            style = MaterialTheme.typography.size14SemiBold
         )
         Spacer(modifier = Modifier.height(MaterialTheme.paddings.smallMedium))
         SearchBar(
@@ -162,7 +180,7 @@ private fun FavoriteMenu(
         Text(
             modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium),
             text = stringResource(R.string.favorite_menu_title),
-            style = MaterialTheme.typography.mainMenu
+            style = MaterialTheme.typography.size14SemiBold
         )
         Spacer(modifier = Modifier.height(MaterialTheme.paddings.smallMedium))
         LazyRow(
@@ -198,7 +216,7 @@ private fun MenuByCategory(
                         .padding(end = MaterialTheme.paddings.small)
                         .background(
                             color = MaterialTheme.colors.secondary,
-                            shape = MaterialTheme.shapes.image
+                            shape = MaterialTheme.shapes.round8
                         )
                         .size(30.dp),
                     onClick = onAllCategoryClick,
@@ -263,246 +281,16 @@ private fun MenuByCategory(
 private fun Preview() {
     SoliteContent {
         MainOrderScreen(
-            "Jajanan Sosialita",
-            "Baros",
-            listOf(
-                Product(
-                    name = "Siomay",
-                    desc = "Siomay ayam",
-                    price = 15000,
-                    category = "",
-                    image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                    id = "1",
-                    isActive = true,
-                    isUploaded = false
-                ),
-                Product(
-                    name = "Lorem ipsum dolor sit amet",
-                    desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                    price = 15000,
-                    category = "",
-                    image = "",
-                    id = "2",
-                    isActive = true,
-                    isUploaded = false
-                ),
-                Product(
-                    name = "Siomay",
-                    desc = "Siomay ayam",
-                    price = 15000,
-                    category = "",
-                    image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                    id = "3",
-                    isActive = true,
-                    isUploaded = false
-                ),
-                Product(
-                    name = "Lorem ipsum dolor sit amet",
-                    desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                    price = 15000,
-                    category = "",
-                    image = "",
-                    id = "4",
-                    isActive = true,
-                    isUploaded = false
-                ),
-            ),
-            mapOf(
-                Category(
-                    id = "1",
-                    name = "Makanan",
-                    desc = "",
-                    isActive = true,
-                    isUploaded = true
-                ) to listOf(
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "1",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "2",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "3",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "4",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                ),
-                Category(
-                    id = "2",
-                    name = "Minuman",
-                    desc = "",
-                    isActive = true,
-                    isUploaded = true
-                ) to listOf(
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "1",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "2",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "3",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "4",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                ),
-                Category(
-                    id = "3",
-                    name = "Coffee",
-                    desc = "",
-                    isActive = true,
-                    isUploaded = true
-                ) to listOf(
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "1",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "2",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "3",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "4",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                ),
-                Category(
-                    id = "4",
-                    name = "Non-Coffee",
-                    desc = "",
-                    isActive = true,
-                    isUploaded = true
-                ) to listOf(
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "1",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "2",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Siomay",
-                        desc = "Siomay ayam",
-                        price = 15000,
-                        category = "",
-                        image = "https://denisyordanp.com/public_assets/images/solite_pos_logo.png",
-                        id = "3",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                    Product(
-                        name = "Lorem ipsum dolor sit amet",
-                        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-                        price = 15000,
-                        category = "",
-                        image = "",
-                        id = "4",
-                        isActive = true,
-                        isUploaded = false
-                    ),
-                ),
-            ),
-            {},
-            {}
+            mainStoreName = "Jajanan Sosialita",
+            currentStoreName = "Baros",
+            bucketBottomPadding = 50.dp,
+            currentOrderCount = 5,
+            currentTotalOrder = 45000,
+            favoriteItems = DummySchema.products,
+            productsCategory = DummySchema.categoriesProducts,
+            onSearchClick = {},
+            onAllCategoryClick = {},
+            onBucketClick = {}
         )
     }
 }

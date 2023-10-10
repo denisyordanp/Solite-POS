@@ -3,4 +3,5 @@
     <string name="search_menu_title">Cari menu</string>
     <string name="search_menu_placeholder">Tuliskan nama menu</string>
     <string name="favorite_menu_title">Menu favorit</string>
+    <string name="menu_title">menu</string>
 </resources>

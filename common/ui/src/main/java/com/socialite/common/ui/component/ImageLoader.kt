@@ -12,7 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import com.socialite.common.ui.R
-import com.socialite.core.ui.extension.image
+import com.socialite.core.ui.extension.round8
 
 @Composable
 fun ImageLoader(
@@ -22,7 +22,7 @@ fun ImageLoader(
     Surface(
         modifier = modifier,
         color = MaterialTheme.colors.onSurface,
-        shape = MaterialTheme.shapes.image
+        shape = MaterialTheme.shapes.round8
     ) {
         Box {
             Image(

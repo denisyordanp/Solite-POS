@@ -8,49 +8,67 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val Typography.body1Normal
+val Typography.size16Normal
     @Composable
     @ReadOnlyComposable
-    get() = MaterialTheme.typography.body1.copy(
+    get() = default.copy(
+        fontSize = 16.sp,
         color = MaterialTheme.colors.onPrimary,
     )
 
-val Typography.body2Bold
+val Typography.size14Bold
     @Composable
     @ReadOnlyComposable
-    get() = MaterialTheme.typography.body2.copy(
-        color = MaterialTheme.colors.onPrimary,
+    get() = size14Normal.copy(
         fontWeight = FontWeight.Bold
     )
 
-val Typography.overLineNormal
+val Typography.size14Normal
     @Composable
     @ReadOnlyComposable
-    get() = MaterialTheme.typography.overline.copy(
-        color = MaterialTheme.colors.onPrimary,
+    get() = default.copy(
+        fontSize = 14.sp,
     )
 
-val Typography.captionBold
+val Typography.size10Normal
     @Composable
     @ReadOnlyComposable
-    get() = MaterialTheme.typography.caption.copy(
-        color = MaterialTheme.colors.onPrimary,
-        fontWeight = FontWeight.Bold
+    get() = default.copy(
+        fontSize = 10.sp,
     )
 
-val Typography.defaultH5
+val Typography.size12Normal
     @Composable
     @ReadOnlyComposable
-    get() = MaterialTheme.typography.h5.copy(
-        color = MaterialTheme.colors.onPrimary,
-        fontWeight = FontWeight.Bold
+    get() = default.copy(
+        fontSize = 12.sp,
     )
 
-val Typography.mainMenu
+val Typography.size12Bold
+    @Composable
+    @ReadOnlyComposable
+    get() = size12Normal.copy(
+        fontWeight = FontWeight.Bold,
+    )
+
+val Typography.size24Bold
+    @Composable
+    @ReadOnlyComposable
+    get() = default.copy(
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+    )
+
+val Typography.size14SemiBold
+    @Composable
+    @ReadOnlyComposable
+    get() = size14Normal.copy(
+        fontWeight = FontWeight.SemiBold,
+    )
+
+private val Typography.default
     @Composable
     @ReadOnlyComposable
     get() = TextStyle.Default.copy(
-        fontSize = 14.sp,
-        fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colors.onPrimary,
     )

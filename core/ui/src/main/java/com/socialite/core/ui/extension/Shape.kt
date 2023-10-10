@@ -4,14 +4,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
 import androidx.compose.ui.unit.dp
 
-val Shapes.searchBar: RoundedCornerShape
+val Shapes.round20: RoundedCornerShape
     get() = RoundedCornerShape(20.dp)
 
-val Shapes.tab: RoundedCornerShape
+val Shapes.round15: RoundedCornerShape
     get() = RoundedCornerShape(15.dp)
 
-val Shapes.item: RoundedCornerShape
+val Shapes.round12: RoundedCornerShape
     get() = RoundedCornerShape(12.dp)
 
-val Shapes.image: RoundedCornerShape
+val Shapes.round8: RoundedCornerShape
     get() = RoundedCornerShape(8.dp)

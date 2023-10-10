@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.common.ui.component.ImageLoader
-import com.socialite.core.ui.extension.body2Bold
-import com.socialite.core.ui.extension.item
-import com.socialite.core.ui.extension.overLineNormal
+import com.socialite.core.ui.extension.size14Bold
+import com.socialite.core.ui.extension.round12
+import com.socialite.core.ui.extension.size10Normal
 import com.socialite.core.ui.extension.paddings
 import com.socialite.schema.ui.main.Product
 
@@ -43,7 +43,7 @@ fun FavoriteMenuItem(product: Product) {
                     height = Dimension.fillToConstraints
                 },
             color = MaterialTheme.colors.surface,
-            shape = MaterialTheme.shapes.item,
+            shape = MaterialTheme.shapes.round12,
             content = {}
         )
 
@@ -76,7 +76,7 @@ fun FavoriteMenuItem(product: Product) {
                     top.linkTo(image.bottom, margin = paddings.smallMedium)
                 },
             text = product.name,
-            style = MaterialTheme.typography.body2Bold,
+            style = MaterialTheme.typography.size14Bold,
             textAlign = TextAlign.Center
         )
 
@@ -93,7 +93,7 @@ fun FavoriteMenuItem(product: Product) {
                     top.linkTo(name.bottom, margin = paddings.extraSmall)
                 },
             text = product.desc,
-            style = MaterialTheme.typography.overLineNormal,
+            style = MaterialTheme.typography.size10Normal,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Center

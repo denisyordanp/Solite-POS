@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.socialite.core.ui.extension.paddings
-import com.socialite.core.ui.extension.searchBar
+import com.socialite.core.ui.extension.round20
 import com.socialite.core.ui.theme.SolitePOSTheme
 import com.socialite.feature.customerorder.R
 
@@ -38,7 +38,7 @@ fun SearchBar(
     Row(
         modifier = modifier
             .height(40.dp)
-            .clip(MaterialTheme.shapes.searchBar)
+            .clip(MaterialTheme.shapes.round20)
             .background(MaterialTheme.colors.surface)
             .clickable { onClick?.invoke() },
         verticalAlignment = Alignment.CenterVertically

@@ -9,9 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -19,11 +17,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.socialite.common.ui.component.ImageLoader
 import com.socialite.core.extensions.toIDR
-import com.socialite.core.ui.extension.body1Normal
-import com.socialite.core.ui.extension.body2Bold
-import com.socialite.core.ui.extension.item
-import com.socialite.core.ui.extension.overLineNormal
+import com.socialite.core.ui.extension.size16Normal
+import com.socialite.core.ui.extension.size14Bold
+import com.socialite.core.ui.extension.round12
+import com.socialite.core.ui.extension.size10Normal
 import com.socialite.core.ui.extension.paddings
+import com.socialite.core.ui.extension.spanStyles
 import com.socialite.feature.customerorder.R
 import com.socialite.schema.ui.main.Category
 import com.socialite.schema.ui.main.Product
@@ -55,7 +54,7 @@ fun ProductItem(
                     height = Dimension.fillToConstraints
                 },
             color = MaterialTheme.colors.surface,
-            shape = MaterialTheme.shapes.item,
+            shape = MaterialTheme.shapes.round12,
             content = {}
         )
 
@@ -87,7 +86,7 @@ fun ProductItem(
                     top.linkTo(parent.top, margin = paddings.medium)
                 },
             text = product.name,
-            style = MaterialTheme.typography.body2Bold,
+            style = MaterialTheme.typography.size14Bold,
             textAlign = TextAlign.Start
         )
 
@@ -104,7 +103,7 @@ fun ProductItem(
                     top.linkTo(name.bottom, margin = paddings.small)
                 },
             text = product.name,
-            style = MaterialTheme.typography.overLineNormal,
+            style = MaterialTheme.typography.size10Normal,
             textAlign = TextAlign.Start
         )
 
@@ -121,13 +120,13 @@ fun ProductItem(
                     width = Dimension.fillToConstraints
                 },
             text = categoryItem?.name.orEmpty(),
-            style = MaterialTheme.typography.body2Bold,
+            style = MaterialTheme.typography.size14Bold,
             textAlign = TextAlign.Start
         )
 
         val priceText = buildAnnotatedString {
             append(stringResource(R.string.idr_title))
-            withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) {
+            withStyle(MaterialTheme.spanStyles.bold) {
                 append(" ${product.price.toIDR()}")
             }
         }
@@ -138,7 +137,7 @@ fun ProductItem(
                     bottom.linkTo(parent.bottom, margin = paddings.medium)
                 },
             text = priceText,
-            style = MaterialTheme.typography.body1Normal,
+            style = MaterialTheme.typography.size16Normal,
             textAlign = TextAlign.Start
         )
     }

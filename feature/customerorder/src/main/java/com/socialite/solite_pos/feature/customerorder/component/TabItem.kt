@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.socialite.core.ui.extension.captionBold
 import com.socialite.core.ui.extension.paddings
-import com.socialite.core.ui.extension.tab
+import com.socialite.core.ui.extension.round15
+import com.socialite.core.ui.extension.size12Bold
 
 @Composable
 fun TabItem(
@@ -31,7 +31,7 @@ fun TabItem(
     Box(
         modifier = modifier
             .height(30.dp)
-            .clip(MaterialTheme.shapes.tab)
+            .clip(MaterialTheme.shapes.round15)
             .background(bgColor)
             .clickable {
                 onClick()
@@ -43,7 +43,7 @@ fun TabItem(
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.captionBold.copy(
+            style = MaterialTheme.typography.size12Bold.copy(
                 color = textColor
             ),
             textAlign = TextAlign.Center
