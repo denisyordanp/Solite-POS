@@ -15,3 +15,6 @@ val Shapes.round12: RoundedCornerShape
 
 val Shapes.round8: RoundedCornerShape
     get() = RoundedCornerShape(8.dp)
+
+val Shapes.bottomSheet: RoundedCornerShape
+    get() = RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp)
