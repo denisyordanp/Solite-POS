@@ -66,6 +66,14 @@ val Typography.size14SemiBold
         fontWeight = FontWeight.SemiBold,
     )
 
+val Typography.size20Bold
+    @Composable
+    @ReadOnlyComposable
+    get() = default.copy(
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+    )
+
 private val Typography.default
     @Composable
     @ReadOnlyComposable

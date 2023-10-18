@@ -1,9 +1,10 @@
 package com.socialite.solite_pos.feature.customerorder.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,38 +27,26 @@ import com.socialite.core.ui.extension.spanStyles
 import com.socialite.core.ui.theme.SolitePOSTheme
 import com.socialite.feature.customerorder.R
 import com.socialite.schema.ui.dummy.DummySchema
-import com.socialite.schema.ui.main.Category
-import com.socialite.schema.ui.main.Product
+import com.socialite.schema.ui.helper.ProductWithCategory
 
 @Composable
-fun ProductItem(
-    product: Product,
-    categoryItem: Category? = null
+fun ProductDetail(
+    productWithCategory: ProductWithCategory
 ) {
+    val product = productWithCategory.product
+    val categoryItem = productWithCategory.category
     val paddings = MaterialTheme.paddings
 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colors.surface,
+                shape = MaterialTheme.shapes.round12
+            )
+            .padding(MaterialTheme.paddings.medium)
     ) {
-        val (image, card, name, desc, category, price) = createRefs()
-
-        Surface(
-            modifier = Modifier
-                .constrainAs(card) {
-                    linkTo(
-                        start = parent.start,
-                        end = parent.end,
-                        startMargin = paddings.extraLarge
-                    )
-                    linkTo(top = parent.top, bottom = parent.bottom)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                },
-            color = MaterialTheme.colors.surface,
-            shape = MaterialTheme.shapes.round12,
-            content = {}
-        )
+        val (image, name, desc, category, price) = createRefs()
 
         ImageLoader(
             modifier = Modifier
@@ -65,9 +54,7 @@ fun ProductItem(
                 .constrainAs(image) {
                     linkTo(
                         top = parent.top,
-                        bottom = parent.bottom,
-                        topMargin = paddings.smallMedium,
-                        bottomMargin = paddings.smallMedium
+                        bottom = parent.bottom
                     )
                     start.linkTo(parent.start)
                 }, source = product.image
@@ -79,11 +66,10 @@ fun ProductItem(
                     linkTo(
                         start = image.end,
                         end = parent.end,
-                        startMargin = paddings.medium,
-                        endMargin = paddings.medium
+                        startMargin = paddings.medium
                     )
                     width = Dimension.fillToConstraints
-                    top.linkTo(parent.top, margin = paddings.medium)
+                    top.linkTo(parent.top)
                 },
             text = product.name,
             style = MaterialTheme.typography.size14Bold,
@@ -96,8 +82,7 @@ fun ProductItem(
                     linkTo(
                         start = image.end,
                         end = parent.end,
-                        startMargin = paddings.medium,
-                        endMargin = paddings.medium
+                        startMargin = paddings.medium
                     )
                     width = Dimension.fillToConstraints
                     top.linkTo(name.bottom, margin = paddings.small)
@@ -116,10 +101,10 @@ fun ProductItem(
                         startMargin = paddings.medium,
                         endMargin = paddings.small
                     )
-                    bottom.linkTo(parent.bottom, margin = paddings.medium)
+                    bottom.linkTo(parent.bottom)
                     width = Dimension.fillToConstraints
                 },
-            text = categoryItem?.name.orEmpty(),
+            text = categoryItem.name,
             style = MaterialTheme.typography.size14Bold,
             textAlign = TextAlign.Start
         )
@@ -133,8 +118,8 @@ fun ProductItem(
         Text(
             modifier = Modifier
                 .constrainAs(price) {
-                    end.linkTo(parent.end, margin = paddings.medium)
-                    bottom.linkTo(parent.bottom, margin = paddings.medium)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
                 },
             text = priceText,
             style = MaterialTheme.typography.size16Normal,
@@ -147,8 +132,8 @@ fun ProductItem(
 @Composable
 private fun Preview() {
     SolitePOSTheme {
-        ProductItem(
-            product = DummySchema.products.first()
+        ProductDetail(
+            productWithCategory = DummySchema.productWithCategories.first()
         )
     }
 }

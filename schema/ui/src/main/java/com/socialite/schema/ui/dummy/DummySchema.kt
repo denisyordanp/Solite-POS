@@ -3,9 +3,11 @@ package com.socialite.schema.ui.dummy
 import com.socialite.schema.ui.helper.BucketOrder
 import com.socialite.schema.ui.helper.ProductOrderDetail
 import com.socialite.schema.ui.helper.ProductWithCategory
+import com.socialite.schema.ui.helper.VariantWithOptions
 import com.socialite.schema.ui.main.Category
 import com.socialite.schema.ui.main.Customer
 import com.socialite.schema.ui.main.Product
+import com.socialite.schema.ui.main.Variant
 import com.socialite.schema.ui.main.VariantOption
 
 object DummySchema {
@@ -297,5 +299,48 @@ object DummySchema {
                 amount = 10
             )
         )
+    )
+
+    val variantWithOptions = listOf(
+        VariantWithOptions(
+            variant = Variant(
+                id = "1",
+                name = "One Must",
+                type = Variant.ONE_OPTION,
+                isMust = true,
+                isUploaded = false
+            ),
+            options = variantOptions
+        ),
+        VariantWithOptions(
+            variant = Variant(
+                id = "1",
+                name = "One Not Must",
+                type = Variant.ONE_OPTION,
+                isMust = false,
+                isUploaded = false
+            ),
+            options = variantOptions
+        ),
+        VariantWithOptions(
+            variant = Variant(
+                id = "2",
+                name = "Multiple Must",
+                type = Variant.MULTIPLE_OPTION,
+                isMust = true,
+                isUploaded = false
+            ),
+            options = variantOptions
+        ),
+        VariantWithOptions(
+            variant = Variant(
+                id = "2",
+                name = "Multiple Not Must",
+                type = Variant.MULTIPLE_OPTION,
+                isMust = false,
+                isUploaded = false
+            ),
+            options = variantOptions
+        ),
     )
 }

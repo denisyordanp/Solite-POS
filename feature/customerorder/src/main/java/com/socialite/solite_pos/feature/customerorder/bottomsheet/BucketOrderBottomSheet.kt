@@ -50,6 +50,8 @@ fun BucketOrderBottomSheet(
 ) {
     Column(
         modifier = modifier
+            .padding(horizontal = MaterialTheme.paddings.medium)
+            .padding(bottom = MaterialTheme.paddings.medium)
     ) {
         val time =
             bucketOrder.time?.timeMilliSecondToDateFormat(DateUtils.DATE_WITH_DAY_AND_TIME_FORMAT)

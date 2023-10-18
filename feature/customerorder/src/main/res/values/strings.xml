@@ -8,4 +8,6 @@
     <string name="dine_in_title">Makan ditempat</string>
     <string name="take_away_title">Dibungkus</string>
     <string name="order_now_button">Pesan sekarang</string>
+    <string name="this_variant_must_be_selected">Varian ini wajib dipilih</string>
+    <string name="adding_button_title">Tambahkan</string>
 </resources>
