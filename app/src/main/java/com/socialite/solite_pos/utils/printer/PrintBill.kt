@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.utils.printer
 
-import com.socialite.domain.schema.OrderWithProduct
-import com.socialite.domain.schema.main.VariantOption
+import com.socialite.schema.ui.helper.OrderWithProduct
+import com.socialite.schema.ui.main.VariantOption
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.thousand
 import com.socialite.solite_pos.utils.config.RupiahUtils.Companion.toRupiah
 import java.io.IOException

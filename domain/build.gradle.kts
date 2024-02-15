@@ -35,11 +35,21 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(project(":common"))
+    api(project(":schema:ui"))
 
+    implementation(project(":data"))
+    implementation(project(":common:utility"))
+    implementation(project(":core:network"))
+    implementation(project(":core:extension"))
+    implementation(project(":schema:menu"))
+    implementation(project(":schema:database"))
+
+    // Kotlin
     implementation("androidx.core:core-ktx:${Depedencies.kotlinCoreVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Depedencies.kotlinCoroutineVersion}")
+
+    // Databse
+    implementation("androidx.room:room-ktx:${Depedencies.roomVersion}")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:${Depedencies.hiltVersion}")

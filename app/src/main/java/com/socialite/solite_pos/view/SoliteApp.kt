@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.socialite.domain.domain.IsDarkModeActive
-import com.socialite.domain.helper.DateUtils
+import com.socialite.common.utility.helper.DateUtils
 import com.socialite.solite_pos.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.MainScope

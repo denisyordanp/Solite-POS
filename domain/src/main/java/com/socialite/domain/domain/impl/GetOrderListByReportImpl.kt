@@ -1,19 +1,19 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.core.extensions.toLongDefault
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
-import com.socialite.data.schema.room.helper.OrderData
+import com.socialite.schema.database.helper.OrderData
 import com.socialite.domain.domain.GetOrderListByReport
-import com.socialite.domain.schema.ReportParameter
+import com.socialite.schema.ui.helper.ReportParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOn
-import okhttp3.internal.toLongOrDefault
 import javax.inject.Inject
 
 class GetOrderListByReportImpl @Inject constructor(
@@ -51,7 +51,7 @@ class GetOrderListByReportImpl @Inject constructor(
                         status = status,
                         from = parameters.start,
                         until = parameters.end,
-                        userId = it?.id?.toLongOrDefault(0L) ?: 0L
+                        userId = it?.id?.toLongDefault(0L) ?: 0L
                     )
                 } else if (parameters.isAllUser()) {
                     ordersRepository.getOrderAllUserList(
@@ -66,7 +66,7 @@ class GetOrderListByReportImpl @Inject constructor(
                         from = parameters.start,
                         until = parameters.end,
                         store = parameters.storeId,
-                        userId = it?.id?.toLongOrDefault(0L) ?: 0L
+                        userId = it?.id?.toLongDefault(0L) ?: 0L
                     )
                 }
             }

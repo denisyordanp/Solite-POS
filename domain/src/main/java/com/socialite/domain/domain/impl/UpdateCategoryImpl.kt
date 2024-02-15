@@ -3,7 +3,7 @@ package com.socialite.domain.domain.impl
 import com.socialite.data.repository.CategoriesRepository
 import com.socialite.domain.domain.UpdateCategory
 import com.socialite.domain.helper.toData
-import com.socialite.domain.schema.main.Category
+import com.socialite.schema.ui.main.Category
 import javax.inject.Inject
 
 class UpdateCategoryImpl @Inject constructor(

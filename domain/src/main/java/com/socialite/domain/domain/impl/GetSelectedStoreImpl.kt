@@ -1,6 +1,6 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.DefaultDispatcher
+import com.socialite.common.utility.di.DefaultDispatcher
 import com.socialite.data.repository.StoreRepository
 import com.socialite.domain.domain.GetSelectedStore
 import com.socialite.domain.domain.GetSelectedStoreId

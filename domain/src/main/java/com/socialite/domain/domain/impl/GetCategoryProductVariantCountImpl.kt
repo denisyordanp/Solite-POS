@@ -1,12 +1,12 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.ProductVariantsRepository
 import com.socialite.data.repository.ProductsRepository
 import com.socialite.domain.domain.GetCategoryProductVariantCount
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.ProductVariantCount
-import com.socialite.domain.schema.main.Category
+import com.socialite.schema.ui.helper.ProductVariantCount
+import com.socialite.schema.ui.main.Category
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

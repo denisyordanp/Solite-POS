@@ -8,7 +8,7 @@ import com.socialite.domain.domain.GetStores
 import com.socialite.domain.domain.IsUserStaff
 import com.socialite.domain.domain.SelectStore
 import com.socialite.domain.domain.UpdateStore
-import com.socialite.domain.schema.main.Store
+import com.socialite.schema.ui.main.Store
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

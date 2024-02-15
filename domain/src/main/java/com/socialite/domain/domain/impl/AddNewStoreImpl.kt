@@ -4,7 +4,7 @@ import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.StoreRepository
 import com.socialite.domain.domain.AddNewStore
 import com.socialite.domain.helper.toData
-import com.socialite.domain.schema.main.Store
+import com.socialite.schema.ui.main.Store
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

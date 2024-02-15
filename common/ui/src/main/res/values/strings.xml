@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="common_store_title">Kedai</string>
+    <string name="idr_title">IDR</string>
+    <string name="mandatory_option">Pilihan wajib</string>
+    <string name="optional_option">Pilihan opsional</string>
+</resources>

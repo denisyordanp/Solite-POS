@@ -3,7 +3,7 @@ package com.socialite.solite_pos.utils.tools.helper
 import android.os.Bundle
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.socialite.domain.helper.DateUtils
+import com.socialite.common.utility.helper.DateUtils
 import java.io.Serializable
 
 data class ReportParameter(

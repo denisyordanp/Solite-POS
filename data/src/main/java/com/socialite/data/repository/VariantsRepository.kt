@@ -1,6 +1,6 @@
 package com.socialite.data.repository
 
-import com.socialite.data.schema.room.new_master.Variant
+import com.socialite.schema.database.new_master.Variant
 import kotlinx.coroutines.flow.Flow
 
 interface VariantsRepository : SyncRepository<Variant> {

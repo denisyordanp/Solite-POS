@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_master.Outcome
+import com.socialite.schema.database.new_master.Outcome
 
 data class OutcomeResponse(
     val amount: Int,

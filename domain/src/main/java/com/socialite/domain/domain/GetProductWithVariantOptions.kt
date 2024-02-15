@@ -1,7 +1,7 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.VariantWithOptions
-import com.socialite.domain.schema.main.Product
+import com.socialite.schema.ui.helper.VariantWithOptions
+import com.socialite.schema.ui.main.Product
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetProductWithVariantOptions {

@@ -1,14 +1,14 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.common.di.IoDispatcher
-import com.socialite.data.database.AppDatabase
-import com.socialite.data.database.dao.VariantsDao
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.core.database.AppDatabase
+import com.socialite.core.database.dao.VariantsDao
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.repository.VariantsRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.new_master.Variant
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.new_master.Variant
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -27,10 +27,13 @@ class VariantsRepositoryImpl @Inject constructor(
     override suspend fun insertVariant(data: Variant) {
         dao.insertNewVariant(data)
     }
+
     override suspend fun updateVariant(data: Variant) {
-        dao.updateNewVariant(data.copy(
-            isUploaded = false
-        ))
+        dao.updateNewVariant(
+            data.copy(
+                isUploaded = false
+            )
+        )
     }
 
     override suspend fun migrateToUUID() {

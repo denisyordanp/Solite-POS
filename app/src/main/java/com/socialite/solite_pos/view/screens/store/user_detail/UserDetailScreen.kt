@@ -43,8 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.socialite.common.state.DataState
-import com.socialite.common.state.ErrorState
+import com.socialite.common.utility.state.DataState
+import com.socialite.common.utility.state.ErrorState
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicEditText
 import com.socialite.solite_pos.compose.BasicTopBar

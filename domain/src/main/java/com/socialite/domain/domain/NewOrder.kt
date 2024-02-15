@@ -1,8 +1,8 @@
 package com.socialite.domain.domain
 
-import com.socialite.common.state.DataState
-import com.socialite.domain.schema.ProductOrderDetail
-import com.socialite.domain.schema.main.Customer
+import com.socialite.common.utility.state.DataState
+import com.socialite.schema.ui.helper.ProductOrderDetail
+import com.socialite.schema.ui.main.Customer
 import kotlinx.coroutines.flow.Flow
 
 fun interface NewOrder {

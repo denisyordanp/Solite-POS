@@ -2,8 +2,6 @@ package com.socialite.solite_pos.utils.config
 
 import java.util.regex.Pattern
 
-fun String.rupiahToK() = this.replace(",000", "K")
-
 fun String.isNotValidEmail(): Boolean {
     return !android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
 }

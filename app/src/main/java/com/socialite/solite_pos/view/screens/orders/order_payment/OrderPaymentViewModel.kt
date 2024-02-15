@@ -6,11 +6,11 @@ import com.socialite.domain.domain.GetOrderWithProduct
 import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.domain.GetPromos
 import com.socialite.domain.domain.PayOrder
-import com.socialite.domain.schema.main.Order
-import com.socialite.domain.schema.main.OrderPayment
-import com.socialite.domain.schema.main.OrderPromo
-import com.socialite.domain.schema.main.Payment
-import com.socialite.domain.schema.main.Promo
+import com.socialite.schema.ui.main.Order
+import com.socialite.schema.ui.main.OrderPayment
+import com.socialite.schema.ui.main.OrderPromo
+import com.socialite.schema.ui.main.Payment
+import com.socialite.schema.ui.main.Promo
 import com.socialite.solite_pos.utils.config.CashAmounts
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel

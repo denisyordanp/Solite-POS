@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.AddNewPayment
 import com.socialite.domain.domain.GetPayments
 import com.socialite.domain.domain.UpdatePayment
-import com.socialite.domain.schema.main.Payment
+import com.socialite.schema.ui.main.Payment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package com.socialite.data.repository
 
-import com.socialite.data.schema.room.new_master.Store
+import com.socialite.schema.database.new_master.Store
 import kotlinx.coroutines.flow.Flow
 
 interface StoreRepository : SyncRepository<Store> {

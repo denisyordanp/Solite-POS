@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_master.Payment
+import com.socialite.schema.database.new_master.Payment
 
 data class PaymentResponse(
     val desc: String,

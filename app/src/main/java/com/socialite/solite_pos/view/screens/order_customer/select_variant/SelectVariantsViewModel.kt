@@ -3,8 +3,8 @@ package com.socialite.solite_pos.view.screens.order_customer.select_variant
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.socialite.domain.domain.GetProductWithVariantOptions
-import com.socialite.domain.schema.ProductOrderDetail
-import com.socialite.domain.schema.main.VariantOption
+import com.socialite.schema.ui.helper.ProductOrderDetail
+import com.socialite.schema.ui.main.VariantOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

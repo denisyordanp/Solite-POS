@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.main.Category
+import com.socialite.schema.ui.main.Category
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetCategories {

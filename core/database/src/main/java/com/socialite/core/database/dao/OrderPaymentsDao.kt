@@ -1,0 +1,34 @@
+package com.socialite.core.database.dao
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.socialite.schema.database.bridge.OrderPayment
+import com.socialite.schema.database.new_bridge.OrderPayment as NewOrderPayment
+
+@Dao
+interface OrderPaymentsDao {
+
+    @Query("SELECT * FROM ${NewOrderPayment.DB_NAME} WHERE ${NewOrderPayment.UPLOAD} = 0")
+    suspend fun getNeedUploadOrderPayments(): List<NewOrderPayment>
+
+    @Query("SELECT * FROM '${OrderPayment.DB_NAME}'")
+    suspend fun getOrderPayments(): List<OrderPayment>
+
+    @Query("SELECT * FROM '${NewOrderPayment.DB_NAME}'")
+    suspend fun getNewOrderPayments(): List<NewOrderPayment>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderPayments(list: List<NewOrderPayment>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewOrderPayment(payment: NewOrderPayment)
+
+    @Update
+    suspend fun updateOrderPayment(orderPayment: OrderPayment)
+
+    @Update
+    suspend fun updateNewOrderPayments(orderPayment: List<NewOrderPayment>)
+}

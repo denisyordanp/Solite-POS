@@ -7,8 +7,8 @@ import com.socialite.domain.domain.GetCategories
 import com.socialite.domain.domain.GetProductVariantOptions
 import com.socialite.domain.domain.GetProductWithCategoryById
 import com.socialite.domain.domain.UpdateProduct
-import com.socialite.domain.schema.main.Category
-import com.socialite.domain.schema.main.Product
+import com.socialite.schema.ui.main.Category
+import com.socialite.schema.ui.main.Product
 import com.socialite.solite_pos.utils.tools.mapper.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -43,7 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.socialite.domain.schema.main.Promo
+import com.socialite.schema.ui.main.Promo
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicCheckBox
@@ -52,7 +52,7 @@ import com.socialite.solite_pos.compose.BasicRadioButton
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.view.ui.ThousandAndSuggestionVisualTransformation
 import kotlinx.coroutines.launch
 

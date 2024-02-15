@@ -1,7 +1,7 @@
 package com.socialite.data.schema.helper
 
 import com.socialite.data.repository.SyncRepository
-import com.socialite.data.schema.room.EntityData
+import com.socialite.schema.database.EntityData
 
 open class UpdateSynchronizations(
     private val repository: SyncRepository<EntityData>

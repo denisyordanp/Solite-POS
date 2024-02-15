@@ -1,13 +1,13 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.GetOrdersGeneralMenuBadge
-import com.socialite.domain.menu.GeneralMenus
+import com.socialite.schema.menu.GeneralMenus
 import com.socialite.domain.schema.GeneralMenuBadge
-import com.socialite.domain.schema.main.Order
+import com.socialite.schema.ui.main.Order
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow

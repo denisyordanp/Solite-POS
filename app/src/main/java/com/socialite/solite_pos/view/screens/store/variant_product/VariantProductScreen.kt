@@ -37,11 +37,11 @@ import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.OptionItem
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.domain.schema.VariantWithOptions
-import com.socialite.domain.schema.main.Product
-import com.socialite.domain.schema.main.Variant
-import com.socialite.domain.schema.main.VariantOption
-import com.socialite.domain.schema.main.VariantProduct
+import com.socialite.schema.ui.helper.VariantWithOptions
+import com.socialite.schema.ui.main.Product
+import com.socialite.schema.ui.main.Variant
+import com.socialite.schema.ui.main.VariantOption
+import com.socialite.schema.ui.main.VariantProduct
 
 @Composable
 @ExperimentalMaterialApi

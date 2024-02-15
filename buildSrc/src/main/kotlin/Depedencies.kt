@@ -34,6 +34,7 @@ object Depedencies {
 
     // UI
     const val materialVersion = "1.6.1"
+    const val coilCompose = "2.4.0"
 
     // Utility
     const val easyPermissionVersion = "3.0.0"

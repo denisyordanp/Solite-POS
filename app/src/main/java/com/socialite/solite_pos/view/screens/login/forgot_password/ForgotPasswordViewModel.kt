@@ -2,10 +2,10 @@ package com.socialite.solite_pos.view.screens.login.forgot_password
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.state.DataState
 import com.socialite.domain.domain.ForgotPassword
 import com.socialite.domain.domain.IsAbleSendForgotPassword
-import com.socialite.domain.helper.DateUtils
+import com.socialite.common.utility.helper.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,9 +27,11 @@ class ForgotPasswordViewModel @Inject constructor(
     fun sendEmail(
         email: String,
     ) = viewModelScope.launch {
-        _viewState.emitAll(forgotPassword(
-            email = email,
-            currentTime = DateUtils.calendar.timeInMillis
-        ))
+        _viewState.emitAll(
+            forgotPassword(
+                email = email,
+                currentTime = DateUtils.calendar.timeInMillis
+            )
+        )
     }
 }

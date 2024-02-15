@@ -1,11 +1,11 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.domain.domain.GetOrderListByReport
 import com.socialite.domain.domain.GetOrderMenusWithAmount
-import com.socialite.domain.menu.OrderMenus
+import com.socialite.schema.menu.OrderMenus
 import com.socialite.domain.schema.MenuOrderAmount
-import com.socialite.domain.schema.ReportParameter
+import com.socialite.schema.ui.helper.ReportParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

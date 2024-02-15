@@ -1,13 +1,14 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.core.extensions.toLongDefault
 import com.socialite.data.repository.OutcomesRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.GetOutcomes
 import com.socialite.domain.helper.toDomain
-import com.socialite.domain.schema.Outcome
-import com.socialite.domain.schema.ReportParameter
+import com.socialite.schema.ui.helper.Outcome
+import com.socialite.schema.ui.helper.ReportParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
-import okhttp3.internal.toLongOrDefault
 import javax.inject.Inject
 
 class GetOutcomesImpl @Inject constructor(
@@ -53,7 +53,7 @@ class GetOutcomesImpl @Inject constructor(
                             parameters.start,
                             parameters.end,
                             parameters.storeId,
-                            it?.id?.toLongOrDefault(0L) ?: 0L
+                            it?.id?.toLongDefault(0L) ?: 0L
                         )
                     }
                 )

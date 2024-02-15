@@ -50,9 +50,9 @@ import com.socialite.solite_pos.compose.BasicAddButton
 import com.socialite.solite_pos.compose.BasicEmptyList
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.SpaceForFloatingButton
-import com.socialite.domain.helper.DateUtils
-import com.socialite.domain.schema.Outcome
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.common.utility.helper.DateUtils
+import com.socialite.schema.ui.helper.Outcome
+import com.socialite.core.extensions.thousand
 import com.socialite.solite_pos.utils.tools.helper.ReportParameter
 import com.socialite.solite_pos.view.screens.store.outcomes.components.OutcomeDetail
 import kotlinx.coroutines.launch

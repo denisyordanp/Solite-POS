@@ -45,10 +45,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.socialite.solite_pos.R
 import com.socialite.solite_pos.compose.BasicTopBar
 import com.socialite.solite_pos.compose.PrimaryButtonView
-import com.socialite.domain.schema.ProductOrderDetail
-import com.socialite.domain.schema.VariantWithOptions
-import com.socialite.domain.schema.main.VariantOption
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.schema.ui.helper.ProductOrderDetail
+import com.socialite.schema.ui.helper.VariantWithOptions
+import com.socialite.schema.ui.main.VariantOption
+import com.socialite.core.extensions.thousand
 
 @Composable
 fun SelectVariantsScreen(

@@ -5,9 +5,9 @@ import com.socialite.data.repository.OrderPaymentsRepository
 import com.socialite.data.repository.OrderPromosRepository
 import com.socialite.data.repository.OrdersRepository
 import com.socialite.domain.helper.toData
-import com.socialite.domain.schema.main.Order
-import com.socialite.domain.schema.main.OrderPayment
-import com.socialite.domain.schema.main.OrderPromo
+import com.socialite.schema.ui.main.Order
+import com.socialite.schema.ui.main.OrderPayment
+import com.socialite.schema.ui.main.OrderPromo
 import javax.inject.Inject
 
 class PayOrderImpl @Inject constructor(

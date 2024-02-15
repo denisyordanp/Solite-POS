@@ -1,18 +1,18 @@
 package com.socialite.data.repository.impl
 
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.socialite.common.di.IoDispatcher
-import com.socialite.common.extension.toResponse
-import com.socialite.common.network.NetworkConfig
-import com.socialite.data.database.dao.UserDao
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.core.extensions.toResponse
+import com.socialite.core.network.NetworkConfig
+import com.socialite.core.database.dao.UserDao
 import com.socialite.data.datastore.DataStoreManager
 import com.socialite.data.di.AuthorizationService
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.master.User
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.master.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

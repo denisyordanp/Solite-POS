@@ -1,7 +1,7 @@
 package com.socialite.domain.helper
 
-import com.socialite.domain.schema.ProductOrderDetail
-import com.socialite.data.schema.room.new_bridge.OrderDetail
+import com.socialite.schema.ui.helper.ProductOrderDetail
+import com.socialite.schema.database.new_bridge.OrderDetail
 import com.socialite.data.repository.OrderDetailsRepository
 import com.socialite.data.repository.ProductsRepository
 import kotlinx.coroutines.flow.firstOrNull

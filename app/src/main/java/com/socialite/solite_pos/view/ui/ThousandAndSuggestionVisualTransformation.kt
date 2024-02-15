@@ -4,7 +4,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
-import com.socialite.solite_pos.utils.config.thousand
+import com.socialite.core.extensions.thousand
 
 // TODO: Need improvement on when adding suggestion offset
 class ThousandAndSuggestionVisualTransformation(

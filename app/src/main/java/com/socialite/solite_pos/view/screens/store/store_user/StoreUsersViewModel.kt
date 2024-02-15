@@ -2,11 +2,11 @@ package com.socialite.solite_pos.view.screens.store.store_user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.state.DataState
 import com.socialite.domain.domain.AddNewUser
 import com.socialite.domain.domain.FetchUsers
 import com.socialite.domain.domain.UpdateUser
-import com.socialite.domain.schema.main.User
+import com.socialite.schema.ui.main.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

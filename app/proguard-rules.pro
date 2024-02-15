@@ -21,5 +21,5 @@
 #-renamesourcefileattribute SourceFile
 
 ## Gson
--keep class com.socialite.common.network.response.** { *; }
+-keep class com.socialite.core.network.response.** { *; }
 -keep class com.socialite.data.schema.response.** { *; }

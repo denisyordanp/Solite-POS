@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.ProductWithCategory
+import com.socialite.schema.ui.helper.ProductWithCategory
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetProductWithCategoryById {

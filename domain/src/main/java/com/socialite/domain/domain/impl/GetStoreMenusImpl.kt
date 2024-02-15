@@ -1,10 +1,10 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.menus.StoreMenus
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.domain.GetStoreMenus
-import com.socialite.domain.menu.UserAuthority
-import com.socialite.domain.menu.toAuthority
+import com.socialite.schema.ui.utility.UserAuthority
+import com.socialite.schema.ui.utility.toAuthority
+import com.socialite.schema.menu.StoreMenus
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

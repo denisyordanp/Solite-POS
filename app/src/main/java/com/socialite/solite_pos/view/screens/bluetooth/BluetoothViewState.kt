@@ -1,7 +1,7 @@
 package com.socialite.solite_pos.view.screens.bluetooth
 
 import android.bluetooth.BluetoothDevice
-import com.socialite.domain.schema.OrderWithProduct
+import com.socialite.schema.ui.helper.OrderWithProduct
 
 data class BluetoothViewState(
     val devices: List<BluetoothDevice>,

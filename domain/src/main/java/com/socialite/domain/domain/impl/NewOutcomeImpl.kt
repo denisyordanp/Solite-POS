@@ -5,7 +5,7 @@ import com.socialite.data.repository.OutcomesRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository
 import com.socialite.domain.helper.toData
-import com.socialite.domain.schema.Outcome
+import com.socialite.schema.ui.helper.Outcome
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

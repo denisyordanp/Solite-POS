@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.schema
 
-import com.socialite.domain.menu.UserAuthority
+import com.socialite.schema.ui.utility.UserAuthority
 import com.socialite.solite_pos.view.ui.DropdownItem
 
 data class User(

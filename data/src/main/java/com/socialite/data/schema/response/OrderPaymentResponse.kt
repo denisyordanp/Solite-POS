@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_bridge.OrderPayment
+import com.socialite.schema.database.new_bridge.OrderPayment
 
 data class OrderPaymentResponse(
     val id: String,

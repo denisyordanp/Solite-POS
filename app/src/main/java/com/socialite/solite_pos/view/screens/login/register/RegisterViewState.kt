@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.login.register
 
-import com.socialite.common.state.ErrorState
+import com.socialite.common.utility.state.ErrorState
 
 data class RegisterViewState(
     val errorState: ErrorState?,

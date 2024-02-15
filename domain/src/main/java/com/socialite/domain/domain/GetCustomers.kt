@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.main.Customer
+import com.socialite.schema.ui.main.Customer
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetCustomers {

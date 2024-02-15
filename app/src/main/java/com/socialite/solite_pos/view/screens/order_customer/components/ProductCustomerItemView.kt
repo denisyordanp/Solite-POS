@@ -25,9 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.socialite.domain.schema.ProductWithCategory
+import com.socialite.core.extensions.toIDR
+import com.socialite.schema.ui.helper.ProductWithCategory
 import com.socialite.solite_pos.R
-import com.socialite.solite_pos.utils.config.toIDR
 
 @Composable
 fun ProductCustomerItemView(

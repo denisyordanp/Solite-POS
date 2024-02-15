@@ -1,6 +1,6 @@
 package com.socialite.data.repository.impl
 
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.di.AuthorizationService
 import com.socialite.data.network.SoliteServices
 import com.socialite.data.repository.SynchronizeRepository

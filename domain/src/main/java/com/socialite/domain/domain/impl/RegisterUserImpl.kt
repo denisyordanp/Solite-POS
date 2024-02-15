@@ -1,9 +1,9 @@
 package com.socialite.domain.domain.impl
 
-import com.socialite.common.di.DefaultDispatcher
-import com.socialite.common.extension.dataStateFlow
-import com.socialite.common.network.response.ApiResponse
-import com.socialite.common.state.DataState
+import com.socialite.common.utility.di.DefaultDispatcher
+import com.socialite.common.utility.extension.dataStateFlow
+import com.socialite.common.utility.state.DataState
+import com.socialite.core.network.response.ApiResponse
 import com.socialite.data.repository.AccountRepository
 import com.socialite.data.repository.SettingRepository
 import com.socialite.data.repository.UserRepository

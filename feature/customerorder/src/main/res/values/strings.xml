@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_menu_title">Cari menu</string>
+    <string name="search_menu_placeholder">Cari nama menu</string>
+    <string name="search_customer_placeholder">Cari nama pelanggan</string>
+    <string name="favorite_menu_title">Menu favorit</string>
+    <string name="menu_title">menu</string>
+    <string name="dine_in_title">Makan ditempat</string>
+    <string name="take_away_title">Dibungkus</string>
+    <string name="order_now_button">Pesan sekarang</string>
+    <string name="this_variant_must_be_selected">Varian ini wajib dipilih</string>
+    <string name="adding_button_title">Tambahkan</string>
+</resources>

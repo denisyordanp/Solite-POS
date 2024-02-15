@@ -1,6 +1,6 @@
 package com.socialite.solite_pos.view.screens.store
 
-import com.socialite.common.menus.StoreMenus
+import com.socialite.schema.menu.StoreMenus
 import com.socialite.solite_pos.schema.GeneralMenuBadge
 import com.socialite.solite_pos.schema.Store
 import com.socialite.solite_pos.schema.User

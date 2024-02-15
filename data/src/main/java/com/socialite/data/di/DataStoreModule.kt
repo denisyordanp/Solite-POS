@@ -2,7 +2,7 @@ package com.socialite.data.di
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.datastore.DataStoreManager
 import com.socialite.data.datastore.impl.DataStoreManagerImpl
 import dagger.Module

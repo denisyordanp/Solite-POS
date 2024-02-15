@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.master.User
+import com.socialite.schema.database.master.User
 
 data class UserStoreResponse(
     val id: Int,

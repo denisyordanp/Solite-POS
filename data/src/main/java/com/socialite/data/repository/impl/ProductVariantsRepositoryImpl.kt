@@ -1,17 +1,17 @@
 package com.socialite.data.repository.impl
 
 import androidx.room.withTransaction
-import com.socialite.common.di.IoDispatcher
-import com.socialite.data.database.AppDatabase
-import com.socialite.data.database.dao.ProductVariantsDao
-import com.socialite.data.database.dao.ProductsDao
-import com.socialite.data.database.dao.VariantOptionsDao
-import com.socialite.data.database.dao.VariantsDao
+import com.socialite.common.utility.di.IoDispatcher
+import com.socialite.core.database.AppDatabase
+import com.socialite.core.database.dao.ProductVariantsDao
+import com.socialite.core.database.dao.ProductsDao
+import com.socialite.core.database.dao.VariantOptionsDao
+import com.socialite.core.database.dao.VariantsDao
 import com.socialite.data.repository.ProductVariantsRepository
-import com.socialite.data.schema.room.EntityData
-import com.socialite.data.schema.room.new_bridge.VariantProduct
 import com.socialite.data.repository.SyncRepository
 import com.socialite.data.schema.helper.UpdateSynchronizations
+import com.socialite.schema.database.EntityData
+import com.socialite.schema.database.new_bridge.VariantProduct
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
@@ -26,7 +26,9 @@ class ProductVariantsRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ProductVariantsRepository {
 
-    override fun getVariantOptions(productId: String) = dao.getVariantProducts(productId).flowOn(dispatcher)
+    override fun getVariantOptions(productId: String) =
+        dao.getVariantProducts(productId).flowOn(dispatcher)
+
     override fun getAllVariantOptions() = dao.getAllVariantProducts().flowOn(dispatcher)
 
     override suspend fun getNeedUploadVariantProducts() = dao.getNeedUploadVariantProducts()
@@ -34,7 +36,8 @@ class ProductVariantsRepositoryImpl @Inject constructor(
     override suspend fun isProductHasVariants(idProduct: String) =
         !dao.getProductVariants(idProduct).isNullOrEmpty()
 
-    override fun getVariantsProductById(idProduct: String) = dao.getProductVariantsById(idProduct).flowOn(dispatcher)
+    override fun getVariantsProductById(idProduct: String) =
+        dao.getProductVariantsById(idProduct).flowOn(dispatcher)
 
     override suspend fun insertVariantProduct(data: VariantProduct) {
         dao.insertNewVariantProduct(data)

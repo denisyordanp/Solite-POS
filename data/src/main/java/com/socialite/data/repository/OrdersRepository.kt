@@ -1,7 +1,7 @@
 package com.socialite.data.repository
 
-import com.socialite.data.schema.room.helper.OrderData
-import com.socialite.data.schema.room.new_master.Order
+import com.socialite.schema.database.helper.OrderData
+import com.socialite.schema.database.new_master.Order
 import kotlinx.coroutines.flow.Flow
 
 interface OrdersRepository : SyncRepository<Order> {

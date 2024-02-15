@@ -1,6 +1,6 @@
 package com.socialite.data.schema.response
 
-import com.socialite.data.schema.room.new_bridge.OrderProductVariant
+import com.socialite.schema.database.new_bridge.OrderProductVariant
 
 data class OrderProductVariantResponse(
     val id: String,

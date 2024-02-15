@@ -1,6 +1,6 @@
 package com.socialite.domain.domain
 
-import com.socialite.domain.schema.main.VariantProduct
+import com.socialite.schema.ui.main.VariantProduct
 import kotlinx.coroutines.flow.Flow
 
 fun interface GetVariantsProductById {

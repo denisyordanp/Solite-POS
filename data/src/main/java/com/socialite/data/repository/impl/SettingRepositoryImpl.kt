@@ -3,7 +3,7 @@ package com.socialite.data.repository.impl
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.socialite.common.di.IoDispatcher
+import com.socialite.common.utility.di.IoDispatcher
 import com.socialite.data.datastore.DataStoreManager
 import com.socialite.data.preference.SettingPreferences
 import com.socialite.data.preference.UserPreferences
